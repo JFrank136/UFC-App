@@ -1,38 +1,107 @@
-.App {
-  text-align: center;
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+  color: #000;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+a {
+  color: #2c3e50;
+  text-decoration: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+a:hover {
+  text-decoration: underline;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Layout wrapper */
+.container {
   display: flex;
-  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 40px;
+  flex-wrap: wrap;
+}
+
+/* List formatting */
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+/* Section styles */
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 20px;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+/* Inputs and buttons */
+input[type="text"] {
+  padding: 8px;
+  font-size: 16px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 6px 10px;
+  margin-left: 10px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #e0e0e0;
+}
+
+button.favorited {
+  background-color: lightgreen;
+  font-weight: bold;
+}
+
+/* Columns */
+.left-panel {
+  width: 40%;
+  min-width: 300px;
+}
+
+.right-panel {
+  width: 50%;
+  min-width: 300px;
+}
+
+/* Search results container */
+.search-results {
+  max-width: 500px;
+}
+
+.search-results li {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-between;
 }
 
-.App-link {
-  color: #61dafb;
+/* Nav links */
+nav {
+  text-align: center;
+  padding-top: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+nav a {
+  margin: 0 10px;
 }
