@@ -2,9 +2,13 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
+import json
+import os
 
 app = Flask(__name__)
 CORS(app)
+
+FAVORITES_FILE = "favorites.json"
 
 # ---------- Search Fighters Route ----------
 @app.route('/api/search')
@@ -45,7 +49,6 @@ def search():
 @app.route('/api/upcoming', methods=["POST"])
 def upcoming():
     data = request.get_json()
-    print("Incoming data:", data)
     fighter_names = data.get("fighters", [])
     if not fighter_names:
         return jsonify([])
@@ -54,51 +57,39 @@ def upcoming():
     headers = {"User-Agent": "Mozilla/5.0"}
 
     for name in fighter_names:
-        print(f"Searching for fighter: {name}")
         search_url = f"https://www.tapology.com/search?term={name.replace(' ', '+')}"
         res = requests.get(search_url, headers=headers)
         soup = BeautifulSoup(res.text, 'html.parser')
 
         fighter_link = soup.select_one("a[href^='/fightcenter/fighters/']")
         if not fighter_link:
-            print(f"No fighter link found for {name}")
             continue
 
         fighter_page_url = "https://www.tapology.com" + fighter_link['href']
-        print(f"Fighter page URL: {fighter_page_url}")
-
         res_fighter = requests.get(fighter_page_url, headers=headers)
         soup_fighter = BeautifulSoup(res_fighter.text, 'html.parser')
 
-        # Look for "Confirmed Upcoming Bout" link
         confirmed_bout = soup_fighter.find("a", string="Confirmed Upcoming Bout")
         if not confirmed_bout:
-            print(f"No confirmed upcoming bout found for {name}")
             continue
 
         try:
-            # Go up several levels to get the full card block
             fight_card_container = confirmed_bout
-            for _ in range(5):  # climb enough to reach enclosing card div
+            for _ in range(5):
                 if fight_card_container.parent:
                     fight_card_container = fight_card_container.parent
 
-            # Get event name
             event_tag = fight_card_container.find("a", title="Event Page")
             event = event_tag.get_text(strip=True) if event_tag else "TBD"
 
-            # Get event date
             date_tag = fight_card_container.find("span", class_="text-xs11 text-neutral-600")
             date = date_tag.get_text(strip=True) if date_tag else "TBA"
 
-            # Get opponent by excluding searched fighter
             fighter_links = fight_card_container.select("a[href^='/fightcenter/fighters/']")
             opponent = next(
                 (a.get_text(strip=True) for a in fighter_links if a.get_text(strip=True).lower() != name.lower()),
                 "TBD"
             )
-
-            print(f"Upcoming Fight: {name} vs {opponent} at {event} on {date}")
 
             results.append({
                 "name": name,
@@ -113,7 +104,60 @@ def upcoming():
 
     return jsonify(results)
 
+# ---------- Favorites API ----------
+@app.route('/api/favorites', methods=["GET"])
+def get_favorites():
+    try:
+        if not os.path.exists(FAVORITES_FILE):
+            return jsonify([])
+        with open(FAVORITES_FILE, "r") as f:
+            favorites = json.load(f)
+        return jsonify(favorites), 200
+    except Exception as e:
+        print("Load favorites error:", e)
+        return jsonify([]), 200
+
+@app.route('/api/favorites', methods=["POST"])
+def add_favorite():
+    fighter = request.get_json()
+    try:
+        if os.path.exists(FAVORITES_FILE):
+            with open(FAVORITES_FILE, "r") as f:
+                favorites = json.load(f)
+        else:
+            favorites = []
+
+        if not any(f['name'] == fighter['name'] for f in favorites):
+            favorites.append(fighter)
+
+        with open(FAVORITES_FILE, "w") as f:
+            json.dump(favorites, f, indent=2)
+
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        print("Add favorite error:", e)
+        return jsonify({"error": "Could not save favorite"}), 500
+
+@app.route('/api/favorites', methods=["DELETE"])
+def delete_favorite():
+    fighter = request.get_json()
+    try:
+        if os.path.exists(FAVORITES_FILE):
+            with open(FAVORITES_FILE, "r") as f:
+                favorites = json.load(f)
+        else:
+            favorites = []
+
+        updated = [f for f in favorites if f['name'] != fighter['name']]
+
+        with open(FAVORITES_FILE, "w") as f:
+            json.dump(updated, f, indent=2)
+
+        return jsonify({"status": "deleted"}), 200
+    except Exception as e:
+        print("Delete favorite error:", e)
+        return jsonify({"error": "Could not delete favorite"}), 500
+
 # ---------- Run Server ----------
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
-
