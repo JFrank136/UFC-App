@@ -1,45 +1,33 @@
 import React, { useState, useEffect } from "react";
 
-const FighterSearch = ({ onAddFighter }) => {
+function FighterSearch() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  const API_BASE = "https://ufc-app-58c5.onrender.com";
-
+  // Load favorites from backend on initial render
   useEffect(() => {
-    fetchFavorites();
+    fetch("/api/favorites")
+      .then(res => res.json())
+      .then(data => setFavorites(data))
+      .catch(err => console.error("Failed to load favorites:", err));
   }, []);
-
-  const fetchFavorites = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/api/favorites`);
-      const data = await res.json();
-      setFavorites(data);
-    } catch (err) {
-      console.error("Failed to load favorites", err);
-    }
-  };
 
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!query.trim()) return;
 
-    setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/api/search?query=${encodeURIComponent(query)}`);
-      const data = await res.json();
+      const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+      const data = await response.json();
 
       const uniqueResults = Array.from(
         new Map(data.map(f => [f.name, f])).values()
       );
 
       setResults(uniqueResults);
-    } catch (err) {
-      console.error("Search failed", err);
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error("Error during search:", error);
     }
   };
 
@@ -48,27 +36,38 @@ const FighterSearch = ({ onAddFighter }) => {
     if (alreadyFavorite) return;
 
     try {
-      await fetch(`${API_BASE}/api/favorites`, {
+      const response = await fetch("/api/favorites", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(fighter),
       });
-      setFavorites(prev => [...prev, fighter]);
+
+      if (response.ok) {
+        setFavorites([...favorites, fighter]);
+      } else {
+        console.error("Failed to add favorite");
+      }
     } catch (err) {
-      console.error("Failed to save favorite", err);
+      console.error("Error adding favorite:", err);
     }
   };
 
   const removeFromFavorites = async (fighter) => {
     try {
-      await fetch(`${API_BASE}/api/favorites`, {
+      const response = await fetch("/api/favorites", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(fighter),
+        body: JSON.stringify({ name: fighter.name }),
       });
-      setFavorites(prev => prev.filter(fav => fav.name !== fighter.name));
+
+      if (response.ok) {
+        const updatedFavorites = favorites.filter(f => f.name !== fighter.name);
+        setFavorites(updatedFavorites);
+      } else {
+        console.error("Failed to remove favorite");
+      }
     } catch (err) {
-      console.error("Failed to delete favorite", err);
+      console.error("Error removing favorite:", err);
     }
   };
 
@@ -83,7 +82,9 @@ const FighterSearch = ({ onAddFighter }) => {
   const getLastName = (fullName) => {
     const nameWithoutNickname = fullName.replace(/"[^"]+"/, "").trim();
     const nameParts = nameWithoutNickname.split(" ");
-    return nameParts.length > 1 ? nameParts[nameParts.length - 1].toLowerCase() : nameWithoutNickname.toLowerCase();
+    return nameParts.length > 1
+      ? nameParts[nameParts.length - 1].toLowerCase()
+      : nameWithoutNickname.toLowerCase();
   };
 
   return (
@@ -116,8 +117,6 @@ const FighterSearch = ({ onAddFighter }) => {
           <button type="submit" style={{ marginLeft: "10px" }}>Search</button>
         </form>
 
-        {loading && <p>Searching...</p>}
-
         <h2>Results</h2>
         <ul>
           {results.map((fighter, idx) => {
@@ -129,12 +128,14 @@ const FighterSearch = ({ onAddFighter }) => {
                 </a>
                 <button
                   onClick={() => addToFavorites(fighter)}
+                  disabled={isFavorite}
                   style={{
                     marginLeft: "10px",
-                    backgroundColor: isFavorite ? "lightgreen" : "initial"
+                    backgroundColor: isFavorite ? "lightgreen" : "initial",
+                    cursor: isFavorite ? "not-allowed" : "pointer"
                   }}
                 >
-                  Add to Favorites
+                  {isFavorite ? "Favorited" : "Add to Favorites"}
                 </button>
               </li>
             );
@@ -143,6 +144,6 @@ const FighterSearch = ({ onAddFighter }) => {
       </div>
     </div>
   );
-};
+}
 
 export default FighterSearch;
