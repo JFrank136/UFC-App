@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import FighterSearch from "./pages/FighterSearch";
 import UpcomingFights from "./pages/UpcomingFights";
+import './App.css';
+
 
 function App() {
   return (
