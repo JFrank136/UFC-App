@@ -1,55 +1,53 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-function UpcomingFights() {
+const UpcomingFights = () => {
   const [fights, setFights] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const API_BASE = "https://ufc-app-58c5.onrender.com";
-
   useEffect(() => {
-    fetchFavorites();
+    const loadFavoritesAndFetch = async () => {
+      try {
+        const res = await fetch("/api/favorites");
+        const storedFavorites = await res.json();
+        setFavorites(storedFavorites);
+        fetchFights(storedFavorites);
+      } catch (err) {
+        console.error("Error loading favorites:", err);
+        setError("Failed to load favorites.");
+      }
+    };
+
+    loadFavoritesAndFetch();
   }, []);
 
-  const fetchFavorites = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/api/favorites`);
-      const data = await res.json();
-      setFavorites(data);
-    } catch (err) {
-      console.error("Failed to load favorites", err);
+  const fetchFights = async (fighters = favorites) => {
+    if (fighters.length === 0) {
+      setError("No favorite fighters found. Add some in the Search page!");
+      setFights([]);
+      return;
     }
-  };
 
-  const fetchFights = async () => {
     try {
       setLoading(true);
-      setError("");
 
-      if (favorites.length === 0) {
-        setError("No favorite fighters found. Add some in the Search page!");
-        setFights([]);
-        return;
-      }
-
-      const fighterNames = favorites.map((f) => f.name);
-      const res = await fetch(`${API_BASE}/api/upcoming`, {
+      const response = await fetch("/api/upcoming", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fighters: fighterNames }),
+        body: JSON.stringify({ fighters: fighters.map((f) => f.name) }),
       });
 
-      if (!res.ok) throw new Error("Failed to fetch upcoming fights.");
-      const data = await res.json();
+      if (!response.ok) throw new Error("Failed to fetch upcoming fights.");
+      const data = await response.json();
 
       const filtered = data
         .filter((fight) => fight.event.toLowerCase().includes("ufc"))
         .map((fight) => {
           const cleanName = fight.name.replace(/"[^"]+"/g, "").trim();
           const cleanOpponent = fight.opponent.replace(/"[^"]+"/g, "").trim();
-
           let formattedDate = fight.date;
+
           try {
             if (
               formattedDate &&
@@ -81,9 +79,10 @@ function UpcomingFights() {
       });
 
       setFights(sorted);
+      setError("");
     } catch (err) {
-      console.error("Error fetching upcoming fights:", err);
-      setError("Error fetching upcoming fights. Please try again later.");
+      console.error("Error fetching fights:", err);
+      setError("Error fetching upcoming fights.");
     } finally {
       setLoading(false);
     }
@@ -96,32 +95,28 @@ function UpcomingFights() {
     const match = favorites.find(
       (fav) => fav.name.replace(/"[^"]+"/g, "").trim() === name
     );
-    return match?.url || null;
+    return match?.url || "#";
   };
 
   return (
     <div>
       <h1>Upcoming Fights</h1>
-      <button onClick={fetchFights} style={{ marginBottom: "20px" }}>
+      <button onClick={() => fetchFights()} style={{ marginBottom: "20px" }}>
         Refresh
       </button>
       {loading ? (
-        <div>Loading...</div>
+        <p>Loading...</p>
       ) : error ? (
-        <div>{error}</div>
+        <p>{error}</p>
       ) : fights.length === 0 ? (
         <p>No upcoming UFC fights found. Click refresh to load.</p>
       ) : (
         <ul>
           {fights.map((fight, idx) => {
-            const nameUrl = getUrl(fight.name);
-            const opponentUrl = getUrl(fight.opponent);
-
             const nameStyle = {
               fontWeight: isFavorite(fight.name) ? "bold" : "normal",
               color: isFavorite(fight.name) ? "#1976d2" : "inherit",
             };
-
             const opponentStyle = {
               fontWeight: isFavorite(fight.opponent) ? "bold" : "normal",
               color: isFavorite(fight.opponent) ? "#1976d2" : "inherit",
@@ -130,7 +125,7 @@ function UpcomingFights() {
             return (
               <li key={idx}>
                 <a
-                  href={nameUrl || "#"}
+                  href={getUrl(fight.name)}
                   style={nameStyle}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -139,7 +134,7 @@ function UpcomingFights() {
                 </a>{" "}
                 vs.{" "}
                 <a
-                  href={opponentUrl || "#"}
+                  href={getUrl(fight.opponent)}
                   style={opponentStyle}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -157,6 +152,6 @@ function UpcomingFights() {
       )}
     </div>
   );
-}
+};
 
 export default UpcomingFights;
