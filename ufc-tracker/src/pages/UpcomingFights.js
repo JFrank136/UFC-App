@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const UpcomingFights = () => {
+function UpcomingFights() {
   const [fights, setFights] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ const UpcomingFights = () => {
         return;
       }
 
-      const fighterNames = favorites.map(f => f.name);
+      const fighterNames = favorites.map((f) => f.name);
       const res = await fetch(`${API_BASE}/api/upcoming`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -44,8 +44,8 @@ const UpcomingFights = () => {
       const data = await res.json();
 
       const filtered = data
-        .filter(fight => fight.event.toLowerCase().includes("ufc"))
-        .map(fight => {
+        .filter((fight) => fight.event.toLowerCase().includes("ufc"))
+        .map((fight) => {
           const cleanName = fight.name.replace(/"[^"]+"/g, "").trim();
           const cleanOpponent = fight.opponent.replace(/"[^"]+"/g, "").trim();
 
@@ -90,10 +90,12 @@ const UpcomingFights = () => {
   };
 
   const isFavorite = (name) =>
-    favorites.some(fav => fav.name.replace(/"[^"]+"/g, "").trim() === name);
+    favorites.some((fav) => fav.name.replace(/"[^"]+"/g, "").trim() === name);
 
   const getUrl = (name) => {
-    const match = favorites.find(fav => fav.name.replace(/"[^"]+"/g, "").trim() === name);
+    const match = favorites.find(
+      (fav) => fav.name.replace(/"[^"]+"/g, "").trim() === name
+    );
     return match?.url || null;
   };
 
@@ -127,15 +129,26 @@ const UpcomingFights = () => {
 
             return (
               <li key={idx}>
-                <a href={nameUrl || "#"} style={nameStyle} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={nameUrl || "#"}
+                  style={nameStyle}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {fight.name}
                 </a>{" "}
                 vs.{" "}
-                <a href={opponentUrl || "#"} style={opponentStyle} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={opponentUrl || "#"}
+                  style={opponentStyle}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {fight.opponent}
                 </a>
                 <br />
-                Event: {fight.event}<br />
+                Event: {fight.event}
+                <br />
                 Date: {fight.date}
               </li>
             );
@@ -144,6 +157,6 @@ const UpcomingFights = () => {
       )}
     </div>
   );
-};
+}
 
 export default UpcomingFights;

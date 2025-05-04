@@ -5,9 +5,10 @@ function FighterSearch() {
   const [results, setResults] = useState([]);
   const [favorites, setFavorites] = useState([]);
 
-  // Load favorites from backend on initial render
+  const API_BASE = "https://ufc-app-58c5.onrender.com";
+
   useEffect(() => {
-    fetch("/api/favorites")
+    fetch(`${API_BASE}/api/favorites`)
       .then(res => res.json())
       .then(data => setFavorites(data))
       .catch(err => console.error("Failed to load favorites:", err));
@@ -18,11 +19,11 @@ function FighterSearch() {
     if (!query.trim()) return;
 
     try {
-      const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+      const response = await fetch(`${API_BASE}/api/search?query=${encodeURIComponent(query)}`);
       const data = await response.json();
 
       const uniqueResults = Array.from(
-        new Map(data.map(f => [f.name, f])).values()
+        new Map(data.map(fighter => [fighter.name, fighter])).values()
       );
 
       setResults(uniqueResults);
@@ -36,16 +37,14 @@ function FighterSearch() {
     if (alreadyFavorite) return;
 
     try {
-      const response = await fetch("/api/favorites", {
+      const res = await fetch(`${API_BASE}/api/favorites`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(fighter),
       });
 
-      if (response.ok) {
-        setFavorites([...favorites, fighter]);
-      } else {
-        console.error("Failed to add favorite");
+      if (res.ok) {
+        setFavorites(prev => [...prev, fighter]);
       }
     } catch (err) {
       console.error("Error adding favorite:", err);
@@ -54,17 +53,14 @@ function FighterSearch() {
 
   const removeFromFavorites = async (fighter) => {
     try {
-      const response = await fetch("/api/favorites", {
+      const res = await fetch(`${API_BASE}/api/favorites`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: fighter.name }),
       });
 
-      if (response.ok) {
-        const updatedFavorites = favorites.filter(f => f.name !== fighter.name);
-        setFavorites(updatedFavorites);
-      } else {
-        console.error("Failed to remove favorite");
+      if (res.ok) {
+        setFavorites(prev => prev.filter(fav => fav.name !== fighter.name));
       }
     } catch (err) {
       console.error("Error removing favorite:", err);
@@ -74,7 +70,6 @@ function FighterSearch() {
   const formatFighterName = (fullName) => {
     const nicknameMatch = fullName.match(/"([^"]+)"/);
     const nickname = nicknameMatch ? nicknameMatch[1] : null;
-
     const nameWithoutNickname = fullName.replace(/"[^"]+"/, "").trim();
     return nickname ? `${nameWithoutNickname} (${nickname})` : nameWithoutNickname;
   };
