@@ -6,10 +6,21 @@ const FighterSearch = ({ onAddFighter }) => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const API_BASE = "https://ufc-app-58c5.onrender.com";
+
   useEffect(() => {
-    const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorites(storedFavorites);
+    fetchFavorites();
   }, []);
+
+  const fetchFavorites = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/favorites`);
+      const data = await res.json();
+      setFavorites(data);
+    } catch (err) {
+      console.error("Failed to load favorites", err);
+    }
+  };
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -17,46 +28,54 @@ const FighterSearch = ({ onAddFighter }) => {
 
     setLoading(true);
     try {
-      const response = await fetch(
-        `https://ufc-app-58c5.onrender.com/api/search?query=${encodeURIComponent(query)}`
-      );
-      const data = await response.json();
+      const res = await fetch(`${API_BASE}/api/search?query=${encodeURIComponent(query)}`);
+      const data = await res.json();
 
       const uniqueResults = Array.from(
-        new Map(data.map((fighter) => [fighter.name, fighter])).values()
+        new Map(data.map(f => [f.name, f])).values()
       );
 
       setResults(uniqueResults);
-    } catch (error) {
-      console.error("Error during search:", error);
-    }
-    setLoading(false);
-  };
-
-  const addToFavorites = (fighter) => {
-    const alreadyFavorite = favorites.some((fav) => fav.name === fighter.name);
-    if (!alreadyFavorite) {
-      const updatedFavorites = [...favorites, fighter];
-      setFavorites(updatedFavorites);
-      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    } catch (err) {
+      console.error("Search failed", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const removeFromFavorites = (fighter) => {
-    const updatedFavorites = favorites.filter((fav) => fav.name !== fighter.name);
-    setFavorites(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  const addToFavorites = async (fighter) => {
+    const alreadyFavorite = favorites.some(fav => fav.name === fighter.name);
+    if (alreadyFavorite) return;
+
+    try {
+      await fetch(`${API_BASE}/api/favorites`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fighter),
+      });
+      setFavorites(prev => [...prev, fighter]);
+    } catch (err) {
+      console.error("Failed to save favorite", err);
+    }
   };
 
-  const handleAdd = (fighter) => {
-    onAddFighter(fighter.name);
-    setQuery("");
-    setResults([]);
+  const removeFromFavorites = async (fighter) => {
+    try {
+      await fetch(`${API_BASE}/api/favorites`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fighter),
+      });
+      setFavorites(prev => prev.filter(fav => fav.name !== fighter.name));
+    } catch (err) {
+      console.error("Failed to delete favorite", err);
+    }
   };
 
   const formatFighterName = (fullName) => {
     const nicknameMatch = fullName.match(/"([^"]+)"/);
     const nickname = nicknameMatch ? nicknameMatch[1] : null;
+
     const nameWithoutNickname = fullName.replace(/"[^"]+"/, "").trim();
     return nickname ? `${nameWithoutNickname} (${nickname})` : nameWithoutNickname;
   };
@@ -64,9 +83,7 @@ const FighterSearch = ({ onAddFighter }) => {
   const getLastName = (fullName) => {
     const nameWithoutNickname = fullName.replace(/"[^"]+"/, "").trim();
     const nameParts = nameWithoutNickname.split(" ");
-    return nameParts.length > 1
-      ? nameParts[nameParts.length - 1].toLowerCase()
-      : nameWithoutNickname.toLowerCase();
+    return nameParts.length > 1 ? nameParts[nameParts.length - 1].toLowerCase() : nameWithoutNickname.toLowerCase();
   };
 
   return (
@@ -96,9 +113,7 @@ const FighterSearch = ({ onAddFighter }) => {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Enter fighter name"
           />
-          <button type="submit" style={{ marginLeft: "10px" }}>
-            Search
-          </button>
+          <button type="submit" style={{ marginLeft: "10px" }}>Search</button>
         </form>
 
         {loading && <p>Searching...</p>}
@@ -106,7 +121,7 @@ const FighterSearch = ({ onAddFighter }) => {
         <h2>Results</h2>
         <ul>
           {results.map((fighter, idx) => {
-            const isFavorite = favorites.some((fav) => fav.name === fighter.name);
+            const isFavorite = favorites.some(fav => fav.name === fighter.name);
             return (
               <li key={idx}>
                 <a href={fighter.url} target="_blank" rel="noopener noreferrer">
@@ -116,7 +131,7 @@ const FighterSearch = ({ onAddFighter }) => {
                   onClick={() => addToFavorites(fighter)}
                   style={{
                     marginLeft: "10px",
-                    backgroundColor: isFavorite ? "lightgreen" : "initial",
+                    backgroundColor: isFavorite ? "lightgreen" : "initial"
                   }}
                 >
                   Add to Favorites

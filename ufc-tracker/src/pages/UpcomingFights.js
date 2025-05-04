@@ -1,47 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const UpcomingFights = ({ trackedFighters }) => {
+const UpcomingFights = () => {
   const [fights, setFights] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorites(storedFavorites);
+  const API_BASE = "https://ufc-app-58c5.onrender.com";
 
-    fetchFights();
-  }, [trackedFighters]);
+  useEffect(() => {
+    fetchFavorites();
+  }, []);
+
+  const fetchFavorites = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/favorites`);
+      const data = await res.json();
+      setFavorites(data);
+    } catch (err) {
+      console.error("Failed to load favorites", err);
+    }
+  };
 
   const fetchFights = async () => {
     try {
       setLoading(true);
+      setError("");
 
-      const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-      setFavorites(storedFavorites);
-
-      if (storedFavorites.length === 0) {
+      if (favorites.length === 0) {
         setError("No favorite fighters found. Add some in the Search page!");
         setFights([]);
         return;
       }
 
-      const fighterNames = storedFavorites.map((f) => f.name);
-      const response = await fetch("https://ufc-app-58c5.onrender.com/api/upcoming", {
+      const fighterNames = favorites.map(f => f.name);
+      const res = await fetch(`${API_BASE}/api/upcoming`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fighters: fighterNames }),
       });
 
-      if (!response.ok) throw new Error("Failed to fetch upcoming fights.");
-
-      const data = await response.json();
+      if (!res.ok) throw new Error("Failed to fetch upcoming fights.");
+      const data = await res.json();
 
       const filtered = data
-        .filter((fight) => fight.event.toLowerCase().includes("ufc"))
-        .map((fight) => {
+        .filter(fight => fight.event.toLowerCase().includes("ufc"))
+        .map(fight => {
           const cleanName = fight.name.replace(/"[^"]+"/g, "").trim();
           const cleanOpponent = fight.opponent.replace(/"[^"]+"/g, "").trim();
 
@@ -68,7 +72,7 @@ const UpcomingFights = ({ trackedFighters }) => {
           };
         });
 
-      const sortedFights = filtered.sort((a, b) => {
+      const sorted = filtered.sort((a, b) => {
         const parseDate = (d) => {
           if (!d || d.toLowerCase() === "tba") return Infinity;
           return new Date(`2025 ${d}`);
@@ -76,9 +80,7 @@ const UpcomingFights = ({ trackedFighters }) => {
         return parseDate(a.date) - parseDate(b.date);
       });
 
-      localStorage.setItem("upcomingFights", JSON.stringify(sortedFights));
-      setFights(sortedFights);
-      setError("");
+      setFights(sorted);
     } catch (err) {
       console.error("Error fetching upcoming fights:", err);
       setError("Error fetching upcoming fights. Please try again later.");
@@ -88,12 +90,10 @@ const UpcomingFights = ({ trackedFighters }) => {
   };
 
   const isFavorite = (name) =>
-    favorites.some((fav) => fav.name.replace(/"[^"]+"/g, "").trim() === name);
+    favorites.some(fav => fav.name.replace(/"[^"]+"/g, "").trim() === name);
 
   const getUrl = (name) => {
-    const match = favorites.find(
-      (fav) => fav.name.replace(/"[^"]+"/g, "").trim() === name
-    );
+    const match = favorites.find(fav => fav.name.replace(/"[^"]+"/g, "").trim() === name);
     return match?.url || null;
   };
 
@@ -103,59 +103,45 @@ const UpcomingFights = ({ trackedFighters }) => {
       <button onClick={fetchFights} style={{ marginBottom: "20px" }}>
         Refresh
       </button>
+      {loading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>{error}</div>
+      ) : fights.length === 0 ? (
+        <p>No upcoming UFC fights found. Click refresh to load.</p>
+      ) : (
+        <ul>
+          {fights.map((fight, idx) => {
+            const nameUrl = getUrl(fight.name);
+            const opponentUrl = getUrl(fight.opponent);
 
-      <div className="fights-container">
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p>{error}</p>
-        ) : fights.length === 0 ? (
-          <p>No upcoming UFC fights found. Click refresh to load.</p>
-        ) : (
-          <ul className="fight-list">
-            {fights.map((fight, idx) => {
-              const nameUrl = getUrl(fight.name);
-              const opponentUrl = getUrl(fight.opponent);
+            const nameStyle = {
+              fontWeight: isFavorite(fight.name) ? "bold" : "normal",
+              color: isFavorite(fight.name) ? "#1976d2" : "inherit",
+            };
 
-              const nameStyle = {
-                fontWeight: isFavorite(fight.name) ? "bold" : "normal",
-                color: isFavorite(fight.name) ? "#1976d2" : "inherit",
-              };
+            const opponentStyle = {
+              fontWeight: isFavorite(fight.opponent) ? "bold" : "normal",
+              color: isFavorite(fight.opponent) ? "#1976d2" : "inherit",
+            };
 
-              const opponentStyle = {
-                fontWeight: isFavorite(fight.opponent) ? "bold" : "normal",
-                color: isFavorite(fight.opponent) ? "#1976d2" : "inherit",
-              };
-
-              return (
-                <li key={idx}>
-                  <a
-                    href={nameUrl || "#"}
-                    style={nameStyle}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {fight.name}
-                  </a>{" "}
-                  vs.{" "}
-                  <a
-                    href={opponentUrl || "#"}
-                    style={opponentStyle}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {fight.opponent}
-                  </a>
-                  <br />
-                  Event: {fight.event}
-                  <br />
-                  Date: {fight.date}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
+            return (
+              <li key={idx}>
+                <a href={nameUrl || "#"} style={nameStyle} target="_blank" rel="noopener noreferrer">
+                  {fight.name}
+                </a>{" "}
+                vs.{" "}
+                <a href={opponentUrl || "#"} style={opponentStyle} target="_blank" rel="noopener noreferrer">
+                  {fight.opponent}
+                </a>
+                <br />
+                Event: {fight.event}<br />
+                Date: {fight.date}
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 };
