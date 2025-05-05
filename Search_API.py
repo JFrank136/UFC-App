@@ -9,12 +9,12 @@ app = Flask(__name__)
 CORS(app)
 
 FAVORITES_FILE = "favorites.json"
+FIGHTS_FILE = "fights.json"
 
 # ---------- Search Fighters Route ----------
 @app.route('/api/search')
 def search():
     query = request.args.get('query', '').strip().lower()
-
     if not query:
         return jsonify([])
 
@@ -45,7 +45,20 @@ def search():
         print("Error during scraping:", e)
         return jsonify({"error": "Scraping failed"}), 500
 
-# ---------- Upcoming Fights Route ----------
+# ---------- GET Cached Fights ----------
+@app.route('/api/upcoming', methods=["GET"])
+def get_cached_fights():
+    try:
+        if not os.path.exists(FIGHTS_FILE):
+            return jsonify([])
+        with open(FIGHTS_FILE, "r") as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        print("Error loading cached fights:", e)
+        return jsonify([])
+
+# ---------- POST & Scrape New Fights ----------
 @app.route('/api/upcoming', methods=["POST"])
 def upcoming():
     data = request.get_json()
@@ -57,23 +70,23 @@ def upcoming():
     headers = {"User-Agent": "Mozilla/5.0"}
 
     for name in fighter_names:
-        search_url = f"https://www.tapology.com/search?term={name.replace(' ', '+')}"
-        res = requests.get(search_url, headers=headers)
-        soup = BeautifulSoup(res.text, 'html.parser')
-
-        fighter_link = soup.select_one("a[href^='/fightcenter/fighters/']")
-        if not fighter_link:
-            continue
-
-        fighter_page_url = "https://www.tapology.com" + fighter_link['href']
-        res_fighter = requests.get(fighter_page_url, headers=headers)
-        soup_fighter = BeautifulSoup(res_fighter.text, 'html.parser')
-
-        confirmed_bout = soup_fighter.find("a", string="Confirmed Upcoming Bout")
-        if not confirmed_bout:
-            continue
-
         try:
+            search_url = f"https://www.tapology.com/search?term={name.replace(' ', '+')}"
+            res = requests.get(search_url, headers=headers)
+            soup = BeautifulSoup(res.text, 'html.parser')
+
+            fighter_link = soup.select_one("a[href^='/fightcenter/fighters/']")
+            if not fighter_link:
+                continue
+
+            fighter_page_url = "https://www.tapology.com" + fighter_link['href']
+            res_fighter = requests.get(fighter_page_url, headers=headers)
+            soup_fighter = BeautifulSoup(res_fighter.text, 'html.parser')
+
+            confirmed_bout = soup_fighter.find("a", string="Confirmed Upcoming Bout")
+            if not confirmed_bout:
+                continue
+
             fight_card_container = confirmed_bout
             for _ in range(5):
                 if fight_card_container.parent:
@@ -99,8 +112,15 @@ def upcoming():
             })
 
         except Exception as e:
-            print(f"Error parsing fight details for {name}: {e}")
+            print(f"Error parsing fight for {name}:", e)
             continue
+
+    # Save to fights.json cache
+    try:
+        with open(FIGHTS_FILE, "w") as f:
+            json.dump(results, f, indent=2)
+    except Exception as e:
+        print("Failed to write fight cache:", e)
 
     return jsonify(results)
 
