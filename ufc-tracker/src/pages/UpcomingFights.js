@@ -40,7 +40,8 @@ function UpcomingFights() {
       setLoading(true);
       setError("");
 
-      const names = favList.map((f) => f.name);
+      const names = favList.map((f) => typeof f === "string" ? f : f.name);
+
 
       const res = await fetch(`${API_BASE}/api/upcoming`, {
         method: "POST",
@@ -102,15 +103,12 @@ function UpcomingFights() {
     }
   };
 
-  const isFavorite = (name) =>
-    favorites.some((fav) => fav.name.replace(/"[^"]+"/g, "").trim() === name);
+  const isFavorite = (name) => favorites.includes(name);
 
-  const getUrl = (name) => {
-    const match = favorites.find(
-      (fav) => fav.name.replace(/"[^"]+"/g, "").trim() === name
-    );
-    return match?.url || "#";
-  };
+
+  const getUrl = (name) =>
+    `https://www.tapology.com/search?term=${encodeURIComponent(name)}`;
+
 
   return (
     <div>
