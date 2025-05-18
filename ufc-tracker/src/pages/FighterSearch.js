@@ -8,12 +8,12 @@ function FighterSearch() {
   const API_BASE = "https://ufc-app-58c5.onrender.com";
 
   useEffect(() => {
-    fetch(`${API_BASE}/api/favorites`)
+    fetch("/api/favorites")
       .then(res => res.json())
-      .then(data => setFavorites(data))
-      .catch(err => console.error("Failed to load favorites:", err));
+      .then(data => setFavorites(data));
   }, []);
 
+ 
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!query.trim()) return;
@@ -32,40 +32,26 @@ function FighterSearch() {
     }
   };
 
-  const addToFavorites = async (fighter) => {
-    const alreadyFavorite = favorites.some(fav => fav.name === fighter.name);
-    if (alreadyFavorite) return;
+  function addToFavorites(name) {
+    fetch("/api/favorites", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    })
+      .then(res => res.json())
+      .then(data => setFavorites(data));
+  }
 
-    try {
-      const res = await fetch(`${API_BASE}/api/favorites`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(fighter),
-      });
+  function removeFromFavorites(name) {
+    fetch("/api/favorites", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    })
+      .then(res => res.json())
+      .then(data => setFavorites(data));
+  }
 
-      if (res.ok) {
-        setFavorites(prev => [...prev, fighter]);
-      }
-    } catch (err) {
-      console.error("Error adding favorite:", err);
-    }
-  };
-
-  const removeFromFavorites = async (fighter) => {
-    try {
-      const res = await fetch(`${API_BASE}/api/favorites`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: fighter.name }),
-      });
-
-      if (res.ok) {
-        setFavorites(prev => prev.filter(fav => fav.name !== fighter.name));
-      }
-    } catch (err) {
-      console.error("Error removing favorite:", err);
-    }
-  };
 
   const formatFighterName = (fullName) => {
     const nicknameMatch = fullName.match(/"([^"]+)"/);
@@ -93,7 +79,7 @@ function FighterSearch() {
             .map((fav) => (
               <li key={fav.name}>
                 <span style={{ marginRight: "10px" }}>{formatFighterName(fav.name)}</span>
-                <button onClick={() => removeFromFavorites(fav)}>Remove</button>
+              <button onClick={() => removeFromFavorites(fighter.name)}>Remove</button>
               </li>
             ))}
         </ul>
@@ -115,14 +101,14 @@ function FighterSearch() {
         <h2>Results</h2>
         <ul>
           {results.map((fighter, idx) => {
-            const isFavorite = favorites.some(fav => fav.name === fighter.name);
+            const isFavorite = favorites.includes(fighter.name);
             return (
               <li key={idx}>
                 <a href={fighter.url} target="_blank" rel="noopener noreferrer">
                   {fighter.name}
                 </a>
                 <button
-                  onClick={() => addToFavorites(fighter)}
+                  onClick={() => addToFavorites(fighter.name)}
                   disabled={isFavorite}
                   style={{
                     marginLeft: "10px",

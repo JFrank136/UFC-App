@@ -1,0 +1,6 @@
+Make it accessible by phone
+Filter the search list to be the active UFC roster
+Make the fighter names clickable links for the upcoming fights page
+
+Add a like and love for favorite fighters
+	There are fighters where I might watch and there are fighters that I must watch

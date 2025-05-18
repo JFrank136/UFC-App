@@ -178,6 +178,7 @@ def delete_favorite():
         print("Delete favorite error:", e)
         return jsonify({"error": "Could not delete favorite"}), 500
 
+
 # ---------- Run Server ----------
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
