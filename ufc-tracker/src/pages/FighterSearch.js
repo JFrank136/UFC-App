@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Search, Heart, X, Loader2 } from "lucide-react";
 
 function FighterSearch() {
   const [query, setQuery] = useState("");
@@ -91,114 +90,229 @@ function FighterSearch() {
     }
   };
 
+  // Simple CSS styles as an object
+  const styles = {
+    container: {
+      maxWidth: "1200px",
+      margin: "0 auto",
+      padding: "20px",
+      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+    },
+    pageTitle: {
+      fontSize: "26px",
+      fontWeight: "bold",
+      textAlign: "center",
+      marginBottom: "25px",
+      color: "#333"
+    },
+    contentWrapper: {
+      display: "flex",
+      flexDirection: "row",
+      gap: "20px",
+      flexWrap: "wrap"
+    },
+    searchColumn: {
+      flex: "2",
+      minWidth: "300px",
+      padding: "20px",
+      backgroundColor: "white",
+      borderRadius: "8px",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+    },
+    favoritesColumn: {
+      flex: "1",
+      minWidth: "250px",
+      padding: "20px",
+      backgroundColor: "white",
+      borderRadius: "8px",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+    },
+    sectionTitle: {
+      fontSize: "20px",
+      fontWeight: "600",
+      marginBottom: "15px",
+      color: "#444",
+      display: "flex",
+      alignItems: "center"
+    },
+    searchForm: {
+      marginBottom: "20px",
+      display: "flex"
+    },
+    searchInput: {
+      flex: "1",
+      padding: "10px 12px",
+      fontSize: "16px",
+      border: "1px solid #ccc",
+      borderRight: "none",
+      borderRadius: "4px 0 0 4px",
+      outline: "none"
+    },
+    button: {
+      padding: "10px 16px",
+      backgroundColor: "#3b82f6",
+      color: "white",
+      border: "none",
+      borderRadius: "0 4px 4px 0",
+      cursor: "pointer",
+      fontSize: "16px",
+      fontWeight: "500",
+      transition: "background-color 0.2s"
+    },
+    disabledButton: {
+      backgroundColor: "#93c5fd",
+      cursor: "not-allowed"
+    },
+    removeButton: {
+      padding: "5px 10px",
+      backgroundColor: "#fee2e2",
+      color: "#dc2626",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      fontSize: "14px",
+      transition: "background-color 0.2s"
+    },
+    favoritedButton: {
+      padding: "5px 10px",
+      backgroundColor: "#d1fae5",
+      color: "#059669",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "not-allowed",
+      fontSize: "14px"
+    },
+    addButton: {
+      padding: "5px 10px",
+      backgroundColor: "#f3f4f6",
+      color: "#4b5563",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      fontSize: "14px",
+      transition: "background-color 0.2s"
+    },
+    resultsTitle: {
+      fontSize: "18px",
+      fontWeight: "500",
+      marginBottom: "10px",
+      marginTop: "20px",
+      color: "#444"
+    },
+    listItem: {
+      padding: "12px 0",
+      borderBottom: "1px solid #e5e7eb",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
+    },
+    link: {
+      color: "#2563eb",
+      textDecoration: "none",
+      fontWeight: "500"
+    },
+    errorMessage: {
+      padding: "10px",
+      backgroundColor: "#fee2e2",
+      color: "#dc2626",
+      borderRadius: "4px",
+      marginBottom: "15px"
+    },
+    emptyText: {
+      color: "#6b7280",
+      fontStyle: "italic"
+    },
+    heartIcon: {
+      marginRight: "5px"
+    },
+    favoriteName: {
+      color: "#1f2937"
+    }
+  };
+
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-gray-50">
-      <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">UFC Fighter Search</h1>
+    <div style={styles.container}>
+      <h1 style={styles.pageTitle}>UFC Fighter Search</h1>
       
-      <div className="flex flex-col md:flex-row gap-8">
+      <div style={styles.contentWrapper}>
         {/* Search & Results Column */}
-        <div className="w-full md:w-2/3 bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700 flex items-center">
-            <Search className="mr-2" size={20} />
-            Search Fighters
-          </h2>
+        <div style={styles.searchColumn}>
+          <h2 style={styles.sectionTitle}>Search Fighters</h2>
           
-          <div className="mb-6">
-            <div className="flex">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Enter fighter name"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button
-                onClick={handleSearch}
-                disabled={searchLoading}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md transition duration-200 disabled:opacity-70 flex items-center"
-              >
-                {searchLoading ? (
-                  <>
-                    <Loader2 className="animate-spin mr-2" size={16} />
-                    Searching
-                  </>
-                ) : (
-                  "Search"
-                )}
-              </button>
-            </div>
+          <div style={styles.searchForm}>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Enter fighter name"
+              style={styles.searchInput}
+            />
+            <button
+              onClick={handleSearch}
+              disabled={searchLoading}
+              style={{
+                ...styles.button,
+                ...(searchLoading ? styles.disabledButton : {})
+              }}
+            >
+              {searchLoading ? "Searching..." : "Search"}
+            </button>
           </div>
           
           {error && (
-            <div className="p-3 mb-4 bg-red-100 text-red-700 rounded-md flex items-center">
-              <X className="mr-2" size={16} />
+            <div style={styles.errorMessage}>
               {error}
             </div>
           )}
 
-          <div className="mt-6">
-            <h3 className="text-xl font-medium mb-3 text-gray-700">Results</h3>
-            {results.length === 0 ? (
-              <p className="text-gray-500 italic">No results to display</p>
-            ) : (
-              <ul className="divide-y divide-gray-200">
-                {results.map((fighter, idx) => (
-                  <li key={idx} className="py-3 flex items-center justify-between">
-                    <div>
-                      <a 
-                        href={fighter.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-                      >
-                        {formatFighterName(fighter.name)}
-                      </a>
-                    </div>
-                    <button
-                      onClick={() => addToFavorites(fighter)}
-                      disabled={isFavorite(fighter.name)}
-                      className={`flex items-center px-3 py-1 rounded-md transition duration-200 text-sm ${
-                        isFavorite(fighter.name)
-                          ? "bg-green-100 text-green-700 cursor-not-allowed"
-                          : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                      }`}
-                    >
-                      <Heart 
-                        className={`mr-1 ${isFavorite(fighter.name) ? "fill-green-500" : ""}`}
-                        size={16} 
-                      />
-                      {isFavorite(fighter.name) ? "Favorited" : "Add to Favorites"}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <h3 style={styles.resultsTitle}>Results</h3>
+          {results.length === 0 ? (
+            <p style={styles.emptyText}>No results to display</p>
+          ) : (
+            <ul style={{ padding: 0, listStyle: "none", margin: 0 }}>
+              {results.map((fighter, idx) => (
+                <li key={idx} style={styles.listItem}>
+                  <a 
+                    href={fighter.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={styles.link}
+                  >
+                    {formatFighterName(fighter.name)}
+                  </a>
+                  <button
+                    onClick={() => addToFavorites(fighter)}
+                    disabled={isFavorite(fighter.name)}
+                    style={isFavorite(fighter.name) ? styles.favoritedButton : styles.addButton}
+                  >
+                    <span style={styles.heartIcon}>♥</span>
+                    {isFavorite(fighter.name) ? "Favorited" : "Add to Favorites"}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* Favorites Column */}
-        <div className="w-full md:w-1/3 bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700 flex items-center">
-            <Heart className="mr-2 fill-red-500 text-red-500" size={20} />
-            Favorite Fighters
-          </h2>
+        <div style={styles.favoritesColumn}>
+          <h2 style={styles.sectionTitle}>Favorite Fighters</h2>
           
           {favorites.length === 0 ? (
-            <p className="text-gray-500 italic">No favorites added yet</p>
+            <p style={styles.emptyText}>No favorites added yet</p>
           ) : (
-            <ul className="divide-y divide-gray-200">
+            <ul style={{ padding: 0, listStyle: "none", margin: 0 }}>
               {[...favorites]
                 .sort((a, b) => getLastName(a.name).localeCompare(getLastName(b.name)))
                 .map((fav) => (
-                  <li key={fav.name} className="py-3 flex items-center justify-between">
-                    <span className="text-gray-800">{formatFighterName(fav.name)}</span>
+                  <li key={fav.name} style={styles.listItem}>
+                    <span style={styles.favoriteName}>{formatFighterName(fav.name)}</span>
                     <button
                       onClick={() => removeFromFavorites(fav.name)}
-                      className="flex items-center px-2 py-1 rounded-md bg-red-50 hover:bg-red-100 text-red-600 text-sm transition duration-200"
+                      style={styles.removeButton}
                     >
-                      <X size={14} className="mr-1" />
-                      Remove
+                      ✕ Remove
                     </button>
                   </li>
                 ))}

@@ -1,0 +1,6517 @@
+[
+  {
+    "name": "DANNY ABBADI",
+    "nickname": "\"THE ASSASSIN\"",
+    "profile_url": "https://www.ufc.com/athlete/danny-abbadi"
+  },
+  {
+    "name": "NARIMAN ABBASSOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/nariman-abbassov"
+  },
+  {
+    "name": "TANK ABBOTT",
+    "nickname": "\"TANK\"",
+    "profile_url": "https://www.ufc.com/athlete/tank-abbott"
+  },
+  {
+    "name": "HAMDY ABDELWAHAB",
+    "nickname": "\"THE HAMMER\"",
+    "profile_url": "https://www.ufc.com/athlete/hamdy-abdelwahab"
+  },
+  {
+    "name": "MANSUR ABDUL-MALIK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mansur-abdul-malik"
+  },
+  {
+    "name": "SHAMIL ABDURAKHIMOV",
+    "nickname": "\"ABREK\"",
+    "profile_url": "https://www.ufc.com/athlete/shamil-abdurakhimov"
+  },
+  {
+    "name": "DAICHI ABE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/daichi-abe"
+  },
+  {
+    "name": "PAPY ABEDI",
+    "nickname": "\"MAKAMBO\"",
+    "profile_url": "https://www.ufc.com/athlete/papy-abedi"
+  },
+  {
+    "name": "KLIDSON ABREU",
+    "nickname": "\"WHITE BEAR\"",
+    "profile_url": "https://www.ufc.com/athlete/klidson-abreu"
+  },
+  {
+    "name": "RICARDO ABREU",
+    "nickname": "\"DEMENTE\"",
+    "profile_url": "https://www.ufc.com/athlete/ricardo-abreu"
+  },
+  {
+    "name": "JOHN ADAJAR",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/john-adajar"
+  },
+  {
+    "name": "JUAN ADAMS",
+    "nickname": "\"THE KRAKEN\"",
+    "profile_url": "https://www.ufc.com/athlete/juan-adams"
+  },
+  {
+    "name": "SCOTT ADAMS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tenk-ebbott"
+  },
+  {
+    "name": "ANTHONY ADAMS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/anthony-adams"
+  },
+  {
+    "name": "ZARRUKH ADASHEV",
+    "nickname": "\"THE LION\"",
+    "profile_url": "https://www.ufc.com/athlete/zarrukh-adashev"
+  },
+  {
+    "name": "ISRAEL ADESANYA",
+    "nickname": "\"THE LAST STYLEBENDER\"",
+    "profile_url": "https://www.ufc.com/athlete/israel-adesanya"
+  },
+  {
+    "name": "SAM ADKINS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/sam-adkins"
+  },
+  {
+    "name": "NICK AGALLAR",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/nick-agallar"
+  },
+  {
+    "name": "MARIYA AGAPOVA",
+    "nickname": "\"MONEY MASHKA\"",
+    "profile_url": "https://www.ufc.com/athlete/mariya-agapova"
+  },
+  {
+    "name": "FABIO AGU",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/fabio-agu"
+  },
+  {
+    "name": "MARCELLO AGUIAR",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/marcello-aguiar"
+  },
+  {
+    "name": "KEVIN AGUILAR",
+    "nickname": "\"ANGEL OF DEATH\"",
+    "profile_url": "https://www.ufc.com/athlete/kevin-aguilar"
+  },
+  {
+    "name": "JESSICA AGUILAR",
+    "nickname": "\"JAG\"",
+    "profile_url": "https://www.ufc.com/athlete/jessica-aguilar"
+  },
+  {
+    "name": "JESUS AGUILAR",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jesus-aguilar"
+  },
+  {
+    "name": "CHRISTIAN AGUILERA",
+    "nickname": "\"THE BEAST\"",
+    "profile_url": "https://www.ufc.com/athlete/christian-aguilera"
+  },
+  {
+    "name": "NICK AGUIRRE",
+    "nickname": "\"SLICK\"",
+    "profile_url": "https://www.ufc.com/athlete/nick-aguirre"
+  },
+  {
+    "name": "ASHIEK AJIM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ashiek-ajim"
+  },
+  {
+    "name": "OMARI AKHMEDOV",
+    "nickname": "\"WOLVERINE\"",
+    "profile_url": "https://www.ufc.com/athlete/omari-akhmedov"
+  },
+  {
+    "name": "YOSHIHIRO AKIYAMA",
+    "nickname": "\"SEXYAMA\"",
+    "profile_url": "https://www.ufc.com/athlete/yoshihiro-akiyama"
+  },
+  {
+    "name": "ROSTEM AKMAN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rostam-akman"
+  },
+  {
+    "name": "MOSTAPHA AL TURK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mostapha-al-turk"
+  },
+  {
+    "name": "RAZAK AL-HASSAN",
+    "nickname": "\"RAZOR\"",
+    "profile_url": "https://www.ufc.com/athlete/razak-al-hassan"
+  },
+  {
+    "name": "ALI AL-QAISI",
+    "nickname": "\"THE ROYAL FIGHTER\"",
+    "profile_url": "https://www.ufc.com/athlete/ali-alqaisi"
+  },
+  {
+    "name": "ABDUL-KAREEM AL-SELWADY",
+    "nickname": "\"PRIDE OF PALESTINE\"",
+    "profile_url": "https://www.ufc.com/athlete/abdul-kareem-al-selwady"
+  },
+  {
+    "name": "HERDEM ALACABEK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/herdem-alacabek"
+  },
+  {
+    "name": "ALATENGHEILI",
+    "nickname": "\"THE MONGOLIAN KNIGHT\"",
+    "profile_url": "https://www.ufc.com/athlete/heili-alateng"
+  },
+  {
+    "name": "AMIR ALBAZI",
+    "nickname": "\"THE PRINCE\"",
+    "profile_url": "https://www.ufc.com/athlete/amir-albazi"
+  },
+  {
+    "name": "JOHN ALBERT",
+    "nickname": "\"PRINCE\"",
+    "profile_url": "https://www.ufc.com/athlete/john-albert"
+  },
+  {
+    "name": "JUNIOR ALBINI",
+    "nickname": "\"BABY\"",
+    "profile_url": "https://www.ufc.com/athlete/junior-albini"
+  },
+  {
+    "name": "WES ALBRITTON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/wes-albritton"
+  },
+  {
+    "name": "ALEXANDRA ALBU",
+    "nickname": "\"STITCH\"",
+    "profile_url": "https://www.ufc.com/athlete/alexandra-albu"
+  },
+  {
+    "name": "IURI ALCANTARA",
+    "nickname": "\"MARAJO\"",
+    "profile_url": "https://www.ufc.com/athlete/iuri-alcantara"
+  },
+  {
+    "name": "ILDEMAR ALCANTARA",
+    "nickname": "\"MARAJO\"",
+    "profile_url": "https://www.ufc.com/athlete/igor-araudzho-1"
+  },
+  {
+    "name": "ALFONSO ALCAREZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/alfonso-alcarez"
+  },
+  {
+    "name": "HECTOR ALDANA",
+    "nickname": "\"EL CHARRO\"",
+    "profile_url": "https://www.ufc.com/athlete/hector-aldana"
+  },
+  {
+    "name": "GILBERT ALDANA",
+    "nickname": "\"EL PELIGROSO\"",
+    "profile_url": "https://www.ufc.com/athlete/gilbert-aldana"
+  },
+  {
+    "name": "IRENE ALDANA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/irene-aldana"
+  },
+  {
+    "name": "JOSE ALDAY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jose-alday"
+  },
+  {
+    "name": "JOSÉ ALDO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jose-aldo"
+  },
+  {
+    "name": "JJ ALDRICH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jj-aldrich"
+  },
+  {
+    "name": "IRINA ALEKSEEVA",
+    "nickname": "\"RUSSIAN RONDA\"",
+    "profile_url": "https://www.ufc.com/athlete/irina-alekseeva"
+  },
+  {
+    "name": "TALITA ALENCAR",
+    "nickname": "\"PROBLEM CHILD \"",
+    "profile_url": "https://www.ufc.com/athlete/talita-alencar"
+  },
+  {
+    "name": "JIM ALERS",
+    "nickname": "\"THE BEAST\"",
+    "profile_url": "https://www.ufc.com/athlete/jim-alers"
+  },
+  {
+    "name": "JOHN ALESSIO",
+    "nickname": "\"THE NATURAL\"",
+    "profile_url": "https://www.ufc.com/athlete/john-alessio"
+  },
+  {
+    "name": "HOUSTON ALEXANDER",
+    "nickname": "\"THE ASSASSIN\"",
+    "profile_url": "https://www.ufc.com/athlete/houston-alexander"
+  },
+  {
+    "name": "LUCAS ALEXANDER",
+    "nickname": "\"THE LION\"",
+    "profile_url": "https://www.ufc.com/athlete/lucas-alexander"
+  },
+  {
+    "name": "MARCIO ALEXANDRE",
+    "nickname": "\"LYOTO\"",
+    "profile_url": "https://www.ufc.com/athlete/marcio-alexandre"
+  },
+  {
+    "name": "OLAF ALFONSO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/olaf-alfonso"
+  },
+  {
+    "name": "BILL ALGEO",
+    "nickname": "\"SENOR PERFECTO\"",
+    "profile_url": "https://www.ufc.com/athlete/bill-algeo"
+  },
+  {
+    "name": "ROYCE ALGER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/royce-alger"
+  },
+  {
+    "name": "ABDUL RAZAK ALHASSAN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/abdul-razak-alhassan"
+  },
+  {
+    "name": "AMIR ALIAKBARI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/amir-aliakbari"
+  },
+  {
+    "name": "SULTAN ALIEV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/sultan-aliev"
+  },
+  {
+    "name": "NURULLO ALIEV",
+    "nickname": "\"TAJIK EAGLE\"",
+    "profile_url": "https://www.ufc.com/athlete/nurullo-aliev"
+  },
+  {
+    "name": "IKRAM ALISKEROV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ikram-aliskerov"
+  },
+  {
+    "name": "LEON ALIU",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/leon-aliu"
+  },
+  {
+    "name": "JOHN ALLAN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/john-allan"
+  },
+  {
+    "name": "ARNOLD ALLEN",
+    "nickname": "\"ALMIGHTY\"",
+    "profile_url": "https://www.ufc.com/athlete/arnold-allen"
+  },
+  {
+    "name": "BRENDAN ALLEN",
+    "nickname": "\"ALL IN\"",
+    "profile_url": "https://www.ufc.com/athlete/brendan-allen"
+  },
+  {
+    "name": "BENNY ALLOWAY",
+    "nickname": "\"BLANCO\"",
+    "profile_url": "https://www.ufc.com/athlete/benny-alloway"
+  },
+  {
+    "name": "ASU ALMABAYEV",
+    "nickname": "\"ZULFIKAR\"",
+    "profile_url": "https://www.ufc.com/athlete/assu-almabayev"
+  },
+  {
+    "name": "BEKZAT ALMAKHAN",
+    "nickname": "\"THE TURAN WARRIOR\"",
+    "profile_url": "https://www.ufc.com/athlete/bekzat-almakhan"
+  },
+  {
+    "name": "ESTEFANI ALMEIDA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/estefani-almeida"
+  },
+  {
+    "name": "THOMAS ALMEIDA",
+    "nickname": "\"THOMINHAS\"",
+    "profile_url": "https://www.ufc.com/athlete/thomas-almeida"
+  },
+  {
+    "name": "ERICKA ALMEIDA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ericka-almeida"
+  },
+  {
+    "name": "RICARDO ALMEIDA",
+    "nickname": "\"BIG DOG\"",
+    "profile_url": "https://www.ufc.com/athlete/ricardo-almeida"
+  },
+  {
+    "name": "CESAR ALMEIDA",
+    "nickname": "\"CESINHA\"",
+    "profile_url": "https://www.ufc.com/athlete/cesar-almeida"
+  },
+  {
+    "name": "LUCAS ALMEIDA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/lucas-almeida"
+  },
+  {
+    "name": "JAILTON ALMEIDA",
+    "nickname": "\"MALHADINHO\"",
+    "profile_url": "https://www.ufc.com/athlete/jailton-almeida"
+  },
+  {
+    "name": "SARAH ALPAR",
+    "nickname": "\"TOO SWEET\"",
+    "profile_url": "https://www.ufc.com/athlete/sarah-alpar"
+  },
+  {
+    "name": "VICTOR ALTAMIRANO",
+    "nickname": "\"EL MAGNIFICO\"",
+    "profile_url": "https://www.ufc.com/athlete/victor-altamirano"
+  },
+  {
+    "name": "PATRICIA ALUJAS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/patricia-alujas"
+  },
+  {
+    "name": "JAIME ALVAREZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jaime-alvarez"
+  },
+  {
+    "name": "EDDIE ALVAREZ",
+    "nickname": "\"THE UNDERGROUND KING\"",
+    "profile_url": "https://www.ufc.com/athlete/eddie-alvarez"
+  },
+  {
+    "name": "SEAN ALVAREZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/sean-alvarez"
+  },
+  {
+    "name": "JOEL ÁLVAREZ",
+    "nickname": "\"EL FENOMENO\"",
+    "profile_url": "https://www.ufc.com/athlete/joel-alvarez"
+  },
+  {
+    "name": "AMILCAR ALVES",
+    "nickname": "\"THE TERMINATOR\"",
+    "profile_url": "https://www.ufc.com/athlete/amilcar-alves"
+  },
+  {
+    "name": "WARLLEY ALVES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/warlley-alves"
+  },
+  {
+    "name": "THIAGO ALVES",
+    "nickname": "\"PITBULL\"",
+    "profile_url": "https://www.ufc.com/athlete/thiago-alves"
+  },
+  {
+    "name": "RAFAEL ALVES",
+    "nickname": "\"THE TURN\"",
+    "profile_url": "https://www.ufc.com/athlete/rafael-alves"
+  },
+  {
+    "name": "SAM ALVEY",
+    "nickname": "\"SMILE'N\"",
+    "profile_url": "https://www.ufc.com/athlete/sam-alvey"
+  },
+  {
+    "name": "ADLAN AMAGOV",
+    "nickname": "\"BORZ\"",
+    "profile_url": "https://www.ufc.com/athlete/adlan-amagov"
+  },
+  {
+    "name": "ALEN AMEDOVSKI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/alen-amedovski"
+  },
+  {
+    "name": "HYDER AMIL",
+    "nickname": "\"THE HURRICANE\"",
+    "profile_url": "https://www.ufc.com/athlete/hyder-amil"
+  },
+  {
+    "name": "MAKWAN AMIRKHANI",
+    "nickname": "\"MR. FINLAND\"",
+    "profile_url": "https://www.ufc.com/athlete/makwan-amirkhani"
+  },
+  {
+    "name": "JAQUELINE AMORIM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jaqueline-amorim"
+  },
+  {
+    "name": "ERYK ANDERS",
+    "nickname": "\"YA BOI\"",
+    "profile_url": "https://www.ufc.com/athlete/eryk-anders"
+  },
+  {
+    "name": "MATT ANDERSEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/matt-andersen"
+  },
+  {
+    "name": "MEGAN ANDERSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/megan-anderson"
+  },
+  {
+    "name": "COREY ANDERSON",
+    "nickname": "\"OVERTIME\"",
+    "profile_url": "https://www.ufc.com/athlete/corey-anderson"
+  },
+  {
+    "name": "ANDY ANDERSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/andy-anderson"
+  },
+  {
+    "name": "LOWELL ANDERSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/shon-alvarez-1"
+  },
+  {
+    "name": "TATSUYA ANDO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tatsuya-ando"
+  },
+  {
+    "name": "VISCARDI ANDRADE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/viscardi-andrade"
+  },
+  {
+    "name": "ALEX ANDRADE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/alex-andrade"
+  },
+  {
+    "name": "JÉSSICA ANDRADE",
+    "nickname": "\"BATE ESTACA\"",
+    "profile_url": "https://www.ufc.com/athlete/jessica-andrade"
+  },
+  {
+    "name": "JERMAINE ANDRE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/shon-alvarez-2"
+  },
+  {
+    "name": "JUAN ANDRES LUNA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/juan-andres-luna"
+  },
+  {
+    "name": "DYLAN ANDREWS",
+    "nickname": "\"THE VILLAIN\"",
+    "profile_url": "https://www.ufc.com/athlete/dylan-andrews"
+  },
+  {
+    "name": "REESE ANDY",
+    "nickname": "\"RIPTIDE\"",
+    "profile_url": "https://www.ufc.com/athlete/reese-andy"
+  },
+  {
+    "name": "JULIUS ANGLICKAS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/julius-anglickas"
+  },
+  {
+    "name": "COLLIN ANGLIN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/collin-anglin"
+  },
+  {
+    "name": "CHAD ANHELIGER",
+    "nickname": "\"THE MONSTER\"",
+    "profile_url": "https://www.ufc.com/athlete/chad-anheliger"
+  },
+  {
+    "name": "YOJI ANJO",
+    "nickname": "\"MR. 200%\"",
+    "profile_url": "https://www.ufc.com/athlete/yoji-anjo"
+  },
+  {
+    "name": "MAGOMED ANKALAEV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/magomed-ankalaev"
+  },
+  {
+    "name": "NINA NUNES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/nina-nunes"
+  },
+  {
+    "name": "GADZHIMURAD ANTIGULOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/gadzhimurad-antigulov"
+  },
+  {
+    "name": "ADAM ANTOLIN",
+    "nickname": "\"CAPTAIN CHAOS\"",
+    "profile_url": "https://www.ufc.com/athlete/adam-antolin"
+  },
+  {
+    "name": "ZU ANYANWU",
+    "nickname": "\"8TH WONDER\"",
+    "profile_url": "https://www.ufc.com/athlete/zu-anyanwu"
+  },
+  {
+    "name": "WANG ANYING",
+    "nickname": "\"SMILEY\"",
+    "profile_url": "https://www.ufc.com/athlete/wang-anying"
+  },
+  {
+    "name": "SHINSHO ANZAI",
+    "nickname": "\"ANIMAL\"",
+    "profile_url": "https://www.ufc.com/athlete/shinsho-anzai"
+  },
+  {
+    "name": "AORIQILENG",
+    "nickname": "\"THE MONGOLIAN MURDERER\"",
+    "profile_url": "https://www.ufc.com/athlete/aoriqileng"
+  },
+  {
+    "name": "JOSH APPELT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/josh-appelt"
+  },
+  {
+    "name": "ROMIE ARAM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/romie-aram"
+  },
+  {
+    "name": "FELIPE ARANTES",
+    "nickname": "\"SERTANEJO\"",
+    "profile_url": "https://www.ufc.com/athlete/felipe-arantes"
+  },
+  {
+    "name": "IGOR ARAUJO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/igor-araujo"
+  },
+  {
+    "name": "VIVIANE ARAÚJO",
+    "nickname": "\"VIVI\"",
+    "profile_url": "https://www.ufc.com/athlete/viviane-araujo"
+  },
+  {
+    "name": "JULIO ARCE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/julio-arce"
+  },
+  {
+    "name": "CARRESE ARCHER",
+    "nickname": "\"ONE PUNCH\"",
+    "profile_url": "https://www.ufc.com/athlete/carrese-archer"
+  },
+  {
+    "name": "ALICE ARDELEAN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/alice-ardelean"
+  },
+  {
+    "name": "DAN ARGUETA",
+    "nickname": "\"THE DETERMINED\"",
+    "profile_url": "https://www.ufc.com/athlete/daniel-argueta"
+  },
+  {
+    "name": "RHEZA ARIANTO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rheza-arianto"
+  },
+  {
+    "name": "HASHEM ARKHAGHA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/hashem-arkhagha"
+  },
+  {
+    "name": "ANDREI ARLOVSKI",
+    "nickname": "\"THE PIT BULL\"",
+    "profile_url": "https://www.ufc.com/athlete/andrei-arlovski"
+  },
+  {
+    "name": "GARRETT ARMFIELD",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/garrett-armfield"
+  },
+  {
+    "name": "AUSTIN ARNETT",
+    "nickname": "\"GOLDEN BOY\"",
+    "profile_url": "https://www.ufc.com/athlete/austin-arnett"
+  },
+  {
+    "name": "ELI ARONOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/eli-aronov"
+  },
+  {
+    "name": "AKBARH ARREOLA",
+    "nickname": "\"EL CABALLERO\"",
+    "profile_url": "https://www.ufc.com/athlete/akbarh-arreola"
+  },
+  {
+    "name": "ANTONIO ARROYO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/antonio-arroyo"
+  },
+  {
+    "name": "MATT ARROYO",
+    "nickname": "\"NO REGARD\"",
+    "profile_url": "https://www.ufc.com/athlete/matt-arroyo"
+  },
+  {
+    "name": "CESAR ARZAMENDIA",
+    "nickname": "\"GOKU\"",
+    "profile_url": "https://www.ufc.com/athlete/cesar-arzamendia"
+  },
+  {
+    "name": "KAI ASAKURA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kai-asakura"
+  },
+  {
+    "name": "TEDDY ASH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/teddy-ash"
+  },
+  {
+    "name": "ARMAN ASHIMOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/arman-ashimov"
+  },
+  {
+    "name": "YANAL ASHMOUZ",
+    "nickname": "\"RED FOX\"",
+    "profile_url": "https://www.ufc.com/athlete/yanal-ashmouz"
+  },
+  {
+    "name": "ASKAR ASKAR",
+    "nickname": "\"AK-47\"",
+    "profile_url": "https://www.ufc.com/athlete/askar-askar"
+  },
+  {
+    "name": "ASKAR ASKAROV",
+    "nickname": "\"BULLET\"",
+    "profile_url": "https://www.ufc.com/athlete/askar-askarov"
+  },
+  {
+    "name": "CYRIL ASKER",
+    "nickname": "\"SILVERBACK\"",
+    "profile_url": "https://www.ufc.com/athlete/cyril-asker"
+  },
+  {
+    "name": "KHUSEIN ASKHABOV",
+    "nickname": "\"NOHCHO\"",
+    "profile_url": "https://www.ufc.com/athlete/khusein-askhabov"
+  },
+  {
+    "name": "SCOTT ASKHAM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/scott-askham"
+  },
+  {
+    "name": "BEN ASKREN",
+    "nickname": "\"FUNKY\"",
+    "profile_url": "https://www.ufc.com/athlete/ben-askren"
+  },
+  {
+    "name": "IBO ASLAN",
+    "nickname": "\"THE LAST OTTOMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/ibo-aslan"
+  },
+  {
+    "name": "TOM ASPINALL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tom-aspinall"
+  },
+  {
+    "name": "BRUNO ASSIS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/bruno-assis"
+  },
+  {
+    "name": "JUNIOR ASSUNCAO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/junior-assuncao"
+  },
+  {
+    "name": "RAPHAEL ASSUNÇÃO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/raphael-assuncao"
+  },
+  {
+    "name": "RICH ATTONITO",
+    "nickname": "\"THE RAGING BULL\"",
+    "profile_url": "https://www.ufc.com/athlete/rich-attonito"
+  },
+  {
+    "name": "OLIVIER AUBIN-MERCIER",
+    "nickname": "\"THE CANADIAN GANGSTER\"",
+    "profile_url": "https://www.ufc.com/athlete/olivier-aubin-mercier"
+  },
+  {
+    "name": "PAT AUDINWOOD",
+    "nickname": "\"AWESOMELY AWESOME\"",
+    "profile_url": "https://www.ufc.com/athlete/pat-audinwood"
+  },
+  {
+    "name": "JOSE AUGUSTO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jose-augusto"
+  },
+  {
+    "name": "LEONARDO AUGUSTO LELECO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/leonardo-augusto-leleco"
+  },
+  {
+    "name": "MARCUS AURELIO",
+    "nickname": "\"MAXIMUS\"",
+    "profile_url": "https://www.ufc.com/athlete/marcus-aurelio"
+  },
+  {
+    "name": "CHRIS AVILA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chris-avila"
+  },
+  {
+    "name": "JULIA AVILA",
+    "nickname": "\"RAGING PANDA\"",
+    "profile_url": "https://www.ufc.com/athlete/julia-avila"
+  },
+  {
+    "name": "JESSIN AYARI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jessin-ayari"
+  },
+  {
+    "name": "OTTMAN AZAITAR",
+    "nickname": "\"BULLDOZER\"",
+    "profile_url": "https://www.ufc.com/athlete/ottman-azaitar"
+  },
+  {
+    "name": "ABU AZAITAR",
+    "nickname": "\"CAPTAIN MOROCCO\"",
+    "profile_url": "https://www.ufc.com/athlete/abu-azaitar"
+  },
+  {
+    "name": "HUNTER AZURE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/hunter-azure"
+  },
+  {
+    "name": "NIKLAS BACKSTROM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/niklas-backstrom"
+  },
+  {
+    "name": "SETH BACZYNSKI",
+    "nickname": "\"POLISH PISTOLA\"",
+    "profile_url": "https://www.ufc.com/athlete/seth-baczynski"
+  },
+  {
+    "name": "ABDUL AZEEM BADAKHSHI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/abdul-azeem-badakhshi"
+  },
+  {
+    "name": "RYAN BADER",
+    "nickname": "\"DARTH\"",
+    "profile_url": "https://www.ufc.com/athlete/ryan-bader"
+  },
+  {
+    "name": "IZABELA BADUREK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/izabela-badurek"
+  },
+  {
+    "name": "MIGUEL BAEZA",
+    "nickname": "\"CARAMEL THUNDER\"",
+    "profile_url": "https://www.ufc.com/athlete/miguel-baeza"
+  },
+  {
+    "name": "ALI BAGAUTINOV",
+    "nickname": "\"PUNCHER\"",
+    "profile_url": "https://www.ufc.com/athlete/ali-bagautinov"
+  },
+  {
+    "name": "MEHDI BAGHDAD",
+    "nickname": "\"THE SULTAN\"",
+    "profile_url": "https://www.ufc.com/athlete/mehdi-baghdad"
+  },
+  {
+    "name": "MELSIK BAGHDASARYAN",
+    "nickname": "\"THE GUN\"",
+    "profile_url": "https://www.ufc.com/athlete/melsik-baghdasaryan"
+  },
+  {
+    "name": "SIYAR BAHADURZADA",
+    "nickname": "\"THE GREAT\"",
+    "profile_url": "https://www.ufc.com/athlete/siyar-bahadurzada"
+  },
+  {
+    "name": "IGNACIO BAHAMONDES",
+    "nickname": "\"LA JAULA\"",
+    "profile_url": "https://www.ufc.com/athlete/ignacio-bahamondes"
+  },
+  {
+    "name": "SHAMAR BAILEY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/shamar-bailey"
+  },
+  {
+    "name": "SCOTT BAKER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/scott-baker"
+  },
+  {
+    "name": "OLUWALE BAMGBOSE",
+    "nickname": "\"HOLY WAR ANGEL\"",
+    "profile_url": "https://www.ufc.com/athlete/oluwale-bamgbose"
+  },
+  {
+    "name": "MARCIN BANDEL",
+    "nickname": "\"BOMBA\"",
+    "profile_url": "https://www.ufc.com/athlete/marcin-bandel"
+  },
+  {
+    "name": "HUMBERTO BANDENAY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/humberto-bandenay"
+  },
+  {
+    "name": "TAE HYUN BANG",
+    "nickname": "\"THE KOREAN COWBOY\"",
+    "profile_url": "https://www.ufc.com/athlete/tae-hyun-bang"
+  },
+  {
+    "name": "SHAUNA BANNON",
+    "nickname": "\"MAMA B\"",
+    "profile_url": "https://www.ufc.com/athlete/shauna-bannon"
+  },
+  {
+    "name": "ANTONIO BANUELOS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/antonio-banuelos"
+  },
+  {
+    "name": "RENAN BARAO",
+    "nickname": "\"THE BARON\"",
+    "profile_url": "https://www.ufc.com/athlete/renan-barao"
+  },
+  {
+    "name": "MAYCEE BARBER",
+    "nickname": "\"THE FUTURE\"",
+    "profile_url": "https://www.ufc.com/athlete/maycee-barber"
+  },
+  {
+    "name": "BRYAN BARBERENA",
+    "nickname": "\"BAM BAM\"",
+    "profile_url": "https://www.ufc.com/athlete/bryan-barberena"
+  },
+  {
+    "name": "DIONE BARBOSA",
+    "nickname": "\"THE WITCH\"",
+    "profile_url": "https://www.ufc.com/athlete/dione-barbosa"
+  },
+  {
+    "name": "EDSON BARBOZA",
+    "nickname": "\"JUNIOR\"",
+    "profile_url": "https://www.ufc.com/athlete/edson-barboza"
+  },
+  {
+    "name": "RAONI BARCELOS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/raoni-barcelos"
+  },
+  {
+    "name": "CARLOS BARETTO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/carlos-baretto"
+  },
+  {
+    "name": "DANIEL BAREZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/daniel-barez"
+  },
+  {
+    "name": "DANNY BARLOW",
+    "nickname": "\"LEFTHAND2GOD\"",
+    "profile_url": "https://www.ufc.com/athlete/danny-barlow"
+  },
+  {
+    "name": "LUKE BARNATT",
+    "nickname": "\"THE BIGSLOW\"",
+    "profile_url": "https://www.ufc.com/athlete/luke-barnatt"
+  },
+  {
+    "name": "JAMES BARNES",
+    "nickname": "\"MOOKA\"",
+    "profile_url": "https://www.ufc.com/athlete/james-barnes"
+  },
+  {
+    "name": "SHONTE BARNES",
+    "nickname": "\"SHYNE\"",
+    "profile_url": "https://www.ufc.com/athlete/shonte-barnes"
+  },
+  {
+    "name": "JOSH BARNETT",
+    "nickname": "\"THE WARMASTER\"",
+    "profile_url": "https://www.ufc.com/athlete/josh-barnett"
+  },
+  {
+    "name": "CHRIS BARNETT",
+    "nickname": "\"BEASTBOY\"",
+    "profile_url": "https://www.ufc.com/athlete/chris-barnett"
+  },
+  {
+    "name": "DAVID BARON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/david-baron"
+  },
+  {
+    "name": "PHIL BARONI",
+    "nickname": "\"NEW YORK BAD ASS\"",
+    "profile_url": "https://www.ufc.com/athlete/phil-baroni"
+  },
+  {
+    "name": "DAN BARRERA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/dan-barrera"
+  },
+  {
+    "name": "PETER BARRETT",
+    "nickname": "\"SLIPPERY\"",
+    "profile_url": "https://www.ufc.com/athlete/peter-barrett"
+  },
+  {
+    "name": "MARC-ANDRE BARRIAULT",
+    "nickname": "\"POWERBAR\"",
+    "profile_url": "https://www.ufc.com/athlete/marc-andre-barriault"
+  },
+  {
+    "name": "ALEXANDRE BARROS",
+    "nickname": "\"BAIXINHO\"",
+    "profile_url": "https://www.ufc.com/athlete/alexandre-barros"
+  },
+  {
+    "name": "FRANCIMAR BARROSO",
+    "nickname": "\"BODAO\"",
+    "profile_url": "https://www.ufc.com/athlete/francimar-barroso"
+  },
+  {
+    "name": "PAT BARRY",
+    "nickname": "\"HD\"",
+    "profile_url": "https://www.ufc.com/athlete/pat-barry"
+  },
+  {
+    "name": "DEAN BARRY",
+    "nickname": "\"THE SNIPER\"",
+    "profile_url": "https://www.ufc.com/athlete/dean-barry"
+  },
+  {
+    "name": "ENRIQUE BARZOLA",
+    "nickname": "\"EL FUERTE\"",
+    "profile_url": "https://www.ufc.com/athlete/enrique-barzola"
+  },
+  {
+    "name": "FARID BASHARAT",
+    "nickname": "\"FEROCIOUS\"",
+    "profile_url": "https://www.ufc.com/athlete/farid-basharat"
+  },
+  {
+    "name": "JAVID BASHARAT",
+    "nickname": "\"THE SNOW LEOPARD\"",
+    "profile_url": "https://www.ufc.com/athlete/javid-basharat"
+  },
+  {
+    "name": "AUSTIN BASHI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/austin-bashi"
+  },
+  {
+    "name": "STEPHEN BASS",
+    "nickname": "\"BIGFISH\"",
+    "profile_url": "https://www.ufc.com/athlete/stephen-bass"
+  },
+  {
+    "name": "SHAYNA BASZLER",
+    "nickname": "\"THE QUEEN OF SPADES\"",
+    "profile_url": "https://www.ufc.com/athlete/shayna-baszler"
+  },
+  {
+    "name": "BAHATEBOLE BATEBOLATI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/bahatebole-batebolati"
+  },
+  {
+    "name": "CAMERON BATES",
+    "nickname": "\"CAMO WRLD\"",
+    "profile_url": "https://www.ufc.com/athlete/cameron-bates"
+  },
+  {
+    "name": "MICHEL BATISTA",
+    "nickname": "\"EL PANDA\"",
+    "profile_url": "https://www.ufc.com/athlete/michel-batista"
+  },
+  {
+    "name": "BRYAN BATTLE",
+    "nickname": "\"THE BUTCHER\"",
+    "profile_url": "https://www.ufc.com/athlete/bryan-battle"
+  },
+  {
+    "name": "ALAN BAUDOT",
+    "nickname": "\"THE BLACK SAMOURAI\"",
+    "profile_url": "https://www.ufc.com/athlete/alan-baudot"
+  },
+  {
+    "name": "MARIO BAUTISTA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mario-bautista"
+  },
+  {
+    "name": "CHRIS BEAL",
+    "nickname": "\"THE REAL DEAL\"",
+    "profile_url": "https://www.ufc.com/athlete/chris-beal"
+  },
+  {
+    "name": "DONAVAN BEARD",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/donavan-beard"
+  },
+  {
+    "name": "ARIEL BECK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ariel-beck"
+  },
+  {
+    "name": "JOHNNY BEDFORD",
+    "nickname": "\"BRUTAL\"",
+    "profile_url": "https://www.ufc.com/athlete/johnny-bedford"
+  },
+  {
+    "name": "ROLANDO BEDOYA",
+    "nickname": "\"THE MACHINE \"",
+    "profile_url": "https://www.ufc.com/athlete/rolando-bedoya"
+  },
+  {
+    "name": "ALLAN BEGOSSO",
+    "nickname": "\"MINI\"",
+    "profile_url": "https://www.ufc.com/athlete/allan-begosso"
+  },
+  {
+    "name": "AZAMAT BEKOEV",
+    "nickname": "\"IRON\"",
+    "profile_url": "https://www.ufc.com/athlete/azamat-bekoev"
+  },
+  {
+    "name": "MIRSAD BEKTIC",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mirsad-bektic"
+  },
+  {
+    "name": "DIANA BELBITA",
+    "nickname": "\"THE WARRIOR PRINCESS\"",
+    "profile_url": "https://www.ufc.com/athlete/diana-belbita"
+  },
+  {
+    "name": "ALAN BELCHER",
+    "nickname": "\"THE TALENT\"",
+    "profile_url": "https://www.ufc.com/athlete/alan-belcher"
+  },
+  {
+    "name": "VITOR BELFORT",
+    "nickname": "\"THE PHENOM\"",
+    "profile_url": "https://www.ufc.com/athlete/vitor-belfort"
+  },
+  {
+    "name": "YOUSRI BELGAROUI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/yousri-belgaroui"
+  },
+  {
+    "name": "CODY BELISLE",
+    "nickname": "\"BODACIOUS\"",
+    "profile_url": "https://www.ufc.com/athlete/cody-belisle"
+  },
+  {
+    "name": "RODOLFO BELLATO",
+    "nickname": "\"TRATOR\"",
+    "profile_url": "https://www.ufc.com/athlete/rodolfo-bellato"
+  },
+  {
+    "name": "DANILO BELLUARDO",
+    "nickname": "\"CATERPILLAR\"",
+    "profile_url": "https://www.ufc.com/athlete/danilo-belluardo"
+  },
+  {
+    "name": "MARCO BELTRAN",
+    "nickname": "\"PSYCHO\"",
+    "profile_url": "https://www.ufc.com/athlete/marco-beltran"
+  },
+  {
+    "name": "JOEY BELTRAN",
+    "nickname": "\"THE MEXICUTIONER\"",
+    "profile_url": "https://www.ufc.com/athlete/joey-beltran"
+  },
+  {
+    "name": "JOSEPH BENAVIDEZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/joseph-benavidez"
+  },
+  {
+    "name": "DAVE BENETEAU",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/dave-beneteau"
+  },
+  {
+    "name": "GABRIEL BENITEZ",
+    "nickname": "\"MOGGLY\"",
+    "profile_url": "https://www.ufc.com/athlete/gabriel-benitez"
+  },
+  {
+    "name": "DEANNA BENNETT",
+    "nickname": "\"VITAMIN D\"",
+    "profile_url": "https://www.ufc.com/athlete/deanna-bennett"
+  },
+  {
+    "name": "LANCE BENOIST",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/lance-benoist"
+  },
+  {
+    "name": "RYAN BENOIT",
+    "nickname": "\"BABY FACE\"",
+    "profile_url": "https://www.ufc.com/athlete/ryan-benoit"
+  },
+  {
+    "name": "STEVE BERGER",
+    "nickname": "\"RED NOSE\"",
+    "profile_url": "https://www.ufc.com/athlete/steve-berger"
+  },
+  {
+    "name": "KENNETH BERGH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kenneth-bergh"
+  },
+  {
+    "name": "KEITH BERISH",
+    "nickname": "\"SHA BANG BANG\"",
+    "profile_url": "https://www.ufc.com/athlete/keith-berish"
+  },
+  {
+    "name": "MANNY BERMUDEZ",
+    "nickname": "\"THE BERMUDEZ TRIANGLE\"",
+    "profile_url": "https://www.ufc.com/athlete/manny-bermudez"
+  },
+  {
+    "name": "DENNIS BERMUDEZ",
+    "nickname": "\"THE MENACE\"",
+    "profile_url": "https://www.ufc.com/athlete/tenisu-hamiyutesu"
+  },
+  {
+    "name": "TALITA BERNARDO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/talita-bernardo"
+  },
+  {
+    "name": "DAVE BERRY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/skott-beyker-0"
+  },
+  {
+    "name": "DIEUSEL BERTO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/deyv-beneto-0"
+  },
+  {
+    "name": "ALLEN BERUBE",
+    "nickname": "\"MONSTAH\"",
+    "profile_url": "https://www.ufc.com/athlete/allen-berube"
+  },
+  {
+    "name": "ANTON BERZIN",
+    "nickname": "\"THE BODY SNATCHER\"",
+    "profile_url": "https://www.ufc.com/athlete/anton-berzin"
+  },
+  {
+    "name": "SCOTT BESSAC",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/skott-beyker-1"
+  },
+  {
+    "name": "MATT BESSETTE",
+    "nickname": "\"THE MANGLER\"",
+    "profile_url": "https://www.ufc.com/athlete/matt-bessette"
+  },
+  {
+    "name": "KHADZHIMURAT BESTAEV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/khadzhimurat-bestaev"
+  },
+  {
+    "name": "KB BHULLAR",
+    "nickname": "\"THE BENGAL\"",
+    "profile_url": "https://www.ufc.com/athlete/kb-bhullar"
+  },
+  {
+    "name": "MAGOMED BIBULATOV",
+    "nickname": "\"CHABORZ\"",
+    "profile_url": "https://www.ufc.com/athlete/magomed-bibulatov"
+  },
+  {
+    "name": "DAVID BIELKHEDEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/david-bielkheden"
+  },
+  {
+    "name": "BLAKE BILDER",
+    "nickname": "\"EL ANIMAL\"",
+    "profile_url": "https://www.ufc.com/athlete/blake-bilder"
+  },
+  {
+    "name": "JONAS BILHARINHO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jonas-bilharinho"
+  },
+  {
+    "name": "XIE BIN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/xie-bin"
+  },
+  {
+    "name": "ANTHONY BIRCHAK",
+    "nickname": "\"EL TORO\"",
+    "profile_url": "https://www.ufc.com/athlete/anthony-birchak"
+  },
+  {
+    "name": "CHRIS BIRCHLER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chris-birchler"
+  },
+  {
+    "name": "MICHAEL BISPING",
+    "nickname": "\"THE COUNT\"",
+    "profile_url": "https://www.ufc.com/athlete/michael-bisping"
+  },
+  {
+    "name": "AMAURY BITETTI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/amaury-bitetti"
+  },
+  {
+    "name": "CAIO BITTENCOURT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/caio-bittencourt"
+  },
+  {
+    "name": "SIMON BIYONG",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/simon-biyong"
+  },
+  {
+    "name": "JAN BŁACHOWICZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jan-blachowicz"
+  },
+  {
+    "name": "JASON BLACK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jason-black"
+  },
+  {
+    "name": "BRAD BLACKBURN",
+    "nickname": "\"BAD\"",
+    "profile_url": "https://www.ufc.com/athlete/brad-blackburn"
+  },
+  {
+    "name": "TOM BLACKLEDGE",
+    "nickname": "\"THE JUGGERNAUT\"",
+    "profile_url": "https://www.ufc.com/athlete/tom-blackledge"
+  },
+  {
+    "name": "SHERRARD BLACKLEDGE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/sherrard-blackledge"
+  },
+  {
+    "name": "DA'MON BLACKSHEAR",
+    "nickname": "\"THE MONSTER\"",
+    "profile_url": "https://www.ufc.com/athlete/damon-blackshear"
+  },
+  {
+    "name": "ERIN BLANCHFIELD",
+    "nickname": "\"COLD BLOODED\"",
+    "profile_url": "https://www.ufc.com/athlete/erin-blanchfield"
+  },
+  {
+    "name": "MAXIMO BLANCO",
+    "nickname": "\"MAXI\"",
+    "profile_url": "https://www.ufc.com/athlete/maximo-blanco"
+  },
+  {
+    "name": "CURTIS BLAYDES",
+    "nickname": "\"RAZOR\"",
+    "profile_url": "https://www.ufc.com/athlete/curtis-blaydes"
+  },
+  {
+    "name": "TEREZA BLEDA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tereza-bleda"
+  },
+  {
+    "name": "BYRON BLOODWORTH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/byron-bloodworth"
+  },
+  {
+    "name": "DASHAWN BOATWRIGHT",
+    "nickname": "\"BUCK, THE 400-POUND SILVERBACK\"",
+    "profile_url": "https://www.ufc.com/athlete/dashawn-boatwright"
+  },
+  {
+    "name": "DANIEL BOBISH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/daniel-bobish"
+  },
+  {
+    "name": "MARK BOCEK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mark-bocek"
+  },
+  {
+    "name": "KYLE BOCHNIAK",
+    "nickname": "\"CRASH\"",
+    "profile_url": "https://www.ufc.com/athlete/kyle-bochniak"
+  },
+  {
+    "name": "JAMES BOCHNOVIC",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/james-bochnovic"
+  },
+  {
+    "name": "TIM BOETSCH",
+    "nickname": "\"THE BARBARIAN\"",
+    "profile_url": "https://www.ufc.com/athlete/tim-boetsch"
+  },
+  {
+    "name": "GALORE BOFANDO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/galore-bofando"
+  },
+  {
+    "name": "ROMAN BOGATOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/roman-bogatov"
+  },
+  {
+    "name": "JERRY BOHLANDER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jerry-bohlander"
+  },
+  {
+    "name": "MANDY BÖHM",
+    "nickname": "\"MONSTER\"",
+    "profile_url": "https://www.ufc.com/athlete/mandy-bohm"
+  },
+  {
+    "name": "GASTON BOLANOS",
+    "nickname": "\"DREAMKILLER\"",
+    "profile_url": "https://www.ufc.com/athlete/gaston-bolanos"
+  },
+  {
+    "name": "DENYS BONDAR",
+    "nickname": "\"PSYCHO\"",
+    "profile_url": "https://www.ufc.com/athlete/denys-bondar"
+  },
+  {
+    "name": "GABRIEL BONFIM",
+    "nickname": "\"MARRETINHA\"",
+    "profile_url": "https://www.ufc.com/athlete/gabriel-bonfim"
+  },
+  {
+    "name": "ISMAEL BONFIM",
+    "nickname": "\"MARRETA\"",
+    "profile_url": "https://www.ufc.com/athlete/ismael-bonfim"
+  },
+  {
+    "name": "JESSE BONGFELDT",
+    "nickname": "\"WATER\"",
+    "profile_url": "https://www.ufc.com/athlete/jesse-bongfeldt"
+  },
+  {
+    "name": "STEPHAN BONNAR",
+    "nickname": "\"AMERICAN PSYCHO\"",
+    "profile_url": "https://www.ufc.com/athlete/stephan-bonnar"
+  },
+  {
+    "name": "MICHAEL BONNETTE",
+    "nickname": "\"NO MERCY\"",
+    "profile_url": "https://www.ufc.com/athlete/michael-bonnette"
+  },
+  {
+    "name": "ROGERIO BONTORIN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rogerio-bontorin"
+  },
+  {
+    "name": "BRANDEN BORDEAUX",
+    "nickname": "\"THE BUTCHER\"",
+    "profile_url": "https://www.ufc.com/athlete/branden-bordeaux"
+  },
+  {
+    "name": "RAY BORG",
+    "nickname": "\"THE TAZMEXICAN DEVIL\"",
+    "profile_url": "https://www.ufc.com/athlete/ray-borg"
+  },
+  {
+    "name": "KEVIN BORJAS",
+    "nickname": "\"EL GALLO NEGRO\"",
+    "profile_url": "https://www.ufc.com/athlete/kevin-borjas"
+  },
+  {
+    "name": "CALEN BORN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/calen-born"
+  },
+  {
+    "name": "CAIO BORRALHO",
+    "nickname": "\"THE NATURAL\"",
+    "profile_url": "https://www.ufc.com/athlete/caio-borralho"
+  },
+  {
+    "name": "ZACH BORREGO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/zach-borrego"
+  },
+  {
+    "name": "VIACHESLAV BORSHCHEV",
+    "nickname": "\"SLAVA CLAUS\"",
+    "profile_url": "https://www.ufc.com/athlete/viacheslav-borshchev"
+  },
+  {
+    "name": "TANNER BOSER",
+    "nickname": "\"THE BULLDOZER\"",
+    "profile_url": "https://www.ufc.com/athlete/tanner-boser"
+  },
+  {
+    "name": "STEVE BOSSE",
+    "nickname": "\"THE BOSS\"",
+    "profile_url": "https://www.ufc.com/athlete/steve-bosse"
+  },
+  {
+    "name": "MARCUS BOSSETT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/skott-beyker-2"
+  },
+  {
+    "name": "POLIANA BOTELHO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/poliana-botelho"
+  },
+  {
+    "name": "TAI BOWDEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/skott-beyker-3"
+  },
+  {
+    "name": "MELTON BOWEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/melton-bowen"
+  },
+  {
+    "name": "KYRON BOWEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kyron-bowen"
+  },
+  {
+    "name": "BRIAN BOWLES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/brian-bowles"
+  },
+  {
+    "name": "ROGER BOWLING",
+    "nickname": "\"RELENTLESS\"",
+    "profile_url": "https://www.ufc.com/athlete/roger-bowling"
+  },
+  {
+    "name": "ANVAR BOYNAZAROV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/anvar-boynazarov"
+  },
+  {
+    "name": "KYLE BRADLEY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kayl-dakas"
+  },
+  {
+    "name": "PAUL BRADLEY",
+    "nickname": "\"THE GENTLEMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/paul-bradley-0"
+  },
+  {
+    "name": "SEAN BRADY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/sean-brady"
+  },
+  {
+    "name": "EBENEZER BRAGA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kayl-dakas-0"
+  },
+  {
+    "name": "RAMIZ BRAHIMAJ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ramiz-brahimaj"
+  },
+  {
+    "name": "JOE BRAMMER",
+    "nickname": "\"THE SOUTH SIDE STRANGLER\"",
+    "profile_url": "https://www.ufc.com/athlete/joe-brammer"
+  },
+  {
+    "name": "DAVID BRANCH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/david-branch"
+  },
+  {
+    "name": "DIEGO BRANDAO",
+    "nickname": "\"DB\"",
+    "profile_url": "https://www.ufc.com/athlete/diego-brandao"
+  },
+  {
+    "name": "BRUNA BRASIL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/bruna-brasil"
+  },
+  {
+    "name": "MARTIN BRAVO",
+    "nickname": "\"EL TORO\"",
+    "profile_url": "https://www.ufc.com/athlete/martin-bravo"
+  },
+  {
+    "name": "MIKE BREEDEN",
+    "nickname": "\"MONEY\"",
+    "profile_url": "https://www.ufc.com/athlete/mike-breeden"
+  },
+  {
+    "name": "TOM BREESE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tom-breese"
+  },
+  {
+    "name": "ELVES BRENER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/elves-brener"
+  },
+  {
+    "name": "CHRIS BRENNAN",
+    "nickname": "\"THE WESTSIDE STRANGLER\"",
+    "profile_url": "https://www.ufc.com/athlete/kris-avila-0"
+  },
+  {
+    "name": "CHARLIE BRENNEMAN",
+    "nickname": "\"THE SPANIARD\"",
+    "profile_url": "https://www.ufc.com/athlete/charlie-brenneman"
+  },
+  {
+    "name": "MARCOS BRIGAGAO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/marcos-brigagao"
+  },
+  {
+    "name": "JASON BRILZ",
+    "nickname": "\"HITMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/jason-brilz"
+  },
+  {
+    "name": "MARCUS BRIMAGE",
+    "nickname": "\"THE BAMA BEAST\"",
+    "profile_url": "https://www.ufc.com/athlete/marcus-brimage"
+  },
+  {
+    "name": "AARON BRINK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/aaron-brink"
+  },
+  {
+    "name": "HENRY BRIONES",
+    "nickname": "\"BURE\"",
+    "profile_url": "https://www.ufc.com/athlete/henry-briones"
+  },
+  {
+    "name": "KAIK BRITO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kaik-brito"
+  },
+  {
+    "name": "JOANDERSON BRITO",
+    "nickname": "\"TUBARAO\"",
+    "profile_url": "https://www.ufc.com/athlete/joanderson-brito"
+  },
+  {
+    "name": "ANTWAIN BRITT",
+    "nickname": "\"THE JUGGERNAUT\"",
+    "profile_url": "https://www.ufc.com/athlete/antwain-britt"
+  },
+  {
+    "name": "JARRED BROOKS",
+    "nickname": "\"THE MONKEY GOD\"",
+    "profile_url": "https://www.ufc.com/athlete/jarred-brooks"
+  },
+  {
+    "name": "WILL BROOKS",
+    "nickname": "\"ILL WILL\"",
+    "profile_url": "https://www.ufc.com/athlete/will-brooks"
+  },
+  {
+    "name": "ROB BROUGHTON",
+    "nickname": "\"THE BEAR\"",
+    "profile_url": "https://www.ufc.com/athlete/rob-broughton"
+  },
+  {
+    "name": "TJ BROWN",
+    "nickname": "\"DOWNTOWN\"",
+    "profile_url": "https://www.ufc.com/athlete/tj-brown"
+  },
+  {
+    "name": "DAMIEN BROWN",
+    "nickname": "\"BEATDOWN\"",
+    "profile_url": "https://www.ufc.com/athlete/damien-brown"
+  },
+  {
+    "name": "RANDY BROWN",
+    "nickname": "\"RUDEBOY\"",
+    "profile_url": "https://www.ufc.com/athlete/randy-brown"
+  },
+  {
+    "name": "HUMBERTO BROWN",
+    "nickname": "\"EL GATO NEGRO\"",
+    "profile_url": "https://www.ufc.com/athlete/humberto-brown"
+  },
+  {
+    "name": "TODD BROWN",
+    "nickname": "\"BULLDOG\"",
+    "profile_url": "https://www.ufc.com/athlete/todd-brown"
+  },
+  {
+    "name": "MATT BROWN",
+    "nickname": "\"THE IMMORTAL\"",
+    "profile_url": "https://www.ufc.com/athlete/matt-brown"
+  },
+  {
+    "name": "MIKE BROWN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mike-brown"
+  },
+  {
+    "name": "TRAVIS BROWNE",
+    "nickname": "\"HAPA\"",
+    "profile_url": "https://www.ufc.com/athlete/travis-browne"
+  },
+  {
+    "name": "JUNIE BROWNING",
+    "nickname": "\"THE LUNATIC\"",
+    "profile_url": "https://www.ufc.com/athlete/junie-browning"
+  },
+  {
+    "name": "JULES BRUCHEZ",
+    "nickname": "\"COTTON MOUTH FROM THE SOUTH\"",
+    "profile_url": "https://www.ufc.com/athlete/jules-bruchez"
+  },
+  {
+    "name": "STEPHANIE LUCIANO",
+    "nickname": "\"RONDINHA\"",
+    "profile_url": "https://www.ufc.com/athlete/stephanie-bruna-luciano"
+  },
+  {
+    "name": "CODY BRUNDAGE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/cody-brundage"
+  },
+  {
+    "name": "STEVE BRUNO",
+    "nickname": "\"HOLLYWOOD\"",
+    "profile_url": "https://www.ufc.com/athlete/steve-bruno"
+  },
+  {
+    "name": "DEREK BRUNSON",
+    "nickname": "\"THE 1\"",
+    "profile_url": "https://www.ufc.com/athlete/derek-brunson"
+  },
+  {
+    "name": "DENNIS BRYANT",
+    "nickname": "\"THE BEARD\"",
+    "profile_url": "https://www.ufc.com/athlete/dennis-bryant"
+  },
+  {
+    "name": "JOSH BRYANT",
+    "nickname": "\"THE BEAST\"",
+    "profile_url": "https://www.ufc.com/athlete/josh-bryant"
+  },
+  {
+    "name": "ROBERT BRYCZEK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/robert-bryczek"
+  },
+  {
+    "name": "LUKASZ BRZESKI",
+    "nickname": "\"THE BULL\"",
+    "profile_url": "https://www.ufc.com/athlete/lukasz-brzeski"
+  },
+  {
+    "name": "JUSTIN BUCHHOLZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/justin-buchholz"
+  },
+  {
+    "name": "JOAQUIN BUCKLEY",
+    "nickname": "\"NEW MANSA\"",
+    "profile_url": "https://www.ufc.com/athlete/joaquin-buckley"
+  },
+  {
+    "name": "MARTIN BUDAY",
+    "nickname": "\"BADYS\"",
+    "profile_url": "https://www.ufc.com/athlete/martin-buday"
+  },
+  {
+    "name": "DYLAN BUDKA",
+    "nickname": "\"THE MINDLESS HULK \"",
+    "profile_url": "https://www.ufc.com/athlete/dylan-budka"
+  },
+  {
+    "name": "PAUL BUENTELLO",
+    "nickname": "\"THE HEADHUNTER\"",
+    "profile_url": "https://www.ufc.com/athlete/paul-buentello"
+  },
+  {
+    "name": "MODESTAS BUKAUSKAS",
+    "nickname": "\"THE BALTIC GLADIATOR\"",
+    "profile_url": "https://www.ufc.com/athlete/modestas-bukauskas"
+  },
+  {
+    "name": "FELIPE BUNES",
+    "nickname": "\"FELIPINHO\"",
+    "profile_url": "https://www.ufc.com/athlete/felipe-bunes"
+  },
+  {
+    "name": "WULIJI BUREN",
+    "nickname": "\"BEAST MASTER\"",
+    "profile_url": "https://www.ufc.com/athlete/wuliji-buren"
+  },
+  {
+    "name": "SHANE BURGOS",
+    "nickname": "\"HURRICANE\"",
+    "profile_url": "https://www.ufc.com/athlete/shane-burgos"
+  },
+  {
+    "name": "JOSHUA BURKMAN",
+    "nickname": "\"THE PEOPLE'S WARRIOR\"",
+    "profile_url": "https://www.ufc.com/athlete/joshua-burkman"
+  },
+  {
+    "name": "JUSTIN BURLINSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/justin-burlinson"
+  },
+  {
+    "name": "NATE BURNARD",
+    "nickname": "\"THE BUFFALO SOLDIER\"",
+    "profile_url": "https://www.ufc.com/athlete/nate-burnard"
+  },
+  {
+    "name": "MADS BURNELL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mads-burnell"
+  },
+  {
+    "name": "MIKEY BURNETT",
+    "nickname": "\"THE EASTSIDE ASSASSIN\"",
+    "profile_url": "https://www.ufc.com/athlete/mikey-burnett"
+  },
+  {
+    "name": "HERBERT BURNS",
+    "nickname": "\"THE BLAZE\"",
+    "profile_url": "https://www.ufc.com/athlete/herbert-burns"
+  },
+  {
+    "name": "KEVIN BURNS",
+    "nickname": "\"THE FIRE\"",
+    "profile_url": "https://www.ufc.com/athlete/kevin-burns"
+  },
+  {
+    "name": "GILBERT BURNS",
+    "nickname": "\"DURINHO\"",
+    "profile_url": "https://www.ufc.com/athlete/gilbert-burns"
+  },
+  {
+    "name": "NAH-SHON BURRELL",
+    "nickname": "\"THE ROCK N ROLLA\"",
+    "profile_url": "https://www.ufc.com/athlete/nah-shon-burrell"
+  },
+  {
+    "name": "MARTIN BUSCHKAMP",
+    "nickname": "\"BARRACUDA\"",
+    "profile_url": "https://www.ufc.com/athlete/martin-buschkamp"
+  },
+  {
+    "name": "BUBBA BUSH",
+    "nickname": "\"THE FIGHTING TEXAS AGGIE\"",
+    "profile_url": "https://www.ufc.com/athlete/bubba-bush"
+  },
+  {
+    "name": "DAKOTA BUSH",
+    "nickname": "\"HAIRY\"",
+    "profile_url": "https://www.ufc.com/athlete/dakota-bush"
+  },
+  {
+    "name": "MURILO BUSTAMANTE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/murilo-bustamante"
+  },
+  {
+    "name": "TODD BUTLER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kevin-byorns-1"
+  },
+  {
+    "name": "JESSE BUTLER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jesse-butler"
+  },
+  {
+    "name": "JP BUYS",
+    "nickname": "\"YOUNG SAVAGE\"",
+    "profile_url": "https://www.ufc.com/athlete/jp-buys"
+  },
+  {
+    "name": "DENNIS BUZUKJA",
+    "nickname": "\"THE GREAT\"",
+    "profile_url": "https://www.ufc.com/athlete/dennis-buzukja"
+  },
+  {
+    "name": "CHARLES BYRD",
+    "nickname": "\"KID DYNAMITE\"",
+    "profile_url": "https://www.ufc.com/athlete/charles-byrd"
+  },
+  {
+    "name": "STEVE BYRNES",
+    "nickname": "\"THE SERGEANT\"",
+    "profile_url": "https://www.ufc.com/athlete/kevin-byorns-2"
+  },
+  {
+    "name": "YAN CABRAL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/yan-cabral"
+  },
+  {
+    "name": "ALEX CACERES",
+    "nickname": "\"BRUCE LEEROY\"",
+    "profile_url": "https://www.ufc.com/athlete/alex-caceres"
+  },
+  {
+    "name": "VINCE CACHERO",
+    "nickname": "\"THE ANOMALY\"",
+    "profile_url": "https://www.ufc.com/athlete/vince-cachero"
+  },
+  {
+    "name": "PRISCILA CACHOEIRA",
+    "nickname": "\"ZOMBIE GIRL\"",
+    "profile_url": "https://www.ufc.com/athlete/priscila-cachoeira"
+  },
+  {
+    "name": "RICKY CALATAYUD",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ricky-calatayud"
+  },
+  {
+    "name": "NICOLLE CALIARI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/nicolle-caliari"
+  },
+  {
+    "name": "TAYLOR CALLENS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/taylor-callens"
+  },
+  {
+    "name": "CYNTHIA CALVILLO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/cynthia-calvillo"
+  },
+  {
+    "name": "FRANK CAMACHO",
+    "nickname": "\"THE CRANK\"",
+    "profile_url": "https://www.ufc.com/athlete/frank-camacho"
+  },
+  {
+    "name": "MATHEUS CAMILO",
+    "nickname": "\"JAGUAR\"",
+    "profile_url": "https://www.ufc.com/athlete/matheus-camilo"
+  },
+  {
+    "name": "FABRICIO CAMOES",
+    "nickname": "\"MORANGO\"",
+    "profile_url": "https://www.ufc.com/athlete/fabricio-camoes"
+  },
+  {
+    "name": "BRIAN CAMOZZI",
+    "nickname": "\"MANTIS\"",
+    "profile_url": "https://www.ufc.com/athlete/brian-camozzi"
+  },
+  {
+    "name": "CHRIS CAMOZZI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chris-camozzi"
+  },
+  {
+    "name": "RICKY CAMP",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ricky-camp"
+  },
+  {
+    "name": "SHANE CAMPBELL",
+    "nickname": "\"SHAOLIN\"",
+    "profile_url": "https://www.ufc.com/athlete/shane-campbell"
+  },
+  {
+    "name": "CHARLIE CAMPBELL",
+    "nickname": "\"THE CANNIBAL \"",
+    "profile_url": "https://www.ufc.com/athlete/charlie-campbell"
+  },
+  {
+    "name": "KITT CAMPBELL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kitt-campbell"
+  },
+  {
+    "name": "JOHN CAMPETELLA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kevin-byorns-3"
+  },
+  {
+    "name": "WAGNER CAMPOS",
+    "nickname": "\"GALETO\"",
+    "profile_url": "https://www.ufc.com/athlete/volkan-ozdemir-0"
+  },
+  {
+    "name": "WILL CAMPUZANO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/will-campuzano"
+  },
+  {
+    "name": "ALEKSA CAMUR",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/aleksa-camur"
+  },
+  {
+    "name": "CHICO CAMUS",
+    "nickname": "\"THE KING\"",
+    "profile_url": "https://www.ufc.com/athlete/chico-camus"
+  },
+  {
+    "name": "ASBEL CANCIO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/artem-lobov-0"
+  },
+  {
+    "name": "CARLOS CANDELARIO",
+    "nickname": "\"THE CANNON\"",
+    "profile_url": "https://www.ufc.com/athlete/carlos-candelario"
+  },
+  {
+    "name": "RONALDO CANDIDO",
+    "nickname": "\"PACMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/ronaldo-candido"
+  },
+  {
+    "name": "LUIZ CANE",
+    "nickname": "\"BANA\"",
+    "profile_url": "https://www.ufc.com/athlete/luiz-cane"
+  },
+  {
+    "name": "GUIDO CANNETTI",
+    "nickname": "\"NINJA\"",
+    "profile_url": "https://www.ufc.com/athlete/guido-cannetti"
+  },
+  {
+    "name": "JARED CANNONIER",
+    "nickname": "\"THA KILLA GORILLA\"",
+    "profile_url": "https://www.ufc.com/athlete/jared-cannonier"
+  },
+  {
+    "name": "STEVE CANTWELL",
+    "nickname": "\"ROBOT\"",
+    "profile_url": "https://www.ufc.com/athlete/steve-cantwell"
+  },
+  {
+    "name": "PAUL CAPALDO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/paul-capaldo"
+  },
+  {
+    "name": "PHIL CARACAPPA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/phil-caracappa"
+  },
+  {
+    "name": "FRANK CARACCI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/skott-beyker-4"
+  },
+  {
+    "name": "GINA CARANO",
+    "nickname": "\"CONVICTION\"",
+    "profile_url": "https://www.ufc.com/athlete/gina-carano"
+  },
+  {
+    "name": "BRYAN CARAWAY",
+    "nickname": "\"KID LIGHTNING\"",
+    "profile_url": "https://www.ufc.com/athlete/bryan-caraway"
+  },
+  {
+    "name": "CHRIS CARIASO",
+    "nickname": "\"KAMIKAZE\"",
+    "profile_url": "https://www.ufc.com/athlete/chris-cariaso"
+  },
+  {
+    "name": "RAFAEL CARINO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/stiv-kantvell-0"
+  },
+  {
+    "name": "ANTONIO CARLOS JUNIOR",
+    "nickname": "\"CARA DE SAPATO\"",
+    "profile_url": "https://www.ufc.com/athlete/antonio-carlos-junior"
+  },
+  {
+    "name": "SPIKE CARLYLE",
+    "nickname": "\"THE ALPHA GINGER\"",
+    "profile_url": "https://www.ufc.com/athlete/spike-carlyle"
+  },
+  {
+    "name": "FRANCIS CARMONT",
+    "nickname": "\"LIMITLESS\"",
+    "profile_url": "https://www.ufc.com/athlete/francis-carmont"
+  },
+  {
+    "name": "LIZ CARMOUCHE",
+    "nickname": "\"GIRLRILLA\"",
+    "profile_url": "https://www.ufc.com/athlete/risu-kamushiyu"
+  },
+  {
+    "name": "ROAN CARNEIRO",
+    "nickname": "\"JUCAO\"",
+    "profile_url": "https://www.ufc.com/athlete/roan-carneiro"
+  },
+  {
+    "name": "ARIANE CARNELOSSI",
+    "nickname": "\"SORRISO\"",
+    "profile_url": "https://www.ufc.com/athlete/ariane-carnelossi"
+  },
+  {
+    "name": "LUANA CAROLINA",
+    "nickname": "\"DREAD\"",
+    "profile_url": "https://www.ufc.com/athlete/luana-carolina"
+  },
+  {
+    "name": "TIM CARON",
+    "nickname": "\"THE BEAR\"",
+    "profile_url": "https://www.ufc.com/athlete/tim-caron"
+  },
+  {
+    "name": "CLAYTON CARPENTER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/clayton-carpenter"
+  },
+  {
+    "name": "CAIN CARRIZOSA",
+    "nickname": "\"THE INSANE\"",
+    "profile_url": "https://www.ufc.com/athlete/cain-carrizosa"
+  },
+  {
+    "name": "SHONIE CARTER",
+    "nickname": "\"MR. INTERNATIONAL\"",
+    "profile_url": "https://www.ufc.com/athlete/shonie-carter"
+  },
+  {
+    "name": "JACK CARTWRIGHT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jack-cartwright"
+  },
+  {
+    "name": "ANTONIO CARVALHO",
+    "nickname": "\"PATO\"",
+    "profile_url": "https://www.ufc.com/athlete/antonio-carvalho"
+  },
+  {
+    "name": "SHANE CARWIN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/shane-carwin"
+  },
+  {
+    "name": "JOHNNY CASE",
+    "nickname": "\"HOLLYWOOD\"",
+    "profile_url": "https://www.ufc.com/athlete/johnny-case"
+  },
+  {
+    "name": "CORTNEY CASEY",
+    "nickname": "\"CAST IRON\"",
+    "profile_url": "https://www.ufc.com/athlete/cortney-casey"
+  },
+  {
+    "name": "KEVIN CASEY",
+    "nickname": "\"KING\"",
+    "profile_url": "https://www.ufc.com/athlete/kevin-casey"
+  },
+  {
+    "name": "DUANE CASON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/duane-cason"
+  },
+  {
+    "name": "JOHN CASTANEDA",
+    "nickname": "\"SEXI MEXI\"",
+    "profile_url": "https://www.ufc.com/athlete/john-castaneda"
+  },
+  {
+    "name": "DANNY CASTILLO",
+    "nickname": "\"LAST CALL\"",
+    "profile_url": "https://www.ufc.com/athlete/danny-castillo"
+  },
+  {
+    "name": "GIL CASTILLO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/gil-castillo"
+  },
+  {
+    "name": "NICK CATONE",
+    "nickname": "\"THE JERSEY DEVIL\"",
+    "profile_url": "https://www.ufc.com/athlete/nick-catone"
+  },
+  {
+    "name": "LUKE CAUDILLO",
+    "nickname": "\"LIL' HULK\"",
+    "profile_url": "https://www.ufc.com/athlete/luke-caudillo"
+  },
+  {
+    "name": "RAFAEL CAVALCANTE",
+    "nickname": "\"FEIJAO\"",
+    "profile_url": "https://www.ufc.com/athlete/rafael-cavalcante"
+  },
+  {
+    "name": "JACQUELINE CAVALCANTI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jacqueline-cavalcanti"
+  },
+  {
+    "name": "MAGNUS CEDENBLAD",
+    "nickname": "\"JYCKEN\"",
+    "profile_url": "https://www.ufc.com/athlete/magnus-cedenblad"
+  },
+  {
+    "name": "YOSDENIS CEDENO",
+    "nickname": "\"THE PINK PANTHER\"",
+    "profile_url": "https://www.ufc.com/athlete/yosdenis-cedeno"
+  },
+  {
+    "name": "HENRY CEJUDO",
+    "nickname": "\"TRIPLE C\"",
+    "profile_url": "https://www.ufc.com/athlete/henry-cejudo"
+  },
+  {
+    "name": "ADAM CELLA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/abner-lloveras-3"
+  },
+  {
+    "name": "VINICIUS CENCI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/vinicius-cenci"
+  },
+  {
+    "name": "KATLYN CERMINARA",
+    "nickname": "\"BLONDE FIGHTER\"",
+    "profile_url": "https://www.ufc.com/athlete/katlyn-cerminara"
+  },
+  {
+    "name": "RAFAEL CERQUEIRA",
+    "nickname": "\"THE LION\"",
+    "profile_url": "https://www.ufc.com/athlete/rafael-cerqueira"
+  },
+  {
+    "name": "ALBERTA CERRA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/alberta-cerra"
+  },
+  {
+    "name": "DONALD CERRONE",
+    "nickname": "\"COWBOY\"",
+    "profile_url": "https://www.ufc.com/athlete/donald-cerrone"
+  },
+  {
+    "name": "LUAN CHAGAS",
+    "nickname": "\"TARZAN\"",
+    "profile_url": "https://www.ufc.com/athlete/luan-chagas"
+  },
+  {
+    "name": "EDGAR CHAIREZ",
+    "nickname": "\"PURO CHICALI\"",
+    "profile_url": "https://www.ufc.com/athlete/edgar-chairez"
+  },
+  {
+    "name": "ANSAR CHALANGOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ansar-chalangov"
+  },
+  {
+    "name": "ALEX CHAMBERS",
+    "nickname": "\"ASTRO GIRL\"",
+    "profile_url": "https://www.ufc.com/athlete/alex-chambers"
+  },
+  {
+    "name": "CHELSEA CHANDLER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chelsea-chandler"
+  },
+  {
+    "name": "MICHAEL CHANDLER",
+    "nickname": "\"IRON\"",
+    "profile_url": "https://www.ufc.com/athlete/michael-chandler"
+  },
+  {
+    "name": "DONNIE CHAPPELL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/donnie-chappell"
+  },
+  {
+    "name": "JOE CHARLES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/maykl-chendler-0"
+  },
+  {
+    "name": "MORGAN CHARRIERE",
+    "nickname": "\"THE LAST PIRATE\"",
+    "profile_url": "https://www.ufc.com/athlete/morgan-charriere"
+  },
+  {
+    "name": "ERNEST CHAVEZ",
+    "nickname": "\"THE MAD TITAN\"",
+    "profile_url": "https://www.ufc.com/athlete/ernest-chavez"
+  },
+  {
+    "name": "DANNY CHAVEZ",
+    "nickname": "\"THE COLOMBIAN WARRIOR\"",
+    "profile_url": "https://www.ufc.com/athlete/danny-chavez"
+  },
+  {
+    "name": "GABRIEL CHECCO",
+    "nickname": "\"ZANGIEF\"",
+    "profile_url": "https://www.ufc.com/athlete/gabriel-checco"
+  },
+  {
+    "name": "ALBERT CHENG",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/albert-cheng"
+  },
+  {
+    "name": "FABIO CHERANT",
+    "nickname": "\"WATER BUFFALO\"",
+    "profile_url": "https://www.ufc.com/athlete/fabio-cherant"
+  },
+  {
+    "name": "MARK CHERICO",
+    "nickname": "\"THE PRIDE OF BLOOMFIELD\"",
+    "profile_url": "https://www.ufc.com/athlete/mark-cherico"
+  },
+  {
+    "name": "MACY CHIASSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/macy-chiasson"
+  },
+  {
+    "name": "MICHAEL CHIESA",
+    "nickname": "\"MAVERICK\"",
+    "profile_url": "https://www.ufc.com/athlete/michael-chiesa"
+  },
+  {
+    "name": "GIGA CHIKADZE",
+    "nickname": "\"NINJA\"",
+    "profile_url": "https://www.ufc.com/athlete/giga-chikadze"
+  },
+  {
+    "name": "KHAMZAT CHIMAEV",
+    "nickname": "\"BORZ\"",
+    "profile_url": "https://www.ufc.com/athlete/khamzat-chimaev"
+  },
+  {
+    "name": "SAKO CHIVITCHIAN",
+    "nickname": "\"THE PSYCHO\"",
+    "profile_url": "https://www.ufc.com/athlete/sako-chivitchian"
+  },
+  {
+    "name": "SEUNGWOO CHOI",
+    "nickname": "\"STING\"",
+    "profile_url": "https://www.ufc.com/athlete/seungwoo-choi"
+  },
+  {
+    "name": "DOOHO CHOI",
+    "nickname": "\"THE KOREAN SUPERBOY\"",
+    "profile_url": "https://www.ufc.com/athlete/dooho-choi"
+  },
+  {
+    "name": "DONGHUN CHOI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/donghun-choi"
+  },
+  {
+    "name": "SEUNGGUK CHOI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/seungguk-choi"
+  },
+  {
+    "name": "JOHN CHOLISH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/john-cholish"
+  },
+  {
+    "name": "RYO CHONAN",
+    "nickname": "\"PIRANHA\"",
+    "profile_url": "https://www.ufc.com/athlete/ryo-chonan"
+  },
+  {
+    "name": "WILL CHOPE",
+    "nickname": "\"THE KILL\"",
+    "profile_url": "https://www.ufc.com/athlete/will-chope"
+  },
+  {
+    "name": "JOACHIM CHRISTENSEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/joachim-christensen"
+  },
+  {
+    "name": "KEVIN CHRISTIAN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kevin-christian"
+  },
+  {
+    "name": "DAN CHRISTISON",
+    "nickname": "\"THE SANDMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/dan-christison"
+  },
+  {
+    "name": "ANTHONY CHRISTODOULOU",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/anthony-christodoulou"
+  },
+  {
+    "name": "YUI CHUL NAM",
+    "nickname": "\"THE KOREAN BULLDOZER\"",
+    "profile_url": "https://www.ufc.com/athlete/yui-chul-nam"
+  },
+  {
+    "name": "CAMERON CHURCH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/cameron-church"
+  },
+  {
+    "name": "MIKE CIESNOLEVICZ",
+    "nickname": "\"MIKE C\"",
+    "profile_url": "https://www.ufc.com/athlete/mike-ciesnolevicz"
+  },
+  {
+    "name": "HANNAH CIFERS",
+    "nickname": "\"SHOCKWAVE\"",
+    "profile_url": "https://www.ufc.com/athlete/hannah-cifers"
+  },
+  {
+    "name": "MISHA CIRKUNOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/misha-cirkunov"
+  },
+  {
+    "name": "DEVIN CLARK",
+    "nickname": "\"BROWN BEAR\"",
+    "profile_url": "https://www.ufc.com/athlete/devin-clark"
+  },
+  {
+    "name": "HEATHER JO CLARK",
+    "nickname": "\"HURRICANE\"",
+    "profile_url": "https://www.ufc.com/athlete/heather-jo-clark"
+  },
+  {
+    "name": "JESSICA-ROSE CLARK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jessica-rose-clark"
+  },
+  {
+    "name": "LAVERNE CLARK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/laverne-clark"
+  },
+  {
+    "name": "LOGAN CLARK",
+    "nickname": "\"THE PINK POUNDER\"",
+    "profile_url": "https://www.ufc.com/athlete/logan-clark"
+  },
+  {
+    "name": "MITCH CLARKE",
+    "nickname": "\"DANGER ZONE\"",
+    "profile_url": "https://www.ufc.com/athlete/mitsuchi-kuraku"
+  },
+  {
+    "name": "RICH CLEMENTI",
+    "nickname": "\"NO LOVE\"",
+    "profile_url": "https://www.ufc.com/athlete/rich-clementi"
+  },
+  {
+    "name": "CHRIS CLEMENTS",
+    "nickname": "\"THE MENACE\"",
+    "profile_url": "https://www.ufc.com/athlete/chris-clements"
+  },
+  {
+    "name": "MARK CLIMACO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mark-climaco"
+  },
+  {
+    "name": "JOSH CLOPTON",
+    "nickname": "\"THE GENTLEMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/josh-clopton"
+  },
+  {
+    "name": "BRIAN COBB",
+    "nickname": "\"THE BANDIT\"",
+    "profile_url": "https://www.ufc.com/athlete/brian-cobb"
+  },
+  {
+    "name": "JOHN COFER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/john-cofer"
+  },
+  {
+    "name": "FELIPE COLARES",
+    "nickname": "\"CABOCAO\"",
+    "profile_url": "https://www.ufc.com/athlete/felipe-colares"
+  },
+  {
+    "name": "COLTIN COLE",
+    "nickname": "\"THE TRUTH\"",
+    "profile_url": "https://www.ufc.com/athlete/coltin-cole-0"
+  },
+  {
+    "name": "CHANDLER COLE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chandler-cole"
+  },
+  {
+    "name": "MARK COLEMAN",
+    "nickname": "\"THE HAMMER\"",
+    "profile_url": "https://www.ufc.com/athlete/mark-coleman"
+  },
+  {
+    "name": "CLAY COLLARD",
+    "nickname": "\"CASSIUS\"",
+    "profile_url": "https://www.ufc.com/athlete/clay-collard"
+  },
+  {
+    "name": "JAMIE COLLEEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jamie-colleen"
+  },
+  {
+    "name": "JAKE COLLIER",
+    "nickname": "\"THE PROTOTYPE\"",
+    "profile_url": "https://www.ufc.com/athlete/jake-collier"
+  },
+  {
+    "name": "CHRISTIAN COLOMBO",
+    "nickname": "\"GODZILLA\"",
+    "profile_url": "https://www.ufc.com/athlete/christian-colombo"
+  },
+  {
+    "name": "WES COMBS",
+    "nickname": "\"THE SOLDIER\"",
+    "profile_url": "https://www.ufc.com/athlete/wes-combs"
+  },
+  {
+    "name": "CARLOS CONDIT",
+    "nickname": "\"THE NATURAL BORN KILLER\"",
+    "profile_url": "https://www.ufc.com/athlete/carlos-condit"
+  },
+  {
+    "name": "CHRIS CONDO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chris-condo"
+  },
+  {
+    "name": "WANG CONG",
+    "nickname": "\"THE JOKER\"",
+    "profile_url": "https://www.ufc.com/athlete/wang-cong"
+  },
+  {
+    "name": "TRISTAN CONNELLY",
+    "nickname": "\"BOONDOCK\"",
+    "profile_url": "https://www.ufc.com/athlete/tristan-connelly"
+  },
+  {
+    "name": "MARCOS CONRADO JUNIOR",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/marcos-conrado-junior"
+  },
+  {
+    "name": "BOB COOK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/brayen-kobb-2"
+  },
+  {
+    "name": "AMANDA COOPER",
+    "nickname": "\"ABC\"",
+    "profile_url": "https://www.ufc.com/athlete/amanda-cooper"
+  },
+  {
+    "name": "CHRIS COPE",
+    "nickname": "\"C-MURDER\"",
+    "profile_url": "https://www.ufc.com/athlete/chris-cope"
+  },
+  {
+    "name": "KIT COPE",
+    "nickname": "\"HAVOC\"",
+    "profile_url": "https://www.ufc.com/athlete/kit-cope"
+  },
+  {
+    "name": "JOSH COPELAND",
+    "nickname": "\"CUDDLY BEAR\"",
+    "profile_url": "https://www.ufc.com/athlete/josh-copeland"
+  },
+  {
+    "name": "MICHAEL CORA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/michael-cora"
+  },
+  {
+    "name": "AKIRA CORASSANI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/akira-corassani"
+  },
+  {
+    "name": "CORY CORBIN",
+    "nickname": "\"HAMMA\"",
+    "profile_url": "https://www.ufc.com/athlete/cory-corbin"
+  },
+  {
+    "name": "DANIEL CORMIER",
+    "nickname": "\"DC\"",
+    "profile_url": "https://www.ufc.com/athlete/daniel-cormier"
+  },
+  {
+    "name": "NORA CORNOLLE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/nora-cornolle"
+  },
+  {
+    "name": "JONATHAN CORREA",
+    "nickname": "\"PUERTO RICAN RAMBO\"",
+    "profile_url": "https://www.ufc.com/athlete/jonathan-correa"
+  },
+  {
+    "name": "BETHE CORREIA",
+    "nickname": "\"PITBULL\"",
+    "profile_url": "https://www.ufc.com/athlete/bethe-correia"
+  },
+  {
+    "name": "WESLEY CORREIRA",
+    "nickname": "\"CABBAGE\"",
+    "profile_url": "https://www.ufc.com/athlete/wesley-correira"
+  },
+  {
+    "name": "WALDO CORTES ACOSTA",
+    "nickname": "\"SALSA BOY\"",
+    "profile_url": "https://www.ufc.com/athlete/waldo-cortes-acosta"
+  },
+  {
+    "name": "REYES CORTEZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/reyes-cortez"
+  },
+  {
+    "name": "TRACY CORTEZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tracy-cortez"
+  },
+  {
+    "name": "ORION COSCE",
+    "nickname": "\"GALAXY\"",
+    "profile_url": "https://www.ufc.com/athlete/orion-cosce"
+  },
+  {
+    "name": "LOUIS COSCE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/louis-cosce"
+  },
+  {
+    "name": "RANDY COSTA",
+    "nickname": "\"THE ZOHAN\"",
+    "profile_url": "https://www.ufc.com/athlete/randy-costa"
+  },
+  {
+    "name": "DAVI COSTA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/davi-costa"
+  },
+  {
+    "name": "ALESSANDRO COSTA",
+    "nickname": "\"NONO\"",
+    "profile_url": "https://www.ufc.com/athlete/alessandro-costa"
+  },
+  {
+    "name": "PAULO COSTA",
+    "nickname": "\"THE ERASER\"",
+    "profile_url": "https://www.ufc.com/athlete/paulo-costa"
+  },
+  {
+    "name": "MELQUIZAEL COSTA",
+    "nickname": "\"MELK CAUTHY\"",
+    "profile_url": "https://www.ufc.com/athlete/melquizael-costa"
+  },
+  {
+    "name": "OSCAR COTA",
+    "nickname": "\"ELEVATION\"",
+    "profile_url": "https://www.ufc.com/athlete/oscar-cota"
+  },
+  {
+    "name": "PATRICK COTE",
+    "nickname": "\"THE PREDATOR\"",
+    "profile_url": "https://www.ufc.com/athlete/patrick-cote"
+  },
+  {
+    "name": "J.C. COTTRELL",
+    "nickname": "\"SUPERSTAR\"",
+    "profile_url": "https://www.ufc.com/athlete/jc-cottrell"
+  },
+  {
+    "name": "JR COUGHRAN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jr-coughran-0"
+  },
+  {
+    "name": "RASHAD COULTER",
+    "nickname": "\"DAYWALKER\"",
+    "profile_url": "https://www.ufc.com/athlete/rashad-coulter"
+  },
+  {
+    "name": "RYAN COUTURE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ryan-couture"
+  },
+  {
+    "name": "RANDY COUTURE",
+    "nickname": "\"THE NATURAL\"",
+    "profile_url": "https://www.ufc.com/athlete/randy-couture"
+  },
+  {
+    "name": "COLBY COVINGTON",
+    "nickname": "\"CHAOS\"",
+    "profile_url": "https://www.ufc.com/athlete/colby-covington"
+  },
+  {
+    "name": "HAILEY COWAN",
+    "nickname": "\"ALL HAIL\"",
+    "profile_url": "https://www.ufc.com/athlete/hailey-cowan"
+  },
+  {
+    "name": "JEFF COX",
+    "nickname": "\"THE GRINDER\"",
+    "profile_url": "https://www.ufc.com/athlete/jeff-cox"
+  },
+  {
+    "name": "NATHAN COY",
+    "nickname": "\"SOULFORCE\"",
+    "profile_url": "https://www.ufc.com/athlete/neisan-koi"
+  },
+  {
+    "name": "ANDREW CRAIG",
+    "nickname": "\"HIGHLIGHT\"",
+    "profile_url": "https://www.ufc.com/athlete/andrew-craig"
+  },
+  {
+    "name": "PAUL CRAIG",
+    "nickname": "\"BEARJEW\"",
+    "profile_url": "https://www.ufc.com/athlete/paul-craig"
+  },
+  {
+    "name": "DAN CRAMER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/dan-cramer"
+  },
+  {
+    "name": "ALBERTO CRANE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/alberto-crane"
+  },
+  {
+    "name": "TIM CREDEUR",
+    "nickname": "\"CRAZY\"",
+    "profile_url": "https://www.ufc.com/athlete/tim-credeur"
+  },
+  {
+    "name": "PAUL CREIGHTON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/paul-creighton"
+  },
+  {
+    "name": "MIRKO CRO COP",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mirko-cro-cop"
+  },
+  {
+    "name": "EDILBERTO CROCOTA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/edilberto-crocota"
+  },
+  {
+    "name": "KEVIN CROOM",
+    "nickname": "\"CRASH\"",
+    "profile_url": "https://www.ufc.com/athlete/kevin-croom"
+  },
+  {
+    "name": "KIEFER CROSBIE",
+    "nickname": "\"BDK\"",
+    "profile_url": "https://www.ufc.com/athlete/kiefer-crosbie"
+  },
+  {
+    "name": "KENNETH CROSS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kenneth-cross"
+  },
+  {
+    "name": "ALLEN CROWDER",
+    "nickname": "\"PRETTY BOY\"",
+    "profile_url": "https://www.ufc.com/athlete/allen-crowder"
+  },
+  {
+    "name": "DARON CRUICKSHANK",
+    "nickname": "\"DETROIT SUPERSTAR\"",
+    "profile_url": "https://www.ufc.com/athlete/daron-cruickshank"
+  },
+  {
+    "name": "RICHARD CRUNKILTON JR.",
+    "nickname": "\"CLEAT\"",
+    "profile_url": "https://www.ufc.com/athlete/richard-crunkilton-jr"
+  },
+  {
+    "name": "JIMMY CRUTE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jim-crute"
+  },
+  {
+    "name": "AALON CRUZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/aalon-cruz"
+  },
+  {
+    "name": "MARCIO CRUZ",
+    "nickname": "\"PE DE PANO\"",
+    "profile_url": "https://www.ufc.com/athlete/marcio-cruz"
+  },
+  {
+    "name": "DOMINICK CRUZ",
+    "nickname": "\"THE DOMINATOR\"",
+    "profile_url": "https://www.ufc.com/athlete/dominick-cruz"
+  },
+  {
+    "name": "TIMMY CUAMBA",
+    "nickname": "\"TWILIGHT \"",
+    "profile_url": "https://www.ufc.com/athlete/timothy-cuamba"
+  },
+  {
+    "name": "JAY CUCCINIELLO",
+    "nickname": "\"MELLOWFELLOW\"",
+    "profile_url": "https://www.ufc.com/athlete/jay-cucciniello"
+  },
+  {
+    "name": "EMILIO CUELLAR",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/emilio-cuellar"
+  },
+  {
+    "name": "JOSH CULIBAO",
+    "nickname": "\"KUYA\"",
+    "profile_url": "https://www.ufc.com/athlete/joshua-culibao"
+  },
+  {
+    "name": "ZAK CUMMINGS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/satsuku-kaminkusu"
+  },
+  {
+    "name": "PATRICK CUMMINS",
+    "nickname": "\"DURKIN\"",
+    "profile_url": "https://www.ufc.com/athlete/hatoritsuku-kaminsu"
+  },
+  {
+    "name": "LUKE CUMMO",
+    "nickname": "\"THE SILENT ASSASSIN\"",
+    "profile_url": "https://www.ufc.com/athlete/luke-cummo"
+  },
+  {
+    "name": "HUGO CUNHA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/hugo-cunha"
+  },
+  {
+    "name": "ALTON CUNNINGHAM",
+    "nickname": "\"THE BO-MAN\"",
+    "profile_url": "https://www.ufc.com/athlete/alton-cunningham"
+  },
+  {
+    "name": "AJ CUNNINGHAM",
+    "nickname": "\"THE SAVAGE\"",
+    "profile_url": "https://www.ufc.com/athlete/aj-cunningham"
+  },
+  {
+    "name": "SANTO CURATOLO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/santo-curatolo"
+  },
+  {
+    "name": "LARRY CURETON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/lyuk-kummo-0"
+  },
+  {
+    "name": "KAILIN CURRAN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kailin-curran"
+  },
+  {
+    "name": "JEFF CURRAN",
+    "nickname": "\"BIG FROG\"",
+    "profile_url": "https://www.ufc.com/athlete/jeff-curran"
+  },
+  {
+    "name": "CHRIS CURTIS",
+    "nickname": "\"ACTION-MAN\"",
+    "profile_url": "https://www.ufc.com/athlete/chris-curtis"
+  },
+  {
+    "name": "ION CUTELABA",
+    "nickname": "\"THE HULK\"",
+    "profile_url": "https://www.ufc.com/athlete/ion-cutelaba"
+  },
+  {
+    "name": "GLEIDSON CUTIS",
+    "nickname": "\"PONEY\"",
+    "profile_url": "https://www.ufc.com/athlete/gleidson-cutis"
+  },
+  {
+    "name": "CRIS CYBORG",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/cris-cyborg"
+  },
+  {
+    "name": "DIEGO HENRIQUE DA SILVA",
+    "nickname": "\"GAUCHO\"",
+    "profile_url": "https://www.ufc.com/athlete/diego-henrique-da-silva"
+  },
+  {
+    "name": "ALEX DA SILVA",
+    "nickname": "\"LEKO\"",
+    "profile_url": "https://www.ufc.com/athlete/alex-da-silva"
+  },
+  {
+    "name": "HENRIQUE DA SILVA",
+    "nickname": "\"FRANKENSTEIN\"",
+    "profile_url": "https://www.ufc.com/athlete/henrique-da-silva"
+  },
+  {
+    "name": "ARIANE DA SILVA",
+    "nickname": "\"THE QUEEN\"",
+    "profile_url": "https://www.ufc.com/athlete/ariane-da-silva"
+  },
+  {
+    "name": "HENRIQUE DA SILVA LOPES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/henrique-da-silva-lopes"
+  },
+  {
+    "name": "DAYANA DA SILVA SANTOS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/dayana-da-silva-santos"
+  },
+  {
+    "name": "MARCUS DA SILVIERA",
+    "nickname": "\"CONAN\"",
+    "profile_url": "https://www.ufc.com/athlete/marcus-da-silviera"
+  },
+  {
+    "name": "NICOLAS DALBY",
+    "nickname": "\"DANISH DYNAMITE\"",
+    "profile_url": "https://www.ufc.com/athlete/nicolas-dalby"
+  },
+  {
+    "name": "PAUL DALEY",
+    "nickname": "\"SEMTEX\"",
+    "profile_url": "https://www.ufc.com/athlete/paul-daley"
+  },
+  {
+    "name": "AISLING DALY",
+    "nickname": "\"AIS THE BASH\"",
+    "profile_url": "https://www.ufc.com/athlete/aisling-daly"
+  },
+  {
+    "name": "LEONARDO DAMIANI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/leonardo-damiani"
+  },
+  {
+    "name": "RODRIGO DAMM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rodrigo-damm"
+  },
+  {
+    "name": "BATGEREL DANAA",
+    "nickname": "\"STORM\"",
+    "profile_url": "https://www.ufc.com/athlete/batgerel-danaa"
+  },
+  {
+    "name": "CINDY DANDOIS",
+    "nickname": "\"BATTLE CAT\"",
+    "profile_url": "https://www.ufc.com/athlete/cindy-dandois"
+  },
+  {
+    "name": "PETER DANESOE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/peter-danesoe"
+  },
+  {
+    "name": "JARJIS DANHO",
+    "nickname": "\"MAN MOUNTAIN\"",
+    "profile_url": "https://www.ufc.com/athlete/jarjis-danho"
+  },
+  {
+    "name": "JOSE DANIEL MEDINA",
+    "nickname": "\"CHICHO\"",
+    "profile_url": "https://www.ufc.com/athlete/jose-daniel-medina"
+  },
+  {
+    "name": "ALEXANDRE DANTAS",
+    "nickname": "\"CAFE\"",
+    "profile_url": "https://www.ufc.com/athlete/alexandre-dantas"
+  },
+  {
+    "name": "MAC DANZIG",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mac-danzig"
+  },
+  {
+    "name": "BENEIL DARIUSH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/beneil-dariush"
+  },
+  {
+    "name": "SEAN DAUGHTERY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/sean-daughtery"
+  },
+  {
+    "name": "KYLE DAUKAUS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kyle-daukaus"
+  },
+  {
+    "name": "CHRIS DAUKAUS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chris-daukaus"
+  },
+  {
+    "name": "BRANDON DAVIS",
+    "nickname": "\"KILLER B\"",
+    "profile_url": "https://www.ufc.com/athlete/brandon-davis"
+  },
+  {
+    "name": "MIKE DAVIS",
+    "nickname": "\"BEAST BOY\"",
+    "profile_url": "https://www.ufc.com/athlete/mike-davis"
+  },
+  {
+    "name": "ALEXIS DAVIS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/arekushisu-teihisu"
+  },
+  {
+    "name": "PHIL DAVIS",
+    "nickname": "\"MR. WONDERFUL\"",
+    "profile_url": "https://www.ufc.com/athlete/phil-davis"
+  },
+  {
+    "name": "MARCUS DAVIS",
+    "nickname": "\"THE IRISH HAND GRENADE\"",
+    "profile_url": "https://www.ufc.com/athlete/marcus-davis"
+  },
+  {
+    "name": "RICK DAVIS",
+    "nickname": "\"THE FLYING SQUIRREL\"",
+    "profile_url": "https://www.ufc.com/athlete/rick-davis"
+  },
+  {
+    "name": "HAKEEM DAWODU",
+    "nickname": "\"MEAN\"",
+    "profile_url": "https://www.ufc.com/athlete/hakeem-dawodu"
+  },
+  {
+    "name": "GRANT DAWSON",
+    "nickname": "\"KGD\"",
+    "profile_url": "https://www.ufc.com/athlete/grant-dawson"
+  },
+  {
+    "name": "MARTIN DAY",
+    "nickname": "\"THE SPARTAN\"",
+    "profile_url": "https://www.ufc.com/athlete/martin-day"
+  },
+  {
+    "name": "JASON DAY",
+    "nickname": "\"DOOMS\"",
+    "profile_url": "https://www.ufc.com/athlete/jason-day"
+  },
+  {
+    "name": "ANGEL DE ANDA",
+    "nickname": "\"THE DREAM\"",
+    "profile_url": "https://www.ufc.com/athlete/angel-de-anda"
+  },
+  {
+    "name": "YORGAN DE CASTRO",
+    "nickname": "\"THE MAD TITAN\"",
+    "profile_url": "https://www.ufc.com/athlete/yorgan-de-castro"
+  },
+  {
+    "name": "RAFAEL DE FREITAS",
+    "nickname": "\"BARATA (COCKROACH)\"",
+    "profile_url": "https://www.ufc.com/athlete/rafael-de-freitas"
+  },
+  {
+    "name": "GERALDO DE FREITAS JR.",
+    "nickname": "\"SPARTAN\"",
+    "profile_url": "https://www.ufc.com/athlete/gerlado-de-freitas-jr"
+  },
+  {
+    "name": "PHIL DE FRIES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/phil-de-fries"
+  },
+  {
+    "name": "CHRIS DE LA ROCHA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chris-de-la-rocha"
+  },
+  {
+    "name": "MARK DE LA ROSA",
+    "nickname": "\"BUMBLEBEE\"",
+    "profile_url": "https://www.ufc.com/athlete/mark-de-la-rosa"
+  },
+  {
+    "name": "MONTANA DE LA ROSA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/montana-de-la-rosa"
+  },
+  {
+    "name": "MIKE DE LA TORRE",
+    "nickname": "\"EL CUCUY\"",
+    "profile_url": "https://www.ufc.com/athlete/mike-de-la-torre"
+  },
+  {
+    "name": "MARCOS ROGERIO DE LIMA",
+    "nickname": "\"PEZAO\"",
+    "profile_url": "https://www.ufc.com/athlete/marcos-rogerio-de-lima"
+  },
+  {
+    "name": "RODRIGO DE LIMA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rodrigo-de-lima"
+  },
+  {
+    "name": "JORGE DE OLIVEIRA",
+    "nickname": "\"BLADE\"",
+    "profile_url": "https://www.ufc.com/athlete/jorge-de-oliveira"
+  },
+  {
+    "name": "LEONARDO DE OLIVEIRA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/leonardo-de-oliveira"
+  },
+  {
+    "name": "ISABELA DE PADUA",
+    "nickname": "\"BELINHA\"",
+    "profile_url": "https://www.ufc.com/athlete/isabela-de-padua"
+  },
+  {
+    "name": "GLORIA DE PAULA",
+    "nickname": "\"GLORINHA\"",
+    "profile_url": "https://www.ufc.com/athlete/gloria-de-paula"
+  },
+  {
+    "name": "GERMAINE DE RANDAMIE",
+    "nickname": "\"THE IRON LADY\"",
+    "profile_url": "https://www.ufc.com/athlete/germaine-de-randamie"
+  },
+  {
+    "name": "REINIER DE RIDDER",
+    "nickname": "\"RDR\"",
+    "profile_url": "https://www.ufc.com/athlete/reinier-de-ridder"
+  },
+  {
+    "name": "CARLS JOHN DE TOMAS",
+    "nickname": "\"CJ\"",
+    "profile_url": "https://www.ufc.com/athlete/carls-john-de-tomas"
+  },
+  {
+    "name": "CARL DEATON",
+    "nickname": "\"THE ANISHINAABE KID\"",
+    "profile_url": "https://www.ufc.com/athlete/carl-deaton"
+  },
+  {
+    "name": "TOM DEBLASS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tom-aspinell-0"
+  },
+  {
+    "name": "SHANE DEL ROSARIO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/shane-del-rosario"
+  },
+  {
+    "name": "WALLEN DEL ROSARIO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/wallen-del-rosario"
+  },
+  {
+    "name": "YADIER DEL VALLE",
+    "nickname": "\"THE CUBAN PROBLEM\"",
+    "profile_url": "https://www.ufc.com/athlete/yadier-del-valle"
+  },
+  {
+    "name": "ROLANDO DELGADO",
+    "nickname": "\"THE CRAZY CUBAN\"",
+    "profile_url": "https://www.ufc.com/athlete/rolando-delgado"
+  },
+  {
+    "name": "JOSE MIGUEL DELGADO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jose-delgado"
+  },
+  {
+    "name": "ANTE DELIJA",
+    "nickname": "\"WALKING TROUBLE\"",
+    "profile_url": "https://www.ufc.com/athlete/ante-delija"
+  },
+  {
+    "name": "JACK DELLA MADDALENA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jack-della-maddalena"
+  },
+  {
+    "name": "ROLAND DELORME",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/roland-delorme"
+  },
+  {
+    "name": "JASON DELUCIA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jason-delucia"
+  },
+  {
+    "name": "VANESSA DEMOPOULOS",
+    "nickname": "\"LIL MONSTER\"",
+    "profile_url": "https://www.ufc.com/athlete/vanessa-demopoulos"
+  },
+  {
+    "name": "CHRIS DEMPSEY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chris-dempsey"
+  },
+  {
+    "name": "NICK DENIS",
+    "nickname": "\"THE NINJA OF LOVE\"",
+    "profile_url": "https://www.ufc.com/athlete/nick-denis"
+  },
+  {
+    "name": "JASON DENT",
+    "nickname": "\"DYNAMITE\"",
+    "profile_url": "https://www.ufc.com/athlete/jason-dent"
+  },
+  {
+    "name": "MACKENZIE DERN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mackenzie-dern"
+  },
+  {
+    "name": "TONY DESOUZA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tony-desouza"
+  },
+  {
+    "name": "ROBELIS DESPAIGNE",
+    "nickname": "\"THE BIG BOY\"",
+    "profile_url": "https://www.ufc.com/athlete/robelis-despaigne"
+  },
+  {
+    "name": "EDWIN DEWEES",
+    "nickname": "\"BABYFACE\"",
+    "profile_url": "https://www.ufc.com/athlete/edwin-dewees"
+  },
+  {
+    "name": "ALESSIO DI CHIRICO",
+    "nickname": "\"MANZO\"",
+    "profile_url": "https://www.ufc.com/athlete/alessio-di-chirico"
+  },
+  {
+    "name": "MICOL DI SEGNI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/micol-di-segni"
+  },
+  {
+    "name": "CYRILLE DIABATE",
+    "nickname": "\"THE SNAKE\"",
+    "profile_url": "https://www.ufc.com/athlete/cyrille-diabate"
+  },
+  {
+    "name": "MARC DIAKIESE",
+    "nickname": "\"BONECRUSHER\"",
+    "profile_url": "https://www.ufc.com/athlete/marc-diakiese"
+  },
+  {
+    "name": "TYLER DIAMOND",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tyler-diamond"
+  },
+  {
+    "name": "BLOOD DIAMOND",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mike-diamond"
+  },
+  {
+    "name": "HACRAN DIAS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/hacran-dias"
+  },
+  {
+    "name": "VICTOR DIAS",
+    "nickname": "\"CRAZY HORSE\"",
+    "profile_url": "https://www.ufc.com/athlete/victor-dias"
+  },
+  {
+    "name": "ELDO XAVIER DIAS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/eldo-xavier-dias"
+  },
+  {
+    "name": "ADRIAN DIAZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/adrian-diaz"
+  },
+  {
+    "name": "NATE DIAZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/nate-diaz"
+  },
+  {
+    "name": "NICK DIAZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/nick-diaz"
+  },
+  {
+    "name": "OZZY DIAZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ozzy-diaz"
+  },
+  {
+    "name": "TJ DILLASHAW",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tj-dillashaw"
+  },
+  {
+    "name": "JHONATA DINIZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jhonata-diniz"
+  },
+  {
+    "name": "RICO DISCIULLO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rico-disciullo"
+  },
+  {
+    "name": "MATT DIXON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/matt-dixon"
+  },
+  {
+    "name": "RUSSELL DOANE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/russell-doane"
+  },
+  {
+    "name": "DREW DOBER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/drew-dober"
+  },
+  {
+    "name": "SHANA DOBSON",
+    "nickname": "\"DANGER\"",
+    "profile_url": "https://www.ufc.com/athlete/shana-dobson"
+  },
+  {
+    "name": "AJ DOBSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/aj-dobson"
+  },
+  {
+    "name": "DAVID DODD",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/david-dodd"
+  },
+  {
+    "name": "JOHN DODSON",
+    "nickname": "\"THE MAGICIAN\"",
+    "profile_url": "https://www.ufc.com/athlete/shiyon-totsutoson"
+  },
+  {
+    "name": "JOE DOERKSEN",
+    "nickname": "\"EL DIRTE\"",
+    "profile_url": "https://www.ufc.com/athlete/joe-doerksen"
+  },
+  {
+    "name": "ROMAN DOLIDZE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/roman-dolidze"
+  },
+  {
+    "name": "CAMERON DOLLAR",
+    "nickname": "\"MONEY MAN\"",
+    "profile_url": "https://www.ufc.com/athlete/cameron-dollar"
+  },
+  {
+    "name": "CB DOLLAWAY",
+    "nickname": "\"THE DOBERMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/cb-dollaway"
+  },
+  {
+    "name": "MONTSERRAT RENDON",
+    "nickname": "\"MONSTER\"",
+    "profile_url": "https://www.ufc.com/athlete/montserrat-rendon"
+  },
+  {
+    "name": "CODY DONOVAN",
+    "nickname": "\"DONNYBROOK\"",
+    "profile_url": "https://www.ufc.com/athlete/kodi-stemenn-0"
+  },
+  {
+    "name": "HOUSTON DORR",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/houston-dorr"
+  },
+  {
+    "name": "RAFAEL DOS ANJOS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rafael-dos-anjos"
+  },
+  {
+    "name": "ANDERSON DOS SANTOS",
+    "nickname": "\"BERINJA\"",
+    "profile_url": "https://www.ufc.com/athlete/anderson-dos-santos"
+  },
+  {
+    "name": "ANTONIO DOS SANTOS",
+    "nickname": "\"JUNIOR ALPHA\"",
+    "profile_url": "https://www.ufc.com/athlete/antonio-dos-santos"
+  },
+  {
+    "name": "ELIZEU ZALESKI DOS SANTOS",
+    "nickname": "\"CAPOEIRA\"",
+    "profile_url": "https://www.ufc.com/athlete/elizeu-dos-santos"
+  },
+  {
+    "name": "GERONIMO DOS SANTOS",
+    "nickname": "\"MONDRAGON\"",
+    "profile_url": "https://www.ufc.com/athlete/geronimo-dos-santos"
+  },
+  {
+    "name": "FELIPE DOS SANTOS",
+    "nickname": "\"LIPE DETONA\"",
+    "profile_url": "https://www.ufc.com/athlete/felipe-dos-santos"
+  },
+  {
+    "name": "ACACIO DOS SANTOS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/acacio-dos-santos"
+  },
+  {
+    "name": "MAIARA AMAJANAS DOS SANTOS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/maiara-amajanas-dos-santos"
+  },
+  {
+    "name": "RAYANNE DOS SANTOS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rayanne-dos-santos"
+  },
+  {
+    "name": "OLEKSANDR DOSKALCHUK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/oleksandr-doskalchuk"
+  },
+  {
+    "name": "CEDRIC DOUMBE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/cedric-doumbe"
+  },
+  {
+    "name": "JOHN DOWDY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/khyuston-dorr-0"
+  },
+  {
+    "name": "DAN DOWNES",
+    "nickname": "\"DANNY BOY\"",
+    "profile_url": "https://www.ufc.com/athlete/dan-downes"
+  },
+  {
+    "name": "DEREK DOWNEY",
+    "nickname": "\"THE GENTLEMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/derek-downey"
+  },
+  {
+    "name": "KYLE DRISCOLL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kyle-driscoll"
+  },
+  {
+    "name": "TOMASZ DRWAL",
+    "nickname": "\"GORILLA\"",
+    "profile_url": "https://www.ufc.com/athlete/tomasz-drwal"
+  },
+  {
+    "name": "ROBERT DRYSDALE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/robert-drysdale"
+  },
+  {
+    "name": "DRICUS DU PLESSIS",
+    "nickname": "\"STILLKNOCKS\"",
+    "profile_url": "https://www.ufc.com/athlete/dricus-du-plessis"
+  },
+  {
+    "name": "HUGO DUARTE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/hugo-duarte"
+  },
+  {
+    "name": "YUNEISY DUBEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/yuneisy-duben"
+  },
+  {
+    "name": "EMILY DUCOTE",
+    "nickname": "\"GORDINHA\"",
+    "profile_url": "https://www.ufc.com/athlete/emily-ducote"
+  },
+  {
+    "name": "VIKTORIIA DUDAKOVA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/viktoriia-dudakova"
+  },
+  {
+    "name": "MILANA DUDIEVA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/milana-dudieva"
+  },
+  {
+    "name": "TODD DUFFEE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/todd-duffee"
+  },
+  {
+    "name": "JOE DUFFY",
+    "nickname": "\"IRISH\"",
+    "profile_url": "https://www.ufc.com/athlete/joe-duffy"
+  },
+  {
+    "name": "ALEXIS DUFRESNE",
+    "nickname": "\"SNEAKY ZEBRA\"",
+    "profile_url": "https://www.ufc.com/athlete/alexis-dufresne"
+  },
+  {
+    "name": "JESSAMYN DUKE",
+    "nickname": "\"THE GUN\"",
+    "profile_url": "https://www.ufc.com/athlete/jessamyn-duke"
+  },
+  {
+    "name": "ISLAM DULATOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/islam-dulatov"
+  },
+  {
+    "name": "ISAAC DULGARIAN",
+    "nickname": "\"THE MIDWEST CHOPPA\"",
+    "profile_url": "https://www.ufc.com/athlete/isaac-dulgarian"
+  },
+  {
+    "name": "KELLY DULLANTY",
+    "nickname": "\"PSYCHO KELLY\"",
+    "profile_url": "https://www.ufc.com/athlete/kelly-dullanty"
+  },
+  {
+    "name": "SEDRIQUES DUMAS",
+    "nickname": "\"THE REAPER\"",
+    "profile_url": "https://www.ufc.com/athlete/sedriques-dumas"
+  },
+  {
+    "name": "NORMA DUMONT",
+    "nickname": "\"THE IMMORTAL\"",
+    "profile_url": "https://www.ufc.com/athlete/norma-dumont"
+  },
+  {
+    "name": "CHRISTIAN LEROY DUNCAN",
+    "nickname": "\"CLD\"",
+    "profile_url": "https://www.ufc.com/athlete/christian-leroy-duncan"
+  },
+  {
+    "name": "CHRIS DUNCAN",
+    "nickname": "\"THE PROBLEM\"",
+    "profile_url": "https://www.ufc.com/athlete/chris-duncan"
+  },
+  {
+    "name": "EVAN DUNHAM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/evan-dunham"
+  },
+  {
+    "name": "TOM DUQUESNOY",
+    "nickname": "\"FIRE KID\"",
+    "profile_url": "https://www.ufc.com/athlete/tom-duquesnoy"
+  },
+  {
+    "name": "ALBERT DURAEV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/albert-duraev"
+  },
+  {
+    "name": "REUBEN DURAN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/reuben-duran"
+  },
+  {
+    "name": "CODY DURDEN",
+    "nickname": "\"CUSTOM MADE\"",
+    "profile_url": "https://www.ufc.com/athlete/cody-durden"
+  },
+  {
+    "name": "LUIZ DUTRA",
+    "nickname": "\"BESOURO\"",
+    "profile_url": "https://www.ufc.com/athlete/luiz-dutra"
+  },
+  {
+    "name": "RILEY DUTRO",
+    "nickname": "\"THE PERFECT STORM\"",
+    "profile_url": "https://www.ufc.com/athlete/riley-dutro"
+  },
+  {
+    "name": "MERAB DVALISHVILI",
+    "nickname": "\"THE MACHINE\"",
+    "profile_url": "https://www.ufc.com/athlete/merab-dvalishvili"
+  },
+  {
+    "name": "DAVID DVORAK",
+    "nickname": "\"UNDERTAKER\"",
+    "profile_url": "https://www.ufc.com/athlete/david-dvorak"
+  },
+  {
+    "name": "MATT DWYER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/matt-dwyer"
+  },
+  {
+    "name": "ROLANDO DY",
+    "nickname": "\"DY INCREDIBLE\"",
+    "profile_url": "https://www.ufc.com/athlete/rolando-dy"
+  },
+  {
+    "name": "BEN EARWOOD",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ben-earwood"
+  },
+  {
+    "name": "CODY EAST",
+    "nickname": "\"THE FREIGHT TRAIN\"",
+    "profile_url": "https://www.ufc.com/athlete/cody-east"
+  },
+  {
+    "name": "MARVIN EASTMAN",
+    "nickname": "\"THE BEASTMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/marvin-eastman"
+  },
+  {
+    "name": "MIKE EASTON",
+    "nickname": "\"THE HULK\"",
+    "profile_url": "https://www.ufc.com/athlete/mike-easton"
+  },
+  {
+    "name": "BRIAN EBERSOLE",
+    "nickname": "\"BAD BOY\"",
+    "profile_url": "https://www.ufc.com/athlete/brian-ebersole"
+  },
+  {
+    "name": "ROYBERT ECHEVERRIA",
+    "nickname": "\"THE UNBROKEN\"",
+    "profile_url": "https://www.ufc.com/athlete/roy-echeverria"
+  },
+  {
+    "name": "MARK EDDIVA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mark-eddiva"
+  },
+  {
+    "name": "FRANKIE EDGAR",
+    "nickname": "\"THE ANSWER\"",
+    "profile_url": "https://www.ufc.com/athlete/frankie-edgar"
+  },
+  {
+    "name": "ABDUL-KERIM EDILOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/abdul-kerim-edilov"
+  },
+  {
+    "name": "JOHNNY EDUARDO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/johnny-eduardo"
+  },
+  {
+    "name": "TE EDWARDS",
+    "nickname": "\"TANGO\"",
+    "profile_url": "https://www.ufc.com/athlete/te-edwards"
+  },
+  {
+    "name": "JUSTIN EDWARDS",
+    "nickname": "\"FAST EDDY\"",
+    "profile_url": "https://www.ufc.com/athlete/justin-edwards"
+  },
+  {
+    "name": "YVES EDWARDS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/yves-edwards"
+  },
+  {
+    "name": "ADLI EDWARDS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/adli-edwards"
+  },
+  {
+    "name": "JOSELYNE EDWARDS",
+    "nickname": "\"LA PANTERA\"",
+    "profile_url": "https://www.ufc.com/athlete/joselyne-edwards"
+  },
+  {
+    "name": "LEON EDWARDS",
+    "nickname": "\"ROCKY\"",
+    "profile_url": "https://www.ufc.com/athlete/leon-edwards"
+  },
+  {
+    "name": "TOM EGAN",
+    "nickname": "\"THE TANK\"",
+    "profile_url": "https://www.ufc.com/athlete/tom-egan"
+  },
+  {
+    "name": "STEPHANIE EGGER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/stephanie-egger"
+  },
+  {
+    "name": "JUSTIN EILERS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/justin-eilers"
+  },
+  {
+    "name": "JOHN-OLAV EINEMO",
+    "nickname": "\"THE VIKING\"",
+    "profile_url": "https://www.ufc.com/athlete/john-olav-einemo"
+  },
+  {
+    "name": "PER EKLUND",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/per-eklund"
+  },
+  {
+    "name": "EVAN ELDER",
+    "nickname": "\"THE PHENOM \"",
+    "profile_url": "https://www.ufc.com/athlete/evan-elder"
+  },
+  {
+    "name": "BILLY ELEKANA",
+    "nickname": "\"SON OF SUSIE\"",
+    "profile_url": "https://www.ufc.com/athlete/billy-elekana"
+  },
+  {
+    "name": "JOAO ELIAS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/joao-elias"
+  },
+  {
+    "name": "DARREN ELKINS",
+    "nickname": "\"THE DAMAGE\"",
+    "profile_url": "https://www.ufc.com/athlete/darren-elkins"
+  },
+  {
+    "name": "JAKE ELLENBERGER",
+    "nickname": "\"THE JUGGERNAUT\"",
+    "profile_url": "https://www.ufc.com/athlete/jake-ellenberger"
+  },
+  {
+    "name": "JOE ELLENBERGER",
+    "nickname": "\"EXCALIBUR\"",
+    "profile_url": "https://www.ufc.com/athlete/joe-ellenberger"
+  },
+  {
+    "name": "OBAN ELLIOTT",
+    "nickname": "\"THE WELSH GANGSTER\"",
+    "profile_url": "https://www.ufc.com/athlete/oban-elliott"
+  },
+  {
+    "name": "TIM ELLIOTT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tim-elliott"
+  },
+  {
+    "name": "LISA ELLIS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/lisa-ellis"
+  },
+  {
+    "name": "BRIAN ELLIS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/brian-ellis"
+  },
+  {
+    "name": "ANNA ELMOSE",
+    "nickname": "\"PANDA\"",
+    "profile_url": "https://www.ufc.com/athlete/anna-elmose"
+  },
+  {
+    "name": "CAMERON ELSE",
+    "nickname": "\"CAMCHIDA\"",
+    "profile_url": "https://www.ufc.com/athlete/cameron-else"
+  },
+  {
+    "name": "SOVANNAHRY EM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/sovannahry-em"
+  },
+  {
+    "name": "RAMAZAN EMEEV",
+    "nickname": "\"GORETS\"",
+    "profile_url": "https://www.ufc.com/athlete/ramazan-emeev"
+  },
+  {
+    "name": "ROB EMERSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rob-emerson"
+  },
+  {
+    "name": "FREDDY EMILIANO LINARES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/freddy-emiliano-linares"
+  },
+  {
+    "name": "JAMALL EMMERS",
+    "nickname": "\"PRETTY BOY\"",
+    "profile_url": "https://www.ufc.com/athlete/jamall-emmers"
+  },
+  {
+    "name": "JOSH EMMETT",
+    "nickname": "\"CC0 (C-C-OH)\"",
+    "profile_url": "https://www.ufc.com/athlete/josh-emmett"
+  },
+  {
+    "name": "KOLTON ENGLUND",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kolton-englund"
+  },
+  {
+    "name": "OLIVER ENKAMP",
+    "nickname": "\"THE FUTURE\"",
+    "profile_url": "https://www.ufc.com/athlete/oliver-enkamp"
+  },
+  {
+    "name": "ALEX ENLUND",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/alex-enlund"
+  },
+  {
+    "name": "IAN ENTWISTLE",
+    "nickname": "\"ENTY\"",
+    "profile_url": "https://www.ufc.com/athlete/ian-entwistle"
+  },
+  {
+    "name": "ANDY ENZ",
+    "nickname": "\"LIONHEART\"",
+    "profile_url": "https://www.ufc.com/athlete/andy-enz"
+  },
+  {
+    "name": "STEVE ERCEG",
+    "nickname": "\"ASTROBOY\"",
+    "profile_url": "https://www.ufc.com/athlete/steve-erceg"
+  },
+  {
+    "name": "KONSTANTIN EROKHIN",
+    "nickname": "\"THE RUSSIAN BEAR\"",
+    "profile_url": "https://www.ufc.com/athlete/konstantin-erokhin"
+  },
+  {
+    "name": "JULIAN EROSA",
+    "nickname": "\"JUICY J\"",
+    "profile_url": "https://www.ufc.com/athlete/julian-erosa"
+  },
+  {
+    "name": "JARNO ERRENS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jarno-errens"
+  },
+  {
+    "name": "IVAN ERSLAN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ivan-erslan"
+  },
+  {
+    "name": "COLE ESCOVEDO",
+    "nickname": "\"APACHE KID\"",
+    "profile_url": "https://www.ufc.com/athlete/cole-escovedo"
+  },
+  {
+    "name": "EFRAIN ESCUDERO",
+    "nickname": "\"HECHO EN MÉXICO\"",
+    "profile_url": "https://www.ufc.com/athlete/efrain-escudero"
+  },
+  {
+    "name": "CARLA ESPARZA",
+    "nickname": "\"COOKIE MONSTER\"",
+    "profile_url": "https://www.ufc.com/athlete/carla-esparza"
+  },
+  {
+    "name": "JUAN ESPINO",
+    "nickname": "\"EL GUAPO\"",
+    "profile_url": "https://www.ufc.com/athlete/juan-espino"
+  },
+  {
+    "name": "JORDAN ESPINOSA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jordan-espinosa"
+  },
+  {
+    "name": "JODIE ESQUIBEL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jodie-esquibel"
+  },
+  {
+    "name": "RAFAEL ESTEVAM",
+    "nickname": "\"MACAPA\"",
+    "profile_url": "https://www.ufc.com/athlete/rafael-estevam"
+  },
+  {
+    "name": "ACHILLES ESTREMADURA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/achilles-estremadura"
+  },
+  {
+    "name": "SHAUN ETCHELL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/shaun-etchell"
+  },
+  {
+    "name": "TERRY ETIM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/terry-etim"
+  },
+  {
+    "name": "FRED ETTISH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/fred-ettish"
+  },
+  {
+    "name": "SIJARA EUBANKS",
+    "nickname": "\"SARJ\"",
+    "profile_url": "https://www.ufc.com/athlete/sijara-eubanks"
+  },
+  {
+    "name": "RASHAD EVANS",
+    "nickname": "\"SUGA\"",
+    "profile_url": "https://www.ufc.com/athlete/rashad-evans"
+  },
+  {
+    "name": "DOUG EVANS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/doug-evans"
+  },
+  {
+    "name": "ASHLEE EVANS-SMITH",
+    "nickname": "\"REBEL GIRL\"",
+    "profile_url": "https://www.ufc.com/athlete/ashlee-evans-smith"
+  },
+  {
+    "name": "DAN EVENSEN",
+    "nickname": "\"THE VIKING\"",
+    "profile_url": "https://www.ufc.com/athlete/dan-evensen"
+  },
+  {
+    "name": "TONYA EVINGER",
+    "nickname": "\"TRIPLE THREAT\"",
+    "profile_url": "https://www.ufc.com/athlete/tonya-evinger"
+  },
+  {
+    "name": "MOVSAR EVLOEV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/movsar-evloev"
+  },
+  {
+    "name": "ANDRE EWELL",
+    "nickname": "\"MR. HIGHLIGHT\"",
+    "profile_url": "https://www.ufc.com/athlete/andre-ewell"
+  },
+  {
+    "name": "JESSICA EYE",
+    "nickname": "\"EVIL\"",
+    "profile_url": "https://www.ufc.com/athlete/jessica-eye"
+  },
+  {
+    "name": "EDWARD FAALOLOTO",
+    "nickname": "\"FALO\"",
+    "profile_url": "https://www.ufc.com/athlete/edward-faaloloto"
+  },
+  {
+    "name": "URIJAH FABER",
+    "nickname": "\"THE CALIFORNIA KID\"",
+    "profile_url": "https://www.ufc.com/athlete/urijah-faber"
+  },
+  {
+    "name": "MELINDA FÁBIÁN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/melinda-fabian"
+  },
+  {
+    "name": "WAGNNEY FABIANO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/wagnney-fabiano"
+  },
+  {
+    "name": "BARTOSZ FABINSKI",
+    "nickname": "\"THE BUTCHER\"",
+    "profile_url": "https://www.ufc.com/athlete/bartosz-fabinski"
+  },
+  {
+    "name": "RON FAIRCLOTH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ron-faircloth"
+  },
+  {
+    "name": "ZARAH FAIRN",
+    "nickname": "\"INFINITE\"",
+    "profile_url": "https://www.ufc.com/athlete/zarah-fairn"
+  },
+  {
+    "name": "JASON FAIRN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jason-fairn"
+  },
+  {
+    "name": "RINAT FAKHRETDINOV",
+    "nickname": "\"GLADIATOR\"",
+    "profile_url": "https://www.ufc.com/athlete/rinat-fakhretdinov"
+  },
+  {
+    "name": "MAIQUEL FALCAO",
+    "nickname": "\"BIG RIG\"",
+    "profile_url": "https://www.ufc.com/athlete/maiquel-falcao"
+  },
+  {
+    "name": "PEDRO FALCAO",
+    "nickname": "\"PEDRINHO\"",
+    "profile_url": "https://www.ufc.com/athlete/pedro-falcao"
+  },
+  {
+    "name": "BRODIE FARBER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/brodie-farber"
+  },
+  {
+    "name": "KALINDRA FARIA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kalindra-faria"
+  },
+  {
+    "name": "JAIR FARIAS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jair-farias"
+  },
+  {
+    "name": "RICO FARRINGTON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rico-farrington"
+  },
+  {
+    "name": "KELLY FASZHOLZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kelly-faszholz"
+  },
+  {
+    "name": "PAUL FELDER",
+    "nickname": "\"THE IRISH DRAGON\"",
+    "profile_url": "https://www.ufc.com/athlete/paul-felder"
+  },
+  {
+    "name": "CARLOS FELIPE",
+    "nickname": "\"BOI\"",
+    "profile_url": "https://www.ufc.com/athlete/carlos-felipe"
+  },
+  {
+    "name": "JOSH FERGUSON",
+    "nickname": "\"TAZ\"",
+    "profile_url": "https://www.ufc.com/athlete/josh-ferguson"
+  },
+  {
+    "name": "TONY FERGUSON",
+    "nickname": "\"EL CUCUY\"",
+    "profile_url": "https://www.ufc.com/athlete/tony-ferguson"
+  },
+  {
+    "name": "CJ FERNANDES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/cj-fernandes"
+  },
+  {
+    "name": "KAUÊ FERNANDES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kaue-fernandes"
+  },
+  {
+    "name": "GABRIELLA FERNANDES",
+    "nickname": "\"GABI\"",
+    "profile_url": "https://www.ufc.com/athlete/gabriella-fernandes"
+  },
+  {
+    "name": "LUCAS FERNANDO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/lucas-fernando"
+  },
+  {
+    "name": "CEZAR FERREIRA",
+    "nickname": "\"MUTANTE\"",
+    "profile_url": "https://www.ufc.com/athlete/cezar-ferreira"
+  },
+  {
+    "name": "ALEXANDRE FERREIRA",
+    "nickname": "\"CACARECO\"",
+    "profile_url": "https://www.ufc.com/athlete/alexandre-ferreira"
+  },
+  {
+    "name": "BRUNNO FERREIRA",
+    "nickname": "\"THE HULK\"",
+    "profile_url": "https://www.ufc.com/athlete/brunno-ferreira"
+  },
+  {
+    "name": "DIEGO FERREIRA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/diego-ferreira"
+  },
+  {
+    "name": "ERISSON FERREIRA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/erisson-ferreira-da-silva"
+  },
+  {
+    "name": "SCOTT FERROZZO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/scott-ferrozzo"
+  },
+  {
+    "name": "TIMO FEUCHT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/timo-feucht"
+  },
+  {
+    "name": "ANDRE FIALHO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/andre-fialho"
+  },
+  {
+    "name": "DREW FICKETT",
+    "nickname": "\"THE MASTER\"",
+    "profile_url": "https://www.ufc.com/athlete/drew-fickett"
+  },
+  {
+    "name": "SCOTT FIELDER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/skott-ferrozzo-0"
+  },
+  {
+    "name": "TEST FIGHTER2",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/test-fighter2"
+  },
+  {
+    "name": "MICHAL FIGLAK",
+    "nickname": "\"MAD DOG\"",
+    "profile_url": "https://www.ufc.com/athlete/michal-figlak"
+  },
+  {
+    "name": "FRANCISCO FIGUEIREDO",
+    "nickname": "\"SNIPER\"",
+    "profile_url": "https://www.ufc.com/athlete/francisco-figueiredo"
+  },
+  {
+    "name": "DEIVESON FIGUEIREDO",
+    "nickname": "\"DEUS DA GUERRA\"",
+    "profile_url": "https://www.ufc.com/athlete/deiveson-figueiredo"
+  },
+  {
+    "name": "EDWIN FIGUEROA",
+    "nickname": "\"EL FEROZ\"",
+    "profile_url": "https://www.ufc.com/athlete/edwin-figueroa"
+  },
+  {
+    "name": "JAFEL FILHO",
+    "nickname": "\"PASTOR\"",
+    "profile_url": "https://www.ufc.com/athlete/jafel-filho"
+  },
+  {
+    "name": "ANDRE FILI",
+    "nickname": "\"TOUCHY\"",
+    "profile_url": "https://www.ufc.com/athlete/andre-fili"
+  },
+  {
+    "name": "TORREZ FINNEY",
+    "nickname": "\"THE PUNISHER\"",
+    "profile_url": "https://www.ufc.com/athlete/torrez-finney"
+  },
+  {
+    "name": "LUIGI FIORAVANTI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/luigi-fioravanti"
+  },
+  {
+    "name": "NICK FIORE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/nick-fiore"
+  },
+  {
+    "name": "MANON FIOROT",
+    "nickname": "\"THE BEAST\"",
+    "profile_url": "https://www.ufc.com/athlete/manon-fiorot"
+  },
+  {
+    "name": "SPENCER FISHER",
+    "nickname": "\"THE KING\"",
+    "profile_url": "https://www.ufc.com/athlete/spencer-fisher"
+  },
+  {
+    "name": "CHRIS FISHGOLD",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chris-fishgold"
+  },
+  {
+    "name": "JON FITCH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jon-fitch"
+  },
+  {
+    "name": "ISI FITIKEFU",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/isi-fitikefu"
+  },
+  {
+    "name": "RAFAEL FIZIEV",
+    "nickname": "\"ATAMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/rafael-fiziev"
+  },
+  {
+    "name": "COLIN FLETCHER",
+    "nickname": "\"THE FREAKSHOW\"",
+    "profile_url": "https://www.ufc.com/athlete/colin-fletcher"
+  },
+  {
+    "name": "NATHAN FLETCHER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/nathan-fletcher"
+  },
+  {
+    "name": "AJ FLETCHER",
+    "nickname": "\"THE GHOST\"",
+    "profile_url": "https://www.ufc.com/athlete/aj-fletcher"
+  },
+  {
+    "name": "JIMMY FLICK",
+    "nickname": "\"THE BRICK\"",
+    "profile_url": "https://www.ufc.com/athlete/jimmy-flick"
+  },
+  {
+    "name": "LUKE FLORES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/luke-flores"
+  },
+  {
+    "name": "TY FLORES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ty-flores"
+  },
+  {
+    "name": "ALEJANDRO FLORES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/alejandro-flores"
+  },
+  {
+    "name": "KENNY FLORIAN",
+    "nickname": "\"KENFLO\"",
+    "profile_url": "https://www.ufc.com/athlete/kenny-florian"
+  },
+  {
+    "name": "DARRIUS FLOWERS",
+    "nickname": "\"BEASTMODE\"",
+    "profile_url": "https://www.ufc.com/athlete/darrius-flowers"
+  },
+  {
+    "name": "CAROS FODOR",
+    "nickname": "\"THE FUTURE\"",
+    "profile_url": "https://www.ufc.com/athlete/caros-fodor"
+  },
+  {
+    "name": "ROB FONT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rob-font"
+  },
+  {
+    "name": "JESSE FORBES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jesse-forbes"
+  },
+  {
+    "name": "JUSSIER FORMIGA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jussier-formiga"
+  },
+  {
+    "name": "BRIANNA FORTINO",
+    "nickname": "\"THE BULL\"",
+    "profile_url": "https://www.ufc.com/athlete/brianna-van-buren"
+  },
+  {
+    "name": "MARCEL FORTUNA",
+    "nickname": "\"MAOZINHA\"",
+    "profile_url": "https://www.ufc.com/athlete/marcel-fortuna"
+  },
+  {
+    "name": "BRIAN FOSTER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/brian-foster"
+  },
+  {
+    "name": "XAVIER FOUPA-POKAM",
+    "nickname": "\"THE PROFESSOR X\"",
+    "profile_url": "https://www.ufc.com/athlete/xavier-foupa-pokam"
+  },
+  {
+    "name": "GLAICO FRANCA",
+    "nickname": "\"NEGO\"",
+    "profile_url": "https://www.ufc.com/athlete/glaico-franca"
+  },
+  {
+    "name": "HERMES FRANCA",
+    "nickname": "\"THE UNREAL\"",
+    "profile_url": "https://www.ufc.com/athlete/hermes-franca"
+  },
+  {
+    "name": "KAI KARA-FRANCE",
+    "nickname": "\"DON'T BLINK\"",
+    "profile_url": "https://www.ufc.com/athlete/kai-kara-france"
+  },
+  {
+    "name": "RICH FRANKLIN",
+    "nickname": "\"ACE\"",
+    "profile_url": "https://www.ufc.com/athlete/rich-franklin"
+  },
+  {
+    "name": "STEPHANIE FRAUSTO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/stephanie-frausto"
+  },
+  {
+    "name": "JUSTIN FRAZIER",
+    "nickname": "\"THE GRIZZLYBEAR\"",
+    "profile_url": "https://www.ufc.com/athlete/justin-frazier"
+  },
+  {
+    "name": "ZANE FRAZIER",
+    "nickname": "\"NASTY\"",
+    "profile_url": "https://www.ufc.com/athlete/zane-frazier"
+  },
+  {
+    "name": "IAN FREEMAN",
+    "nickname": "\"THE MACHINE\"",
+    "profile_url": "https://www.ufc.com/athlete/ian-freeman"
+  },
+  {
+    "name": "WILLAMY FREIRE",
+    "nickname": "\"CHIQUERIM\"",
+    "profile_url": "https://www.ufc.com/athlete/willamy-freire"
+  },
+  {
+    "name": "PATRICIO PITBULL",
+    "nickname": "\"PITBULL\"",
+    "profile_url": "https://www.ufc.com/athlete/patricio-pitbull-freire"
+  },
+  {
+    "name": "DONAVON FRELOW",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/donavon-frelow"
+  },
+  {
+    "name": "JOSH FREMD",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/josh-fremd"
+  },
+  {
+    "name": "MATT FREVOLA",
+    "nickname": "\"THE STEAMROLLA\"",
+    "profile_url": "https://www.ufc.com/athlete/matt-frevola"
+  },
+  {
+    "name": "JINH YU FREY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jinh-yu-frey"
+  },
+  {
+    "name": "ARTEM FROLOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/artem-frolov"
+  },
+  {
+    "name": "SARAH FROTA",
+    "nickname": "\"A TRETA\"",
+    "profile_url": "https://www.ufc.com/athlete/sarah-frota"
+  },
+  {
+    "name": "DANIEL FRUNZA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/daniel-frunza"
+  },
+  {
+    "name": "DON FRYE",
+    "nickname": "\"THE PREDATOR\"",
+    "profile_url": "https://www.ufc.com/athlete/don-frye"
+  },
+  {
+    "name": "ANTHONY FRYKLUND",
+    "nickname": "\"THE FREAK\"",
+    "profile_url": "https://www.ufc.com/athlete/anthony-fryklund"
+  },
+  {
+    "name": "ADAM FUGITT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/adam-fugitt"
+  },
+  {
+    "name": "KATSUHISA FUJI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/katsuhisa-fuji"
+  },
+  {
+    "name": "RIKI FUKUDA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/riki-fukuda"
+  },
+  {
+    "name": "MASIO FULLEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/masio-fullen"
+  },
+  {
+    "name": "SAM FULTON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/sam-fulton"
+  },
+  {
+    "name": "TRAVIS FULTON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/travis-fulton"
+  },
+  {
+    "name": "RICARDO FUNCH",
+    "nickname": "\"GOLDEN BOY\"",
+    "profile_url": "https://www.ufc.com/athlete/ricardo-funch"
+  },
+  {
+    "name": "GUSTAVO GABRIEL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/gustavo-gabriel"
+  },
+  {
+    "name": "CLAUDIA GADELHA",
+    "nickname": "\"CLAUDINHA\"",
+    "profile_url": "https://www.ufc.com/athlete/claudia-gadelha"
+  },
+  {
+    "name": "MAGOMED GADZHIYASULOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/magomed-gadzhiyasulov"
+  },
+  {
+    "name": "JUSTIN GAETHJE",
+    "nickname": "\"THE HIGHLIGHT\"",
+    "profile_url": "https://www.ufc.com/athlete/justin-gaethje"
+  },
+  {
+    "name": "SHEILA GAFF",
+    "nickname": "\"THE GERMAN TANK\"",
+    "profile_url": "https://www.ufc.com/athlete/sheila-gaff"
+  },
+  {
+    "name": "MUIN GAFUROV",
+    "nickname": "\"TAJIIK\"",
+    "profile_url": "https://www.ufc.com/athlete/muin-gafurov"
+  },
+  {
+    "name": "MITCH GAGNON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mitch-gagnon"
+  },
+  {
+    "name": "DAVE GALERA",
+    "nickname": "\"SCARECROW\"",
+    "profile_url": "https://www.ufc.com/athlete/david-zavada"
+  },
+  {
+    "name": "MICKEY GALL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mickey-gall"
+  },
+  {
+    "name": "DANIEL GALLEMORE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/daniel-gallemore"
+  },
+  {
+    "name": "TOM GALLICCHIO",
+    "nickname": "\"DA TANK\"",
+    "profile_url": "https://www.ufc.com/athlete/tom-gallicchio"
+  },
+  {
+    "name": "JOEY GAMBINO",
+    "nickname": "\"THE RAGING WARRIOR\"",
+    "profile_url": "https://www.ufc.com/athlete/joey-gambino"
+  },
+  {
+    "name": "MANNY GAMBURYAN",
+    "nickname": "\"THE ANVIL\"",
+    "profile_url": "https://www.ufc.com/athlete/manny-gamburyan"
+  },
+  {
+    "name": "MATEUSZ GAMROT",
+    "nickname": "\"GAMER\"",
+    "profile_url": "https://www.ufc.com/athlete/mateusz-gamrot"
+  },
+  {
+    "name": "SHAMIL GAMZATOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/shamil-gamzatov"
+  },
+  {
+    "name": "ARIEL GANDULLA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ariel-gandulla"
+  },
+  {
+    "name": "CIRYL GANE",
+    "nickname": "\"BON GAMIN\"",
+    "profile_url": "https://www.ufc.com/athlete/ciryl-gane"
+  },
+  {
+    "name": "SEAN GANNON",
+    "nickname": "\"THE CANNON\"",
+    "profile_url": "https://www.ufc.com/athlete/sean-gannon"
+  },
+  {
+    "name": "JUNYE GAO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/junye-gao"
+  },
+  {
+    "name": "LUIZ GARAGORRI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/luiz-garagorri"
+  },
+  {
+    "name": "CODY GARBRANDT",
+    "nickname": "\"NO LOVE\"",
+    "profile_url": "https://www.ufc.com/athlete/cody-garbrandt"
+  },
+  {
+    "name": "ELIAS GARCIA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/elias-garcia"
+  },
+  {
+    "name": "EDGAR GARCIA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/edgar-garcia"
+  },
+  {
+    "name": "HARRISON GARCIA",
+    "nickname": "\"HITMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/harrison-garcia"
+  },
+  {
+    "name": "ALEX GARCIA",
+    "nickname": "\"THE DOMINICAN NIGHTMARE\"",
+    "profile_url": "https://www.ufc.com/athlete/alex-garcia"
+  },
+  {
+    "name": "LEONARD GARCIA",
+    "nickname": "\"BAD BOY\"",
+    "profile_url": "https://www.ufc.com/athlete/leonard-garcia"
+  },
+  {
+    "name": "FERNIE GARCIA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/fernie-garcia"
+  },
+  {
+    "name": "RAFA GARCIA",
+    "nickname": "\"GIFTED\"",
+    "profile_url": "https://www.ufc.com/athlete/rafa-garcia"
+  },
+  {
+    "name": "STEVE GARCIA",
+    "nickname": "\"MEAN MACHINE\"",
+    "profile_url": "https://www.ufc.com/athlete/steve-garcia"
+  },
+  {
+    "name": "PABLO GARZA",
+    "nickname": "\"THE SCARECROW \"",
+    "profile_url": "https://www.ufc.com/athlete/pablo-garza"
+  },
+  {
+    "name": "AZAMAT GASHIMOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/azamat-gashimov"
+  },
+  {
+    "name": "BRIAN GASSAWAY",
+    "nickname": "\"MANDINGO\"",
+    "profile_url": "https://www.ufc.com/athlete/brian-gassaway"
+  },
+  {
+    "name": "KELVIN GASTELUM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kelvin-gastelum"
+  },
+  {
+    "name": "WILLIE GATES",
+    "nickname": "\"WHOOP ASS\"",
+    "profile_url": "https://www.ufc.com/athlete/willie-gates"
+  },
+  {
+    "name": "MELISSA GATTO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/melissa-gatto"
+  },
+  {
+    "name": "LOUIS GAUDINOT",
+    "nickname": "\"GOODNIGHT\"",
+    "profile_url": "https://www.ufc.com/athlete/louis-gaudinot"
+  },
+  {
+    "name": "ATEBA GAUTIER",
+    "nickname": "\"THE SILENT ASSASSIN\"",
+    "profile_url": "https://www.ufc.com/athlete/ateba-gautier"
+  },
+  {
+    "name": "MANUEL GAXHJA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/manuel-gaxhja"
+  },
+  {
+    "name": "SHAMIL GAZIEV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/shamil-gaziev"
+  },
+  {
+    "name": "PAUL GEORGIEFF",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/paul-georgieff"
+  },
+  {
+    "name": "BRIAN GERAGHTY",
+    "nickname": "\"DUKE\"",
+    "profile_url": "https://www.ufc.com/athlete/brian-geraghty"
+  },
+  {
+    "name": "KARINE GEVORGYAN",
+    "nickname": "\"PRINCESS\"",
+    "profile_url": "https://www.ufc.com/athlete/karine-gevorgyan"
+  },
+  {
+    "name": "YANIS GHEMMOURI",
+    "nickname": "\"THE DESERT WARRIOR\"",
+    "profile_url": "https://www.ufc.com/athlete/yanis-ghemmouri"
+  },
+  {
+    "name": "DARREL GHOLAR",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/brayen-gesevey-2"
+  },
+  {
+    "name": "TIKI GHOSN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tiki-ghosn"
+  },
+  {
+    "name": "CHRISTOS GIAGOS",
+    "nickname": "\"THE SPARTAN\"",
+    "profile_url": "https://www.ufc.com/athlete/christos-giagos"
+  },
+  {
+    "name": "JOE GIANNETTI",
+    "nickname": "\"SKELETOR\"",
+    "profile_url": "https://www.ufc.com/athlete/joe-giannetti"
+  },
+  {
+    "name": "JAMES GIBOO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/james-giboo"
+  },
+  {
+    "name": "CODY GIBSON",
+    "nickname": "\"THE RENEGADE\"",
+    "profile_url": "https://www.ufc.com/athlete/cody-gibson"
+  },
+  {
+    "name": "CHASE GIBSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chase-gibson"
+  },
+  {
+    "name": "THOMAS GIFFORD",
+    "nickname": "\"THE YOUNG LION\"",
+    "profile_url": "https://www.ufc.com/athlete/thomas-gifford"
+  },
+  {
+    "name": "JOE GIGLIOTTI",
+    "nickname": "\"CAPO\"",
+    "profile_url": "https://www.ufc.com/athlete/joe-gigliotti"
+  },
+  {
+    "name": "JOEY GILBERT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/joey-gilbert"
+  },
+  {
+    "name": "TREVIN GILES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/trevin-giles"
+  },
+  {
+    "name": "GREGOR GILLESPIE",
+    "nickname": "\"THE GIFT\"",
+    "profile_url": "https://www.ufc.com/athlete/gregor-gillespie"
+  },
+  {
+    "name": "JASON GILLIAM",
+    "nickname": "\"THE GIZZARD\"",
+    "profile_url": "https://www.ufc.com/athlete/jason-gilliam"
+  },
+  {
+    "name": "MICHEAL GILLMORE",
+    "nickname": "\"THE GENTLEMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/micheal-gillmore"
+  },
+  {
+    "name": "ALEX GILPIN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/alex-gilpin"
+  },
+  {
+    "name": "BOB GILSTRAP",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/stiv-garsiya-0"
+  },
+  {
+    "name": "EPERAIM GINTING",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/eperaim-ginting"
+  },
+  {
+    "name": "HE-MAN GIPSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/dzheyson-gilliam-0"
+  },
+  {
+    "name": "RICKY GLENN",
+    "nickname": "\"THE GLADIATOR\"",
+    "profile_url": "https://www.ufc.com/athlete/ricky-glenn"
+  },
+  {
+    "name": "MARK GODBEER",
+    "nickname": "\"THE HAND OF\"",
+    "profile_url": "https://www.ufc.com/athlete/mark-godbeer"
+  },
+  {
+    "name": "LOOPY GODINEZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/loopy-godinez"
+  },
+  {
+    "name": "ALLAN GOES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/allan-goes"
+  },
+  {
+    "name": "BILLY RAY GOFF",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/billy-goff"
+  },
+  {
+    "name": "AMIRAN GOGOLADZE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/amiran-gogoladze"
+  },
+  {
+    "name": "HANNAH GOLDY",
+    "nickname": "\"24K\"",
+    "profile_url": "https://www.ufc.com/athlete/hannah-goldy"
+  },
+  {
+    "name": "MARCELO GOLM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/marcelo-golm"
+  },
+  {
+    "name": "DENISE GOMES",
+    "nickname": "\"DEE\"",
+    "profile_url": "https://www.ufc.com/athlete/denise-gomes"
+  },
+  {
+    "name": "JOEY GOMEZ",
+    "nickname": "\"KO KING\"",
+    "profile_url": "https://www.ufc.com/athlete/joey-gomez"
+  },
+  {
+    "name": "LUIS GOMEZ",
+    "nickname": "\"TIGER JUNIOR\"",
+    "profile_url": "https://www.ufc.com/athlete/luis-gomez"
+  },
+  {
+    "name": "ULYSSES GOMEZ",
+    "nickname": "\"USELESS\"",
+    "profile_url": "https://www.ufc.com/athlete/tayson-pedro-0"
+  },
+  {
+    "name": "JOEY GOMEZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/joey-gomez-0"
+  },
+  {
+    "name": "EDSON GOMEZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/edson-gomez"
+  },
+  {
+    "name": "TAKANORI GOMI",
+    "nickname": "\"THE FIREBALL KID\"",
+    "profile_url": "https://www.ufc.com/athlete/takanori-gomi"
+  },
+  {
+    "name": "WILLIAM GOMIS",
+    "nickname": "\"JAGUAR\"",
+    "profile_url": "https://www.ufc.com/athlete/william-gomis"
+  },
+  {
+    "name": "AKIHIRO GONO",
+    "nickname": "\"THE JAPANESE SENSATION\"",
+    "profile_url": "https://www.ufc.com/athlete/akihiro-gono"
+  },
+  {
+    "name": "GABRIEL GONZAGA",
+    "nickname": "\"NAPAO\"",
+    "profile_url": "https://www.ufc.com/athlete/gabriel-gonzaga"
+  },
+  {
+    "name": "JUSTIN GONZALES",
+    "nickname": "\"J-TRAIN\"",
+    "profile_url": "https://www.ufc.com/athlete/justin-gonzales"
+  },
+  {
+    "name": "JASON GONZALEZ",
+    "nickname": "\"NICOYA\"",
+    "profile_url": "https://www.ufc.com/athlete/jason-gonzalez"
+  },
+  {
+    "name": "LEWIS GONZALEZ",
+    "nickname": "\"\"LETHAL\"\"",
+    "profile_url": "https://www.ufc.com/athlete/lewis-gonzalez"
+  },
+  {
+    "name": "PEARL GONZALEZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/pearl-gonzalez"
+  },
+  {
+    "name": "ERICK GONZALEZ",
+    "nickname": "\"THE GHOST PEPPER\"",
+    "profile_url": "https://www.ufc.com/athlete/erick-gonzalez"
+  },
+  {
+    "name": "JENNIFER GONZALEZ",
+    "nickname": "\"LA JEFA\"",
+    "profile_url": "https://www.ufc.com/athlete/jennifer-gonzalez"
+  },
+  {
+    "name": "MIKEY GONZALEZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mikey-gonzalez"
+  },
+  {
+    "name": "JORGE GONZALEZ",
+    "nickname": "\"STREET\"",
+    "profile_url": "https://www.ufc.com/athlete/jorge-gonzalez"
+  },
+  {
+    "name": "LYMAN GOOD",
+    "nickname": "\"CYBORG\"",
+    "profile_url": "https://www.ufc.com/athlete/lyman-good"
+  },
+  {
+    "name": "JARED GOODEN",
+    "nickname": "\"NITE TRAIN\"",
+    "profile_url": "https://www.ufc.com/athlete/jared-gooden"
+  },
+  {
+    "name": "GARY GOODRIDGE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/gary-goodridge"
+  },
+  {
+    "name": "GERARD GORDEAU",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/gerard-gordeau"
+  },
+  {
+    "name": "TEBARIS GORDON",
+    "nickname": "\"BOOM\"",
+    "profile_url": "https://www.ufc.com/athlete/tebaris-gordon"
+  },
+  {
+    "name": "EDDIE GORDON",
+    "nickname": "\"TRUCK\"",
+    "profile_url": "https://www.ufc.com/athlete/eddie-gordon"
+  },
+  {
+    "name": "MALCOLM GORDON",
+    "nickname": "\"X\"",
+    "profile_url": "https://www.ufc.com/athlete/malcolm-gordon"
+  },
+  {
+    "name": "JARED GORDON",
+    "nickname": "\"FLASH\"",
+    "profile_url": "https://www.ufc.com/athlete/jared-gordon"
+  },
+  {
+    "name": "TRESEAN GORE",
+    "nickname": "\"MR. VICIOUS\"",
+    "profile_url": "https://www.ufc.com/athlete/tresean-gore"
+  },
+  {
+    "name": "ALEX GORGEES",
+    "nickname": "\"HITMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/alex-gorgees"
+  },
+  {
+    "name": "THEMBA GORIMBO",
+    "nickname": "\"THE ANSWER\"",
+    "profile_url": "https://www.ufc.com/athlete/themba-gorimbo"
+  },
+  {
+    "name": "TIM GORMAN",
+    "nickname": "\"THE PSYCHO\"",
+    "profile_url": "https://www.ufc.com/athlete/tim-gorman"
+  },
+  {
+    "name": "CHASE GORMLEY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chase-gormley"
+  },
+  {
+    "name": "JONATHAN GOULET",
+    "nickname": "\"THE ROAD WARRIOR\"",
+    "profile_url": "https://www.ufc.com/athlete/jonathan-goulet"
+  },
+  {
+    "name": "THIBAULT GOUTI",
+    "nickname": "\"GT\"",
+    "profile_url": "https://www.ufc.com/athlete/thibault-gouti"
+  },
+  {
+    "name": "WILSON GOUVEIA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/wilson-gouveia"
+  },
+  {
+    "name": "DAMIAN GRABOWSKI",
+    "nickname": "\"THE POLISH PITBULL\"",
+    "profile_url": "https://www.ufc.com/athlete/damian-grabowski"
+  },
+  {
+    "name": "KRON GRACIE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kron-gracie"
+  },
+  {
+    "name": "ROGER GRACIE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/roger-gracie"
+  },
+  {
+    "name": "ROLLES GRACIE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rolles-gracie"
+  },
+  {
+    "name": "RENZO GRACIE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/renzo-gracie"
+  },
+  {
+    "name": "ROYCE GRACIE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/royce-gracie"
+  },
+  {
+    "name": "BOGDAN GRAD",
+    "nickname": "\"THE UNLEASHED\"",
+    "profile_url": "https://www.ufc.com/athlete/bogdan-grad"
+  },
+  {
+    "name": "MIRANDA GRANGER",
+    "nickname": "\"DANGER\"",
+    "profile_url": "https://www.ufc.com/athlete/miranda-granger"
+  },
+  {
+    "name": "DWIGHT GRANT",
+    "nickname": "\"THE BODY SNATCHER\"",
+    "profile_url": "https://www.ufc.com/athlete/dwight-grant"
+  },
+  {
+    "name": "TJ GRANT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tj-grant"
+  },
+  {
+    "name": "DAVEY GRANT",
+    "nickname": "\"DANGEROUS\"",
+    "profile_url": "https://www.ufc.com/athlete/davey-grant"
+  },
+  {
+    "name": "ALEXA GRASSO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/alexa-grasso"
+  },
+  {
+    "name": "TONY GRAVELY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tony-gravely"
+  },
+  {
+    "name": "MICHAEL GRAVES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/michael-graves"
+  },
+  {
+    "name": "SHELTON GRAVES",
+    "nickname": "\"“THE GRAVEDIGGER”\"",
+    "profile_url": "https://www.ufc.com/athlete/shelton-graves"
+  },
+  {
+    "name": "JAMES GRAY",
+    "nickname": "\"THE PHENOM\"",
+    "profile_url": "https://www.ufc.com/athlete/james-gray"
+  },
+  {
+    "name": "KEVIN GRAY",
+    "nickname": "\"POCKET HERC\"",
+    "profile_url": "https://www.ufc.com/athlete/kevin-gray"
+  },
+  {
+    "name": "DESMOND GREEN",
+    "nickname": "\"THE PREDATOR\"",
+    "profile_url": "https://www.ufc.com/athlete/desmond-green"
+  },
+  {
+    "name": "KING GREEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/bobby-green"
+  },
+  {
+    "name": "GABE GREEN",
+    "nickname": "\"GIFTED\"",
+    "profile_url": "https://www.ufc.com/athlete/gabe-green"
+  },
+  {
+    "name": "MAURICE GREENE",
+    "nickname": "\"THE CROCHET BOSS\"",
+    "profile_url": "https://www.ufc.com/athlete/maurice-greene"
+  },
+  {
+    "name": "LOGAN GREENHALGH",
+    "nickname": "\"TANK\"",
+    "profile_url": "https://www.ufc.com/athlete/logan-greenhalgh"
+  },
+  {
+    "name": "MATT GRICE",
+    "nickname": "\"THE REAL ONE\"",
+    "profile_url": "https://www.ufc.com/athlete/matt-grice"
+  },
+  {
+    "name": "JORDAN GRIFFIN",
+    "nickname": "\"NATIVEPSYCHO\"",
+    "profile_url": "https://www.ufc.com/athlete/jordan-griffin"
+  },
+  {
+    "name": "MAX GRIFFIN",
+    "nickname": "\"PAIN\"",
+    "profile_url": "https://www.ufc.com/athlete/max-griffin"
+  },
+  {
+    "name": "TYSON GRIFFIN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tyson-griffin"
+  },
+  {
+    "name": "FORREST GRIFFIN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/forrest-griffin"
+  },
+  {
+    "name": "CHAD GRIGGS",
+    "nickname": "\"THE GRAVE DIGGER\"",
+    "profile_url": "https://www.ufc.com/athlete/chad-griggs"
+  },
+  {
+    "name": "CHARALAMPOS GRIGORIOU",
+    "nickname": "\"FEROCIOUS \"",
+    "profile_url": "https://www.ufc.com/athlete/charalampos-grigoriou"
+  },
+  {
+    "name": "GARRETT GRIMES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/garrett-grimes"
+  },
+  {
+    "name": "MAX GRISHIN",
+    "nickname": "\"MAXIMUS\"",
+    "profile_url": "https://www.ufc.com/athlete/max-grishin"
+  },
+  {
+    "name": "JOSH GRISPI",
+    "nickname": "\"THE FLUKE\"",
+    "profile_url": "https://www.ufc.com/athlete/josh-grispi"
+  },
+  {
+    "name": "GARRETT GROSS",
+    "nickname": "\"GLORY TO GOD\"",
+    "profile_url": "https://www.ufc.com/athlete/garrett-gross"
+  },
+  {
+    "name": "NEIL GROVE",
+    "nickname": "\"GOLIATH\"",
+    "profile_url": "https://www.ufc.com/athlete/neil-grove"
+  },
+  {
+    "name": "KENDALL GROVE",
+    "nickname": "\"DA SPYDER\"",
+    "profile_url": "https://www.ufc.com/athlete/kendall-grove"
+  },
+  {
+    "name": "CHRIS GRUETZEMACHER",
+    "nickname": "\"GRITZ\"",
+    "profile_url": "https://www.ufc.com/athlete/kurisu-kuretsutsuemaka"
+  },
+  {
+    "name": "VIK GRUJIC",
+    "nickname": "\"THE SPARTAN\"",
+    "profile_url": "https://www.ufc.com/athlete/vik-grujic"
+  },
+  {
+    "name": "MIKE GRUNDY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mike-grundy"
+  },
+  {
+    "name": "WANG GUAN",
+    "nickname": "\"THE DONGBEI TIGER\"",
+    "profile_url": "https://www.ufc.com/athlete/wang-guan"
+  },
+  {
+    "name": "NING GUANGYOU",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ning-guangyou"
+  },
+  {
+    "name": "NANDOR GUELMINO",
+    "nickname": "\"THE HUN\"",
+    "profile_url": "https://www.ufc.com/athlete/nandor-guelmino"
+  },
+  {
+    "name": "RAINN GUERRERO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rainn-guerrero"
+  },
+  {
+    "name": "SHANNON GUGERTY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/shannon-gugerty"
+  },
+  {
+    "name": "CLAY GUIDA",
+    "nickname": "\"THE CARPENTER\"",
+    "profile_url": "https://www.ufc.com/athlete/clay-guida"
+  },
+  {
+    "name": "MELVIN GUILLARD",
+    "nickname": "\"THE YOUNG ASSASSIN\"",
+    "profile_url": "https://www.ufc.com/athlete/melvin-guillard"
+  },
+  {
+    "name": "MARCELO GUIMARAES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/marcelo-guimaraes"
+  },
+  {
+    "name": "BRAD GUMM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/shennon-gugerti-0"
+  },
+  {
+    "name": "JOHN GUNDERSON",
+    "nickname": "\"GUNS\"",
+    "profile_url": "https://www.ufc.com/athlete/john-gunderson"
+  },
+  {
+    "name": "JOHN GUNTHER",
+    "nickname": "\"THE MACHINE\"",
+    "profile_url": "https://www.ufc.com/athlete/john-gunther"
+  },
+  {
+    "name": "FABIO GURGEL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/dzhon-gunderson-1"
+  },
+  {
+    "name": "JORGE GURGEL",
+    "nickname": "\"JG\"",
+    "profile_url": "https://www.ufc.com/athlete/jorge-gurgel"
+  },
+  {
+    "name": "LUIS GURULE",
+    "nickname": "\"GRIM\"",
+    "profile_url": "https://www.ufc.com/athlete/luis-gurule"
+  },
+  {
+    "name": "BOGDAN GUSKOV",
+    "nickname": "\"CZAREVITCH\"",
+    "profile_url": "https://www.ufc.com/athlete/bogdan-guskov"
+  },
+  {
+    "name": "GUGUN GUSMAN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/gugun-gusman"
+  },
+  {
+    "name": "ANDRE GUSMAO",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/andre-gusmao"
+  },
+  {
+    "name": "ALEXANDER GUSTAFSSON",
+    "nickname": "\"THE MAULER\"",
+    "profile_url": "https://www.ufc.com/athlete/alexander-gustafsson"
+  },
+  {
+    "name": "ANDREAS GUSTAFSSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/andreas-gustafsson"
+  },
+  {
+    "name": "HORACIO GUTIERREZ",
+    "nickname": "\"THE PUNISHER\"",
+    "profile_url": "https://www.ufc.com/athlete/horacio-gutierrez"
+  },
+  {
+    "name": "MANDO GUTIERREZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mando-gutierrez"
+  },
+  {
+    "name": "CHRIS GUTIERREZ",
+    "nickname": "\"EL GUAPO\"",
+    "profile_url": "https://www.ufc.com/athlete/chris-gutierrez"
+  },
+  {
+    "name": "MIKE GUYMON",
+    "nickname": "\"THE JOKER\"",
+    "profile_url": "https://www.ufc.com/athlete/mike-guymon"
+  },
+  {
+    "name": "CHELSEA HACKETT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chelsea-hackett"
+  },
+  {
+    "name": "KEITH HACKNEY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/keith-hackney"
+  },
+  {
+    "name": "CODY HADDON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/cody-haddon"
+  },
+  {
+    "name": "JAKE HADLEY",
+    "nickname": "\"WHITE KONG\"",
+    "profile_url": "https://www.ufc.com/athlete/jake-hadley"
+  },
+  {
+    "name": "DAMIR HADŽOVIĆ",
+    "nickname": "\"THE BOSNIAN BOMBER\"",
+    "profile_url": "https://www.ufc.com/athlete/tamia-hasohitsuku"
+  },
+  {
+    "name": "BASSIL HAFEZ",
+    "nickname": "\"THE HABIBI \"",
+    "profile_url": "https://www.ufc.com/athlete/bassil-hafez"
+  },
+  {
+    "name": "TIM HAGUE",
+    "nickname": "\"THE THRASHING MACHINE\"",
+    "profile_url": "https://www.ufc.com/athlete/tim-hague"
+  },
+  {
+    "name": "YAZAN HAJEH",
+    "nickname": "\"YAZZLE DAZZLE\"",
+    "profile_url": "https://www.ufc.com/athlete/yazan-hajeh"
+  },
+  {
+    "name": "RYAN HALL",
+    "nickname": "\"THE WIZARD\"",
+    "profile_url": "https://www.ufc.com/athlete/ryan-hall"
+  },
+  {
+    "name": "URIAH HALL",
+    "nickname": "\"PRIME TIME\"",
+    "profile_url": "https://www.ufc.com/athlete/uriah-hall"
+  },
+  {
+    "name": "MARK HALL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tim-kheyg-0"
+  },
+  {
+    "name": "DENNIS HALLMAN",
+    "nickname": "\"SUPERMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/dennis-hallman"
+  },
+  {
+    "name": "PIOTR HALLMANN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/piotr-hallmann"
+  },
+  {
+    "name": "TONY HALME",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tony-halme"
+  },
+  {
+    "name": "JOHN HALVERSON",
+    "nickname": "\"THE HURRICANE\"",
+    "profile_url": "https://www.ufc.com/athlete/john-halverson"
+  },
+  {
+    "name": "SEOHEE HAM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/seohee-ham"
+  },
+  {
+    "name": "FRANK HAMAKER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/frank-hamaker"
+  },
+  {
+    "name": "RAMI HAMED",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rami-hamed"
+  },
+  {
+    "name": "MATT HAMILL",
+    "nickname": "\"THE HAMMER\"",
+    "profile_url": "https://www.ufc.com/athlete/matt-hamill"
+  },
+  {
+    "name": "CJ HAMILTON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/cj-hamilton"
+  },
+  {
+    "name": "ANTHONY HAMILTON",
+    "nickname": "\"FREIGHT TRAIN\"",
+    "profile_url": "https://www.ufc.com/athlete/anthony-hamilton"
+  },
+  {
+    "name": "JARED HAMMAN",
+    "nickname": "\"THE MESSENGER\"",
+    "profile_url": "https://www.ufc.com/athlete/jared-hamman"
+  },
+  {
+    "name": "JAMES HAMMORTREE",
+    "nickname": "\"THE SLEDGE\"",
+    "profile_url": "https://www.ufc.com/athlete/james-hammortree"
+  },
+  {
+    "name": "CHAD HANEKOM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chad-hanekom"
+  },
+  {
+    "name": "KAY HANSEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kay-hansen"
+  },
+  {
+    "name": "NASRAT HAQPARAST",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/nasrat-haqparast"
+  },
+  {
+    "name": "SHIN HARAGUCHI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/shin-haraguchi"
+  },
+  {
+    "name": "JANAY HARDING",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/janay-harding"
+  },
+  {
+    "name": "ANTONI HARDONK",
+    "nickname": "\"MR. WONDERFUL\"",
+    "profile_url": "https://www.ufc.com/athlete/antoni-hardonk"
+  },
+  {
+    "name": "GEORGE HARDWICK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/george-hardwick"
+  },
+  {
+    "name": "GREG HARDY",
+    "nickname": "\"PRINCE OF WAR\"",
+    "profile_url": "https://www.ufc.com/athlete/greg-hardy"
+  },
+  {
+    "name": "DAN HARDY",
+    "nickname": "\"THE OUTLAW\"",
+    "profile_url": "https://www.ufc.com/athlete/dan-hardy"
+  },
+  {
+    "name": "JOSIAH HARRELL",
+    "nickname": "\"MUSCLE HAMSTER \"",
+    "profile_url": "https://www.ufc.com/athlete/josiah-harrell"
+  },
+  {
+    "name": "GERALD HARRIS",
+    "nickname": "\"HURRICANE\"",
+    "profile_url": "https://www.ufc.com/athlete/gerald-harris"
+  },
+  {
+    "name": "WALT HARRIS",
+    "nickname": "\"THE BIG TICKET\"",
+    "profile_url": "https://www.ufc.com/athlete/walt-harris"
+  },
+  {
+    "name": "PHIL HARRIS",
+    "nickname": "\"BILLY\"",
+    "profile_url": "https://www.ufc.com/athlete/phil-harris"
+  },
+  {
+    "name": "GERRY HARRIS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/dzheyms-khemmortri-0"
+  },
+  {
+    "name": "CARLSTON HARRIS",
+    "nickname": "\"MOCAMBIQUE\"",
+    "profile_url": "https://www.ufc.com/athlete/carlston-harris"
+  },
+  {
+    "name": "KAYLA HARRISON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kayla-harrison"
+  },
+  {
+    "name": "COLLIN HART",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/collin-hart"
+  },
+  {
+    "name": "DALE HARTT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/dale-hartt"
+  },
+  {
+    "name": "CLAY HARVISON",
+    "nickname": "\"HEAVY METAL\"",
+    "profile_url": "https://www.ufc.com/athlete/clay-harvison"
+  },
+  {
+    "name": "CHRIS HASEMAN",
+    "nickname": "\"THE HAMMER\"",
+    "profile_url": "https://www.ufc.com/athlete/chris-haseman"
+  },
+  {
+    "name": "HAYDER HASSAN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/hayder-hassan"
+  },
+  {
+    "name": "AHMAD HASSANZADA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ahmad-hassanzada"
+  },
+  {
+    "name": "JOHN HATHAWAY",
+    "nickname": "\"THE HITMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/john-hathaway"
+  },
+  {
+    "name": "PHIL HAWES",
+    "nickname": "\"NO HYPE\"",
+    "profile_url": "https://www.ufc.com/athlete/phillip-hawes"
+  },
+  {
+    "name": "TOMMY HAYDEN",
+    "nickname": "\"WILD CARD\"",
+    "profile_url": "https://www.ufc.com/athlete/tommy-hayden"
+  },
+  {
+    "name": "JOSH HAYNES",
+    "nickname": "\"BRING THE PAIN\"",
+    "profile_url": "https://www.ufc.com/athlete/josh-haynes"
+  },
+  {
+    "name": "DUSTIN HAZELETT",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/dustin-hazelett"
+  },
+  {
+    "name": "JAMES HEAD",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/james-head"
+  },
+  {
+    "name": "PAT HEALY",
+    "nickname": "\"BAM BAM\"",
+    "profile_url": "https://www.ufc.com/athlete/pat-healy"
+  },
+  {
+    "name": "DAVID HEATH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/david-heath"
+  },
+  {
+    "name": "CHRIS HEATHERLY",
+    "nickname": "\"STUMP\"",
+    "profile_url": "https://www.ufc.com/athlete/chris-heatherly"
+  },
+  {
+    "name": "JAKE HECHT",
+    "nickname": "\"THE HITMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/jake-hecht"
+  },
+  {
+    "name": "NICK HEIN",
+    "nickname": "\"SERGEANT\"",
+    "profile_url": "https://www.ufc.com/athlete/nick-hein"
+  },
+  {
+    "name": "IAN HEINISCH",
+    "nickname": "\"THE HURRICANE\"",
+    "profile_url": "https://www.ufc.com/athlete/ian-heinisch"
+  },
+  {
+    "name": "MARCIN HELD",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/marcin-held"
+  },
+  {
+    "name": "DELSON HELENO",
+    "nickname": "\"PÉ DE CHUMBO\"",
+    "profile_url": "https://www.ufc.com/athlete/delson-heleno"
+  },
+  {
+    "name": "BENSON HENDERSON",
+    "nickname": "\"SMOOTH\"",
+    "profile_url": "https://www.ufc.com/athlete/benson-henderson"
+  },
+  {
+    "name": "DAN HENDERSON",
+    "nickname": "\"HENDO\"",
+    "profile_url": "https://www.ufc.com/athlete/dan-henderson"
+  },
+  {
+    "name": "CORY HENDRICKS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/cory-hendricks"
+  },
+  {
+    "name": "JOHNY HENDRICKS",
+    "nickname": "\"BIGG RIGG\"",
+    "profile_url": "https://www.ufc.com/athlete/johny-hendricks"
+  },
+  {
+    "name": "JOSH HENDRICKS",
+    "nickname": "\"HEAVY\"",
+    "profile_url": "https://www.ufc.com/athlete/josh-hendricks"
+  },
+  {
+    "name": "LUIS HENRIQUE",
+    "nickname": "\"KLB\"",
+    "profile_url": "https://www.ufc.com/athlete/luis-henrique"
+  },
+  {
+    "name": "JOSÉ HENRIQUE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jose-henrique"
+  },
+  {
+    "name": "DANNY HENRY",
+    "nickname": "\"THE HATCHET\"",
+    "profile_url": "https://www.ufc.com/athlete/danny-henry"
+  },
+  {
+    "name": "VICTOR HENRY",
+    "nickname": "\"LA MANGOSTA\"",
+    "profile_url": "https://www.ufc.com/athlete/victor-henry"
+  },
+  {
+    "name": "JAI HERBERT",
+    "nickname": "\"BLACK COUNTRY BANGER\"",
+    "profile_url": "https://www.ufc.com/athlete/jai-herbert"
+  },
+  {
+    "name": "DAVE HERMAN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/dave-herman"
+  },
+  {
+    "name": "ED HERMAN",
+    "nickname": "\"SHORT FUSE\"",
+    "profile_url": "https://www.ufc.com/athlete/ed-herman"
+  },
+  {
+    "name": "JACK HERMANSSON",
+    "nickname": "\"THE JOKER\"",
+    "profile_url": "https://www.ufc.com/athlete/jack-hermansson"
+  },
+  {
+    "name": "NOHELIN HERNANDEZ",
+    "nickname": "\"SUAVE\"",
+    "profile_url": "https://www.ufc.com/athlete/nohelin-hernandez"
+  },
+  {
+    "name": "ALEXANDER HERNANDEZ",
+    "nickname": "\"THE GREAT APE\"",
+    "profile_url": "https://www.ufc.com/athlete/alexander-hernandez"
+  },
+  {
+    "name": "JUNIOR HERNANDEZ",
+    "nickname": "\"HOT HANDED\"",
+    "profile_url": "https://www.ufc.com/athlete/junior-hernandez"
+  },
+  {
+    "name": "NOE HERNANDEZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/frenk-khamaker-0"
+  },
+  {
+    "name": "CARLOS HERNANDEZ",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/carlos-hernandez"
+  },
+  {
+    "name": "ANTHONY HERNANDEZ",
+    "nickname": "\"FLUFFY\"",
+    "profile_url": "https://www.ufc.com/athlete/anthony-hernandez"
+  },
+  {
+    "name": "ALVARO HERRERA",
+    "nickname": "\"CHANGO\"",
+    "profile_url": "https://www.ufc.com/athlete/alvaro-herrera"
+  },
+  {
+    "name": "GEANE HERRERA",
+    "nickname": "\"THE REVOLUTIONARY\"",
+    "profile_url": "https://www.ufc.com/athlete/geane-herrera"
+  },
+  {
+    "name": "PAUL HERRERA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/paul-herrera"
+  },
+  {
+    "name": "FELICE HERRIG",
+    "nickname": "\"LIL BULLDOG\"",
+    "profile_url": "https://www.ufc.com/athlete/felice-herrig"
+  },
+  {
+    "name": "HEATH HERRING",
+    "nickname": "\"THE TEXAS CRAZY HORSE\"",
+    "profile_url": "https://www.ufc.com/athlete/heath-herring"
+  },
+  {
+    "name": "JON HESS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/khit-kherring-0"
+  },
+  {
+    "name": "CLINT HESTER",
+    "nickname": "\"HEADBUSSA\"",
+    "profile_url": "https://www.ufc.com/athlete/clint-hester"
+  },
+  {
+    "name": "JIMY HETTES",
+    "nickname": "\"THE KID\"",
+    "profile_url": "https://www.ufc.com/athlete/jimy-hettes"
+  },
+  {
+    "name": "JAY HIERON",
+    "nickname": "\"THE THOROUGHBRED\"",
+    "profile_url": "https://www.ufc.com/athlete/jay-hieron"
+  },
+  {
+    "name": "BRADY HIESTAND",
+    "nickname": "\"BAM BAM\"",
+    "profile_url": "https://www.ufc.com/athlete/brady-hiestand"
+  },
+  {
+    "name": "JASON HIGH",
+    "nickname": "\"THE KANSAS CITY BANDIT\"",
+    "profile_url": "https://www.ufc.com/athlete/jason-high"
+  },
+  {
+    "name": "RICHIE HIGHTOWER",
+    "nickname": "\"THE DIRTY SAMURAI\"",
+    "profile_url": "https://www.ufc.com/athlete/richie-hightower"
+  },
+  {
+    "name": "TYLER HILL",
+    "nickname": "\"ZOMBIE\"",
+    "profile_url": "https://www.ufc.com/athlete/tyler-hill"
+  },
+  {
+    "name": "COREY HILL",
+    "nickname": "\"THE REAL DEAL\"",
+    "profile_url": "https://www.ufc.com/athlete/corey-hill"
+  },
+  {
+    "name": "KAILAN HILL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kailan-hill"
+  },
+  {
+    "name": "ANGELA HILL",
+    "nickname": "\"OVERKILL\"",
+    "profile_url": "https://www.ufc.com/athlete/angela-hill"
+  },
+  {
+    "name": "JAMAHAL HILL",
+    "nickname": "\"SWEET DREAMS\"",
+    "profile_url": "https://www.ufc.com/athlete/jamahal-hill"
+  },
+  {
+    "name": "BRANDEN LEE HINKLE",
+    "nickname": "\"THE IRON LION\"",
+    "profile_url": "https://www.ufc.com/athlete/branden-lee-hinkle"
+  },
+  {
+    "name": "HATSU HIOKI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/hatsu-hioki"
+  },
+  {
+    "name": "KUNIYOSHI HIRONAKA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kuniyoshi-hironaka"
+  },
+  {
+    "name": "MIZUTO HIROTA",
+    "nickname": "\"PUGNUS\"",
+    "profile_url": "https://www.ufc.com/athlete/guangtian-ruiren"
+  },
+  {
+    "name": "MATT HOBAR",
+    "nickname": "\"THE CROWBAR\"",
+    "profile_url": "https://www.ufc.com/athlete/matt-hobar"
+  },
+  {
+    "name": "BOBBY HOFFMAN",
+    "nickname": "\"THE BAD SEED\"",
+    "profile_url": "https://www.ufc.com/athlete/bobby-hoffman"
+  },
+  {
+    "name": "CHRIS HOFMANN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chris-hofmann"
+  },
+  {
+    "name": "SAM HOGER",
+    "nickname": "\"THE ALASKAN ASSASSIN\"",
+    "profile_url": "https://www.ufc.com/athlete/sam-hoger"
+  },
+  {
+    "name": "ANDREW HOLBROOK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/andrew-holbrook"
+  },
+  {
+    "name": "CHRIS HOLDSWORTH",
+    "nickname": "\"HOLDS IT DOWN\"",
+    "profile_url": "https://www.ufc.com/athlete/chris-holdsworth"
+  },
+  {
+    "name": "FRANK HOLLAND",
+    "nickname": "\"THE TANK\"",
+    "profile_url": "https://www.ufc.com/athlete/frank-holland"
+  },
+  {
+    "name": "KEVIN HOLLAND",
+    "nickname": "\"TRAILBLAZER\"",
+    "profile_url": "https://www.ufc.com/athlete/kevin-holland"
+  },
+  {
+    "name": "ROGER HOLLETT",
+    "nickname": "\"THE HULK\"",
+    "profile_url": "https://www.ufc.com/athlete/roger-hollett"
+  },
+  {
+    "name": "MAX HOLLOWAY",
+    "nickname": "\"BLESSED\"",
+    "profile_url": "https://www.ufc.com/athlete/max-holloway"
+  },
+  {
+    "name": "HOLLY HOLM",
+    "nickname": "\"THE PREACHER'S DAUGHTER\"",
+    "profile_url": "https://www.ufc.com/athlete/holly-holm"
+  },
+  {
+    "name": "REX HOLMAN",
+    "nickname": "\"BIG DOG\"",
+    "profile_url": "https://www.ufc.com/athlete/rex-holman"
+  },
+  {
+    "name": "JOSEPH HOLMES",
+    "nickname": "\"UGLYMAN JOE\"",
+    "profile_url": "https://www.ufc.com/athlete/joseph-holmes"
+  },
+  {
+    "name": "KURT HOLOBAUGH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kurt-holobaugh"
+  },
+  {
+    "name": "PADDY HOLOHAN",
+    "nickname": "\"THE HOOLIGAN\"",
+    "profile_url": "https://www.ufc.com/athlete/paddy-holohan"
+  },
+  {
+    "name": "MARK HOLST",
+    "nickname": "\"BOOTS\"",
+    "profile_url": "https://www.ufc.com/athlete/mark-holst"
+  },
+  {
+    "name": "SCOTT HOLTZMAN",
+    "nickname": "\"HOT SAUCE\"",
+    "profile_url": "https://www.ufc.com/athlete/scott-holtzman"
+  },
+  {
+    "name": "SABAH HOMASI",
+    "nickname": "\"THE PROBLEM\"",
+    "profile_url": "https://www.ufc.com/athlete/saha-homashi"
+  },
+  {
+    "name": "MARK HOMINICK",
+    "nickname": "\"THE MACHINE\"",
+    "profile_url": "https://www.ufc.com/athlete/mark-hominick"
+  },
+  {
+    "name": "BARB HONCHAK",
+    "nickname": "\"THE LITTLE WARRIOR\"",
+    "profile_url": "https://www.ufc.com/athlete/barb-honchak"
+  },
+  {
+    "name": "SEONGCHAN HONG",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/seongchan-hong"
+  },
+  {
+    "name": "JUNYOUNG HONG",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/junyoung-hong"
+  },
+  {
+    "name": "SATOSHI HONMA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/satoshi-honma"
+  },
+  {
+    "name": "DAVID HOOD",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mark-khominik-1"
+  },
+  {
+    "name": "LORENZO HOOD",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/lorenzo-hood"
+  },
+  {
+    "name": "DAN HOOKER",
+    "nickname": "\"THE HANGMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/dan-hooker"
+  },
+  {
+    "name": "CHASE HOOPER",
+    "nickname": "\"THE DREAM\"",
+    "profile_url": "https://www.ufc.com/athlete/chase-hooper"
+  },
+  {
+    "name": "DARRELL HORCHER",
+    "nickname": "\"THE SAINT\"",
+    "profile_url": "https://www.ufc.com/athlete/darrell-horcher"
+  },
+  {
+    "name": "MOTI HORENSTEIN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mark-khominik-2"
+  },
+  {
+    "name": "YOSHINORI HORIE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/yoshinori-horie"
+  },
+  {
+    "name": "KYOJI HORIGUCHI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kyoji-horiguchi"
+  },
+  {
+    "name": "YUMA HORIUCHI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/yuma-horiuchi"
+  },
+  {
+    "name": "JEREMY HORN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jeremy-horn"
+  },
+  {
+    "name": "JAMEY-LYN HORTH",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jamey-lyn-horth"
+  },
+  {
+    "name": "MATT HORWICH",
+    "nickname": "\"SUAVE, SABRETOOTH\"",
+    "profile_url": "https://www.ufc.com/athlete/matt-horwich-0"
+  },
+  {
+    "name": "SAEED HOSSEINI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/saeed-hosseini"
+  },
+  {
+    "name": "JEFF HOUGLAND",
+    "nickname": "\"HELLBOUND\"",
+    "profile_url": "https://www.ufc.com/athlete/jeff-hougland"
+  },
+  {
+    "name": "BRIAN HOUSTON",
+    "nickname": "\"BHUE\"",
+    "profile_url": "https://www.ufc.com/athlete/brian-houston"
+  },
+  {
+    "name": "JOHN HOWARD",
+    "nickname": "\"DOOMSDAY\"",
+    "profile_url": "https://www.ufc.com/athlete/john-howard"
+  },
+  {
+    "name": "HAROLD HOWARD",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/harold-howard"
+  },
+  {
+    "name": "SHANE HOWELL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/shane-howell"
+  },
+  {
+    "name": "CARLOS HUACHIN",
+    "nickname": "\"PERRO MALO\"",
+    "profile_url": "https://www.ufc.com/athlete/carlos-huachin"
+  },
+  {
+    "name": "BRADY HUANG",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/brady-huang"
+  },
+  {
+    "name": "AUSTIN HUBBARD",
+    "nickname": "\"THUD\"",
+    "profile_url": "https://www.ufc.com/athlete/austin-hubbard"
+  },
+  {
+    "name": "COLLIN HUCKBODY",
+    "nickname": "\"ALL IN\"",
+    "profile_url": "https://www.ufc.com/athlete/collin-huckbody"
+  },
+  {
+    "name": "ROGER HUERTA",
+    "nickname": "\"EL MATADOR\"",
+    "profile_url": "https://www.ufc.com/athlete/roger-huerta"
+  },
+  {
+    "name": "JEFF HUGHES",
+    "nickname": "\"LIGHTS OUT\"",
+    "profile_url": "https://www.ufc.com/athlete/jeff-hughes"
+  },
+  {
+    "name": "SAM HUGHES",
+    "nickname": "\"SAMPAGE\"",
+    "profile_url": "https://www.ufc.com/athlete/sam-hughes"
+  },
+  {
+    "name": "MARK HUGHES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mark-hughes"
+  },
+  {
+    "name": "MATT HUGHES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/matt-hughes"
+  },
+  {
+    "name": "VICTOR HUGO",
+    "nickname": "\"STRIKER\"",
+    "profile_url": "https://www.ufc.com/athlete/victor-hugo"
+  },
+  {
+    "name": "HARRY HUNSUCKER",
+    "nickname": "\"THE HURRICANE\"",
+    "profile_url": "https://www.ufc.com/athlete/harry-hunsucker"
+  },
+  {
+    "name": "MARK HUNT",
+    "nickname": "\"SUPER SAMOAN\"",
+    "profile_url": "https://www.ufc.com/athlete/mark-hunt"
+  },
+  {
+    "name": "ADAM HUNTER",
+    "nickname": "\"WARHAMMER\"",
+    "profile_url": "https://www.ufc.com/athlete/adam-hunter"
+  },
+  {
+    "name": "ALEX HUNTER",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/alex-hunter"
+  },
+  {
+    "name": "SOLOMON HUTCHERSON",
+    "nickname": "\"KING\"",
+    "profile_url": "https://www.ufc.com/athlete/solomon-hutcherson"
+  },
+  {
+    "name": "AL IAQUINTA",
+    "nickname": "\"RAGING\"",
+    "profile_url": "https://www.ufc.com/athlete/al-iaquinta"
+  },
+  {
+    "name": "KHADIS IBRAGIMOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/khadis-ibragimov"
+  },
+  {
+    "name": "MINOKI ICHIHARA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/minoki-ichihara"
+  },
+  {
+    "name": "DAN IGE",
+    "nickname": "\"50K\"",
+    "profile_url": "https://www.ufc.com/athlete/dan-ige"
+  },
+  {
+    "name": "VALERI IGNATOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/saiid-khosseyni-0"
+  },
+  {
+    "name": "FABIANO IHA",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/fabiano-iha"
+  },
+  {
+    "name": "NASSOURDINE IMAVOV",
+    "nickname": "\"THE SNIPER\"",
+    "profile_url": "https://www.ufc.com/athlete/nassourdine-imavov"
+  },
+  {
+    "name": "BRAD IMES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/brad-imes"
+  },
+  {
+    "name": "CHRIS INDICH",
+    "nickname": "\"THE SAVAGE\"",
+    "profile_url": "https://www.ufc.com/athlete/chris-indich"
+  },
+  {
+    "name": "GUTO INOCENTE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/gunnar-nelson-1"
+  },
+  {
+    "name": "MIZUKI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/mizuki"
+  },
+  {
+    "name": "NAOKI INOUE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/naoki-inoue"
+  },
+  {
+    "name": "ENSON INOUE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/enson-inoue"
+  },
+  {
+    "name": "JAMES IRVIN",
+    "nickname": "\"THE SANDMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/james-irvin"
+  },
+  {
+    "name": "ISSA ISAKOV",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/issa-isakov"
+  },
+  {
+    "name": "TERUTO ISHIHARA",
+    "nickname": "\"YASHABO\"",
+    "profile_url": "https://www.ufc.com/athlete/teruto-ishihara"
+  },
+  {
+    "name": "DAMIR ISMAGULOV",
+    "nickname": "\"QAZAQ\"",
+    "profile_url": "https://www.ufc.com/athlete/damir-ismagulov"
+  },
+  {
+    "name": "WALLID ISMAIL",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/wallid-ismail"
+  },
+  {
+    "name": "LEANDRO ISSA",
+    "nickname": "\"BRODINHO\"",
+    "profile_url": "https://www.ufc.com/athlete/leandro-issa"
+  },
+  {
+    "name": "ALVARO IVAN LOPEZ RODRIGUES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/alvaro-ivan-lopez-rodrigues"
+  },
+  {
+    "name": "BLAGOY IVANOV",
+    "nickname": "\"BAGA\"",
+    "profile_url": "https://www.ufc.com/athlete/blagoy-ivanov"
+  },
+  {
+    "name": "ANTHONY IVY",
+    "nickname": "\"AQUAMAN\"",
+    "profile_url": "https://www.ufc.com/athlete/anthony-ivy"
+  },
+  {
+    "name": "YOISLANDY IZQUIERDO",
+    "nickname": "\"CUBA\"",
+    "profile_url": "https://www.ufc.com/athlete/yoislandy-izquierdo"
+  },
+  {
+    "name": "YVES JABOUIN",
+    "nickname": "\"TIGER\"",
+    "profile_url": "https://www.ufc.com/athlete/yves-jabouin"
+  },
+  {
+    "name": "MIKE JACKSON",
+    "nickname": "\"THE TRUTH\"",
+    "profile_url": "https://www.ufc.com/athlete/mike-jackson"
+  },
+  {
+    "name": "DAMON JACKSON",
+    "nickname": "\"THE LEECH\"",
+    "profile_url": "https://www.ufc.com/athlete/damon-jackson"
+  },
+  {
+    "name": "JASON JACKSON",
+    "nickname": "\"JAH-SON\"",
+    "profile_url": "https://www.ufc.com/athlete/jason-jackson"
+  },
+  {
+    "name": "RAMPAGE JACKSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/rampage-jackson"
+  },
+  {
+    "name": "KEVIN JACKSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/dzheyms-irvin-1"
+  },
+  {
+    "name": "EUGENE JACKSON",
+    "nickname": "\"THE WOLF\"",
+    "profile_url": "https://www.ufc.com/athlete/eugene-jackson"
+  },
+  {
+    "name": "JEREMY JACKSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jeremy-jackson"
+  },
+  {
+    "name": "JORDAN JACKSON",
+    "nickname": "\"THE SUPER SAIYAN\"",
+    "profile_url": "https://www.ufc.com/athlete/jordan-jackson"
+  },
+  {
+    "name": "BRIAN JACKSON",
+    "nickname": "\"STONE HANDZ\"",
+    "profile_url": "https://www.ufc.com/athlete/brian-jackson"
+  },
+  {
+    "name": "MONTEL JACKSON",
+    "nickname": "\"QUIK\"",
+    "profile_url": "https://www.ufc.com/athlete/montel-jackson"
+  },
+  {
+    "name": "RICHARD JACOBI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/richard-jacobi"
+  },
+  {
+    "name": "DUSTIN JACOBY",
+    "nickname": "\"THE HANYAK\"",
+    "profile_url": "https://www.ufc.com/athlete/dustin-jacoby"
+  },
+  {
+    "name": "JUSTIN JAMES",
+    "nickname": "\"THE PRETTY BOY\"",
+    "profile_url": "https://www.ufc.com/athlete/justin-james"
+  },
+  {
+    "name": "VIRNA JANDIROBA",
+    "nickname": "\"CARCARA\"",
+    "profile_url": "https://www.ufc.com/athlete/virna-jandiroba"
+  },
+  {
+    "name": "RYAN JANES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ryan-janes"
+  },
+  {
+    "name": "BROCK JARDINE",
+    "nickname": "\"THE MACHINE\"",
+    "profile_url": "https://www.ufc.com/athlete/brock-jardine"
+  },
+  {
+    "name": "KEITH JARDINE",
+    "nickname": "\"THE DEAN OF MEAN\"",
+    "profile_url": "https://www.ufc.com/athlete/keith-jardine"
+  },
+  {
+    "name": "RONY JASON",
+    "nickname": "\"JASON\"",
+    "profile_url": "https://www.ufc.com/athlete/rony-jason"
+  },
+  {
+    "name": "JASMINE JASUDAVICIUS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jasmine-jasudavicius"
+  },
+  {
+    "name": "YAZMIN JAUREGUI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/yazmin-jauregui"
+  },
+  {
+    "name": "JUSTIN JAYNES",
+    "nickname": "\"THE GUITAR HERO\"",
+    "profile_url": "https://www.ufc.com/athlete/justin-jaynes"
+  },
+  {
+    "name": "JOANNA JĘDRZEJCZYK",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/joanna-jedrzejczyk"
+  },
+  {
+    "name": "AARON JEFFERY",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/aaron-jeffery"
+  },
+  {
+    "name": "TRENT JENKINS",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/trent-jenkins"
+  },
+  {
+    "name": "BRANDON JENKINS",
+    "nickname": "\"THE HUMAN HIGHLIGHT REEL\"",
+    "profile_url": "https://www.ufc.com/athlete/brandon-jenkins"
+  },
+  {
+    "name": "JACK JENKINS",
+    "nickname": "\"PHAR\"",
+    "profile_url": "https://www.ufc.com/athlete/jack-jenkins"
+  },
+  {
+    "name": "STEVE JENNUM",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/steve-jennum"
+  },
+  {
+    "name": "RYAN JENSEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/ryan-jensen"
+  },
+  {
+    "name": "KYLE JENSEN",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/kyle-jensen"
+  },
+  {
+    "name": "CHANMI JEON",
+    "nickname": "\"OTTOGI GIRL\"",
+    "profile_url": "https://www.ufc.com/athlete/chanmi-jeon"
+  },
+  {
+    "name": "RONALD JHUN",
+    "nickname": "\"THE MACHINE GUN\"",
+    "profile_url": "https://www.ufc.com/athlete/ronald-jhun"
+  },
+  {
+    "name": "NIUSHIYUE JI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/niushiyue-ji"
+  },
+  {
+    "name": "WUZIAZIBIEKE JIAHEFU",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/wuziazibieke-jiahefu"
+  },
+  {
+    "name": "BAERGENG JIELEYISI",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/baergeng-jieleyisi"
+  },
+  {
+    "name": "ART JIMMERSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/art-jimmerson"
+  },
+  {
+    "name": "RYAN JIMMO",
+    "nickname": "\"THE BIG DEAL\"",
+    "profile_url": "https://www.ufc.com/athlete/ryan-jimmo"
+  },
+  {
+    "name": "ASIKEERBAI JINENSIBIEKE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/asikeerbai-jinensibieke"
+  },
+  {
+    "name": "ASIKERBAI JINENSIBIEKE",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/asikerbai-jinensibieke"
+  },
+  {
+    "name": "LI JINGLIANG",
+    "nickname": "\"THE LEECH\"",
+    "profile_url": "https://www.ufc.com/athlete/li-jingliang"
+  },
+  {
+    "name": "SUNG BIN JO",
+    "nickname": "\"KOREAN FALCON\"",
+    "profile_url": "https://www.ufc.com/athlete/sung-bin-jo"
+  },
+  {
+    "name": "MILES JOHNS",
+    "nickname": "\"CHAPO\"",
+    "profile_url": "https://www.ufc.com/athlete/miles-johns"
+  },
+  {
+    "name": "BRETT JOHNS",
+    "nickname": "\"THE PIKEY\"",
+    "profile_url": "https://www.ufc.com/athlete/brett-johns"
+  },
+  {
+    "name": "PHIL JOHNS",
+    "nickname": "\"LITTLE GIANT\"",
+    "profile_url": "https://www.ufc.com/athlete/phil-johns"
+  },
+  {
+    "name": "JORDAN JOHNSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/jordan-johnson"
+  },
+  {
+    "name": "TIMOTHY JOHNSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/timothy-johnson"
+  },
+  {
+    "name": "DAMARQUES JOHNSON",
+    "nickname": "\"DARKNESS\"",
+    "profile_url": "https://www.ufc.com/athlete/damarques-johnson"
+  },
+  {
+    "name": "MICHAEL JOHNSON",
+    "nickname": "\"THE MENACE\"",
+    "profile_url": "https://www.ufc.com/athlete/michael-johnson"
+  },
+  {
+    "name": "DEMETRIOUS JOHNSON",
+    "nickname": "\"MIGHTY MOUSE\"",
+    "profile_url": "https://www.ufc.com/athlete/temetoriasu-shiyonson"
+  },
+  {
+    "name": "KAJAN JOHNSON",
+    "nickname": "\"RAGIN'\"",
+    "profile_url": "https://www.ufc.com/athlete/kajan-johnson"
+  },
+  {
+    "name": "DASHON JOHNSON",
+    "nickname": "\"FLYBOY\"",
+    "profile_url": "https://www.ufc.com/athlete/dashon-johnson"
+  },
+  {
+    "name": "LAVAR JOHNSON",
+    "nickname": "\"BIG\"",
+    "profile_url": "https://www.ufc.com/athlete/loren-myorfi-0"
+  },
+  {
+    "name": "TAYLOR JOHNSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/taylor-johnson"
+  },
+  {
+    "name": "ANTHONY JOHNSON",
+    "nickname": "\"RUMBLE\"",
+    "profile_url": "https://www.ufc.com/athlete/anthony-johnson"
+  },
+  {
+    "name": "JOSE JOHNSON",
+    "nickname": "\"LOBO SOLITARIO\"",
+    "profile_url": "https://www.ufc.com/athlete/jose-johnson"
+  },
+  {
+    "name": "CHAD JOHNSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/chad-johnson"
+  },
+  {
+    "name": "CHARLES JOHNSON",
+    "nickname": "\"INNER G\"",
+    "profile_url": "https://www.ufc.com/athlete/charles-johnson"
+  },
+  {
+    "name": "TONY JOHNSON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/tony-johnson"
+  },
+  {
+    "name": "BRIAN JOHNSTON",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/damarkes-dzhonson-0"
+  },
+  {
+    "name": "LIANA JOJUA",
+    "nickname": "\"SHE WOLF\"",
+    "profile_url": "https://www.ufc.com/athlete/liana-jojua"
+  },
+  {
+    "name": "DANIEL JOLLY",
+    "nickname": "\"WEREWOLF OF TEXAS\"",
+    "profile_url": "https://www.ufc.com/athlete/daniel-jolly"
+  },
+  {
+    "name": "MASON JONES",
+    "nickname": "\"THE DRAGON\"",
+    "profile_url": "https://www.ufc.com/athlete/mason-jones"
+  },
+  {
+    "name": "ANTONIO JONES",
+    "nickname": "",
+    "profile_url": "https://www.ufc.com/athlete/antonio-jones"
+  },
+  {
+    "name": "JAMELLE JONES",
+    "nickname": "\"THE BEAST\"",
+    "profile_url": "https://www.ufc.com/athlete/jamelle-jones"
+  }
+]
