@@ -1,13 +1,72 @@
+import requests
+from bs4 import BeautifulSoup
+import json
+import time
+import logging
+import traceback
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time
-import json
-import logging
-import traceback
+
+
+def scrape_ufc_fighters():
+    base_url = "https://www.ufc.com/athletes/all"
+    fighters = []
+    page = 0
+
+    while True:
+        url = f"{base_url}?page={page}"
+        print(f"Fetching page {page}…", end=" ")
+        resp = requests.get(url)
+        if resp.status_code != 200:
+            print(f"→ HTTP {resp.status_code}, stopping.")
+            break
+
+        soup = BeautifulSoup(resp.text, "html.parser")
+        cards = soup.select("li.l-flex__item div.c-listing-athlete-flipcard__back")
+        if not cards:
+            print("→ no more fighters found, done.")
+            break
+
+        for card in cards:
+            # name
+            name_el = card.select_one("span.c-listing-athlete__name")
+            name = name_el.get_text(strip=True) if name_el else None
+
+            # nickname
+            nick_el = card.select_one("span.c-listing-athlete__nickname")
+            nickname = nick_el.get_text(strip=True) if nick_el else None
+
+            # profile URL (make absolute)
+            link_el = card.select_one("a.e-button--black")
+            href = link_el["href"] if link_el else None
+            profile_url = f"https://www.ufc.com{href}" if href and href.startswith("/") else href
+
+            fighters.append({
+                "name": name,
+                "nickname": nickname,
+                "profile_url": profile_url
+            })
+            print(f"    [+] Scraped fighter: {name}")
+
+        print(f"→ scraped {len(cards)} fighters on this page.")
+        page += 1
+        time.sleep(1)  # be polite
+
+    # save to JSON
+    with open("ufc_fighters.json", "w", encoding="utf-8") as f:
+        json.dump(fighters, f, indent=2, ensure_ascii=False)
+
+        print(f"→ scraped {len(cards)} fighters on this page.")
+        print(f"→ total fighters so far: {len(fighters)}")
+
+
+if __name__ == "__main__":
+    scrape_ufc_fighters()
 
 # --- configure error logging ---
 logging.basicConfig(
@@ -99,6 +158,8 @@ def scrape_ufc_fighters():
 
     fighters = []
     for idx, card in enumerate(cards, start=1):  # track position for error reporting
+        if idx % 100 == 0:
+            print(f"→ {idx} cards processed so far…")
 
         try:
             # Force the flip (if any styling still hides the back)

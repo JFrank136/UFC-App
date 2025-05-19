@@ -3,6 +3,17 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import FighterSearch from "./pages/FighterSearch";
 import UpcomingFights from "./pages/UpcomingFights";
 import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<FighterSearch />} />
+      </Routes>
+    </Router>
+  );
+}
 
 
 function App() {
@@ -17,7 +28,7 @@ function App() {
         </nav>
         <Routes>
           <Route path="/" element={<UpcomingFights />} />
-          <Route path="/search" element={<FighterSearch />} />
+          <Route path="/" element={<FighterSearch />} />
         </Routes>
       </div>
     </BrowserRouter>
