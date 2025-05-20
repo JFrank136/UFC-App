@@ -13,6 +13,17 @@ def scrape_details(profile_url):
     soup = BeautifulSoup(res.text, "html.parser")
     data = {}
 
+    # Try to get nickname from profile header if present
+    nickname_el = soup.select_one("span.c-hero__nickname")
+    if nickname_el:
+        data["nickname"] = nickname_el.get_text(strip=True)
+
+    # Try to get ranking if visible in the profile header
+    ranking_el = soup.select_one("div.c-hero__headline > div")
+    if ranking_el and "rank" in ranking_el.text.lower():
+        data["ranking"] = ranking_el.get_text(strip=True)
+
+
     def get_bio(label):
         el = soup.find("div", class_="c-bio__label", string=label)
         return el.find_next_sibling("div").get_text(strip=True) if el else None
@@ -21,9 +32,7 @@ def scrape_details(profile_url):
     data["height"] = get_bio("Height")
     data["weight"] = get_bio("Weight")
     data["reach"] = get_bio("Reach")
-    data["record"] = soup.select_one("span.c-hero__headline-suffix")
-    data["record"] = data["record"].text.strip() if data["record"] else None
-
+   
     # Main stats
     stats = soup.select(".c-stat-3bar__value")
     if len(stats) >= 6:

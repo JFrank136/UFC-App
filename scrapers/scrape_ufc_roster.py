@@ -160,7 +160,7 @@ def scrape_ufc_fighters():
     fighters = []
     for idx, card in enumerate(cards, start=1):  # track position for error reporting
         if idx % 100 == 0:
-            print(f"→ {idx} cards processed so far…", flush=TRUE)
+            print(f"→ {idx} cards processed so far…", flush=True)
 
         try:
             # Force the flip (if any styling still hides the back)
@@ -196,7 +196,7 @@ def scrape_ufc_fighters():
                 "profile_url": profile_url,
                 "status": status
             })
-            print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+            print(f"    [+] Scraped: {name} ({status})", flush=True)
 
         except Exception as e:
             # log full stacktrace

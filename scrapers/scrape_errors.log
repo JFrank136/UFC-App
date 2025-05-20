@@ -1,0 +1,719 @@
+2025-05-19 00:52:53,236 ERROR: Load-more loop stopped at 3027 cards: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF7D10CCF65+75717]
+	GetHandleVerifier [0x00007FF7D10CCFC0+75808]
+	(No symbol) [0x00007FF7D0E98F9A]
+	(No symbol) [0x00007FF7D0EEF4C6]
+	(No symbol) [0x00007FF7D0EEF77C]
+	(No symbol) [0x00007FF7D0F42577]
+	(No symbol) [0x00007FF7D0F173BF]
+	(No symbol) [0x00007FF7D0F3F39C]
+	(No symbol) [0x00007FF7D0F17153]
+	(No symbol) [0x00007FF7D0EE0421]
+	(No symbol) [0x00007FF7D0EE11B3]
+	GetHandleVerifier [0x00007FF7D13CD74D+3223469]
+	GetHandleVerifier [0x00007FF7D13C7CF2+3200338]
+	GetHandleVerifier [0x00007FF7D13E5B23+3322755]
+	GetHandleVerifier [0x00007FF7D10E6A3A+180890]
+	GetHandleVerifier [0x00007FF7D10EE13F+211359]
+	GetHandleVerifier [0x00007FF7D10D52B4+109332]
+	GetHandleVerifier [0x00007FF7D10D5462+109762]
+	GetHandleVerifier [0x00007FF7D10BBA79+4825]
+	BaseThreadInitThunk [0x00007FF8C151259D+29]
+	RtlUserThreadStart [0x00007FF8C298AF58+40]
+
+2025-05-19 00:52:55,568 ERROR: Error parsing card 1: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:52:55,996 ERROR: Error parsing card 2: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:52:56,452 ERROR: Error parsing card 3: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:52:57,166 ERROR: Error parsing card 4: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:52:57,802 ERROR: Error parsing card 5: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:52:58,472 ERROR: Error parsing card 6: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:52:59,428 ERROR: Error parsing card 7: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:00,653 ERROR: Error parsing card 8: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:01,882 ERROR: Error parsing card 9: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:02,313 ERROR: Error parsing card 10: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:02,731 ERROR: Error parsing card 11: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:03,184 ERROR: Error parsing card 12: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:03,587 ERROR: Error parsing card 13: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:04,006 ERROR: Error parsing card 14: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:04,663 ERROR: Error parsing card 15: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:05,358 ERROR: Error parsing card 16: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:05,842 ERROR: Error parsing card 17: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:06,256 ERROR: Error parsing card 18: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:08,105 ERROR: Error parsing card 19: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:08,521 ERROR: Error parsing card 20: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:08,936 ERROR: Error parsing card 21: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:09,353 ERROR: Error parsing card 22: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:11,056 ERROR: Error parsing card 23: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:12,316 ERROR: Error parsing card 24: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:13,347 ERROR: Error parsing card 25: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:14,666 ERROR: Error parsing card 26: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:15,080 ERROR: Error parsing card 27: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:16,410 ERROR: Error parsing card 28: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:17,515 ERROR: Error parsing card 29: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:18,856 ERROR: Error parsing card 30: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:21,305 ERROR: Error parsing card 31: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:22,423 ERROR: Error parsing card 32: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:23,067 ERROR: Error parsing card 33: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:23,499 ERROR: Error parsing card 34: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:23,884 ERROR: Error parsing card 35: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:24,333 ERROR: Error parsing card 36: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:26,726 ERROR: Error parsing card 37: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:27,942 ERROR: Error parsing card 38: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:28,949 ERROR: Error parsing card 39: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:29,368 ERROR: Error parsing card 40: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:29,815 ERROR: Error parsing card 41: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:31,333 ERROR: Error parsing card 42: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:31,713 ERROR: Error parsing card 43: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:32,134 ERROR: Error parsing card 44: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:33,095 ERROR: Error parsing card 45: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:33,513 ERROR: Error parsing card 46: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:34,247 ERROR: Error parsing card 47: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:34,661 ERROR: Error parsing card 48: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:35,101 ERROR: Error parsing card 49: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:35,782 ERROR: Error parsing card 50: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:39,724 ERROR: Error parsing card 51: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:40,164 ERROR: Error parsing card 52: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:40,640 ERROR: Error parsing card 53: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:41,083 ERROR: Error parsing card 54: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:47,204 ERROR: Error parsing card 55: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:48,509 ERROR: Error parsing card 56: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:49,508 ERROR: Error parsing card 57: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:49,936 ERROR: Error parsing card 58: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:51,088 ERROR: Error parsing card 59: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:51,489 ERROR: Error parsing card 60: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:52,755 ERROR: Error parsing card 61: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:53,214 ERROR: Error parsing card 62: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:53,639 ERROR: Error parsing card 63: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:54,451 ERROR: Error parsing card 64: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:54,893 ERROR: Error parsing card 65: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:55,342 ERROR: Error parsing card 66: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:56,833 ERROR: Error parsing card 67: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:57,621 ERROR: Error parsing card 68: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:58,339 ERROR: Error parsing card 69: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:53:59,535 ERROR: Error parsing card 70: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:00,182 ERROR: Error parsing card 71: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:00,923 ERROR: Error parsing card 72: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:01,352 ERROR: Error parsing card 73: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:03,394 ERROR: Error parsing card 74: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:03,823 ERROR: Error parsing card 75: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:04,290 ERROR: Error parsing card 76: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:05,002 ERROR: Error parsing card 77: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:06,275 ERROR: Error parsing card 78: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:07,007 ERROR: Error parsing card 79: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:08,358 ERROR: Error parsing card 80: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:10,008 ERROR: Error parsing card 81: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:10,467 ERROR: Error parsing card 82: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:10,883 ERROR: Error parsing card 83: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:11,513 ERROR: Error parsing card 84: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:11,973 ERROR: Error parsing card 85: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:12,603 ERROR: Error parsing card 86: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:13,932 ERROR: Error parsing card 87: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:15,032 ERROR: Error parsing card 88: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:16,085 ERROR: Error parsing card 89: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:17,740 ERROR: Error parsing card 90: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:19,293 ERROR: Error parsing card 91: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:20,714 ERROR: Error parsing card 92: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:22,353 ERROR: Error parsing card 93: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:23,625 ERROR: Error parsing card 94: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:25,401 ERROR: Error parsing card 95: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:26,076 ERROR: Error parsing card 96: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:27,343 ERROR: Error parsing card 97: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:27,764 ERROR: Error parsing card 98: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 00:54:29,300 ERROR: Error parsing card 99: name 'TRUE' is not defined
+Traceback (most recent call last):
+  File "C:\Users\jmfra\OneDrive\Documents\UFC\UFC Tool\scrapers\scrape_ufc_roster.py", line 199, in scrape_ufc_fighters
+    print(f"    [+] Scraped: {name} ({status})", flush=TRUE)
+                                                       ^^^^
+NameError: name 'TRUE' is not defined. Did you mean: 'True'?
+
+2025-05-19 08:27:51,704 ERROR: Load-more loop stopped at 2902 cards: Message: 
+
