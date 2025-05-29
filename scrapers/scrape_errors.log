@@ -717,3 +717,185 @@ NameError: name 'TRUE' is not defined. Did you mean: 'True'?
 
 2025-05-19 08:27:51,704 ERROR: Load-more loop stopped at 2902 cards: Message: 
 
+2025-05-21 08:52:18,696 ERROR: Load-more loop stopped at 398 cards: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF675AACF65+75717]
+	GetHandleVerifier [0x00007FF675AACFC0+75808]
+	(No symbol) [0x00007FF675878F9A]
+	(No symbol) [0x00007FF6758CF4C6]
+	(No symbol) [0x00007FF6758CF77C]
+	(No symbol) [0x00007FF675922577]
+	(No symbol) [0x00007FF6758F73BF]
+	(No symbol) [0x00007FF67591F39C]
+	(No symbol) [0x00007FF6758F7153]
+	(No symbol) [0x00007FF6758C0421]
+	(No symbol) [0x00007FF6758C11B3]
+	GetHandleVerifier [0x00007FF675DAD74D+3223469]
+	GetHandleVerifier [0x00007FF675DA7CF2+3200338]
+	GetHandleVerifier [0x00007FF675DC5B23+3322755]
+	GetHandleVerifier [0x00007FF675AC6A3A+180890]
+	GetHandleVerifier [0x00007FF675ACE13F+211359]
+	GetHandleVerifier [0x00007FF675AB52B4+109332]
+	GetHandleVerifier [0x00007FF675AB5462+109762]
+	GetHandleVerifier [0x00007FF675A9BA79+4825]
+	BaseThreadInitThunk [0x00007FF8C151259D+29]
+	RtlUserThreadStart [0x00007FF8C298AF58+40]
+
+2025-05-21 09:13:57,446 ERROR: Load-more loop stopped at 399 cards: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF7B822CF65+75717]
+	GetHandleVerifier [0x00007FF7B822CFC0+75808]
+	(No symbol) [0x00007FF7B7FF8F9A]
+	(No symbol) [0x00007FF7B804F4C6]
+	(No symbol) [0x00007FF7B804F77C]
+	(No symbol) [0x00007FF7B80A2577]
+	(No symbol) [0x00007FF7B80773BF]
+	(No symbol) [0x00007FF7B809F39C]
+	(No symbol) [0x00007FF7B8077153]
+	(No symbol) [0x00007FF7B8040421]
+	(No symbol) [0x00007FF7B80411B3]
+	GetHandleVerifier [0x00007FF7B852D74D+3223469]
+	GetHandleVerifier [0x00007FF7B8527CF2+3200338]
+	GetHandleVerifier [0x00007FF7B8545B23+3322755]
+	GetHandleVerifier [0x00007FF7B8246A3A+180890]
+	GetHandleVerifier [0x00007FF7B824E13F+211359]
+	GetHandleVerifier [0x00007FF7B82352B4+109332]
+	GetHandleVerifier [0x00007FF7B8235462+109762]
+	GetHandleVerifier [0x00007FF7B821BA79+4825]
+	BaseThreadInitThunk [0x00007FF8C151259D+29]
+	RtlUserThreadStart [0x00007FF8C298AF58+40]
+
+2025-05-22 18:52:20,244 ERROR: Load-more loop stopped at 3028 cards: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF67B81CF45+75717]
+	GetHandleVerifier [0x00007FF67B81CFA0+75808]
+	(No symbol) [0x00007FF67B5E8F9A]
+	(No symbol) [0x00007FF67B63F4C6]
+	(No symbol) [0x00007FF67B63F77C]
+	(No symbol) [0x00007FF67B692577]
+	(No symbol) [0x00007FF67B6673BF]
+	(No symbol) [0x00007FF67B68F39C]
+	(No symbol) [0x00007FF67B667153]
+	(No symbol) [0x00007FF67B630421]
+	(No symbol) [0x00007FF67B6311B3]
+	GetHandleVerifier [0x00007FF67BB1D71D+3223453]
+	GetHandleVerifier [0x00007FF67BB17CC2+3200322]
+	GetHandleVerifier [0x00007FF67BB35AF3+3322739]
+	GetHandleVerifier [0x00007FF67B836A1A+180890]
+	GetHandleVerifier [0x00007FF67B83E11F+211359]
+	GetHandleVerifier [0x00007FF67B825294+109332]
+	GetHandleVerifier [0x00007FF67B825442+109762]
+	GetHandleVerifier [0x00007FF67B80BA59+4825]
+	BaseThreadInitThunk [0x00007FF84567259D+29]
+	RtlUserThreadStart [0x00007FF8470AAF58+40]
+
+2025-05-22 20:40:08,518 ERROR: Failed to fetch status for JOSH STUART: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/josh-stuart (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCF390>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:19,893 ERROR: Failed to fetch status for MIKE STUMPF: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/mike-stumpf (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCEE90>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:20,200 ERROR: Failed to fetch status for TATIANA SUAREZ: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/tatiana-suarez (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCED50>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:20,504 ERROR: Failed to fetch status for VINEESH SUBRAHMANYAN: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/vineesh-subrahmanyan (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCCE10>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:20,810 ERROR: Failed to fetch status for GENKI SUDO: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/genki-sudo (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCF750>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:21,112 ERROR: Failed to fetch status for LUKASZ SUDOLSKI: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/lukasz-sudolski (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCD450>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:21,411 ERROR: Failed to fetch status for GEORGE SULLIVAN: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/george-sullivan (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCF4D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:21,706 ERROR: Failed to fetch status for AMAR SULOEV: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/amar-suloev (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCEAD0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:22,016 ERROR: Failed to fetch status for JUSTIN SUMTER: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/justin-sumter (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCF250>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:22,318 ERROR: Failed to fetch status for RAMA SUPANDHI: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/rama-supandhi (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCDD10>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:22,618 ERROR: Failed to fetch status for JOEL SUTTON: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/genki-sudo-0 (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9BC4050>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:23,003 ERROR: Failed to fetch status for DANILO SUZART: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/danilo-suzart (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9BC4410>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:23,326 ERROR: Failed to fetch status for MARTIN SVENSSON: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/martin-svensson (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9BC47D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:23,638 ERROR: Failed to fetch status for DANIEL SWAIN: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/daniel-swain (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9BC4B90>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:23,951 ERROR: Failed to fetch status for CUB SWANSON: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/cub-swanson (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCDD10>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:24,268 ERROR: Failed to fetch status for EVAN SWEESY: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/evan-sweesy (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCD810>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:24,636 ERROR: Failed to fetch status for MIKE SWICK: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/mike-swick (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCFC50>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:24,937 ERROR: Failed to fetch status for FLOYD SWORD: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/floyd-sword (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCDBD0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:25,243 ERROR: Failed to fetch status for OUMAR SY: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/oumar-sy (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCDF90>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:25,551 ERROR: Failed to fetch status for KLAUDIA SYGULA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/klaudia-sygula (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCD310>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:25,859 ERROR: Failed to fetch status for BENTLEY SYLER: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/bentley-syler (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCC910>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:26,161 ERROR: Failed to fetch status for KEVIN SYLER: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/kevin-syler (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCD1D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:26,460 ERROR: Failed to fetch status for TIM SYLVIA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/tim-sylvia (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCF9D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:37,803 ERROR: Failed to fetch status for KEVIN SZAFLARSKI: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/kevin-szaflarski (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCE990>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:40:49,179 ERROR: Failed to fetch status for EUGENIO TADEU: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/tim-silviya-0 (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCEFD0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:41:00,555 ERROR: Failed to fetch status for JUSTIN TAFA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/justin-tafa (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE88EC190>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:41:11,914 ERROR: Failed to fetch status for JUNIOR TAFA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/junior-tafa (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE88EC550>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:41:23,261 ERROR: Failed to fetch status for KHALID TAHA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/khalid-taha (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE88EC910>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:41:34,605 ERROR: Failed to fetch status for TATSURO TAIRA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/tatsuro-taira (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE88ECCD0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:41:45,966 ERROR: Failed to fetch status for MAIRBEK TAISUMOV: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/mairbek-taisumov (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE88ED090>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:41:57,339 ERROR: Failed to fetch status for YOSHIKI TAKAHASHI: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/yoshiki-takahashi (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE88ED450>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:42:08,703 ERROR: Failed to fetch status for DAIJU TAKASE: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/daiju-takase (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCEFD0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:42:20,083 ERROR: Failed to fetch status for OLEG TAKTAROV: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/oleg-taktarov (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCE990>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:42:31,449 ERROR: Failed to fetch status for MONTREL TALBERT: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/montrel-talbert (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCF9D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:42:42,805 ERROR: Failed to fetch status for PAYTON TALBOTT: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/payton-talbott (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCD1D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:42:54,197 ERROR: Failed to fetch status for NORDINE TALEB: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/nordine-taleb (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCC910>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:05,579 ERROR: Failed to fetch status for MURTAZA TALHA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/murtaza-talha (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCD310>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:17,012 ERROR: Failed to fetch status for ISSEI TAMURA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/issei-tamura (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCDF90>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:28,395 ERROR: Failed to fetch status for AKITOSHI TAMURA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/akitoshi-tamura (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCDBD0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:28,717 ERROR: Failed to fetch status for JASON TAN: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/jason-tan (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCFC50>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:29,028 ERROR: Failed to fetch status for MICHINORI TANAKA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/michinori-tanaka (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCD810>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:29,349 ERROR: Failed to fetch status for EVAN TANNER: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/evan-tanner (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCDD10>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:29,660 ERROR: Failed to fetch status for MIESHA TATE: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/miesha-tate (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C10190>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:29,980 ERROR: Failed to fetch status for BRAD TAVARES: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/brad-tavares (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C10550>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:30,288 ERROR: Failed to fetch status for THIAGO TAVARES: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/thiago-tavares (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C10910>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:30,604 ERROR: Failed to fetch status for RAMON TAVERAS: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/ramon-taveras (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C10CD0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:30,931 ERROR: Failed to fetch status for DANIELLE TAYLOR: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/danielle-taylor (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C11090>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:31,253 ERROR: Failed to fetch status for JESSE TAYLOR: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/jesse-taylor (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C11450>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:31,564 ERROR: Failed to fetch status for PAUL TAYLOR: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/paul-taylor (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCDD10>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:31,879 ERROR: Failed to fetch status for JAMES TE HUNA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/james-te-huna (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCD810>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:32,206 ERROR: Failed to fetch status for SHAWN TEED: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/shawn-teed (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCFC50>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:32,529 ERROR: Failed to fetch status for TALLISON TEIXEIRA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/tallison-teixeira (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCDBD0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:32,848 ERROR: Failed to fetch status for GLOVER TEIXEIRA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/glover-teixeira (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCDF90>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:33,161 ERROR: Failed to fetch status for JOHN TEIXEIRA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/john-teixeira (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCD310>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:33,481 ERROR: Failed to fetch status for TRA TELLIGMAN: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/tra-telligman (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCC910>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:33,799 ERROR: Failed to fetch status for RAMAZAN TEMIROV: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/ramazan-temirov (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCD1D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:34,125 ERROR: Failed to fetch status for TANEISHA TENNANT: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/taneisha-tennant (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCF9D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:34,442 ERROR: Failed to fetch status for DAVID TERRELL: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/david-terrell (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCE990>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:34,777 ERROR: Failed to fetch status for JAMES TERRY: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/james-terry (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCEFD0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:35,096 ERROR: Failed to fetch status for TESTY TEST: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/testy-test (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C11590>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:35,413 ERROR: Failed to fetch status for DAVID TEYMUR: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/david-teymur (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C111D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:35,737 ERROR: Failed to fetch status for DANIEL TEYMUR: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/daniel-teymur (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C10E10>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:36,053 ERROR: Failed to fetch status for MOTONOBU TEZUKA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/montana-de-la-rosa-0 (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C10A50>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:36,370 ERROR: Failed to fetch status for JASON THACKER: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/jason-thacker (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C10190>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:36,694 ERROR: Failed to fetch status for ALEXIA THAINARA: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/alexia-thainara (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C102D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:37,013 ERROR: Failed to fetch status for BRANDON THATCH: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/brandon-thatch (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCE350>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:37,333 ERROR: Failed to fetch status for ELIAS THEODOROU: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/elias-theodorou (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCE210>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:38,086 ERROR: Failed to fetch status for PAULO THIAGO: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/paulo-thiago (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCFED0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:38,501 ERROR: Failed to fetch status for COLBY THICKNESSE: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/colby-thicknesse (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCFD90>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:38,865 ERROR: Failed to fetch status for DIN THOMAS: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/din-thomas (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCE490>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:50,264 ERROR: Failed to fetch status for RYAN THOMAS: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/ryan-thomas (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCD590>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:50,606 ERROR: Failed to fetch status for TIMOTHY THOMAS: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/timothy-thomas (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCCF50>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:50,938 ERROR: Failed to fetch status for STEPHEN THOMPSON: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/stephen-thompson (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCE5D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:51,267 ERROR: Failed to fetch status for NICK THOMPSON: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/nick-thompson (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCD6D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:51,577 ERROR: Failed to fetch status for OLI THOMPSON: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/oli-thompson (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCE850>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:51,883 ERROR: Failed to fetch status for JOSH THOMSON: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/josh-thomson (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE7DCFB10>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:52,195 ERROR: Failed to fetch status for SIMEON THORESEN: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/simeon-thoresen (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C10190>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:52,510 ERROR: Failed to fetch status for GLEISON TIBAU: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/gleison-tibau (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C10A50>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:52,817 ERROR: Failed to fetch status for NOLAN TICMAN: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/nolan-ticman (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C10E10>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:53,123 ERROR: Failed to fetch status for DARREN TILL: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/darren-till (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C111D0>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:53,433 ERROR: Failed to fetch status for DENIS TIULIULIN: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/denis-tiuliulin (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C11590>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 20:43:53,737 ERROR: Failed to fetch status for ANDREW TODHUNTER: HTTPSConnectionPool(host='www.ufc.com', port=443): Max retries exceeded with url: /athlete/andrew-todhunter (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001FDE9C11810>: Failed to resolve 'www.ufc.com' ([Errno 11001] getaddrinfo failed)"))
+2025-05-22 21:16:30,205 ERROR: Load-more loop stopped at 3028 cards: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF6517ACF45+75717]
+	GetHandleVerifier [0x00007FF6517ACFA0+75808]
+	(No symbol) [0x00007FF651578F9A]
+	(No symbol) [0x00007FF6515CF4C6]
+	(No symbol) [0x00007FF6515CF77C]
+	(No symbol) [0x00007FF651622577]
+	(No symbol) [0x00007FF6515F73BF]
+	(No symbol) [0x00007FF65161F39C]
+	(No symbol) [0x00007FF6515F7153]
+	(No symbol) [0x00007FF6515C0421]
+	(No symbol) [0x00007FF6515C11B3]
+	GetHandleVerifier [0x00007FF651AAD71D+3223453]
+	GetHandleVerifier [0x00007FF651AA7CC2+3200322]
+	GetHandleVerifier [0x00007FF651AC5AF3+3322739]
+	GetHandleVerifier [0x00007FF6517C6A1A+180890]
+	GetHandleVerifier [0x00007FF6517CE11F+211359]
+	GetHandleVerifier [0x00007FF6517B5294+109332]
+	GetHandleVerifier [0x00007FF6517B5442+109762]
+	GetHandleVerifier [0x00007FF65179BA59+4825]
+	BaseThreadInitThunk [0x00007FF84567259D+29]
+	RtlUserThreadStart [0x00007FF8470AAF58+40]
+
+2025-05-29 10:10:39,898 ERROR: Load-more loop stopped at 75 cards: Message: 
+
+2025-05-29 10:16:15,125 ERROR: Load-more loop stopped at 104 cards: Message: 
+
