@@ -90,8 +90,10 @@ def batch_insert_fighters(cursor, fighters_batch):
             reach, strikes_landed_per_min, strikes_absorbed_per_min, takedown_avg,
             submission_avg, striking_defense, knockdown_avg, avg_fight_time, nickname, 
             country, age, weight_class, wins_total, losses_total, wins_ko, wins_sub, wins_dec,
-            losses_ko, losses_sub, losses_dec
-        ) VALUES %s
+            losses_ko, losses_sub, losses_dec, image_url, image_local_path, ufc_rankings
+        )
+
+        VALUES %s
         ON CONFLICT (id) DO UPDATE SET
             name = EXCLUDED.name,
             profile_url_ufc = EXCLUDED.profile_url_ufc,
@@ -119,8 +121,10 @@ def batch_insert_fighters(cursor, fighters_batch):
             wins_dec = EXCLUDED.wins_dec,
             losses_ko = EXCLUDED.losses_ko,
             losses_sub = EXCLUDED.losses_sub,
-            losses_dec = EXCLUDED.losses_dec;
-
+            losses_dec = EXCLUDED.losses_dec,
+            image_url = EXCLUDED.image_url,
+            image_local_path = EXCLUDED.image_local_path,
+            ufc_rankings = EXCLUDED.ufc_rankings;
     """
     
     # Convert batch to tuple format with proper data conversion
@@ -154,7 +158,10 @@ def batch_insert_fighters(cursor, fighters_batch):
             clean_numeric(fighter.get("wins_dec")),
             clean_numeric(fighter.get("losses_ko")),
             clean_numeric(fighter.get("losses_sub")),
-            clean_numeric(fighter.get("losses_dec"))
+            clean_numeric(fighter.get("losses_dec")),
+            fighter.get("image_url"),
+            fighter.get("image_local_path"),
+            json.dumps(fighter.get("ufc_rankings", []))  # convert to JSON string
         ))
     
     psycopg2.extras.execute_values(cursor, query, values, template=None)
@@ -201,16 +208,6 @@ def main():
         print(f"❌ Failed to load file: {e}")
         sys.exit(1)
     
-    # Debug first few fighters
-    print("\n🔍 DEBUGGING FIRST 3 FIGHTERS:")
-    for i, fighter in enumerate(fighters[:3]):
-        debug_fighter_data(fighter, i+1)
-    
-    # Ask user if they want to continue
-    response = input(f"\nDo you want to continue with the upload? (y/n): ").lower().strip()
-    if response != 'y':
-        print("Upload cancelled.")
-        return
     
     # Load environment variables
     load_dotenv()
@@ -229,6 +226,10 @@ def main():
         sys.exit(1)
     
     cur = conn.cursor()
+    print("⚠️ Deleting existing fighters from the database...")
+    cur.execute("DELETE FROM fighters;")
+    conn.commit()
+
     
  
     # Statistics

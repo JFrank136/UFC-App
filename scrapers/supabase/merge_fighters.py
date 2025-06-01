@@ -149,6 +149,8 @@ def main():
     print("📂 Loading data files...")
     ufc_data = load_json_file("../data/ufc_details.json")
     sherdog_data = load_json_file("../data/sherdog_fighters.json")
+    rankings_data = load_json_file("../data/ufc_rankings.json")
+
     
     # Load name fixes
     sys.path.append("../utils")
@@ -164,13 +166,34 @@ def main():
     print("🔍 Building lookup tables...")
     sherdog_lookup = build_sherdog_lookup(sherdog_data)
     name_fixes = create_name_fixes_lookup(NAME_FIXES)
+
+    def build_rankings_lookup(rankings_list):
+        lookup = {}
+        for division in rankings_list:
+            div_name = division.get("division", "Pound-for-Pound").strip()
+            for fighter in division.get("fighters", []):
+                uuid = fighter.get("uuid")
+                if uuid:
+                    entry = {"division": div_name, "rank": fighter["rank"]}
+                    lookup.setdefault(uuid, []).append(entry)
+        return lookup
+
+    rankings_lookup = build_rankings_lookup(rankings_data)
+
+    # Start with a clean slate – don't use existing data
+    existing_lookup = {}
+
+
+
     
     # Merge data
     print("🔄 Merging fighter data...")
     merged_fighters = []
     unmatched = []
     
+    mismatched_uuids = []
     for ufc_fighter in ufc_data:
+
         ufc_name = ufc_fighter.get("name", "").strip()
         if not ufc_name:
             print(f"⚠️ Warning: UFC fighter with empty name: {ufc_fighter}")
@@ -178,16 +201,58 @@ def main():
         
         sherdog_fighter = find_sherdog_match(ufc_name, sherdog_lookup, name_fixes)
         
+        merged = ufc_fighter.copy()
+        merged["name"] = create_normalized_name(merged.get("name", ""))
+
         if sherdog_fighter:
-            merged = merge_fighter_data(ufc_fighter, sherdog_fighter)
-            merged["name"] = create_normalized_name(merged["name"])
-            merged_fighters.append(merged)
+            merged = merge_fighter_data(merged, sherdog_fighter)
+
+            # UUID mismatch check
+            if merged.get("id") and sherdog_fighter.get("id") and merged["id"] != sherdog_fighter["id"]:
+                merged["uuid_mismatch"] = {
+                    "ufc_id": merged["id"],
+                    "sherdog_id": sherdog_fighter["id"]
+                }
+                mismatched_uuids.append({
+                    "name": merged["name"],
+                    "ufc_id": merged["id"],
+                    "sherdog_id": sherdog_fighter["id"]
+                })
+
         else:
             unmatched.append(ufc_name)
-    
+            # Still keep UFC-only fighter in merged output
+            # No-op here — handled outside the conditional block
+            pass
+
+
+        uuid = merged.get("id")
+        if uuid and uuid in rankings_lookup:
+            # Insert rankings early so it's not buried below fight_history
+            merged_rankings = rankings_lookup[uuid]
+            merged["ufc_rankings"] = merged_rankings
+
+            # Move fight history (if present) to the end
+            if "fight_history" in merged:
+                fight_history = merged.pop("fight_history")
+                merged["fight_history"] = fight_history
+
+
+        existing_lookup[merged["id"]] = merged
+        merged_fighters.append(merged)
+
+
+   
     # Save results
+    # Save UUID mismatches
+    if mismatched_uuids:
+        mismatch_path = "../data/errors/uuid_mismatches.json"
+        save_merged_data(mismatched_uuids, mismatch_path)
+        print(f"📄 UUID mismatches report: {mismatch_path}")
+
     print("💾 Saving results...")
-    save_merged_data(merged_fighters, "../data/fighters.json")
+    save_merged_data(list(existing_lookup.values()), "../data/fighters.json")
+
     
     # Generate reports
     print("\n📈 Results Summary:")
@@ -205,7 +270,9 @@ def main():
     else:
         print("🎉 All UFC fighters matched successfully!")
     
-    match_rate = (len(merged_fighters) / len(ufc_data)) * 100 if ufc_data else 0
+    matched_count = len(ufc_data) - len(unmatched)
+    match_rate = (matched_count / len(ufc_data)) * 100 if ufc_data else 0
+
     print(f"📊 Match rate: {match_rate:.1f}%")
 
 if __name__ == "__main__":

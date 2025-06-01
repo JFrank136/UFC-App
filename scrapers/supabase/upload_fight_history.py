@@ -80,6 +80,10 @@ def main():
         return
     
     cur = conn.cursor()
+    print("⚠️ Clearing existing fight history from the database...")
+    cur.execute("TRUNCATE TABLE fight_history;")
+    conn.commit()
+
     
     # Statistics tracking
     total_fights = len(fight_history)

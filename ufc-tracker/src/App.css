@@ -53,3 +53,36 @@ button:hover {
   border-radius: 4px;
   margin-top: 1rem;
 }
+
+.toggle-btn {
+  background-color: #e5e7eb;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.toggle-btn.selected {
+  background-color: #3b82f6;
+  color: #fff;
+  border-color: #2563eb;
+}
+.toggle-btn.remove {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+.toggle-btn.remove:hover {
+  background-color: #fecaca;
+}
+.toggle-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.status-label {
+  margin-left: 0.5rem;
+  font-size: 0.95em;
+  color: #6b7280;
+  font-style: italic;
+}

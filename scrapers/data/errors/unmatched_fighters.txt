@@ -1,13 +1,7 @@
 Unmatched UFC fighters (not found in Sherdog)
 Generated: merge_fighters.py
-Total unmatched: 9
+Total unmatched: 3
 
-  1. ABDUL AZEEM BADAKHSHI
-  2. BENARDO SOPAJ
-  3. DAVI COSTA
-  4. FABIO AGU
-  5. FENG PENGCHAO
-  6. KEIFER ROBERTS
-  7. LEONARDO DE OLIVEIRA
-  8. LU KAI
-  9. SANGWOOK KIM
+  1. BENARDO SOPAJ
+  2. DAVI COSTA
+  3. LEONARDO DE OLIVEIRA

@@ -44,7 +44,7 @@ NAME_FIXES = {
     "AJ CUNNINGHAM": "A.J. CUNNINGHAM",
     "ASIKEERBAI JINENSIBIEKE": "Jinensibieke Asikeerbai",
     "ATEBA GAUTIER": "Ateba Abega Gautier",
-    "BENOIT SAINT DENIS": "Benoit St. Denis",
+    "BENOÎT SAINT DENIS": "Benoit St. Denis",
     "BLOOD DIAMOND": "MIKE MATHETHA",
     "CAM ROWSTON": "Cameron Rowston",
     "CHANGHO LEE": "CHANG HO LEE",
@@ -97,7 +97,6 @@ NAME_FIXES = {
     "PATCHY MIX": "Patrick Mix",
     "PATRICIO PITBULL": "Patricio Freire",
     "PHIL ROWE": "Philip Rowe",
-    "RAFAEL LIMA DE CERQUEIRA": "Raffael Cerqueira",
     "RENATO MOICANO": "Renato Carneiro",
     "REYES CORTEZ": "Reyes Cortez Jr.",
     "RICK PALACIOS": "Ricky Palacios",
@@ -117,7 +116,16 @@ NAME_FIXES = {
     "YIZHA": "Zha Yi",
     "ZACH BORREGO": "Zachary Borrego",
     "ZHANG MINGYANG": "Mingyang Zhang",
-    "ZHANG WEILI": "Weili Zhang"
+    "ZHANG WEILI": "Weili Zhang",
+    "ABDUL AZEEM BADAKHSHI": "Abdul Azim Badakhshi",
+    "FABIO AGU": "Fabio Aguiar",
+    "FENG PENGCHAO": "Pengchao Feng",
+    "JOSE DANIEL MEDINA": "Jose Medina",
+    "KEIFER ROBERTS": "Keifer Michael Roberts",
+    "LU KAI": "KAI LU",
+    "MAIARA AMAJANAS DOS SANTOS": "Maiara Amanajas dos Santos",
+    "RAFAEL CERQUEIRA": "Raffael Cerqueira",
+    "SANGWOOK KIM": "Sang Wook Kim"
 }
 
 URL_OVERRIDES = {
@@ -151,7 +159,7 @@ URL_OVERRIDES = {
     "JESUS AGUILAR": "https://www.sherdog.com/fighter/Jesus-Santos-Aguilar-203965",
     "JACK DELLA MADDALENA": "https://www.sherdog.com/fighter/Jack-Della-Maddalena-208155",
     "JON JONES": "https://www.sherdog.com/fighter/Jon-Jones-27944",
-    "BENOIT SAINT DENIS": "https://www.sherdog.com/fighter/Benoit-St-Denis-317103",
+    "BENOÎT SAINT DENIS": "https://www.sherdog.com/fighter/Benoit-St-Denis-317103",
     "DANIEL SPOHN": "https://www.sherdog.com/fighter/Dan-Spohn-39485",
     "AJ CUNNINGHAM": "https://www.sherdog.com/fighter/AJ-Cunningham-228033",
     "BLOOD DIAMOND": "https://www.sherdog.com/fighter/Mike-Mathetha-266635",
@@ -159,7 +167,12 @@ URL_OVERRIDES = {
     "MIZUKI": "https://www.sherdog.com/fighter/Mizuki-Inoue-71390",
     "MUHAMMAD NAIMOV": "https://www.sherdog.com/fighter/Muhammadjon-Naimov-228381",
     "PATRICIO PITBULL": "https://www.sherdog.com/fighter/Patricio-Freire-9960",
-    "YIZHA": "https://www.sherdog.com/fighter/Zha-Yi-228277"
+    "YIZHA": "https://www.sherdog.com/fighter/Zha-Yi-228277",
+    "RAFAEL CERQUEIRA": "https://www.sherdog.com/fighter/Raffael-Cerqueira-344561",
+    "SANGWOOK KIM": "https://www.sherdog.com/fighter/Sang-Wook-Kim-361209",
+    "ABDUL AZEEM BADAKHSHI": "https://www.sherdog.com/fighter/Abdul-Azim-Badakhshi-136805",
+    "BENARDO SOPAJ": "https://www.sherdog.com/fighter/Bernardo-Sopai-226661",
+    "LU KAI": "https://www.sherdog.com/fighter/Kai-Lu-217317"
 }
 
 POWER_SLAP = {
@@ -193,20 +206,71 @@ POWER_SLAP = {
 }
 
 TAPOLOGY_FIXES = {
-    "ADAM FUGITT": "ADAM FUGITT",  # confirm exact casing in JSON
     "ARIANE LIPSKI DA SILVA": "Ariane Da Silva",
-    "BILLY RAY GOFF": "BILLY GOFF",
     "CONG WANG": "WANG CONG",
-    "DARYA ZHELEZNIAKOVA": "Daria Zhelezniakova",
-    "JEKA SARAGIH": "JEKA SARAGIH",  # check if accented or misspelled
+    "Darya Zheleznyakova": "DARIA ZHELEZNIAKOVA",
     "JOO SANG YOO": "JOOSANG YOO",
     "JUN YONG PARK": "JUNYONG PARK",
-    "KHALIL ROUNTREE JR.": "KHALIL ROUNTREE",
-    "KLAUDIA SYGUŁA": "KLAUDIA SYGULA",
-    "RAFFAEL CERQUEIRA": "RAFAEL LIMA DE CERQUEIRA",
-    "RAYANNE DOS SANTOS": "RAYANNE SANTOS",  # confirm last name usage
+    "Klaudia Syguła": "KLAUDIA SYGUŁA",
+    "Raffael Cerqueira": "RAFAEL CERQUEIRA",
     "SEOK HYUN KO": "SEOKHYEON KO",
     "WALDO CORTES-ACOSTA": "WALDO CORTES ACOSTA",
-    "ZACH REESE": "ZACHARY REESE"  # if full name used in JSON
+    "ZACH REESE": "ZACHARY REESE",  # if full name used in JSON
+    "Jose Delgado": "Jose Miguel Delgado"
 }
 
+UFC_ROSTER = {
+    "Jon Jones": "https://www.ufc.com/athlete/jon-jones",
+    "Brandon Royval": "https://www.ufc.com/athlete/brandon-royval",
+    "Adam Fugitt": "https://www.ufc.com/athlete/adam-fugitt",
+    "Jeka Saragih": "https://www.ufc.com/athlete/jeka-saragih",
+    "Rayanne dos Santos": "https://www.ufc.com/athlete/rayanne-dos-santos",
+    "Umar Nurmagomedov": "https://www.ufc.com/athlete/umar-nurmagomedov",
+    "Tatsuro Taira": "https://www.ufc.com/athlete/tatsuro-taira",
+    "Manel Kape": "https://www.ufc.com/athlete/manel-kape",
+    "Asu Almabayev": "https://www.ufc.com/athlete/assu-almabayev",
+    "Steve Erceg": "https://www.ufc.com/athlete/steve-erceg",
+    "Tagir Ulanbekov": "https://www.ufc.com/athlete/tagir-ulanbekov",
+    "Marcus Mcghee": "https://www.ufc.com/athlete/marcus-mcghee",
+    "Vinicius Oliveira": "https://www.ufc.com/athlete/vinicius-oliveira",
+    "Ilia Topuria": "https://www.ufc.com/athlete/ilia-topuria",
+    "Jean Silva": "https://www.ufc.com/athlete/jean-silva-lord",
+    "David Onama": "https://www.ufc.com/athlete/david-onama",
+    "Paddy Pimblett": "https://www.ufc.com/athlete/paddy-pimblett",
+    "Michael Chandler": "https://www.ufc.com/athlete/michael-chandler",
+    "Joel Alvarez": "https://www.ufc.com/athlete/joel-alvarez",
+    "Jack Della Maddalena": "https://www.ufc.com/athlete/jack-della-maddalena",
+    "Ian Machado Garry": "https://www.ufc.com/athlete/ian-garry",
+    "Joaquin Buckley": "https://www.ufc.com/athlete/joaquin-buckley",
+    "Michael Morales": "https://www.ufc.com/athlete/michael-morales",
+    "Carlos Prates": "https://www.ufc.com/athlete/carlos-prates",
+    "Dricus Du Plessis": "https://www.ufc.com/athlete/dricus-du-plessis",
+    "Abus Magomedov": "https://www.ufc.com/athlete/abus-magomedov",
+    "Alex Pereira": "https://www.ufc.com/athlete/alex-pereira",
+    "Carlos Ulberg": "https://www.ufc.com/athlete/carlos-ulberg",
+    "Zhang Mingyang": "https://www.ufc.com/athlete/zhang-mingyang",
+    "Jailton Almeida": "https://www.ufc.com/athlete/jailton-almeida",
+    "Shamil Gaziev": "https://www.ufc.com/athlete/shamil-gaziev",
+    "Waldo Cortes Acosta": "https://www.ufc.com/athlete/waldo-cortes-acosta",
+    "Mick Parkin": "https://www.ufc.com/athlete/mick-parkin",
+    "Martin Buday": "https://www.ufc.com/athlete/martin-buday",
+    "Iasmin Lucindo": "https://www.ufc.com/athlete/iasmin-lucindo",
+    "Tabatha Ricci": "https://www.ufc.com/athlete/tabatha-ricci",
+    "Loopy Godinez": "https://www.ufc.com/athlete/loopy-godinez",
+    "Denise Gomes": "https://www.ufc.com/athlete/denise-gomes",
+    "Jasmine Jasudavicius": "https://www.ufc.com/athlete/jasmine-jasudavicius",
+    "Miranda Maverick": "https://www.ufc.com/athlete/miranda-maverick",
+    "Karine Silva": "https://www.ufc.com/athlete/karine-silva",
+    "Casey O'Neill": "https://www.ufc.com/athlete/casey-oneill",
+    "Kayla Harrison": "https://www.ufc.com/athlete/kayla-harrison",
+    "Ailin Perez": "https://www.ufc.com/athlete/ailin-perez",
+    "Jacqueline Cavalcanti": "https://www.ufc.com/athlete/jacqueline-cavalcanti",
+    "Nora Cornolle": "https://www.ufc.com/athlete/nora-cornolle",
+    "Joselyne Edwards": "https://www.ufc.com/athlete/joselyne-edwards",
+    "Chelsea Chandler": "https://www.ufc.com/athlete/chelsea-chandler",
+    "Amir Albazi": "https://www.ufc.com/athlete/amir-albazi",
+    "Khamzat Chimaev": "https://www.ufc.com/athlete/khamzat-chimaev",
+    "Jose Miguel Delgado": "https://www.ufc.com/athlete/jose-delgado",
+    "Steve Garcia": "https://www.ufc.com/athlete/steve-garcia",
+    "Jamey-Lyn Horth": "https://www.ufc.com/athlete/jamey-lyn-horth"
+}
