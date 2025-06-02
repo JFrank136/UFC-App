@@ -1,7 +1,24 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { searchFighters, addToFavorites, removeFavorite, getUserFavorites } from "../api/fighters";
+import {addToFavorites, removeFavorite, getUserFavorites } from "../api/fighters";
+import supabase from "../api/supabaseClient";
 
 const USERS = ["Jared", "Mars"];
+
+const getThemeColors = (user) => {
+  return user === "Mars" ? {
+    primary: '#dc2626', // Red
+    primaryLight: 'rgba(220, 38, 38, 0.1)',
+    primaryBorder: 'rgba(220, 38, 38, 0.3)',
+    gradient: 'linear-gradient(45deg, #dc2626, #ef4444)',
+    secondary: '#b91c1c'
+  } : {
+    primary: '#2563eb', // Blue  
+    primaryLight: 'rgba(37, 99, 235, 0.1)',
+    primaryBorder: 'rgba(37, 99, 235, 0.3)', 
+    gradient: 'linear-gradient(45deg, #2563eb, #3b82f6)',
+    secondary: '#1d4ed8'
+  };
+};
 
 // Toast notification component
 const Toast = ({ message, type, onClose }) => {
@@ -25,20 +42,65 @@ const LoadingSpinner = ({ size = "small" }) => (
   </div>
 );
 
+// Flag component for countries
+const FlagIcon = ({ country }) => {
+  const flagMap = {
+    'Russia': '🇷🇺',
+    'USA': '🇺🇸',
+    'United States': '🇺🇸',
+    'Brazil': '🇧🇷',
+    'Canada': '🇨🇦',
+    'United Kingdom': '🇬🇧',
+    'England': '🇬🇧',      // England (using UK flag)
+    'Ireland': '🇮🇪',
+    'Australia': '🇦🇺',
+    'Mexico': '🇲🇽',
+    'France': '🇫🇷',
+    'Germany': '🇩🇪',
+    'Poland': '🇵🇱',
+    'Sweden': '🇸🇪',
+    'Norway': '🇳🇴',
+    'Netherlands': '🇳🇱',
+    'China': '🇨🇳',
+    'Japan': '🇯🇵',
+    'South Korea': '🇰🇷',
+    'Georgia': '🇬🇪',
+    'Dagestan': '🇷🇺',      // Dagestan uses Russia flag
+    'Chechnya': '🇷🇺',      // Chechnya uses Russia flag
+    'Turkey': '🇹🇷',
+    'Bolivia': '🇧🇴',
+    'Bahrain': '🇧🇭',
+    'Nigeria': '🇳🇬',
+    'Romania': '🇷🇴',
+    'Chile': '🇨🇱',
+    'Jamaica': '🇯🇲',
+    'Lithuania': '🇱🇹',
+    'South Africa': '🇿🇦',
+    'Scotland': '🏴',       // (Scottish flag; may fallback to UK depending on platform)
+    'Moldova': '🇲🇩',
+    'Thailand': '🇹🇭',
+    'Denmark': '🇩🇰',
+    'Cuba': '🇨🇺',
+    'Venezuela': '🇻🇪',
+    'Croatia': '🇭🇷',
+    'Kazakhstan': '🇰🇿',
+  };
+
+  return <span className="flag-icon">{flagMap[country] || '🏴'}</span>;
+};
+
 const SearchFighter = () => {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [fighters, setFighters] = useState([]);
+  const [filteredFighters, setFilteredFighters] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [user, setUser] = useState(USERS[0]);
+  const [userTheme, setUserTheme] = useState('jared'); // Default theme
   const [favStatus, setFavStatus] = useState({});
-  const [searched, setSearched] = useState(false);
   const [loadingStates, setLoadingStates] = useState({});
   const [toast, setToast] = useState(null);
-
-  // Debounced search for real-time suggestions
+  const [query, setQuery] = useState("");
   const [debounceTimer, setDebounceTimer] = useState(null);
 
   const showToast = (message, type = "success") => {
@@ -73,89 +135,98 @@ const SearchFighter = () => {
     }
   };
 
-  // Real-time search suggestions
-  const fetchSuggestions = useCallback(async (searchQuery) => {
+  // Filter fighters based on search query
+  const filterFighters = useCallback((searchQuery) => {
     if (!searchQuery.trim()) {
-      setSuggestions([]);
+      setFilteredFighters(fighters);
       return;
     }
     
-    try {
-      const fighters = await searchFighters(searchQuery);
-      setSuggestions(fighters.slice(0, 5)); // Limit to 5 suggestions
-    } catch (err) {
-      setSuggestions([]);
-    }
-  }, []);
+    const filtered = fighters.filter(fighter => 
+      fighter.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      fighter.weight_class?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      fighter.country?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    
+    setFilteredFighters(filtered);
+  }, [fighters]);
 
   // Handle query change with debouncing
   const handleQueryChange = (value) => {
     setQuery(value);
-    setShowSuggestions(true);
     
     // Clear existing timer
     if (debounceTimer) {
       clearTimeout(debounceTimer);
     }
     
-    // Set new timer for suggestions
+    // Set new timer for filtering
     const timer = setTimeout(() => {
-      fetchSuggestions(value);
+      filterFighters(value);
     }, 300);
     
     setDebounceTimer(timer);
   };
 
-  const handleSearch = async (searchQuery = query) => {
-    setLoading(true);
-    setError("");
-    setSearched(false);
-    setShowSuggestions(false);
-    
-    try {
-      const fighters = await searchFighters(searchQuery);
-      setResults(fighters);
-      await fetchFavStatus(fighters);
-      setSearched(true);
-      if (fighters.length === 0) {
-        showToast(`No fighters found for "${searchQuery}"`, "info");
+  // Load all fighters on component mount
+  useEffect(() => {
+    const fetchFighters = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("fighters")
+        .select("*");
+      if (error) {
+        setError("Error fetching fighters.");
+        setFighters([]);
+        setFilteredFighters([]);
+      } else {
+        setFighters(data);
+        setFilteredFighters(data); // Show all fighters initially
+        setError("");
       }
-    } catch (err) {
-      setError("Failed to load fighters.");
-      showToast("Failed to search fighters", "error");
-    }
-    setLoading(false);
-  };
+      setLoading(false);
+    };
+    fetchFighters();
+  }, []);
 
-  const updateStatus = async (fighterName, newStatus) => {
-    const loadingKey = `${fighterName}-${newStatus}`;
+  // Update favorite status when fighters or user changes
+  useEffect(() => {
+    if (filteredFighters.length) {
+      fetchFavStatus(filteredFighters);
+    }
+  }, [filteredFighters, user]);
+
+  
+  const updateStatus = async (fighter, newStatus) => {
+    const loadingKey = `${fighter.name}-${newStatus}`;
     setLoadingStates(prev => ({ ...prev, [loadingKey]: true }));
     
     try {
       // Remove current status
-      const current = favStatus[fighterName];
+      const current = favStatus[fighter.name];
       if (current) {
         await removeFavorite(current.id);
       }
       
       if (newStatus === "none") {
-        setFavStatus((s) => ({ ...s, [fighterName]: undefined }));
-        showToast(`Removed ${fighterName} from your list`, "info");
+        setFavStatus((s) => ({ ...s, [fighter.name]: undefined }));
+        showToast(`Removed ${fighter.name} from your list`, "info");
       } else {
         // Add new status
         const newRow = await addToFavorites({
-          fighterName,
+          fighterName: fighter.name,
+          fighter_id: fighter.id,
           group: user,
           priority: newStatus,
         });
         setFavStatus((s) => ({
           ...s,
-          [fighterName]: { status: newStatus, id: newRow.id },
+          [fighter.name]: { status: newStatus, id: newRow.id },
         }));
-        showToast(`Added ${fighterName} to ${newStatus}s!`, "success");
+        showToast(`Added ${fighter.name} to ${newStatus}s!`, "success");
       }
     } catch (err) {
-      showToast(`Failed to update ${fighterName}`, "error");
+      showToast(`Failed to update ${fighter.name}`, "error");
     }
     
     setLoadingStates(prev => ({ ...prev, [loadingKey]: false }));
@@ -163,31 +234,40 @@ const SearchFighter = () => {
 
   const capitalize = (str) =>
     str
-      .split(" ")
+      ?.split(" ")
       .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-      .join(" ");
+      .join(" ") || "";
 
-  const handleSuggestionClick = (fighterName) => {
-    setQuery(fighterName);
-    setShowSuggestions(false);
-    handleSearch(fighterName);
+
+  // Get ranking display for a fighter
+  const getRankingDisplay = (rankings) => {
+    if (!rankings || !Array.isArray(rankings)) return null;
+    
+    const p4p = rankings.find(r => r.division?.toLowerCase().includes('pound-for-pound'));
+    const divisionRank = rankings.find(r => !r.division?.toLowerCase().includes('pound-for-pound'));
+    
+    return { p4p, divisionRank };
   };
-
-  // Close suggestions when clicking outside
-  useEffect(() => {
-    const handleClickOutside = () => setShowSuggestions(false);
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
 
   return (
     <>
       <style jsx>{`
+        :root {
+          --theme-primary: ${getThemeColors(user).primary};
+          --theme-primary-light: ${getThemeColors(user).primaryLight};
+          --theme-primary-border: ${getThemeColors(user).primaryBorder};
+          --theme-gradient: ${getThemeColors(user).gradient};
+          --theme-secondary: ${getThemeColors(user).secondary};
+        }
+        
         .search-container {
-          max-width: 1200px;
-          margin: 0 auto;
+          width: 100%;
+          margin: 0;
           padding: 2rem;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          background: #ffffff;
+          min-height: 100vh;
+          color: #1a1a1a;
         }
         
         .header {
@@ -196,17 +276,18 @@ const SearchFighter = () => {
         }
         
         .header h1 {
-          color: #1a1a1a;
           font-size: 2.5rem;
           font-weight: 700;
+          color: #1a1a1a;
           margin: 0;
+          text-align: center;
         }
         
         .controls {
-          background: white;
+          background: rgba(37, 99, 235, 0.05);
           padding: 1.5rem;
           border-radius: 12px;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          border: 1px solid var(--theme-primary-border);
           margin-bottom: 2rem;
         }
         
@@ -219,21 +300,23 @@ const SearchFighter = () => {
         
         .user-selector label {
           font-weight: 600;
-          color: #374151;
+          color: var(--theme-primary);
         }
         
         .user-selector select {
-          padding: 0.5rem;
+          padding: 0.75rem 1rem;
           border: 2px solid #e5e7eb;
           border-radius: 8px;
+          background: #ffffff;
+          color: #1a1a1a;
           font-size: 1rem;
-          background: white;
-          transition: border-color 0.2s;
+          transition: all 0.3s ease;
         }
-        
+
         .user-selector select:focus {
           outline: none;
-          border-color: #3b82f6;
+          border-color: var(--theme-primary);
+          box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
         }
         
         .search-section {
@@ -251,64 +334,48 @@ const SearchFighter = () => {
           padding: 0.75rem 1rem;
           border: 2px solid #e5e7eb;
           border-radius: 8px;
+          background: #ffffff;
+          color: #1a1a1a;
           font-size: 1rem;
-          transition: all 0.2s;
+          transition: all 0.3s ease;
         }
-        
+
         .search-input:focus {
           outline: none;
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+          border-color: var(--theme-primary);
+          box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
         }
-        
-        .search-btn {
-          padding: 0.75rem 1.5rem;
-          background: #3b82f6;
-          color: white;
-          border: none;
-          border-radius: 8px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        
-        .search-btn:hover:not(:disabled) {
-          background: #2563eb;
-        }
-        
-        .search-btn:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
+
+        .search-input::placeholder {
+          color: rgba(26, 26, 26, 0.6);
         }
         
         .suggestions {
           position: absolute;
           top: 100%;
           left: 0;
-          right: 60px;
-          background: white;
-          border: 2px solid #e5e7eb;
+          right: 0;
+          background: rgba(0, 0, 0, 0.95);
+          border: 2px solid rgba(255, 215, 0, 0.3);
           border-top: none;
           border-radius: 0 0 8px 8px;
           max-height: 200px;
           overflow-y: auto;
           z-index: 10;
         }
-        
+
         .suggestion-item {
           padding: 0.75rem 1rem;
           cursor: pointer;
-          border-bottom: 1px solid #f3f4f6;
+          border-bottom: 1px solid rgba(255, 215, 0, 0.1);
           transition: background-color 0.2s;
+          color: #ffffff;
         }
-        
+
         .suggestion-item:hover {
-          background: #f8fafc;
+          background: var(--theme-primary-light);
         }
-        
+
         .suggestion-item:last-child {
           border-bottom: none;
         }
@@ -319,37 +386,99 @@ const SearchFighter = () => {
         }
         
         .favorites-link a {
-          color: #3b82f6;
+          color: var(--theme-primary);
           text-decoration: none;
           font-weight: 600;
           padding: 0.5rem 1rem;
           border-radius: 6px;
           transition: all 0.2s;
         }
-        
+
         .favorites-link a:hover {
-          background: #eff6ff;
+          background: var(--theme-primary-light);
         }
         
         .results-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
           gap: 1.5rem;
           margin-top: 2rem;
         }
         
         .fighter-card {
-          background: white;
+          background: linear-gradient(145deg, #ffffff, #f8f9fa);
           border-radius: 12px;
           padding: 1.5rem;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-          transition: all 0.2s;
           border: 1px solid #e5e7eb;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .fighter-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: linear-gradient(90deg, #FFD700, #FFA500);
+          transform: scaleX(0);
+          transition: transform 0.3s ease;
+        }
+
+        .fighter-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+          border-color: var(--theme-primary);
+        }
+
+        .fighter-card:hover::before {
+          transform: scaleX(1);
         }
         
-        .fighter-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.15);
+        .fighter-card.p4p-champion {
+          border: 2px solid #ffd700;
+          box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .fighter-card.p4p-champion::before {
+          transform: scaleX(1);
+        }
+        
+       
+        .p4p-badge {
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          background: var(--theme-gradient);
+          color: #1a1a1a;
+          font-size: 0.75rem;
+          font-weight: 700;
+          padding: 0.25rem 0.5rem;
+          border-radius: 12px;
+          border: 2px solid white;
+        }
+        
+        .fighter-header {
+          display: flex;
+          align-items: flex-start;
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+        
+        .fighter-image {
+          width: 80px;
+          height: 80px;
+          border-radius: 8px;
+          object-fit: cover;
+          object-position: top;
+          flex-shrink: 0;
+        }
+        
+        .fighter-info {
+          flex: 1;
         }
         
         .fighter-name {
@@ -358,24 +487,71 @@ const SearchFighter = () => {
           color: #1a1a1a;
           margin: 0 0 0.5rem 0;
         }
-        
-        .fighter-division {
-          color: #6b7280;
-          margin-bottom: 1rem;
-          font-weight: 500;
-        }
-        
-        .fighter-link {
-          display: inline-block;
-          color: #3b82f6;
+
+        .fighter-name a {
+          color: inherit;
           text-decoration: none;
-          font-weight: 600;
-          margin-bottom: 1rem;
           transition: color 0.2s;
         }
+
+        .fighter-name a:hover {
+          color: var(--theme-primary);
+        }  
+
+        .fighter-nickname {
+          font-style: italic;
+          font-size: 0.9rem;
+          color: rgba(26, 26, 26, 0.7);
+          margin-bottom: 0.25rem;
+        }
+
+        .fighter-details {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+          font-size: 0.875rem;
+        }
         
-        .fighter-link:hover {
-          color: #2563eb;
+        .detail-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: rgba(26, 26, 26, 0.8);
+        }
+        
+        .flag-icon {
+          font-size: 1rem;
+        }
+        
+        .record {
+          font-weight: 600;
+          color: #1a1a1a;
+        }
+        
+        .ranking-info {
+          display: flex;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+          flex-wrap: wrap;
+        }
+        
+        .rank-badge {
+          padding: 0.25rem 0.5rem;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 600;
+        }
+        
+        .rank-division {
+          background: rgba(255, 215, 0, 0.2);
+          color: var(--theme-primary);
+          border: 1px solid rgba(255, 215, 0, 0.4);
+        }
+
+        .rank-p4p {
+          background: #ffd700;
+          color: #1a1a1a;
         }
         
         .action-buttons {
@@ -405,67 +581,57 @@ const SearchFighter = () => {
         }
         
         .favorite-btn {
-          border-color: #ef4444;
-          color: #ef4444;
-          background: white;
+          border-color: var(--theme-primary);
+          color: var(--theme-primary);
+          background: var(--theme-primary-light);
         }
-        
+
         .favorite-btn:hover:not(:disabled) {
-          background: #ef4444;
-          color: white;
+          background: rgba(255, 215, 0, 0.2);
+          transform: scale(1.05);
         }
-        
+
         .favorite-btn.selected {
-          background: #ef4444;
-          color: white;
+          background: rgba(255, 215, 0, 0.3);
+          color: var(--theme-primary);
         }
-        
+
         .interested-btn {
-          border-color: #f59e0b;
-          color: #f59e0b;
-          background: white;
+          border-color: #FFA500;
+          color: #FFA500;
+          background: rgba(255, 165, 0, 0.1);
         }
-        
+
         .interested-btn:hover:not(:disabled) {
-          background: #f59e0b;
-          color: white;
+          background: rgba(255, 165, 0, 0.2);
+          transform: scale(1.05);
         }
-        
+
         .interested-btn.selected {
-          background: #f59e0b;
-          color: white;
-        }
-        
-        .status-label {
-          font-size: 0.875rem;
-          font-weight: 600;
-          padding: 0.25rem 0.75rem;
-          border-radius: 12px;
-          color: white;
-        }
-        
-        .status-favorite {
-          background: #ef4444;
-        }
-        
-        .status-interested {
-          background: #f59e0b;
-        }
-        
+          background: rgba(255, 165, 0, 0.3);
+          color: #FFA500;
+        }        
+
         .no-results {
           text-align: center;
           padding: 3rem 1rem;
-          color: #6b7280;
+          color: rgba(255, 255, 255, 0.7);
           font-size: 1.125rem;
         }
         
         .error-message {
-          background: #fef2f2;
-          border: 1px solid #fecaca;
-          color: #dc2626;
+          background: rgba(220, 38, 38, 0.1);
+          border: 1px solid rgba(220, 38, 38, 0.3);
+          color: #ff6b6b;
           padding: 1rem;
           border-radius: 8px;
           margin: 1rem 0;
+        }
+        
+        .loading-container {
+          text-align: center;
+          padding: 3rem;
+          color: rgba(255, 255, 255, 0.8);
         }
         
         .toast {
@@ -507,8 +673,8 @@ const SearchFighter = () => {
         }
         
         .spinner {
-          border: 2px solid #f3f4f6;
-          border-top: 2px solid #3b82f6;
+          border: 2px solid rgba(255, 215, 0, 0.2);
+          border-top: 2px solid #FFD700;
           border-radius: 50%;
           animation: spin 1s linear infinite;
         }
@@ -552,8 +718,14 @@ const SearchFighter = () => {
             flex-direction: column;
           }
           
-          .suggestions {
-            right: 0;
+          .fighter-header {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+          }
+          
+          .fighter-details {
+            grid-template-columns: 1fr;
           }
           
           .action-buttons {
@@ -575,15 +747,17 @@ const SearchFighter = () => {
         <div className="controls">
           <div className="user-selector">
             <label>Select user:</label>
-            <select 
-              value={user} 
-              onChange={async (e) => {
-                setUser(e.target.value);
-                if (results.length) {
-                  await fetchFavStatus(results);
-                }
-              }}
-            >
+          <select 
+            value={user} 
+            onChange={async (e) => {
+              const newUser = e.target.value;
+              setUser(newUser);
+              setUserTheme(newUser.toLowerCase());
+              if (filteredFighters.length) {
+                await fetchFavStatus(filteredFighters);
+              }
+            }}
+          >
               {USERS.map((u) => (
                 <option key={u} value={u}>
                   {u}
@@ -593,52 +767,15 @@ const SearchFighter = () => {
           </div>
 
           <div className="search-section">
-            <div className="search-input-container" onClick={(e) => e.stopPropagation()}>
+            <div className="search-input-container">
               <input
                 type="text"
                 className="search-input"
-                placeholder="Enter fighter name..."
+                placeholder="Search fighters by name, division, or country..."
                 value={query}
                 onChange={(e) => handleQueryChange(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleSearch();
-                  } else if (e.key === "Escape") {
-                    setShowSuggestions(false);
-                  }
-                }}
               />
-              <button 
-                className="search-btn" 
-                onClick={() => handleSearch()} 
-                disabled={loading}
-              >
-                {loading ? <LoadingSpinner size="small" /> : null}
-                {loading ? "Searching..." : "Search"}
-              </button>
             </div>
-
-            {showSuggestions && suggestions.length > 0 && (
-              <div className="suggestions">
-                {suggestions.map((fighter) => {
-                  const fighterName = fighter.name || fighter.fighter;
-                  return (
-                    <div
-                      key={fighter.id || fighterName}
-                      className="suggestion-item"
-                      onClick={() => handleSuggestionClick(fighterName)}
-                    >
-                      {capitalize(fighterName)}
-                      {fighter.division && (
-                        <span style={{ color: '#6b7280', marginLeft: '0.5rem' }}>
-                          • {fighter.division}
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
           </div>
         </div>
 
@@ -648,36 +785,111 @@ const SearchFighter = () => {
 
         {error && <div className="error-message">{error}</div>}
 
-        {searched && results.length === 0 && !loading && (
+        {loading && (
+          <div className="loading-container">
+            <LoadingSpinner />
+            <p>Loading fighters...</p>
+          </div>
+        )}
+
+        {!loading && filteredFighters.length === 0 && query.trim() && (
           <div className="no-results">
             No fighters found for "{query}". Try a different search term.
           </div>
         )}
 
         <div className="results-grid">
-          {results.map((fighter) => {
-            const fighterName = fighter.name || fighter.fighter;
+          {filteredFighters.map((fighter) => {
+            const fighterName = fighter.name;
             const status = favStatus[fighterName]?.status;
             const favoriteLoading = loadingStates[`${fighterName}-favorite`];
             const interestedLoading = loadingStates[`${fighterName}-interested`];
+            const rankings = getRankingDisplay(fighter.ufc_rankings);
+            const isP4PChampion = rankings.p4p && rankings.p4p.rank === 1;
             
             return (
-              <div key={fighter.id || fighterName} className="fighter-card">
-                <h2 className="fighter-name">{capitalize(fighterName)}</h2>
-                
-                {fighter.division && (
-                  <p className="fighter-division">Division: {fighter.division}</p>
+              <div 
+                key={fighter.id} 
+                className={`fighter-card${isP4PChampion ? ' p4p-champion' : ''}`}
+              >
+                {isP4PChampion && (
+                  <div className="p4p-badge">👑 P4P #1</div>
                 )}
                 
-                {fighter.url && (
-                  <a 
-                    href={fighter.url} 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="fighter-link"
-                  >
-                    View Profile →
-                  </a>
+                <div className="fighter-header">
+                  {(fighter.image_url || fighter.image_local_path) && (
+                    <img
+                      src={fighter.image_url || fighter.image_local_path}
+                      alt={fighter.name}
+                      className="fighter-image"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  )}
+                  
+                  <div className="fighter-info">
+<                   h2 className="fighter-name">
+                      {fighter.profile_url_ufc ? (
+                        <a href={fighter.profile_url_ufc} target="_blank" rel="noreferrer">
+                          {capitalize(fighterName)}
+                        </a>
+                      ) : (
+                        capitalize(fighterName)
+                      )}
+                    </h2>
+                    {fighter.nickname && (
+                      <div className="fighter-nickname">
+                        "{fighter.nickname}"
+                      </div>
+                    )}                    
+                    <div className="fighter-details">
+                      {fighter.country && (
+                        <div
+                          className="detail-item"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.4em",
+                            whiteSpace: "nowrap"
+                          }}
+                        >
+                          <FlagIcon country={fighter.country} />
+                          <span>{fighter.country}</span>
+                        </div>
+                      )}
+                      
+                      <div className="detail-item">
+                        <span>{fighter.age ? `Age: ${fighter.age}` : ''}</span>
+                      </div>
+                      
+                      {fighter.weight_class && (
+                        <div className="detail-item">
+                          <span>{fighter.weight_class}</span>
+                        </div>
+                      )}
+                      
+                      <div className="detail-item record">
+                        {fighter.wins_total}-{fighter.losses_total}
+                        {fighter.draws_total && parseInt(fighter.draws_total) > 0 && `-${fighter.draws_total}`}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {rankings && (rankings.p4p || rankings.divisionRank) && (
+                  <div className="ranking-info">
+                    {rankings.p4p && (
+                      <span className="rank-badge rank-p4p">
+                        P4P #{rankings.p4p.rank}
+                      </span>
+                    )}
+                    {rankings.divisionRank && (
+                      <span className="rank-badge rank-division">
+                        {rankings.divisionRank.division} #{rankings.divisionRank.rank}
+                      </span>
+                    )}
+                  </div>
                 )}
                 
                 <div className="action-buttons">
@@ -685,17 +897,17 @@ const SearchFighter = () => {
                     className={`action-btn favorite-btn${status === "favorite" ? " selected" : ""}`}
                     onClick={() =>
                       status === "favorite"
-                        ? updateStatus(fighterName, "none")
-                        : updateStatus(fighterName, "favorite")
+                        ? updateStatus(fighter, "none")
+                        : updateStatus(fighter, "favorite")
                     }
                     disabled={favoriteLoading}
                   >
                     {favoriteLoading ? (
                       <LoadingSpinner size="small" />
                     ) : status === "favorite" ? (
-                      "❤️ Favorited"
+                      "👑 Favorited"
                     ) : (
-                      "🤍 Favorite"
+                      "⭐ Favorite"
                     )}
                   </button>
                   
@@ -703,8 +915,8 @@ const SearchFighter = () => {
                     className={`action-btn interested-btn${status === "interested" ? " selected" : ""}`}
                     onClick={() =>
                       status === "interested"
-                        ? updateStatus(fighterName, "none")
-                        : updateStatus(fighterName, "interested")
+                        ? updateStatus(fighter, "none")
+                        : updateStatus(fighter, "interested")
                     }
                     disabled={status === "favorite" || interestedLoading}
                     title={status === "favorite" ? "Already in favorites" : ""}
@@ -717,12 +929,6 @@ const SearchFighter = () => {
                       "☆ Interested"
                     )}
                   </button>
-                  
-                  {status && (
-                    <span className={`status-label status-${status}`}>
-                      {status === "favorite" ? "In Favorites" : "Interested"}
-                    </span>
-                  )}
                 </div>
               </div>
             );

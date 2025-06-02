@@ -16,12 +16,12 @@ export async function searchFighters(query) {
 }
 
 // Add to User Favorites (with duplicate prevention)
-export async function addToFavorites({ fighterName, group, priority }) {
+export async function addToFavorites({ fighterName, fighter_id, group, priority }) {
   // Prevent duplicate
   const { data: exists, error: checkError } = await supabase
     .from("user_favorites")
     .select("id")
-    .eq("fighter", fighterName)
+    .eq("fighter_id", fighter_id)
     .eq("user", group)
     .eq("priority", priority);
 
@@ -38,6 +38,7 @@ export async function addToFavorites({ fighterName, group, priority }) {
     .insert([
       {
         fighter: fighterName,
+        fighter_id:  fighter_id,
         user: group,
         priority: priority,
         // OMIT fighter_id entirely

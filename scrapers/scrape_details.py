@@ -142,18 +142,18 @@ def _scrape_details(profile_url_ufc):
 
         
         if image_url:
-            image_dir = os.path.join("static", "fighter_images")
+            image_dir = os.path.join("..", "ufc-tracker", "public", "images")
             os.makedirs(image_dir, exist_ok=True)
             image_path = os.path.join(image_dir, f"{fighter_slug}.jpg")
 
             if os.path.exists(image_path):
                 logger.info(f"Image already exists for {fighter_slug}, skipping download.")
-                data["image_local_path"] = image_path
+                data["image_local_path"] = f"/images/{fighter_slug}.jpg"
             else:
                 logger.info(f"Downloading image for {fighter_slug}: {image_url}")
                 success = download_image(image_url, image_path)
                 if success:
-                    data["image_local_path"] = image_path
+                    data["image_local_path"] = f"/images/{fighter_slug}.jpg"
                 else:
                     logger.warning(f"Failed to download image for {fighter_slug}")
             data["image_url"] = image_url
@@ -163,7 +163,7 @@ def _scrape_details(profile_url_ufc):
         else:
             # Use fallback
             data["image_url"] = "/static/images/placeholder.jpg"
-            data["image_local_path"] = "static/images/placeholder.jpg"
+            data["image_local_path"] = "/images/placeholder.jpg"
             logger.info(f"📷 Using placeholder for {fighter_slug}")
             data["image_verified"] = False
 
