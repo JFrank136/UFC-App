@@ -1,0 +1,48 @@
+UFC DB STRUCTURE (OPTIMIZED FOR CLAUDE)
+---------------------------------------
+
+fighters
+--------
+- id (UUID): Primary key
+- name, nickname, age, country
+- height, weight, reach (numbers)
+- weight_class: e.g. "Welterweight"
+- strikes_landed_per_min, absorbed_per_min
+- takedown_avg, submission_avg, striking_defense, knockdown_avg
+- avg_fight_time (minutes)
+- wins_total, losses_total
+- wins_ko, wins_sub, wins_dec
+- losses_ko, losses_sub, losses_dec
+- profile_url_ufc, profile_url_sherdog
+- image_url: Link to fighter image
+- ufc_rankings: JSON array, e.g. ["#4 Lightweight"]
+
+fight_history
+-------------
+- id (UUID): Unique per fighter entry
+- fighter_id (UUID): FK to fighters.id
+- opponent (text only)
+- result: "Win", "Loss", "Draw", "NC"
+- method: "KO/TKO", "Submission", etc.
+- round (int), time (e.g. "4:35")
+- fight_date: "YYYY-MM-DD"
+
+Note: Each fight appears once per fighter (typically 2 rows per fight)
+
+upcoming_fights
+---------------
+- id (UUID): Unique per fight
+- fighter1, fighter2: Names (display only)
+- fighter1_id, fighter2_id (UUID): FK to fighters.id
+- event, event_type: e.g. "UFC 300", "PPV"
+- event_date: "YYYY-MM-DD", event_time: "HH:MM"
+- fight_order (int): Position on card
+- card_section: "Main", "Prelim"
+- weight_class
+- scraped_at: Timestamp of data retrieval
+
+relationships
+-------------
+- fighters.id links to:
+    - fight_history.fighter_id
+    - upcoming_fights.fighter1_id / fighter2_id

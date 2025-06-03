@@ -55,19 +55,42 @@ export async function addToFavorites({ fighterName, fighter_id, group, priority 
 }
 
 // Get User Favorites
+// Get User Favorites
 export async function getUserFavorites({ group, priority }) {
-  const { data, error } = await supabase
+  // First get user favorites
+  const { data: favorites, error: favError } = await supabase
     .from("user_favorites")
     .select("*")
     .eq("user", group)
     .eq("priority", priority)
     .order("added_at", { ascending: false });
 
-  if (error) {
-    console.error("Error fetching favorites:", error);
+  if (favError) {
+    console.error("Error fetching favorites:", favError);
     return [];
   }
-  return data;
+
+  // Then get fighter details for each favorite
+  const enrichedFavorites = [];
+  for (const fav of favorites) {
+    const { data: fighter, error: fighterError } = await supabase
+      .from("fighters")
+      .select("*")
+      .eq("id", fav.fighter_id)
+      .single();
+
+    if (!fighterError && fighter) {
+      enrichedFavorites.push({
+        ...fav,
+        fighterInfo: fighter
+      });
+    } else {
+      // Include favorite even if fighter data missing
+      enrichedFavorites.push(fav);
+    }
+  }
+
+  return enrichedFavorites;
 }
 
 // Remove from Favorites

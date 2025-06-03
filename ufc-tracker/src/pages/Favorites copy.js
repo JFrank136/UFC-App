@@ -4,31 +4,19 @@ import { getUserFavorites, removeFavorite } from "../api/fighters";
 const USERS = ["Jared", "Mars"];
 
 const getThemeColors = (user) => {
-  if (user === "Mars") {
-    return {
-      primary: '#dc2626', // Red
-      primaryLight: 'rgba(220, 38, 38, 0.1)',
-      primaryBorder: 'rgba(220, 38, 38, 0.3)',
-      gradient: 'linear-gradient(45deg, #dc2626, #ef4444)',
-      secondary: '#b91c1c'
-    };
-  } else if (user === "all") {
-    return {
-      primary: '#eab308', // Yellow
-      primaryLight: 'rgba(234, 179, 8, 0.1)',
-      primaryBorder: 'rgba(234, 179, 8, 0.3)',
-      gradient: 'linear-gradient(45deg, #eab308, #facc15)',
-      secondary: '#ca8a04'
-    };
-  } else {
-    return {
-      primary: '#2563eb', // Blue  
-      primaryLight: 'rgba(37, 99, 235, 0.1)',
-      primaryBorder: 'rgba(37, 99, 235, 0.3)', 
-      gradient: 'linear-gradient(45deg, #2563eb, #3b82f6)',
-      secondary: '#1d4ed8'
-    };
-  }
+  return user === "Mars" ? {
+    primary: '#dc2626', // Red
+    primaryLight: 'rgba(220, 38, 38, 0.1)',
+    primaryBorder: 'rgba(220, 38, 38, 0.3)',
+    gradient: 'linear-gradient(45deg, #dc2626, #ef4444)',
+    secondary: '#b91c1c'
+  } : {
+    primary: '#2563eb', // Blue  
+    primaryLight: 'rgba(37, 99, 235, 0.1)',
+    primaryBorder: 'rgba(37, 99, 235, 0.3)', 
+    gradient: 'linear-gradient(45deg, #2563eb, #3b82f6)',
+    secondary: '#1d4ed8'
+  };
 };
 
 // Flag component for countries
@@ -87,76 +75,48 @@ const Favorites = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [fighterToRemove, setFighterToRemove] = useState(null);
   const [allFavorites, setAllFavorites] = useState([]);
-  const theme = getThemeColors(user);
-
 
 const fetchFavorites = async () => {
-  setLoading(true);
-  console.log('Starting fetchFavorites...');
-  try {
-    const jaredFavorites = await getUserFavorites({ group: "Jared", priority: "favorite" });
-    const jaredInterested = await getUserFavorites({ group: "Jared", priority: "interested" });
-    const marsFavorites = await getUserFavorites({ group: "Mars", priority: "favorite" });
-    const marsInterested = await getUserFavorites({ group: "Mars", priority: "interested" });
-    
-    // Group fighters by fighter ID to handle duplicates
-    const fighterMap = new Map();
-
-    const addFighterData = (fighters, user, priority) => {
-      fighters.forEach(f => {
-        const fighterId = f.fighter_id || f.id;
-        const fighterData = {
-          ...f,
-          ...f.fighterInfo,
-          fighter_id: fighterId
-        };
-        
-        if (fighterMap.has(fighterId)) {
-          // Fighter exists, add this user's preference
-          const existing = fighterMap.get(fighterId);
-          existing.users = existing.users || [];
-          existing.users.push({ user, priority });
-        } else {
-          // New fighter
-          fighterData.users = [{ user, priority }];
-          fighterMap.set(fighterId, fighterData);
-        }
-      });
-    };
-
-    addFighterData(jaredFavorites, "Jared", "favorite");
-    addFighterData(jaredInterested, "Jared", "interested");
-    addFighterData(marsFavorites, "Mars", "favorite");
-    addFighterData(marsInterested, "Mars", "interested");
-
-    const allData = Array.from(fighterMap.values());
-    
-    console.log('Final processed data:', allData);
-    setAllFavorites(allData);
-    filterFavorites(allData, user, priority);
-    
-  } catch (error) {
-    console.error("Error fetching favorites:", error);
-  }
-  setLoading(false);
-};
+    setLoading(true);
+    try {
+      // Fetch all favorites and interested for all users
+      const jaredFavorites = await getUserFavorites({ group: "Jared", priority: "favorite" });
+      const jaredInterested = await getUserFavorites({ group: "Jared", priority: "interested" });
+      const marsFavorites = await getUserFavorites({ group: "Mars", priority: "favorite" });
+      const marsInterested = await getUserFavorites({ group: "Mars", priority: "interested" });
+      
+      const allData = [
+        ...jaredFavorites.map(f => ({ ...f, user: "Jared", priority: "favorite" })),
+        ...jaredInterested.map(f => ({ ...f, user: "Jared", priority: "interested" })),
+        ...marsFavorites.map(f => ({ ...f, user: "Mars", priority: "favorite" })),
+        ...marsInterested.map(f => ({ ...f, user: "Mars", priority: "interested" }))
+      ];
+      
+      setAllFavorites(allData);
+      filterFavorites(allData, user, priority);
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+    }
+    setLoading(false);
+  };
 
   const filterFavorites = (data, selectedUser, selectedPriority) => {
-    let filtered = data.filter(fighter => {
-      if (selectedUser === "all" && selectedPriority === "all") return true;
-      
-      return fighter.users.some(userPref => {
-        const userMatch = selectedUser === "all" || userPref.user === selectedUser;
-        const priorityMatch = selectedPriority === "all" || userPref.priority === selectedPriority;
-        return userMatch && priorityMatch;
-      });
-    });
+    let filtered = data;
+    
+    if (selectedUser !== "all") {
+      filtered = filtered.filter(f => f.user === selectedUser);
+    }
+    
+    if (selectedPriority !== "all") {
+      filtered = filtered.filter(f => f.priority === selectedPriority);
+    }
     
     setFavorites(filtered);
   };
-  
+
   useEffect(() => {
     fetchFavorites();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -194,7 +154,7 @@ const getSortedFavorites = () => {
     
     switch (sortBy) {
       case "name":
-        sorted.sort((a, b) => (a.name || a.fighter || '').localeCompare(b.name || b.fighter || ''));
+        sorted.sort((a, b) => a.fighter.localeCompare(b.fighter));
         break;
       case "recent":
         sorted.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
@@ -257,7 +217,7 @@ const getSortedFavorites = () => {
   const SkeletonCard = () => (
     <div className="skeleton-card">
       <div className="skeleton-title"></div>
-      <div className="skeleton-buttons">                
+      <div className="skeleton-buttons">
         <div className="skeleton-button"></div>
         <div className="skeleton-button"></div>
       </div>
@@ -296,7 +256,7 @@ const getSortedFavorites = () => {
         
         <div className="controls-section">
           <div className="control-group">
-            <label>User</label>
+            <label>Fighter</label>
             <select value={user} onChange={e => setUser(e.target.value)} className="select-input">
               <option value="all">All Users</option>
               <option value="Jared">Jared</option>
@@ -340,7 +300,7 @@ const getSortedFavorites = () => {
               
               return (
                 <div 
-                  key={fav.fighter_id || fav.id} 
+                  key={fav.id} 
                   className={`fighter-card${isP4PChampion ? ' p4p-champion' : ''}`}
                 >
                   {isP4PChampion && (
@@ -348,41 +308,27 @@ const getSortedFavorites = () => {
                   )}
                   
                   <div className="fighter-image-container">
-                    {(fav.image_url || fav.image_local_path) ? (
+                    {(fav.image_url || fav.image_local_path) && (
                       <img
                         src={fav.image_url || fav.image_local_path}
-                        alt={fav.name}
+                        alt={fav.fighter}
                         className="fighter-image"
-                        style={{ width: '100%', height: 'auto', borderRadius: 8 }}
                         onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = fav.image_local_path || '';
+                          e.target.style.display = 'none';
                         }}
                       />
-                    ) : (
-                      <div className="fighter-placeholder">
-                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🥊</div>
-                        <div style={{ fontSize: '0.9rem', fontWeight: '600' }}>
-                          {capitalize(fav.name || fav.fighter)}
-                        </div>
-                        {fav.nickname && (
-                          <div style={{ fontSize: '0.75rem', fontStyle: 'italic', opacity: 0.7 }}>
-                            "{fav.nickname}"
-                          </div>
-                        )}
-                      </div>
                     )}
                   </div>
-
+                  
                   <div className="fighter-content">
                     <div className="fighter-header">
                       <h3 className="fighter-name">
                         {fav.profile_url_ufc ? (
                           <a href={fav.profile_url_ufc} target="_blank" rel="noreferrer">
-                            {capitalize(fav.name || fav.fighter)}
+                            {capitalize(fav.fighter)}
                           </a>
                         ) : (
-                          capitalize(fav.name || fav.fighter)
+                          capitalize(fav.fighter)
                         )}
                       </h3>
                       {fav.nickname && (
@@ -417,19 +363,6 @@ const getSortedFavorites = () => {
                           {fav.draws_total && parseInt(fav.draws_total) > 0 && `-${fav.draws_total}`}
                         </span>
                       </div>
-
-                      {/* Enhanced Stats */}
-                      {fav.height && (
-                        <div className="stat-item">
-                          <span>Height: {fav.height}"</span>
-                        </div>
-                      )}
-                      
-                      {fav.reach && (
-                        <div className="stat-item">
-                          <span>Reach: {fav.reach}"</span>
-                        </div>
-                      )}
                     </div>
                     
                     {rankings && (rankings.p4p || rankings.divisionRank) && (
@@ -448,38 +381,30 @@ const getSortedFavorites = () => {
                     )}
                     
                     <div className="fighter-footer">
-                      <div className="user-preferences">
-                        {fav.users.map((userPref, idx) => (
-                          <div key={idx} className="user-preference">
-                            <span className={`user-tag ${userPref.user.toLowerCase()}`}>
-                              {userPref.user}
-                            </span>
-                            <span className="priority-tag">
-                              {userPref.priority === "favorite" ? "⭐" : "👀"}
-                            </span>
-                          </div>
-                        ))}
+                      <div className="user-priority">
+                        <span className={`user-tag ${fav.user.toLowerCase()}`}>
+                          {fav.user}
+                        </span>
+                        <span className="priority-tag">
+                          {fav.priority === "favorite" ? "⭐ Favorite" : "👀 Interested"}
+                        </span>
                       </div>
                       
                       <div className="card-actions">
-                        {fav.users.map((userPref, idx) => (
-                          <div key={idx} className="user-actions">
-                            <button 
-                              className="action-btn toggle-btn"
-                              onClick={() => handlePriorityToggle({...fav, user: userPref.user, priority: userPref.priority})}
-                              title={`Toggle ${userPref.user}'s preference`}
-                            >
-                              {userPref.priority === "favorite" ? "👀" : "⭐"}
-                            </button>
-                            <button 
-                              className="action-btn remove-btn"
-                              onClick={() => handleRemove({...fav, user: userPref.user, priority: userPref.priority})}
-                              title={`Remove from ${userPref.user}'s list`}
-                            >
-                              🗑️
-                            </button>
-                          </div>
-                        ))}
+                        <button 
+                          className="action-btn toggle-btn"
+                          onClick={() => handlePriorityToggle(fav)}
+                          title={fav.priority === "favorite" ? "Move to Interested" : "Move to Favorites"}
+                        >
+                          {fav.priority === "favorite" ? "👀" : "⭐"}
+                        </button>
+                        <button 
+                          className="action-btn remove-btn"
+                          onClick={() => handleRemove(fav)}
+                          title="Remove Fighter"
+                        >
+                          🗑️
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -493,57 +418,9 @@ const getSortedFavorites = () => {
       {showConfirmModal && <ConfirmModal />}
 
       <style jsx>{`
-        .fighter-placeholder {
-          width: 100%;
-          height: 150px;
-          background: linear-gradient(135deg, #374151, #4b5563);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          border-radius: 8px;
-          color: rgba(255, 255, 255, 0.6);
-        }
-
-        .user-preferences {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-
-        .user-preference {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 0.25rem 0;
-        }
-
-        .user-actions {
-          display: flex;
-          gap: 0.25rem;
-          align-items: center;
-          padding: 0.25rem;
-          border-radius: 6px;
-          background: rgba(255, 255, 255, 0.02);
-        }
-
-        .card-actions {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-
-        .fighter-stats .stat-item {
-          margin-bottom: 0.25rem;
-        }
-
-        .fighter-stats .stat-row {
-          flex-wrap: wrap;
-        }
-        
         .favorites-container {
           min-height: 100vh;
-          background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+          background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #0c0c0c 100%);
           color: #fff;
           padding: 2rem;
           max-width: 1400px;
@@ -559,13 +436,12 @@ const getSortedFavorites = () => {
           font-size: 3rem;
           font-weight: 800;
           margin-bottom: 1rem;
-          background: ${theme.gradient};
+          background: linear-gradient(45deg, #ff6b35, #ff8e35, #ffa735);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
-          text-shadow: 0 0 30px ${theme.primaryLight};
+          text-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
         }
-
 
         .controls-section {
           display: flex;
@@ -576,10 +452,9 @@ const getSortedFavorites = () => {
           padding: 2rem;
           background: rgba(255, 255, 255, 0.02);
           border-radius: 16px;
-          border: 1px solid ${theme.primaryBorder};
+          border: 1px solid rgba(255, 107, 53, 0.1);
           backdrop-filter: blur(10px);
         }
-
 
         .control-group {
           display: flex;
@@ -590,7 +465,7 @@ const getSortedFavorites = () => {
 
         .control-group label {
           font-weight: 600;
-          color: ${theme.primary};
+          color: #ff6b35;
           font-size: 0.9rem;
           text-transform: uppercase;
           letter-spacing: 0.5px;
@@ -598,8 +473,8 @@ const getSortedFavorites = () => {
 
         .select-input {
           padding: 0.75rem 1rem;
-          background: rgba(255, 255, 255, 0.4);
-          border: 2px solid ${theme.primaryBorder};
+          background: rgba(0, 0, 0, 0.4);
+          border: 2px solid rgba(255, 107, 53, 0.2);
           border-radius: 8px;
           color: #fff;
           font-size: 0.95rem;
@@ -607,23 +482,11 @@ const getSortedFavorites = () => {
           backdrop-filter: blur(5px);
         }
 
-        .select-input option {
-          background: #fff;
-          color: #1e293b;
-          padding: 0.5rem;
-        }
-
-        .select-input option:checked {
-          background: ${theme.primary};
-          color: #fff;
-        }
-
         .select-input:focus {
           outline: none;
-          border-color: ${theme.primary};
-          box-shadow: 0 0 0 3px ${theme.primaryLight};
+          border-color: #ff6b35;
+          box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
         }
-
 
         .cards-grid {
           display: grid;
@@ -635,7 +498,7 @@ const getSortedFavorites = () => {
         .fighter-card {
           background: linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
           border-radius: 20px;
-          border: 1px solid ${theme.primaryBorder};
+          border: 1px solid rgba(255, 107, 53, 0.1);
           overflow: hidden;
           transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
@@ -649,17 +512,16 @@ const getSortedFavorites = () => {
           left: 0;
           right: 0;
           height: 4px;
-          background: ${theme.gradient};
+          background: linear-gradient(90deg, #ff6b35, #ff8e35, #ffa735);
           transform: scaleX(0);
           transition: transform 0.4s ease;
         }
 
         .fighter-card:hover {
           transform: translateY(-8px);
-          border-color: ${theme.primaryBorder};
-          box-shadow: 0 20px 40px ${theme.primaryLight};
+          border-color: rgba(255, 107, 53, 0.3);
+          box-shadow: 0 20px 40px rgba(255, 107, 53, 0.1);
         }
-
 
         .fighter-card:hover::before {
           transform: scaleX(1);
@@ -680,7 +542,7 @@ const getSortedFavorites = () => {
         }
 
         .fighter-image-container {
-          height: 150px;
+          height: 200px;
           overflow: hidden;
           position: relative;
           background: linear-gradient(45deg, rgba(255, 107, 53, 0.1), rgba(255, 138, 53, 0.1));
@@ -720,7 +582,7 @@ const getSortedFavorites = () => {
         }
 
         .fighter-name a:hover {
-          color: ${theme.primary};
+          color: #ff6b35;
         }
 
         .fighter-nickname {
@@ -749,7 +611,7 @@ const getSortedFavorites = () => {
         }
 
         .weight-class {
-          color: ${theme.primary};
+          color: #ff6b35;
           font-weight: 600;
         }
 
@@ -789,9 +651,9 @@ const getSortedFavorites = () => {
         }
 
         .rank-badge.division {
-          background: ${theme.primaryLight};
-          color: ${theme.primary};
-          border: 1px solid ${theme.primaryBorder};
+          background: rgba(255, 107, 53, 0.2);
+          color: #ff6b35;
+          border: 1px solid rgba(255, 107, 53, 0.3);
         }
 
         .fighter-footer {
@@ -830,12 +692,6 @@ const getSortedFavorites = () => {
           border: 1px solid rgba(220, 38, 38, 0.3);
         }
 
-        .user-tag.all {
-          background: rgba(234, 179, 8, 0.2);
-          color: #facc15;
-          border: 1px solid rgba(234, 179, 8, 0.3);
-        }
-
         .priority-tag {
           font-size: 0.75rem;
           color: rgba(255, 255, 255, 0.6);
@@ -860,13 +716,13 @@ const getSortedFavorites = () => {
         }
 
         .toggle-btn {
-          background: ${theme.primaryLight};
-          color: ${theme.primary};
-          border: 1px solid ${theme.primaryBorder};
+          background: rgba(255, 107, 53, 0.1);
+          color: #ff6b35;
+          border: 1px solid rgba(255, 107, 53, 0.2);
         }
 
         .toggle-btn:hover {
-          background: ${theme.primaryLight};
+          background: rgba(255, 107, 53, 0.2);
           transform: scale(1.1);
         }
 
@@ -884,14 +740,14 @@ const getSortedFavorites = () => {
         .skeleton-card {
           background: rgba(255, 255, 255, 0.02);
           border-radius: 20px;
-          border: 1px solid ${theme.primaryBorder};
+          border: 1px solid rgba(255, 107, 53, 0.1);
           overflow: hidden;
           animation: pulse 2s ease-in-out infinite;
         }
 
         .skeleton-title {
           height: 200px;
-          background: ${theme.primaryLight};
+          background: linear-gradient(90deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1));
           margin-bottom: 1rem;
           animation: shimmer 2s infinite;
         }
@@ -935,7 +791,7 @@ const getSortedFavorites = () => {
 
         .empty-state h3 {
           font-size: 1.5rem;
-          color: ${theme.primary};
+          color: #ff6b35;
           margin-bottom: 1rem;
           font-weight: 700;
         }
@@ -953,20 +809,20 @@ const getSortedFavorites = () => {
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(255, 255, 255, 0.8);
+          background: rgba(0, 0, 0, 0.8);
           display: flex;
           align-items: center;
           justify-content: center;
           z-index: 1000;
           animation: fadeIn 0.3s ease;
-          backdrop-filter: blur(8px);
+          backdrop-filter: blur(5px);
         }
 
         .modal-content {
           background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
           border-radius: 16px;
           padding: 2rem;
-          border: 1px solid ${theme.primaryBorder};
+          border: 1px solid rgba(255, 107, 53, 0.2);
           max-width: 400px;
           width: 90%;
           animation: slideUp 0.3s ease;
@@ -974,7 +830,7 @@ const getSortedFavorites = () => {
         }
 
         .modal-content h3 {
-          color: ${theme.primary};
+          color: #ff6b35;
           margin-bottom: 1rem;
           font-size: 1.3rem;
           font-weight: 700;
