@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {addToFavorites, removeFavorite, getUserFavorites } from "../api/fighters";
 import supabase from "../api/supabaseClient";
+import countryCodes from '../utils/countryCodes';
 
 const USERS = ["Jared", "Mars"];
 
@@ -42,52 +43,6 @@ const LoadingSpinner = ({ size = "small" }) => (
   </div>
 );
 
-// Flag component for countries
-const FlagIcon = ({ country }) => {
-  const flagMap = {
-    'Russia': '🇷🇺',
-    'USA': '🇺🇸',
-    'United States': '🇺🇸',
-    'Brazil': '🇧🇷',
-    'Canada': '🇨🇦',
-    'United Kingdom': '🇬🇧',
-    'England': '🇬🇧',      // England (using UK flag)
-    'Ireland': '🇮🇪',
-    'Australia': '🇦🇺',
-    'Mexico': '🇲🇽',
-    'France': '🇫🇷',
-    'Germany': '🇩🇪',
-    'Poland': '🇵🇱',
-    'Sweden': '🇸🇪',
-    'Norway': '🇳🇴',
-    'Netherlands': '🇳🇱',
-    'China': '🇨🇳',
-    'Japan': '🇯🇵',
-    'South Korea': '🇰🇷',
-    'Georgia': '🇬🇪',
-    'Dagestan': '🇷🇺',      // Dagestan uses Russia flag
-    'Chechnya': '🇷🇺',      // Chechnya uses Russia flag
-    'Turkey': '🇹🇷',
-    'Bolivia': '🇧🇴',
-    'Bahrain': '🇧🇭',
-    'Nigeria': '🇳🇬',
-    'Romania': '🇷🇴',
-    'Chile': '🇨🇱',
-    'Jamaica': '🇯🇲',
-    'Lithuania': '🇱🇹',
-    'South Africa': '🇿🇦',
-    'Scotland': '🏴',       // (Scottish flag; may fallback to UK depending on platform)
-    'Moldova': '🇲🇩',
-    'Thailand': '🇹🇭',
-    'Denmark': '🇩🇰',
-    'Cuba': '🇨🇺',
-    'Venezuela': '🇻🇪',
-    'Croatia': '🇭🇷',
-    'Kazakhstan': '🇰🇿',
-  };
-
-  return <span className="flag-icon">{flagMap[country] || '🏴'}</span>;
-};
 
 const SearchFighter = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -854,8 +809,7 @@ const SearchFighter = () => {
                             whiteSpace: "nowrap"
                           }}
                         >
-                          <FlagIcon country={fighter.country} />
-                          <span>{fighter.country}</span>
+                          <span>{countryCodes[fighter.country?.trim()] || fighter.country}</span>
                         </div>
                       )}
                       

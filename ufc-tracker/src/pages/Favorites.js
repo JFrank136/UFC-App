@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getUserFavorites, removeFavorite } from "../api/fighters";
+import countryCodes from '../utils/countryCodes';
+
 
 const USERS = ["Jared", "Mars"];
 
@@ -31,52 +33,6 @@ const getThemeColors = (user) => {
   }
 };
 
-// Flag component for countries
-const FlagIcon = ({ country }) => {
-  const flagMap = {
-    'Russia': '🇷🇺',
-    'USA': '🇺🇸',
-    'United States': '🇺🇸',
-    'Brazil': '🇧🇷',
-    'Canada': '🇨🇦',
-    'United Kingdom': '🇬🇧',
-    'England': '🇬🇧',
-    'Ireland': '🇮🇪',
-    'Australia': '🇦🇺',
-    'Mexico': '🇲🇽',
-    'France': '🇫🇷',
-    'Germany': '🇩🇪',
-    'Poland': '🇵🇱',
-    'Sweden': '🇸🇪',
-    'Norway': '🇳🇴',
-    'Netherlands': '🇳🇱',
-    'China': '🇨🇳',
-    'Japan': '🇯🇵',
-    'South Korea': '🇰🇷',
-    'Georgia': '🇬🇪',
-    'Dagestan': '🇷🇺',
-    'Chechnya': '🇷🇺',
-    'Turkey': '🇹🇷',
-    'Bolivia': '🇧🇴',
-    'Bahrain': '🇧🇭',
-    'Nigeria': '🇳🇬',
-    'Romania': '🇷🇴',
-    'Chile': '🇨🇱',
-    'Jamaica': '🇯🇲',
-    'Lithuania': '🇱🇹',
-    'South Africa': '🇿🇦',
-    'Scotland': '🏴',
-    'Moldova': '🇲🇩',
-    'Thailand': '🇹🇭',
-    'Denmark': '🇩🇰',
-    'Cuba': '🇨🇺',
-    'Venezuela': '🇻🇪',
-    'Croatia': '🇭🇷',
-    'Kazakhstan': '🇰🇿',
-  };
-
-  return <span className="flag-icon">{flagMap[country] || '🏴'}</span>;
-};
 
 const Favorites = () => {
   const [user, setUser] = useState("all");
@@ -389,13 +345,12 @@ const getSortedFavorites = () => {
                         <p className="fighter-nickname">"{fav.nickname}"</p>
                       )}
                     </div>
-                    
+
                     <div className="fighter-stats">
                       <div className="stat-row">
                         {fav.country && (
                           <div className="stat-item">
-                            <FlagIcon country={fav.country} />
-                            <span>{fav.country}</span>
+                            <span>{countryCodes[fav.country] || fav.country}</span>
                           </div>
                         )}
                         {fav.age && (

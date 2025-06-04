@@ -1,4 +1,4 @@
-UFC DB STRUCTURE (OPTIMIZED FOR CLAUDE)
+UFC Supabase Tables
 ---------------------------------------
 
 fighters
@@ -41,8 +41,18 @@ upcoming_fights
 - weight_class
 - scraped_at: Timestamp of data retrieval
 
+rankings
+--------
+- id (UUID): Primary key
+- division (text): e.g. "Heavyweight"
+- rank (text): e.g. "1", "C", "NR"
+- name (text): Fighter name
+- uuid (UUID): FK to fighters.id
+- change (text): e.g. "Rank increased by 1", or null
+
 relationships
 -------------
 - fighters.id links to:
     - fight_history.fighter_id
     - upcoming_fights.fighter1_id / fighter2_id
+    - rankings.uuid
