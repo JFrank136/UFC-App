@@ -1,6 +1,26 @@
-Make it accessible by phone
-Filter the search list to be the active UFC roster
-Make the fighter names clickable links for the upcoming fights page
+Improvements/Ideas
+----
+ALL PAGES - Improve for mobile
+FighterSearch.js - Include more options for filtering and sorting
+FighterSearch.js - Fix bug for PFP 1
+Favorites.js - Fix formatting for fighter images
+Favorites.js - Add more data into cards (not sure what yet)
+Favorites.js - Be able to search fighters
+Favorites.js - Display upcoming fight details from this PAGES
+UpcomingFights.js - Add more data into cards (not sure what yet)
+UpcomingFights.js - Sort by fight order
+UpcomingFights.js - Different highlighting for PPV vs Fight Night
+UpcomingFights.js - Lot of bugs and errors
+UpcomingFights.js - Fix date formatting
+UpcomingFights.js - Special highlighting if it contains both fights as interested/favorite
 
-Add a like and love for favorite fighters
-	There are fighters where I might watch and there are fighters that I must watch
+
+
+
+Countries Missing:
+Spain
+Myanmar
+New Zealand
+Ecuador
+Czech Republic
+United Arab Emirates
