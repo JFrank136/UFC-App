@@ -24,7 +24,7 @@ const countryCodes = {
   'Chechnya': '🇷🇺',
   'Denmark': '🇩🇰',
   'Ecuador': '🇪🇨',
-  'England': '🏴',
+  'England': '🇬🇧',
   'France': '🇫🇷',
   'Georgia': '🇬🇪',
   'Germany': '🇩🇪',
@@ -57,7 +57,7 @@ const countryCodes = {
   'Portugal': '🇵🇹',
   'Romania': '🇷🇴',
   'Russia': '🇷🇺',
-  'Scotland': '🏴',
+  'Scotland': '🇬🇧',
   'Serbia': '🇷🇸',
   'Singapore': '🇸🇬',
   'Slovakia': '🇸🇰',
@@ -76,7 +76,7 @@ const countryCodes = {
   'Uzbekistan': '🇺🇿',
   'Venezuela': '🇻🇪',
   'Vietnam': '🇻🇳',
-  'Wales': '🏴',
+  'Wales': '🇬🇧',
   'Zimbabwe': '🇿🇼'
 };
 
