@@ -1,6 +1,15 @@
+################
+ADD GENDER FIELD
+Update both Supabase files based on this
+
 IMPORTANT
 ----
 Update supabase files to include Raknings table 
+
+All PAGES
+----
+Include division rank and overall rank for stats
+Have a badge if they are top 10 overall for a stat. Men vs women
 
 Improvements/Ideas
 ----
@@ -18,6 +27,7 @@ UpcomingFights.js - Sort by fight order
 UpcomingFights.js - Different highlighting for PPV vs Fight Night
 UpcomingFights.js - Fix date formatting
 UpcomingFights.js - Countdown timers?
+UpcomingFights.js - Fix filtering (try "Mars" + "Favorites")
 FighterStats.js - Longest unbeaten streak and longest losing streak
 FighterStats.js - Whole page filter for top 5/bottom 5?
 Rankings.js - Has an icon if they have a fight booked, those that do can flip over to see who and when
@@ -26,14 +36,6 @@ Events.js - Clear separation between main event, prelims, early prelims
 Events.js - Fix fighter images for the dropdown
 Events.js - Include fight fight_history
 Events.js - Include an option to click where it gives all details
-
-
-
-All PAGES
-----
-Include division rank and overall rank for stats
-Have a badge if they are top 10 overall for a stat. Men vs women
-
 
 
 ADD PAGE
@@ -55,6 +57,8 @@ Find way to make things more efficient
 When I rescrape roster, it should still keep uuid's
 Get odds data
 Keep more historic data
+Add field for gender
+    -- Update both Supabase files based on this
 
 
 Events.js: Everything but user_favorites
