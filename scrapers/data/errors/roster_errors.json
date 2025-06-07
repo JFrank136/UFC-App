@@ -4,5 +4,23 @@
     "uuid": "f3ac3d11-e298-41ea-9391-90b8129a413b",
     "profile_url": "https://www.ufc.com/athlete/steve-garcia",
     "reason": "manual add"
+  },
+  {
+    "name": "Jamey-Lyn Horth",
+    "uuid": "b7fdb9fb-abe2-492a-804c-51d0926e3619",
+    "profile_url": "https://www.ufc.com/athlete/jamey-lyn-horth",
+    "reason": "manual add"
+  },
+  {
+    "name": "Bruno Silva",
+    "uuid": "ea824e9f-3450-48a7-8cba-3fbc7dca2159",
+    "profile_url": "https://www.ufc.com/athlete/bruno-silva",
+    "reason": "manual add"
+  },
+  {
+    "name": "Bruno Silva",
+    "uuid": "baf44b15-1a19-4bdb-b833-136f314c7be7",
+    "profile_url": "https://www.ufc.com/athlete/bruno-silva",
+    "reason": "manual add"
   }
 ]

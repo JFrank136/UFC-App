@@ -256,7 +256,7 @@ def process_fighter(fighter_info):
 
 
     # Get profile URL - handle both possible keys
-    profile_url_ufc = fighter.get("profile_url_ufc") or fighter.get("profile_url_ufc")
+    profile_url_ufc = fighter.get("profile_url_ufc") or fighter.get("profile_url")
     if not profile_url_ufc:
         logger.warning(f"No profile URL for {fighter_name}")
         return None

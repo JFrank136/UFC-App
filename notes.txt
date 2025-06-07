@@ -1,33 +1,60 @@
+IMPORTANT
+----
+Update supabase files to include Raknings table 
+
 Improvements/Ideas
 ----
 ALL PAGES - Improve for mobile
-FighterSearch.js - Include more options for filtering and sorting
-FighterSearch.js - Fix bug for PFP 1
+FighterSearch.js - Fix filtering for women, look through file
+FighterSearch.js - Better layout for P4P badge
 Favorites.js - Fix formatting for fighter images
 Favorites.js - Add more data into cards (not sure what yet)
 Favorites.js - Be able to search fighters
 Favorites.js - Display upcoming fight details from this PAGES
+Favorites.js - FIx formatting of fighters that are already selected
+Favorites.js - Have the favorites table be mini cards, will contain upcoming fights and more filters (fight/no fight)
 UpcomingFights.js - Add more data into cards (not sure what yet)
 UpcomingFights.js - Sort by fight order
 UpcomingFights.js - Different highlighting for PPV vs Fight Night
-UpcomingFights.js - Lot of bugs and errors
 UpcomingFights.js - Fix date formatting
-UpcomingFights.js - Special highlighting if it contains both fights as interested/favorite
-Favorites.js - Have the favorites table be mini cards, will contain upcoming fights and more filters (fight/no fight)
 UpcomingFights.js - Countdown timers?
 FighterStats.js - Longest unbeaten streak and longest losing streak
 FighterStats.js - Whole page filter for top 5/bottom 5?
 Rankings.js - Has an icon if they have a fight booked, those that do can flip over to see who and when
+Events.js - Fix fighter images
+Events.js - Clear separation between main event, prelims, early prelims
+Events.js - Fix fighter images for the dropdown
+Events.js - Include fight fight_history
+Events.js - Include an option to click where it gives all details
 
 
-----All PAGES
+
+All PAGES
+----
 Include division rank and overall rank for stats
 Have a badge if they are top 10 overall for a stat. Men vs women
 
-----Add page
+
+
+ADD PAGE
+----
 all_fighters.js - Be able to search for any filter and get detailed information on them
 
+Predictions and prediction data related pages
+Select an event, input who won rock, paper, and what decision (3 picks or 2)
+Be able to input if you chose them or got stuck with them
+Have real predictions as well. Maybe like a do you agree?
+Cannot change the picks 3 days after or something
+
+
+
+SCRAPERS
+----
 scrape_rankings.py - See how scraper captures changes for champion, currently missing
+Find way to make things more efficient
+When I rescrape roster, it should still keep uuid's
+Get odds data
+Keep more historic data
 
 
 Events.js: Everything but user_favorites

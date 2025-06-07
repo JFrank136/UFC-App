@@ -16737,5 +16737,25 @@
     "knockdown_avg": "5.04",
     "avg_fight_time": "2.34",
     "last_updated": 1748668899.9946308
+  },
+  {
+    "name": "Bruno Silva",
+    "profile_url": "https://www.ufc.com/athlete/bruno-silva",
+    "status": "Active",
+    "id": "baf44b15-1a19-4bdb-b833-136f314c7be7",
+    "image_local_path": "/images/bruno-silva.jpg",
+    "image_url": "https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-06/SILVA_BRUNO_L_06-07.png?itok=y9ZUoUi5",
+    "image_verified": true,
+    "height": "64.00",
+    "weight": "133.60",
+    "reach": "65.00",
+    "strikes_landed_per_min": "214 (77%)",
+    "strikes_absorbed_per_min": "21 (8%)",
+    "takedown_avg": "42 (15%)",
+    "submission_avg": "6 (43%)",
+    "striking_defense": "4 (29%)",
+    "knockdown_avg": "3.54",
+    "avg_fight_time": "4.08",
+    "last_updated": 1749174276.261022
   }
 ]

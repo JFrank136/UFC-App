@@ -86,7 +86,7 @@ def batch_insert_fighters(cursor, fighters_batch):
     
     query = """
         INSERT INTO fighters (
-            id, name, profile_url_ufc, profile_url_sherdog, status, ranking, height, weight, 
+            id, name, profile_url_ufc, profile_url_sherdog, status, height, weight, 
             reach, strikes_landed_per_min, strikes_absorbed_per_min, takedown_avg,
             submission_avg, striking_defense, knockdown_avg, avg_fight_time, nickname, 
             country, age, weight_class, wins_total, losses_total, wins_ko, wins_sub, wins_dec,
@@ -99,7 +99,6 @@ def batch_insert_fighters(cursor, fighters_batch):
             profile_url_ufc = EXCLUDED.profile_url_ufc,
             profile_url_sherdog = EXCLUDED.profile_url_sherdog,
             status = EXCLUDED.status,
-            ranking = EXCLUDED.ranking,
             height = EXCLUDED.height,
             weight = EXCLUDED.weight,
             reach = EXCLUDED.reach,
@@ -136,7 +135,6 @@ def batch_insert_fighters(cursor, fighters_batch):
             fighter.get("profile_url_ufc"),
             fighter.get("profile_url_sherdog"),
             fighter.get("status"),
-            fighter.get("ranking"),
             clean_numeric(fighter.get("height")),
             clean_numeric(fighter.get("weight")),
             clean_numeric(fighter.get("reach")),

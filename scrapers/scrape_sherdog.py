@@ -463,7 +463,7 @@ def run_retry_only():
                 still_failed.append(entry)
                 continue
 
-        fighter_data = scrape_fighter(url)
+        fighter_data = scrape_fighter(url, original_fighter=entry)
         if fighter_data:
             results.append(fighter_data)
             print(f"✅ Re-scraped: {fighter_data['name']}")

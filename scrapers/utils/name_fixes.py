@@ -172,7 +172,8 @@ URL_OVERRIDES = {
     "SANGWOOK KIM": "https://www.sherdog.com/fighter/Sang-Wook-Kim-361209",
     "ABDUL AZEEM BADAKHSHI": "https://www.sherdog.com/fighter/Abdul-Azim-Badakhshi-136805",
     "BENARDO SOPAJ": "https://www.sherdog.com/fighter/Bernardo-Sopai-226661",
-    "LU KAI": "https://www.sherdog.com/fighter/Kai-Lu-217317"
+    "LU KAI": "https://www.sherdog.com/fighter/Kai-Lu-217317",
+    "BRUNO SILVA": "https://www.sherdog.com/fighter/Bruno-Silva-118601"
 }
 
 POWER_SLAP = {
@@ -272,5 +273,6 @@ UFC_ROSTER = {
     "Khamzat Chimaev": "https://www.ufc.com/athlete/khamzat-chimaev",
     "Jose Miguel Delgado": "https://www.ufc.com/athlete/jose-delgado",
     "Steve Garcia": "https://www.ufc.com/athlete/steve-garcia",
-    "Jamey-Lyn Horth": "https://www.ufc.com/athlete/jamey-lyn-horth"
+    "Jamey-Lyn Horth": "https://www.ufc.com/athlete/jamey-lyn-horth",
+    "Bruno Silva": "https://www.ufc.com/athlete/bruno-silva"
 }

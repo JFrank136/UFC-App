@@ -11244,12 +11244,6 @@
     "id": "9077b19f-24f0-43e1-b2e5-4c4e3849c3ba"
   },
   {
-    "name": "BRUNO SILVA",
-    "profile_url": "https://www.ufc.com/athlete/bruno-silva",
-    "status": "Not Fighting",
-    "id": "9d1d9b13-39aa-4cfb-92f4-5473bb5794b9"
-  },
-  {
     "name": "FELIPE SILVA",
     "profile_url": "https://www.ufc.com/athlete/felipe-silva",
     "status": "Not Fighting",
@@ -17428,5 +17422,17 @@
     "profile_url": "https://www.ufc.com/athlete/steve-garcia",
     "status": "Active",
     "id": "f3ac3d11-e298-41ea-9391-90b8129a413b"
+  },
+  {
+    "name": "Jamey-Lyn Horth",
+    "profile_url": "https://www.ufc.com/athlete/jamey-lyn-horth",
+    "status": "Active",
+    "id": "b7fdb9fb-abe2-492a-804c-51d0926e3619"
+  },
+  {
+    "name": "Bruno Silva",
+    "profile_url": "https://www.ufc.com/athlete/bruno-silva",
+    "status": "Active",
+    "id": "baf44b15-1a19-4bdb-b833-136f314c7be7"
   }
 ]

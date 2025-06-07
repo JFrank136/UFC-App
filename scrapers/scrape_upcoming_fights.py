@@ -24,10 +24,12 @@ def apply_name_fixes(name: str) -> str:
     return fixed
 
 
-sys.path.append("utils")  # or adjust as needed
+# Fix import order - add path before importing
+sys.path.append("utils")
 try:
     from name_fixes import TAPOLOGY_FIXES as RAW_FIXES
     TAPOLOGY_FIXES = {name.upper(): fixed for name, fixed in RAW_FIXES.items()}
+    print(f"✅ Loaded {len(TAPOLOGY_FIXES)} name fixes")
 except ImportError:
     print("⚠️ Could not import TAPOLOGY_FIXES. Continuing without it.")
     TAPOLOGY_FIXES = {}
@@ -54,6 +56,8 @@ OUTPUT_PATH = "data/upcoming_fights.json"
 def setup_browser():
     options = uc.ChromeOptions()
     options.add_argument("--window-size=1920,1080")
+    options.add_argument("--page-load-strategy=normal")  # Wait for page to fully load
+    options.add_argument("--timeout=30000")  # 30 second timeout
     options.add_argument("--incognito")
     options.add_argument("--no-first-run")
     options.add_argument("--no-default-browser-check")
@@ -151,13 +155,16 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
             if not uuid2:
                 print(f"❌ Missing UUID for: {fighter2}")
 
-            # Skip past events
+            # Skip past events with better date handling
             try:
                 fight_date_obj = datetime.strptime(event_date, "%Y-%m-%d").date()
                 if fight_date_obj < now:
+                    print(f"⏭️ Skipping past event: {event_title} ({event_date})")
                     continue
-            except Exception:
-                pass  # If date is TBD or malformed, include it just in case
+            except Exception as e:
+                if event_date != "TBD":
+                    print(f"⚠️ Could not parse date '{event_date}' for {event_title}: {e}")
+                # Include TBD dates but log malformed ones
 
             fights.append({
                 "event": event_title,
@@ -181,22 +188,40 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
     print(f"✅ Scraped {len(fights)} fights")
     return fights
 
-def scrape_event(driver, url):
+def scrape_event(driver, url, max_retries=3):
     print(f"\n🔍 Scraping: {url}")
-    try:
-        driver.get(url)
-    except Exception as e:
-        print(f"❌ Failed to load event page: {url}\n  → {e}")
-        return []
+    
+    for attempt in range(max_retries):
+        try:
+            driver.set_page_load_timeout(30)  # Set explicit timeout
+            driver.get(url)
+            break  # Success, exit retry loop
+        except Exception as e:
+            print(f"❌ Attempt {attempt + 1}/{max_retries} failed for {url}: {e}")
+            if attempt == max_retries - 1:
+                print(f"❌ Final attempt failed, skipping event")
+                return []
+            time.sleep(2 ** attempt)  # Exponential backoff
 
 
     try:
-        WebDriverWait(driver, 10).until(
+        # Wait for fight cards with longer timeout and better error handling
+        WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "li[data-controller='table-row-background']"))
         )
-    except Exception:
-        print("⚠️  Fight cards did not load")
-        return []
+        # Additional wait for dynamic content
+        time.sleep(2)
+    except Exception as e:
+        print(f"⚠️  Fight cards did not load after 20s: {e}")
+        # Try alternative selectors
+        try:
+            WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "table tr, .fight-card"))
+            )
+            print("✅ Found alternative fight card elements")
+        except:
+            print("❌ No fight card elements found with any selector")
+            return []
 
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -220,7 +245,7 @@ def scrape_event(driver, url):
     event_date, event_time = parse_event_datetime(soup)
     return parse_fights(soup, event_title, event_type, event_date, event_time)
 
-def main():
+def main(event_filter=None):
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     driver = setup_browser()
 
@@ -230,14 +255,28 @@ def main():
     all_fights = []
     try:
         links = get_event_links(driver)
-        for link in links:
+        
+        # Apply filtering if specified
+        if event_filter:
+            print(f"🔍 Filtering events containing: '{event_filter}'")
+            filtered_links = []
+            for link in links:
+                if event_filter.lower() in link.lower():
+                    filtered_links.append(link)
+            links = filtered_links
+            print(f"📅 Found {len(links)} matching events")
+        
+        for idx, link in enumerate(links, 1):
+            print(f"\n📅 Event {idx}/{len(links)}")
             try:
                 fights = scrape_event(driver, link)
                 all_fights.extend(fights)
+                print(f"✅ Scraped {len(fights)} fights from this event")
                 time.sleep(random.uniform(1.5, 3.5))
             except Exception as e:
                 print(f"❌ Failed to scrape: {link}\n   {e}")
                 # Log failed events for retry
+                from datetime import timezone
                 error_event = {"url": link, "error": str(e), "timestamp": datetime.now(timezone.utc).isoformat()}
                 error_file = "data/errors/upcoming_event_errors.json"
                 try:
@@ -280,13 +319,17 @@ def main():
 
 if __name__ == "__main__":
     print("Select run mode:")
-    print("[1] Full scrape")
+    print("[1] Full scrape (rewrites file)")
     print("[2] Only try missing UUIDs")
     print("[3] Retry failed event cards")
-    mode = input("Enter 1, 2, or 3: ").strip()
+    print("[4] Scrape specific events (with filter)")
+    mode = input("Enter 1, 2, 3, or 4: ").strip()
 
     if mode == "1":
         main()
+    elif mode == "4":
+        event_filter = input("Enter event name filter (e.g. 'UFC 310', '311'): ").strip()
+        main(event_filter=event_filter)
     elif mode == "2":
         error_file = "data/errors/upcoming_errors.json"
         if not os.path.exists(error_file):
