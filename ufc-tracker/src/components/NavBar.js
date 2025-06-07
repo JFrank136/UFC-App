@@ -38,7 +38,7 @@ const NavBar = () => {
             </button>
             
             {isUFCDropdownOpen && (
-              <div className="dropdown-menu">
+              <div className={`dropdown-menu ${isUFCDropdownOpen ? 'show' : ''}`}>
                 <Link to="/rankings" className="dropdown-link" onClick={() => setIsUFCDropdownOpen(false)}>
                   Rankings
                 </Link>
@@ -133,6 +133,18 @@ const NavBar = () => {
           align-items: center;
         }
 
+        .nav-dropdown:hover .dropdown-menu {
+          display: block;
+        }
+
+        .dropdown-menu {
+          display: none;
+        }
+
+        .dropdown-menu.show {
+          display: block;
+        }
+
         .dropdown-trigger {
           display: flex;
           align-items: center;
@@ -157,9 +169,12 @@ const NavBar = () => {
           border-radius: 8px;
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
           min-width: 140px;
-          z-index: 50;
+          z-index: 1000;
           backdrop-filter: blur(10px);
           animation: slideDown 0.2s ease-out;
+          display: block;
+          opacity: 1;
+          visibility: visible;
         }
 
         @keyframes slideDown {
@@ -190,7 +205,7 @@ const NavBar = () => {
           color: #60a5fa;
         }
 
-        /* Mobile Optimizations */
+      /* Mobile Optimizations */
         @media (max-width: 768px) {
           .nav-container {
             gap: 1rem;
@@ -205,9 +220,13 @@ const NavBar = () => {
             scroll-snap-align: start;
           }
 
+          .nav-dropdown {
+            position: static;
+          }
+
           .dropdown-menu {
             position: fixed;
-            top: auto;
+            top: 70px;
             left: 1rem;
             right: 1rem;
             margin-top: 0;
@@ -215,6 +234,7 @@ const NavBar = () => {
             background: #1f2937;
             border-radius: 12px;
             animation: slideUp 0.3s ease-out;
+            z-index: 1000;
           }
 
           @keyframes slideUp {

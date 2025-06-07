@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Calendar, Clock, MapPin, TrendingUp, Shield, Target, BarChart3, Sun, Moon, ChevronDown, ChevronUp, Users, Trophy, Zap } from 'lucide-react';
+import { Calendar, Clock, MapPin, TrendingUp, Shield, Target, BarChart3, Sun, Moon, ChevronDown, ChevronUp, Users, Trophy, Zap, ChevronLeft, ChevronRight } from 'lucide-react';
 import supabase from '../api/supabaseClient';
 import { getEventData } from '../api/supabaseQueries';
 import countryCodes from '../utils/countryCodes';
@@ -11,16 +11,26 @@ const Events = () => {
   const [expandedEvents, setExpandedEvents] = useState(new Set());
   const [expandedFights, setExpandedFights] = useState(new Set());
   const [darkMode, setDarkMode] = useState(true);
+  const [bettingCardPages, setBettingCardPages] = useState({});
 
   useEffect(() => {
     const fetchFights = async () => {
       try {
         setLoading(true);
         
-        // Try the supabaseQueries function first, fallback to direct query
         try {
           const data = await getEventData();
-          setFights(data || []);
+          // Filter to only show events within 3 days of today or future events
+          const today = new Date();
+          const threeDaysAgo = new Date(today);
+          threeDaysAgo.setDate(today.getDate() - 3);
+          
+          const filteredData = (data || []).filter(fight => {
+            const eventDate = new Date(fight.event_date);
+            return eventDate >= threeDaysAgo;
+          });
+          
+          setFights(filteredData);
           setError(null);
         } catch (queryError) {
           console.log('getEventData failed, falling back to direct query:', queryError);
@@ -46,7 +56,18 @@ const Events = () => {
             .order('fight_order', { ascending: false });
 
           if (error) throw error;
-          setFights(data || []);
+          
+          // Filter past events
+          const today = new Date();
+          const threeDaysAgo = new Date(today);
+          threeDaysAgo.setDate(today.getDate() - 3);
+          
+          const filteredData = (data || []).filter(fight => {
+            const eventDate = new Date(fight.event_date);
+            return eventDate >= threeDaysAgo;
+          });
+          
+          setFights(filteredData);
           setError(null);
         }
       } catch (err) {
@@ -134,6 +155,24 @@ const Events = () => {
            (eventName.toLowerCase().includes('ufc ') && /ufc \d+/.test(eventName.toLowerCase()));
   };
 
+  const isChampionshipFight = (fight) => {
+    const f1 = fight.fighter1_data || fight.fighter1;
+    const f2 = fight.fighter2_data || fight.fighter2;
+    
+    const hasChampionRank = (f1?.rankings && f1.rankings.some(r => r.rank === 'C')) ||
+                           (f2?.rankings && f2.rankings.some(r => r.rank === 'C'));
+    
+    const hasTitleInName = fight.event?.toLowerCase().includes('title') ||
+                          fight.fighter1?.toLowerCase().includes('title') ||
+                          fight.fighter2?.toLowerCase().includes('title');
+    
+    return hasChampionRank || hasTitleInName;
+  };
+
+  const isChampionshipEvent = (fights) => {
+    return fights.some(fight => isChampionshipFight(fight));
+  };
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       weekday: 'long',
@@ -157,6 +196,48 @@ const Events = () => {
     const wins = fighter.wins_total || 0;
     const losses = fighter.losses_total || 0;
     return `${wins}-${losses}`;
+  };
+
+  const getDivisionFromWeight = (weightClass, fighter1, fighter2) => {
+    if (!weightClass || weightClass === 'TBA') return 'TBA';
+    
+    // First try to get division from fighters' rankings
+    const f1Division = fighter1?.rankings?.find(r => !r.division?.toLowerCase().includes('pound-for-pound'))?.division;
+    const f2Division = fighter2?.rankings?.find(r => !r.division?.toLowerCase().includes('pound-for-pound'))?.division;
+    
+    if (f1Division && f2Division && f1Division === f2Division) return f1Division;
+    if (f1Division && !f2Division) return f1Division;
+    if (f2Division && !f1Division) return f2Division;
+    
+    // Fallback to weight mapping
+    const weightMap = {
+      '125': 'Flyweight',
+      '135': 'Bantamweight', 
+      '145': 'Featherweight',
+      '155': 'Lightweight',
+      '170': 'Welterweight',
+      '185': 'Middleweight',
+      '205': 'Light Heavyweight',
+      '265': 'Heavyweight',
+      '115': "Women's Strawweight"
+    };
+    
+    let division = weightMap[weightClass] || weightClass;
+    
+    // Check if either fighter has "women's" in their division
+    const hasWomensDiv = (f1Division && f1Division.toLowerCase().includes("women's")) || 
+                        (f2Division && f2Division.toLowerCase().includes("women's"));
+    
+    if (hasWomensDiv && !division.toLowerCase().includes("women's")) {
+      const womensMap = {
+        'Flyweight': "Women's Flyweight",
+        'Bantamweight': "Women's Bantamweight",
+        'Featherweight': "Women's Featherweight"
+      };
+      division = womensMap[division] || `Women's ${division}`;
+    }
+    
+    return division;
   };
 
   const getFinishRates = (fighter) => {
@@ -187,15 +268,193 @@ const Events = () => {
     return value.toString();
   };
 
+  const getRecentFights = (fighter, limit = 3) => {
+    if (!fighter?.fight_history) return [];
+    return fighter.fight_history
+      .sort((a, b) => new Date(b.fight_date) - new Date(a.fight_date))
+      .slice(0, limit);
+  };
+
+  const groupFightsBySection = (fights) => {
+    const sections = {
+      'Main': [],
+      'Prelim': [],
+      'Early Prelims': []
+    };
+    
+    fights.forEach(fight => {
+      const section = fight.card_section || 'Prelim';
+      if (section === 'Main') {
+        sections['Main'].push(fight);
+      } else if (section === 'Prelim') {
+        sections['Prelim'].push(fight);
+      } else {
+        sections['Early Prelims'].push(fight);
+      }
+    });
+    
+    // Sort fights within each section by fight order (higher numbers first)
+    Object.values(sections).forEach(sectionFights => {
+      sectionFights.sort((a, b) => (b.fight_order || 0) - (a.fight_order || 0));
+    });
+    
+    return sections;
+  };
+
+  const changeBettingPage = (fightId, direction) => {
+    setBettingCardPages(prev => {
+      const currentPage = prev[fightId] || 0;
+      const newPage = direction === 'next' ? 
+        (currentPage + 1) % 3 : 
+        currentPage === 0 ? 2 : currentPage - 1;
+      
+      return {
+        ...prev,
+        [fightId]: newPage
+      };
+    });
+  };
+
+  const BettingCard = ({ fighter, fightId, side }) => {
+    const currentPage = bettingCardPages[fightId] || 0;
+    const finishes = getFinishRates(fighter);
+    const recentFights = getRecentFights(fighter);
+    
+    const pages = [
+      // Page 0: Betting Stats
+      {
+        title: `${fighter.name} - Betting Stats`,
+        content: (
+          <div className="stats-grid">
+            <div className="stat-item">
+              <Zap size={14} />
+              <span>Finish Rate</span>
+              <span className="stat-value">{finishes.ko + finishes.sub}%</span>
+            </div>
+            <div className="stat-item">
+              <Target size={14} />
+              <span>KO Rate</span>
+              <span className="stat-value">{finishes.ko}%</span>
+            </div>
+            <div className="stat-item">
+              <Shield size={14} />
+              <span>Sub Rate</span>
+              <span className="stat-value">{finishes.sub}%</span>
+            </div>
+            <div className="stat-item">
+              <Clock size={14} />
+              <span>Avg Fight Time</span>
+              <span className="stat-value">{formatStat(fighter.avg_fight_time)} min</span>
+            </div>
+            <div className="stat-item">
+              <TrendingUp size={14} />
+              <span>Strikes/Min</span>
+              <span className="stat-value">{formatStat(fighter.strikes_landed_per_min)}</span>
+            </div>
+            <div className="stat-item">
+              <BarChart3 size={14} />
+              <span>Strike Defense</span>
+              <span className="stat-value">{formatStat(fighter.striking_defense)}</span>
+            </div>
+          </div>
+        )
+      },
+      // Page 1: Fight History
+      {
+        title: `${fighter.name} - Fight History`,
+        content: (
+          <div className="fight-history">
+            {recentFights.length > 0 ? recentFights.map((fight, idx) => (
+              <div key={idx} className={`fight-result ${fight.result?.toLowerCase() || ''}`}>
+                <span className="result-indicator">{fight.result?.charAt(0)?.toUpperCase() || '?'}</span>
+                <div className="fight-details">
+                  <span className="opponent">{fight.opponent || 'Unknown'}</span>
+                  <span className="method">{fight.method?.replace(/\([^)]*\)/g, '').trim() || 'N/A'}</span>
+                  <span className="round-time">
+                    {fight.round && fight.time ? `R${fight.round} ${fight.time}` : 'N/A'}
+                  </span>
+                </div>
+              </div>
+            )) : (
+              <div className="no-fights">No recent fights available</div>
+            )}
+          </div>
+        )
+      },
+      // Page 2: Physical Stats
+      {
+        title: `${fighter.name} - Physical`,
+        content: (
+          <div className="physical-stats-detailed">
+            <div className="physical-stat">
+              <span className="label">Age</span>
+              <span className="value">{fighter.age || 'N/A'}</span>
+            </div>
+            <div className="physical-stat">
+              <span className="label">Height</span>
+              <span className="value">{fighter.height ? `${fighter.height}"` : 'N/A'}</span>
+            </div>
+            <div className="physical-stat">
+              <span className="label">Reach</span>
+              <span className="value">{fighter.reach ? `${fighter.reach}"` : 'N/A'}</span>
+            </div>
+            <div className="physical-stat">
+              <span className="label">Weight</span>
+              <span className="value">{fighter.weight ? `${fighter.weight} lbs` : 'N/A'}</span>
+            </div>
+            <div className="physical-stat">
+              <span className="label">Country</span>
+              <span className="value">
+                {countryCodes[fighter.country]} {fighter.country || 'N/A'}
+              </span>
+            </div>
+            <div className="physical-stat">
+              <span className="label">Record</span>
+              <span className="value">{formatRecord(fighter)}</span>
+            </div>
+          </div>
+        )
+      }
+    ];
+
+    return (
+      <div className="betting-card">
+        <div className="betting-card-header">
+          <h5>{pages[currentPage].title}</h5>
+          <div className="card-navigation">
+            <button 
+              className="nav-btn"
+              onClick={() => changeBettingPage(fightId, 'prev')}
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <span className="page-indicator">{currentPage + 1}/3</span>
+            <button 
+              className="nav-btn"
+              onClick={() => changeBettingPage(fightId, 'next')}
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+        <div className="betting-card-content">
+          {pages[currentPage].content}
+        </div>
+      </div>
+    );
+  };
+
   const EventCard = ({ eventKey, eventData, isExpanded }) => {
     const mainEvent = getMainEvent(eventData.fights);
     const eventIsPPV = isPPV(eventData.info.name, eventData.info.type);
     const fightsCount = eventData.fights.length;
+    const isChampionship = isChampionshipEvent(eventData.fights);
+    const sectionedFights = groupFightsBySection(eventData.fights);
     
     return (
       <div className="event-card">
         <div 
-          className={`event-header ${eventIsPPV ? 'ppv-event' : 'fight-night-event'}`}
+          className={`event-header ${eventIsPPV ? 'ppv-event' : 'fight-night-event'} ${isChampionship ? 'championship-event' : ''}`}
           onClick={() => toggleEvent(eventKey)}
         >
           <div className="event-main-content">
@@ -203,6 +462,7 @@ const Events = () => {
               <div className="event-title-container">
                 <h2 className="event-title">{eventData.info.name}</h2>
                 {eventIsPPV && <span className="ppv-badge">PPV</span>}
+                {isChampionship && <span className="championship-badge">👑 TITLE</span>}
               </div>
               
               <div className="event-meta">
@@ -229,36 +489,38 @@ const Events = () => {
                 <div className="fighters-preview">
                   <div className="fighter-preview">
                     <img
-                      src={mainEvent.fighter1?.image_url || '/static/images/placeholder.jpg'}
-                      alt={mainEvent.fighter1?.name || 'Fighter 1'}
+                      src={(mainEvent.fighter1_data || mainEvent.fighter1)?.image_url || '/static/images/placeholder.jpg'}
+                      alt={(mainEvent.fighter1_data || mainEvent.fighter1)?.name || 'Fighter 1'}
                       onError={(e) => {
                         e.target.src = 'https://via.placeholder.com/80x80/cccccc/666666?text=' + 
-                          (mainEvent.fighter1?.name?.charAt(0) || '?');
+                          ((mainEvent.fighter1_data || mainEvent.fighter1)?.name?.charAt(0) || '?');
                       }}
                     />
                     <div className="fighter-info">
-                      <h4>{mainEvent.fighter1?.name || 'TBA'}</h4>
-                      <span className="record">{formatRecord(mainEvent.fighter1)}</span>
+                      <h4>{(mainEvent.fighter1_data || mainEvent.fighter1)?.name || 'TBA'}</h4>
+                      <span className="record">{formatRecord(mainEvent.fighter1_data || mainEvent.fighter1)}</span>
                     </div>
                   </div>
                   
                   <div className="vs-section">
                     <span className="vs">VS</span>
-                    <span className="weight-class">{mainEvent.weight_class || 'TBA'}</span>
+                    <span className="weight-class">
+                      {getDivisionFromWeight(mainEvent.weight_class, mainEvent.fighter1_data || mainEvent.fighter1, mainEvent.fighter2_data || mainEvent.fighter2)}
+                    </span>
                   </div>
                   
                   <div className="fighter-preview">
                     <img
-                      src={mainEvent.fighter2?.image_url || '/static/images/placeholder.jpg'}
-                      alt={mainEvent.fighter2?.name || 'Fighter 2'}
+                      src={(mainEvent.fighter2_data || mainEvent.fighter2)?.image_url || '/static/images/placeholder.jpg'}
+                      alt={(mainEvent.fighter2_data || mainEvent.fighter2)?.name || 'Fighter 2'}
                       onError={(e) => {
                         e.target.src = 'https://via.placeholder.com/80x80/cccccc/666666?text=' + 
-                          (mainEvent.fighter2?.name?.charAt(0) || '?');
+                          ((mainEvent.fighter2_data || mainEvent.fighter2)?.name?.charAt(0) || '?');
                       }}
                     />
                     <div className="fighter-info">
-                      <h4>{mainEvent.fighter2?.name || 'TBA'}</h4>
-                      <span className="record">{formatRecord(mainEvent.fighter2)}</span>
+                      <h4>{(mainEvent.fighter2_data || mainEvent.fighter2)?.name || 'TBA'}</h4>
+                      <span className="record">{formatRecord(mainEvent.fighter2_data || mainEvent.fighter2)}</span>
                     </div>
                   </div>
                 </div>
@@ -278,18 +540,38 @@ const Events = () => {
         </div>
 
         {isExpanded && (
-          <div className="fights-list">
-            {eventData.fights
-              .sort((a, b) => (b.fight_order || 0) - (a.fight_order || 0))
-              .map(fight => (
-                <FightCard 
-                  key={fight.id} 
-                  fight={fight} 
-                  isExpanded={expandedFights.has(fight.id)}
-                  onToggle={() => toggleFight(fight.id)}
-                />
-              ))
-            }
+          <div className="fights-sections">
+            {Object.entries(sectionedFights).map(([sectionName, sectionFights]) => (
+              sectionFights.length > 0 && (
+                <div key={sectionName} className="fight-section">
+                  <div className="section-header">
+                    <h3 className="section-title">{sectionName}</h3>
+                    <div className="section-divider"></div>
+                  </div>
+                  
+                  <div className="fights-list">
+                    {sectionFights.map(fight => (
+                      <FightCard 
+                        key={fight.id} 
+                        fight={fight} 
+                        isExpanded={expandedFights.has(fight.id)}
+                        onToggle={() => toggleFight(fight.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )
+            ))}
+            
+            <div className="collapse-bottom">
+              <button 
+                className="collapse-btn"
+                onClick={() => toggleEvent(eventKey)}
+              >
+                <span>Collapse</span>
+                <ChevronUp size={20} />
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -308,16 +590,17 @@ const Events = () => {
       );
     }
 
-    const f1Finishes = getFinishRates(f1);
-    const f2Finishes = getFinishRates(f2);
+    const isChampionship = isChampionshipFight(fight);
+    const division = getDivisionFromWeight(fight.weight_class, f1, f2);
 
     return (
-      <div className="fight-card">
+      <div className={`fight-card ${isChampionship ? 'championship-fight' : ''}`}>
         <div className="fight-header" onClick={onToggle}>
           <div className="fight-main-info">
             <div className="fight-meta">
               <span className="card-section">{fight.card_section || 'TBA'}</span>
               <span className="fight-time">{formatTime(fight.event_time)}</span>
+              {isChampionship && <span className="championship-indicator">👑</span>}
             </div>
             
             <div className="fighters-matchup">
@@ -341,7 +624,7 @@ const Events = () => {
               
               <div className="fight-vs">
                 <span className="vs">VS</span>
-                <span className="weight">{fight.weight_class} lbs</span>
+                <span className="weight">{division}</span>
               </div>
               
               <div className="fighter-summary">
@@ -372,101 +655,13 @@ const Events = () => {
         {isExpanded && (
           <div className="fight-details">
             <div className="fighters-comparison">
-              <div className="fighter-stats">
-                <h5>{f1.name} - Betting Stats</h5>
-                
-                <div className="stats-grid">
-                  <div className="stat-item">
-                    <Zap size={14} />
-                    <span>Finish Rate</span>
-                    <span className="stat-value">{f1Finishes.ko + f1Finishes.sub}%</span>
-                  </div>
-                  <div className="stat-item">
-                    <Target size={14} />
-                    <span>KO Rate</span>
-                    <span className="stat-value">{f1Finishes.ko}%</span>
-                  </div>
-                  <div className="stat-item">
-                    <Shield size={14} />
-                    <span>Sub Rate</span>
-                    <span className="stat-value">{f1Finishes.sub}%</span>
-                  </div>
-                  <div className="stat-item">
-                    <Clock size={14} />
-                    <span>Avg Fight Time</span>
-                    <span className="stat-value">{formatStat(f1.avg_fight_time)} min</span>
-                  </div>
-                  <div className="stat-item">
-                    <TrendingUp size={14} />
-                    <span>Strikes/Min</span>
-                    <span className="stat-value">{formatStat(f1.strikes_landed_per_min)}</span>
-                  </div>
-                  <div className="stat-item">
-                    <BarChart3 size={14} />
-                    <span>Strike Defense</span>
-                    <span className="stat-value">{formatStat(f1.striking_defense)}</span>
-                  </div>
-                </div>
-
-                <div className="physical-stats">
-                  <h6>Physical</h6>
-                  <div className="physical-grid">
-                    <span>Age: {f1.age || 'N/A'}</span>
-                    <span>Height: {f1.height || 'N/A'}"</span>
-                    <span>Reach: {f1.reach || 'N/A'}"</span>
-                  </div>
-                </div>
-              </div>
-
+              <BettingCard fighter={f1} fightId={fight.id} side="left" />
+              
               <div className="vs-divider">
                 <Trophy size={24} />
               </div>
 
-              <div className="fighter-stats">
-                <h5>{f2.name} - Betting Stats</h5>
-                
-                <div className="stats-grid">
-                  <div className="stat-item">
-                    <Zap size={14} />
-                    <span>Finish Rate</span>
-                    <span className="stat-value">{f2Finishes.ko + f2Finishes.sub}%</span>
-                  </div>
-                  <div className="stat-item">
-                    <Target size={14} />
-                    <span>KO Rate</span>
-                    <span className="stat-value">{f2Finishes.ko}%</span>
-                  </div>
-                  <div className="stat-item">
-                    <Shield size={14} />
-                    <span>Sub Rate</span>
-                    <span className="stat-value">{f2Finishes.sub}%</span>
-                  </div>
-                  <div className="stat-item">
-                    <Clock size={14} />
-                    <span>Avg Fight Time</span>
-                    <span className="stat-value">{formatStat(f2.avg_fight_time)} min</span>
-                  </div>
-                  <div className="stat-item">
-                    <TrendingUp size={14} />
-                    <span>Strikes/Min</span>
-                    <span className="stat-value">{formatStat(f2.strikes_landed_per_min)}</span>
-                  </div>
-                  <div className="stat-item">
-                    <BarChart3 size={14} />
-                    <span>Strike Defense</span>
-                    <span className="stat-value">{formatStat(f2.striking_defense)}</span>
-                  </div>
-                </div>
-
-                <div className="physical-stats">
-                  <h6>Physical</h6>
-                  <div className="physical-grid">
-                    <span>Age: {f2.age || 'N/A'}</span>
-                    <span>Height: {f2.height || 'N/A'}"</span>
-                    <span>Reach: {f2.reach || 'N/A'}"</span>
-                  </div>
-                </div>
-              </div>
+              <BettingCard fighter={f2} fightId={fight.id} side="right" />
             </div>
           </div>
         )}
@@ -552,7 +747,7 @@ const Events = () => {
 
         .events-container.light {
           background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
-          color: #000000;
+          color: #1a1a1a;
         }
 
         /* Header */
@@ -579,10 +774,17 @@ const Events = () => {
           font-size: 2.5rem;
           font-weight: 800;
           margin: 0 0 0.5rem 0;
+        }
+
+        .dark .header-content h1 {
           background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+        }
+
+        .light .header-content h1 {
+          color: #1a1a1a;
         }
 
         .header-content p {
@@ -611,9 +813,9 @@ const Events = () => {
         }
 
         .light .theme-toggle {
-          --toggle-bg: rgba(255, 215, 0, 0.1);
-          --toggle-border: rgba(255, 215, 0, 0.3);
-          --toggle-color: #B8860B;
+          --toggle-bg: rgba(0, 0, 0, 0.05);
+          --toggle-border: rgba(0, 0, 0, 0.1);
+          --toggle-color: #1a1a1a;
         }
 
         .theme-toggle:hover {
@@ -626,7 +828,7 @@ const Events = () => {
         }
 
         .light .theme-toggle:hover {
-          --toggle-hover: rgba(255, 215, 0, 0.2);
+          --toggle-hover: rgba(0, 0, 0, 0.1);
         }
 
         /* Events List */
@@ -654,21 +856,23 @@ const Events = () => {
 
         .light .event-card {
           --card-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
-          --card-border: rgba(255, 215, 0, 0.3);
+          --card-border: rgba(0, 0, 0, 0.1);
         }
 
         .event-card:hover {
-          border-color: #FFD700;
+          border-color: var(--card-hover-border);
           box-shadow: 0 20px 40px var(--card-shadow);
           transform: translateY(-4px);
         }
 
         .dark .event-card:hover {
+          --card-hover-border: #FFD700;
           --card-shadow: rgba(255, 215, 0, 0.2);
         }
 
         .light .event-card:hover {
-          --card-shadow: rgba(255, 215, 0, 0.3);
+          --card-hover-border: rgba(0, 0, 0, 0.2);
+          --card-shadow: rgba(0, 0, 0, 0.15);
         }
 
         .event-header {
@@ -701,6 +905,17 @@ const Events = () => {
           background: linear-gradient(90deg, #C0C0C0, #A0A0A0, #C0C0C0);
         }
 
+        .event-header.championship-event::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+          box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
+        }
+
         .event-header:hover {
           background: var(--header-hover);
         }
@@ -710,7 +925,7 @@ const Events = () => {
         }
 
         .light .event-header:hover {
-          --header-hover: rgba(255, 215, 0, 0.03);
+          --header-hover: rgba(0, 0, 0, 0.02);
         }
 
         .event-main-content {
@@ -729,6 +944,7 @@ const Events = () => {
           align-items: center;
           gap: 1rem;
           margin-bottom: 1rem;
+          flex-wrap: wrap;
         }
 
         .event-title {
@@ -743,10 +959,22 @@ const Events = () => {
         }
 
         .light .event-title {
-          --title-color: #B8860B;
+          --title-color: #1a1a1a;
         }
 
         .ppv-badge {
+          background: linear-gradient(45deg, #FFD700, #FFA500);
+          color: #000;
+          padding: 0.3rem 0.8rem;
+          border-radius: 8px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .championship-badge {
           background: linear-gradient(45deg, #FFD700, #FFA500);
           color: #000;
           padding: 0.3rem 0.8rem;
@@ -773,7 +1001,15 @@ const Events = () => {
         }
 
         .meta-item svg {
-          color: #FFD700;
+          color: var(--meta-icon-color);
+        }
+
+        .dark .meta-item svg {
+          --meta-icon-color: #FFD700;
+        }
+
+        .light .meta-item svg {
+          --meta-icon-color: #1a1a1a;
         }
 
         /* Main Event Preview */
@@ -785,11 +1021,19 @@ const Events = () => {
         .main-event-label {
           text-align: center;
           font-size: 0.9rem;
-          color: #FFD700;
+          color: var(--main-event-label);
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 1px;
           margin-bottom: 1rem;
+        }
+
+        .dark .main-event-label {
+          --main-event-label: #FFD700;
+        }
+
+        .light .main-event-label {
+          --main-event-label: #1a1a1a;
         }
 
         .fighters-preview {
@@ -818,7 +1062,7 @@ const Events = () => {
         }
 
         .light .fighter-preview img {
-          --image-border: rgba(255, 215, 0, 0.4);
+          --image-border: rgba(0, 0, 0, 0.1);
         }
 
         .fighter-info h4 {
@@ -843,7 +1087,15 @@ const Events = () => {
         .vs {
           font-size: 1.4rem;
           font-weight: 800;
-          color: #FFD700;
+          color: var(--vs-color);
+        }
+
+        .dark .vs {
+          --vs-color: #FFD700;
+        }
+
+        .light .vs {
+          --vs-color: #1a1a1a;
         }
 
         .weight-class {
@@ -864,28 +1116,32 @@ const Events = () => {
           align-items: center;
           gap: 0.5rem;
           background: var(--count-bg);
-          color: #FFD700;
+          color: var(--count-color);
           padding: 0.5rem 1rem;
           border-radius: 8px;
           font-weight: 600;
           font-size: 0.9rem;
-          border: 1px solid rgba(255, 215, 0, 0.3);
+          border: 1px solid var(--count-border);
         }
 
         .dark .fights-count {
           --count-bg: rgba(255, 215, 0, 0.1);
+          --count-color: #FFD700;
+          --count-border: rgba(255, 215, 0, 0.3);
         }
 
         .light .fights-count {
-          --count-bg: rgba(255, 215, 0, 0.08);
+          --count-bg: rgba(0, 0, 0, 0.05);
+          --count-color: #1a1a1a;
+          --count-border: rgba(0, 0, 0, 0.1);
         }
 
         .expand-btn {
           background: var(--expand-bg);
-          border: 1px solid rgba(255, 215, 0, 0.3);
+          border: 1px solid var(--expand-border);
           border-radius: 8px;
           padding: 0.5rem;
-          color: #FFD700;
+          color: var(--expand-color);
           cursor: pointer;
           transition: all 0.3s ease;
           display: flex;
@@ -895,39 +1151,116 @@ const Events = () => {
 
         .dark .expand-btn {
           --expand-bg: rgba(255, 215, 0, 0.1);
+          --expand-color: #FFD700;
+          --expand-border: rgba(255, 215, 0, 0.3);
         }
 
         .light .expand-btn {
-          --expand-bg: rgba(255, 215, 0, 0.08);
+          --expand-bg: rgba(0, 0, 0, 0.05);
+          --expand-color: #1a1a1a;
+          --expand-border: rgba(0, 0, 0, 0.1);
         }
 
         .expand-btn:hover {
-          background: rgba(255, 215, 0, 0.2);
+          background: var(--expand-hover);
           transform: scale(1.1);
+        }
+
+        .dark .expand-btn:hover {
+          --expand-hover: rgba(255, 215, 0, 0.2);
+        }
+
+        .light .expand-btn:hover {
+          --expand-hover: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Fight Sections */
+        .fights-sections {
+          border-top: 1px solid var(--border-color);
+          background: var(--sections-bg);
+        }
+
+        .dark .fights-sections {
+          --sections-bg: rgba(0, 0, 0, 0.2);
+        }
+
+        .light .fights-sections {
+          --sections-bg: rgba(0, 0, 0, 0.02);
+        }
+
+        .fight-section {
+          border-bottom: 1px solid var(--border-color);
+        }
+
+        .fight-section:last-of-type {
+          border-bottom: none;
+        }
+
+        .section-header {
+          padding: 1.5rem 2rem 1rem;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .section-title {
+          font-size: 1.2rem;
+          font-weight: 700;
+          margin: 0;
+          color: var(--section-title-color);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          min-width: 120px;
+        }
+
+        .dark .section-title {
+          --section-title-color: #FFD700;
+        }
+
+        .light .section-title {
+          --section-title-color: #1a1a1a;
+        }
+
+        .section-divider {
+          flex: 1;
+          height: 2px;
+          background: var(--divider-bg);
+          border-radius: 1px;
+        }
+
+        .dark .section-divider {
+          --divider-bg: rgba(255, 215, 0, 0.3);
+        }
+
+        .light .section-divider {
+          --divider-bg: rgba(0, 0, 0, 0.1);
         }
 
         /* Fights List */
         .fights-list {
-          border-top: 1px solid var(--border-color);
-          background: var(--fights-bg);
-        }
-
-        .dark .fights-list {
-          --fights-bg: rgba(0, 0, 0, 0.2);
-        }
-
-        .light .fights-list {
-          --fights-bg: rgba(0, 0, 0, 0.02);
+          padding: 0 2rem 1rem;
         }
 
         /* Fight Card */
         .fight-card {
           border-bottom: 1px solid var(--border-color);
           transition: all 0.3s ease;
+          border-radius: 12px;
+          margin-bottom: 1rem;
+          background: var(--fight-card-bg);
+        }
+
+        .dark .fight-card {
+          --fight-card-bg: rgba(255, 255, 255, 0.02);
+        }
+
+        .light .fight-card {
+          --fight-card-bg: rgba(255, 255, 255, 0.5);
         }
 
         .fight-card:last-child {
           border-bottom: none;
+          margin-bottom: 0;
         }
 
         .fight-card:hover {
@@ -939,7 +1272,12 @@ const Events = () => {
         }
 
         .light .fight-card:hover {
-          --fight-hover: rgba(255, 215, 0, 0.02);
+          --fight-hover: rgba(0, 0, 0, 0.02);
+        }
+
+        .fight-card.championship-fight {
+          border: 2px solid #FFD700;
+          box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
         }
 
         .fight-card.error-card {
@@ -976,6 +1314,7 @@ const Events = () => {
           gap: 2rem;
           margin-bottom: 1rem;
           font-size: 0.9rem;
+          align-items: center;
         }
 
         .card-section {
@@ -990,6 +1329,11 @@ const Events = () => {
         .fight-time {
           opacity: 0.6;
           font-weight: 500;
+        }
+
+        .championship-indicator {
+          font-size: 1.2rem;
+          margin-left: 0.5rem;
         }
 
         .fighters-matchup {
@@ -1035,26 +1379,27 @@ const Events = () => {
           flex-direction: column;
           align-items: center;
           gap: 0.25rem;
-          min-width: 60px;
+          min-width: 80px;
         }
 
         .fight-vs .vs {
           font-size: 1.1rem;
           font-weight: 700;
-          color: #FFD700;
+          color: var(--vs-color);
         }
 
         .fight-vs .weight {
-          font-size: 0.75rem;
+          font-size: 0.8rem;
           opacity: 0.6;
+          text-align: center;
         }
 
         .fight-expand-btn {
           background: var(--expand-bg);
-          border: 1px solid rgba(255, 215, 0, 0.3);
+          border: 1px solid var(--expand-border);
           border-radius: 6px;
           padding: 0.5rem;
-          color: #FFD700;
+          color: var(--expand-color);
           cursor: pointer;
           transition: all 0.3s ease;
           display: flex;
@@ -1065,7 +1410,7 @@ const Events = () => {
 
         .fight-expand-btn:hover {
           opacity: 1;
-          background: rgba(255, 215, 0, 0.2);
+          background: var(--expand-hover);
         }
 
         /* Fight Details */
@@ -1090,21 +1435,116 @@ const Events = () => {
           align-items: start;
         }
 
-        .fighter-stats h5 {
-          font-size: 1.1rem;
-          margin: 0 0 1.5rem 0;
-          color: #FFD700;
+        /* Betting Cards */
+        .betting-card {
+          background: var(--betting-bg);
+          border: 1px solid var(--betting-border);
+          border-radius: 12px;
+          overflow: hidden;
+          transition: all 0.3s ease;
+        }
+
+        .dark .betting-card {
+          --betting-bg: rgba(255, 215, 0, 0.05);
+          --betting-border: rgba(255, 215, 0, 0.2);
+        }
+
+        .light .betting-card {
+          --betting-bg: rgba(255, 255, 255, 0.8);
+          --betting-border: rgba(0, 0, 0, 0.1);
+        }
+
+        .betting-card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem 1.5rem;
+          background: var(--betting-header-bg);
+          border-bottom: 1px solid var(--betting-border);
+        }
+
+        .dark .betting-card-header {
+          --betting-header-bg: rgba(255, 215, 0, 0.1);
+        }
+
+        .light .betting-card-header {
+          --betting-header-bg: rgba(0, 0, 0, 0.03);
+        }
+
+        .betting-card-header h5 {
+          font-size: 1rem;
+          margin: 0;
+          color: var(--betting-title-color);
           font-weight: 600;
+        }
+
+        .dark .betting-card-header h5 {
+          --betting-title-color: #FFD700;
+        }
+
+        .light .betting-card-header h5 {
+          --betting-title-color: #1a1a1a;
+        }
+
+        .card-navigation {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .nav-btn {
+          background: var(--nav-btn-bg);
+          border: 1px solid var(--nav-btn-border);
+          border-radius: 4px;
+          padding: 0.25rem;
+          color: var(--nav-btn-color);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .dark .nav-btn {
+          --nav-btn-bg: rgba(255, 215, 0, 0.1);
+          --nav-btn-border: rgba(255, 215, 0, 0.3);
+          --nav-btn-color: #FFD700;
+        }
+
+        .light .nav-btn {
+          --nav-btn-bg: rgba(0, 0, 0, 0.05);
+          --nav-btn-border: rgba(0, 0, 0, 0.1);
+          --nav-btn-color: #1a1a1a;
+        }
+
+        .nav-btn:hover {
+          background: var(--nav-btn-hover);
+          transform: scale(1.1);
+        }
+
+        .dark .nav-btn:hover {
+          --nav-btn-hover: rgba(255, 215, 0, 0.2);
+        }
+
+        .light .nav-btn:hover {
+          --nav-btn-hover: rgba(0, 0, 0, 0.1);
+        }
+
+        .page-indicator {
+          font-size: 0.8rem;
+          opacity: 0.7;
+          min-width: 30px;
           text-align: center;
-          border-bottom: 2px solid rgba(255, 215, 0, 0.3);
-          padding-bottom: 0.5rem;
+        }
+
+        .betting-card-content {
+          padding: 1.5rem;
         }
 
         .stats-grid {
           display: flex;
           flex-direction: column;
           gap: 1rem;
-          margin-bottom: 2rem;
         }
 
         .stat-item {
@@ -1124,8 +1564,8 @@ const Events = () => {
         }
 
         .light .stat-item {
-          --stat-bg: rgba(255, 215, 0, 0.03);
-          --stat-border: rgba(255, 215, 0, 0.1);
+          --stat-bg: rgba(0, 0, 0, 0.02);
+          --stat-border: rgba(0, 0, 0, 0.05);
         }
 
         .stat-item:hover {
@@ -1137,11 +1577,19 @@ const Events = () => {
         }
 
         .light .stat-item:hover {
-          --stat-hover: rgba(255, 215, 0, 0.05);
+          --stat-hover: rgba(0, 0, 0, 0.05);
         }
 
         .stat-item svg {
-          color: #FFD700;
+          color: var(--stat-icon-color);
+        }
+
+        .dark .stat-item svg {
+          --stat-icon-color: #FFD700;
+        }
+
+        .light .stat-item svg {
+          --stat-icon-color: #1a1a1a;
         }
 
         .stat-item span:nth-child(2) {
@@ -1152,42 +1600,139 @@ const Events = () => {
 
         .stat-value {
           font-weight: 600;
-          color: #FFD700;
+          color: var(--stat-value-color);
           font-size: 0.9rem;
         }
 
-        .physical-stats {
-          background: var(--physical-bg);
-          border: 1px solid var(--physical-border);
-          border-radius: 8px;
-          padding: 1rem;
+        .dark .stat-value {
+          --stat-value-color: #FFD700;
         }
 
-        .dark .physical-stats {
-          --physical-bg: rgba(255, 255, 255, 0.02);
-          --physical-border: rgba(255, 255, 255, 0.1);
+        .light .stat-value {
+          --stat-value-color: #1a1a1a;
         }
 
-        .light .physical-stats {
-          --physical-bg: rgba(0, 0, 0, 0.02);
-          --physical-border: rgba(0, 0, 0, 0.1);
-        }
-
-        .physical-stats h6 {
-          font-size: 0.9rem;
-          margin: 0 0 0.75rem 0;
-          color: #FFD700;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .physical-grid {
+        /* Fight History */
+        .fight-history {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
-          font-size: 0.85rem;
-          opacity: 0.8;
+          gap: 0.75rem;
+        }
+
+        .fight-result {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 0.75rem;
+          background: var(--result-bg);
+          border-radius: 8px;
+          border-left: 3px solid transparent;
+        }
+
+        .dark .fight-result {
+          --result-bg: rgba(255, 255, 255, 0.02);
+        }
+
+        .light .fight-result {
+          --result-bg: rgba(0, 0, 0, 0.02);
+        }
+
+        .fight-result.win {
+          border-left-color: #4ade80;
+        }
+
+        .fight-result.loss {
+          border-left-color: #ef4444;
+        }
+
+        .result-indicator {
+          font-weight: 700;
+          width: 20px;
+          text-align: center;
+          font-size: 0.9rem;
+        }
+
+        .fight-result.win .result-indicator {
+          color: #4ade80;
+        }
+
+        .fight-result.loss .result-indicator {
+          color: #ef4444;
+        }
+
+        .fight-details {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+          flex: 1;
+        }
+
+        .fight-result .opponent {
+          font-weight: 600;
+          font-size: 0.9rem;
+        }
+
+        .fight-result .method {
+          opacity: 0.7;
+          font-size: 0.8rem;
+        }
+
+        .fight-result .round-time {
+          opacity: 0.6;
+          font-size: 0.75rem;
+          font-weight: 500;
+        }
+
+        .no-fights {
+          opacity: 0.5;
+          font-style: italic;
+          text-align: center;
+          padding: 2rem;
+        }
+
+        /* Physical Stats */
+        .physical-stats-detailed {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .physical-stat {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.75rem;
+          background: var(--physical-bg);
+          border-radius: 8px;
+          border: 1px solid var(--physical-border);
+        }
+
+        .dark .physical-stat {
+          --physical-bg: rgba(255, 215, 0, 0.05);
+          --physical-border: rgba(255, 215, 0, 0.1);
+        }
+
+        .light .physical-stat {
+          --physical-bg: rgba(0, 0, 0, 0.02);
+          --physical-border: rgba(0, 0, 0, 0.05);
+        }
+
+        .physical-stat .label {
+          font-weight: 500;
+          font-size: 0.9rem;
+        }
+
+        .physical-stat .value {
+          font-weight: 600;
+          color: var(--physical-value-color);
+        }
+
+        .dark .physical-stat .value {
+          --physical-value-color: #FFD700;
+        }
+
+        .light .physical-stat .value {
+          --physical-value-color: #1a1a1a;
         }
 
         .vs-divider {
@@ -1198,8 +1743,64 @@ const Events = () => {
         }
 
         .vs-divider svg {
-          color: #FFD700;
+          color: var(--divider-icon-color);
           opacity: 0.6;
+        }
+
+        .dark .vs-divider svg {
+          --divider-icon-color: #FFD700;
+        }
+
+        .light .vs-divider svg {
+          --divider-icon-color: #1a1a1a;
+        }
+
+        /* Collapse Bottom */
+        .collapse-bottom {
+          padding: 1.5rem 2rem;
+          border-top: 1px solid var(--border-color);
+          text-align: center;
+        }
+
+        .collapse-btn {
+          background: var(--collapse-bg);
+          border: 1px solid var(--collapse-border);
+          border-radius: 8px;
+          padding: 0.75rem 1.5rem;
+          color: var(--collapse-color);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          font-weight: 500;
+          margin: 0 auto;
+        }
+
+        .dark .collapse-btn {
+          --collapse-bg: rgba(255, 215, 0, 0.1);
+          --collapse-border: rgba(255, 215, 0, 0.3);
+          --collapse-color: #FFD700;
+        }
+
+        .light .collapse-btn {
+          --collapse-bg: rgba(0, 0, 0, 0.05);
+          --collapse-border: rgba(0, 0, 0, 0.1);
+          --collapse-color: #1a1a1a;
+        }
+
+        .collapse-btn:hover {
+          background: var(--collapse-hover);
+          transform: translateY(-2px);
+        }
+
+        .dark .collapse-btn:hover {
+          --collapse-hover: rgba(255, 215, 0, 0.2);
+        }
+
+        .light .collapse-btn:hover {
+          --collapse-hover: rgba(0, 0, 0, 0.1);
         }
 
         /* Loading, Error, Empty States */
@@ -1217,7 +1818,7 @@ const Events = () => {
           width: 50px;
           height: 50px;
           border: 3px solid var(--spinner-track);
-          border-top-color: #FFD700;
+          border-top-color: var(--spinner-color);
           border-radius: 50%;
           animation: spin 1s linear infinite;
           margin-bottom: 1rem;
@@ -1225,10 +1826,12 @@ const Events = () => {
 
         .dark .spinner {
           --spinner-track: rgba(255, 215, 0, 0.2);
+          --spinner-color: #FFD700;
         }
 
         .light .spinner {
-          --spinner-track: rgba(255, 215, 0, 0.3);
+          --spinner-track: rgba(0, 0, 0, 0.1);
+          --spinner-color: #1a1a1a;
         }
 
         .error-state h3 {
@@ -1257,8 +1860,16 @@ const Events = () => {
         }
 
         .empty-state h3 {
-          color: #FFD700;
+          color: var(--empty-title-color);
           margin-bottom: 1rem;
+        }
+
+        .dark .empty-state h3 {
+          --empty-title-color: #FFD700;
+        }
+
+        .light .empty-state h3 {
+          --empty-title-color: #1a1a1a;
         }
 
         .empty-state p {
@@ -1314,6 +1925,10 @@ const Events = () => {
             padding: 1.5rem 1rem;
           }
 
+          .event-main-content {
+            width: 100%;
+          }
+
           .fighters-preview {
             flex-direction: column;
             gap: 1rem;
@@ -1350,6 +1965,27 @@ const Events = () => {
           .fight-details {
             padding: 1rem;
           }
+
+          .section-header {
+            padding: 1rem;
+          }
+
+          .fights-list {
+            padding: 0 1rem 1rem;
+          }
+
+          .collapse-bottom {
+            padding: 1rem;
+          }
+
+          .event-title-container {
+            justify-content: center;
+          }
+
+          .fight-meta {
+            justify-content: center;
+            flex-wrap: wrap;
+          }
         }
 
         @media (max-width: 480px) {
@@ -1379,6 +2015,23 @@ const Events = () => {
             flex-direction: column;
             align-items: center;
             gap: 0.5rem;
+          }
+
+          .betting-card-header {
+            padding: 0.75rem 1rem;
+          }
+
+          .betting-card-content {
+            padding: 1rem;
+          }
+
+          .section-title {
+            font-size: 1rem;
+            min-width: auto;
+          }
+
+          .fight-meta {
+            gap: 1rem;
           }
         }
       `}</style>

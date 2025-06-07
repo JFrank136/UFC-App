@@ -48,17 +48,24 @@ Be able to input if you chose them or got stuck with them
 Have real predictions as well. Maybe like a do you agree?
 Cannot change the picks 3 days after or something
 
-
+Conversational page where you can ask questions to see data or get betting insights
+Betting model based on all data
 
 SCRAPERS
 ----
-scrape_rankings.py - See how scraper captures changes for champion, currently missing
+Overall
+----
 Find way to make things more efficient
+Keep more historic data
+
+
+scrape_rankings.py - See how scraper captures changes for champion, currently missing
 When I rescrape roster, it should still keep uuid's
 Get odds data
-Keep more historic data
+Scraper for betting data round to start, ML, and more
 Add field for gender
     -- Update both Supabase files based on this
+Update UFC details (incorrect avg fight time and add more stats)
 
 
 Events.js: Everything but user_favorites

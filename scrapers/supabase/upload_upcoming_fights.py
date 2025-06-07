@@ -15,7 +15,6 @@ def main():
         port=os.getenv("SUPABASE_DB_PORT")
     )
 
-
     with open("../data/upcoming_fights.json", "r", encoding="utf-8") as f:
         fights = json.load(f)
 
@@ -29,6 +28,7 @@ def main():
     insert_query = """
     INSERT INTO upcoming_fights (
         id, event, event_type, event_date, event_time,
+        venue, location, fight_card_image_url, fight_card_image_local_path,
         fighter1, fighter2, fighter1_id, fighter2_id,
         fight_order, card_section, weight_class, scraped_at
     )
@@ -48,13 +48,16 @@ def main():
         if not uuid1 or not uuid2:
             print(f"⚠️ Partial UUID: {fight['fighter1']} vs {fight['fighter2']} (one missing)")
 
-
         values.append((
             str(uuid4()),
             fight.get("event"),
             fight.get("event_type"),
             fight.get("event_date"),
             fight.get("event_time"),
+            fight.get("venue"),
+            fight.get("location"),
+            fight.get("fight_card_image_url"),
+            fight.get("fight_card_image_local_path"),
             fight.get("fighter1"),
             fight.get("fighter2"),
             fight.get("uuid1"),
@@ -69,7 +72,7 @@ def main():
     conn.commit()
     conn.close()
 
-    print(f"✅ Uploaded {len(values)} fights.")
+    print(f"✅ Uploaded {len(values)} fights with venue and image information.")
 
 if __name__ == "__main__":
     main()

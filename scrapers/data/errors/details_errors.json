@@ -1,8 +1,8 @@
 [
   {
-    "name": "Bruno Silva",
-    "uuid": "baf44b15-1a19-4bdb-b833-136f314c7be7",
-    "profile_url_ufc": "https://www.ufc.com/athlete/bruno-silva",
-    "reason": "manual add"
+    "name": "BRIAN JACKSON",
+    "uuid": "16671280-16a6-4cee-b4a1-599b1a3dfe57",
+    "profile_url_ufc": "Unknown",
+    "reason": "scrape failed"
   }
 ]

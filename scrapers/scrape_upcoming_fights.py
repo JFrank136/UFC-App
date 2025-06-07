@@ -11,6 +11,9 @@ from selenium.webdriver.support import expected_conditions as EC
 import random
 import sys
 import unicodedata
+import requests
+import re
+from pathlib import Path
 
 def normalize_name(name: str) -> str:
     nfkd_form = unicodedata.normalize('NFKD', name)
@@ -24,12 +27,42 @@ def apply_name_fixes(name: str) -> str:
     return fixed
 
 
-# Fix import order - add path before importing
-sys.path.append("utils")
+def download_fight_card_image(url, save_path):
+    """Download fight card image with proper headers"""
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Referer": "https://www.tapology.com/"
+        }
+        res = requests.get(url, stream=True, headers=headers, timeout=15)
+        if res.status_code == 200:
+            # Create directory if it doesn't exist
+            os.makedirs(os.path.dirname(save_path), exist_ok=True)
+            
+            with open(save_path, 'wb') as f:
+                for chunk in res.iter_content(1024):
+                    f.write(chunk)
+            print(f"✅ Downloaded fight card image: {save_path}")
+            return True
+        else:
+            print(f"❌ Image download failed: HTTP {res.status_code} for {url}")
+    except Exception as e:
+        print(f"❌ Failed to download fight card image: {e}")
+    return False
+
+
+def sanitize_filename(name):
+    """Convert event title to safe filename"""
+    # Remove or replace problematic characters
+    safe_name = re.sub(r'[<>:"/\\|?*]', '', name)
+    safe_name = re.sub(r'\s+', '_', safe_name.strip())
+    return safe_name[:100]  # Limit length
+
+
+sys.path.append("utils")  # or adjust as needed
 try:
     from name_fixes import TAPOLOGY_FIXES as RAW_FIXES
     TAPOLOGY_FIXES = {name.upper(): fixed for name, fixed in RAW_FIXES.items()}
-    print(f"✅ Loaded {len(TAPOLOGY_FIXES)} name fixes")
 except ImportError:
     print("⚠️ Could not import TAPOLOGY_FIXES. Continuing without it.")
     TAPOLOGY_FIXES = {}
@@ -56,8 +89,6 @@ OUTPUT_PATH = "data/upcoming_fights.json"
 def setup_browser():
     options = uc.ChromeOptions()
     options.add_argument("--window-size=1920,1080")
-    options.add_argument("--page-load-strategy=normal")  # Wait for page to fully load
-    options.add_argument("--timeout=30000")  # 30 second timeout
     options.add_argument("--incognito")
     options.add_argument("--no-first-run")
     options.add_argument("--no-default-browser-check")
@@ -108,6 +139,146 @@ def parse_event_datetime(soup):
         print(f"⚠️  Failed to parse date/time: {e}")
         return "TBD", "TBD"
 
+
+def parse_venue_info(soup):
+    """Extract venue name and location from event page"""
+    venue = None
+    location = None
+    
+    try:
+        # Method 1: Look for venue in spans with "font-bold text-neutral-900" class
+        venue_spans = soup.select("span.font-bold.text-neutral-900")
+        for span in venue_spans:
+            text = span.get_text(strip=True)
+            # Check if this looks like a venue (contains common venue words)
+            if any(word in text.lower() for word in ['arena', 'center', 'centre', 'stadium', 'dome', 'hall', 'pavilion', 'coliseum']):
+                venue = text
+                break
+        
+        # Method 1b: Look for UFC Apex and other venues in "text-neutral-700" spans
+        if not venue:
+            venue_spans_alt = soup.select("span.text-neutral-700")
+            for span in venue_spans_alt:
+                text = span.get_text(strip=True)
+                # Check for UFC Apex specifically or other venue patterns
+                if (text.lower() == "ufc apex" or 
+                    any(word in text.lower() for word in ['arena', 'center', 'centre', 'stadium', 'dome', 'hall', 'pavilion', 'coliseum'])):
+                    venue = text
+                    break
+        
+        # Method 2: Look for location in links that might contain geographic info
+        location_links = soup.select("a[href*='/regions/']")
+        for link in location_links:
+            text = link.get_text(strip=True)
+            # Accept any location text from regions links (expanded beyond just US/common countries)
+            if text and len(text) > 2:  # Basic validation - not empty and meaningful length
+                location = text
+                break
+        
+        # Method 3: Fallback - look for common venue patterns in text
+        if not venue:
+            page_text = soup.get_text()
+            venue_pattern = r'(?:venue|location)[:\s]*([^,\n]*(?:arena|center|centre|stadium|dome|hall|pavilion|coliseum|apex)[^,\n]*)'
+            venue_match = re.search(venue_pattern, page_text, re.IGNORECASE)
+            if venue_match:
+                venue = venue_match.group(1).strip()
+        
+        # Method 4: Look for expanded location patterns (international locations)
+        if not location:
+            page_text = soup.get_text()
+            # Broader location patterns for international events
+            location_patterns = [
+                r'([A-Za-z\s]+,\s*[A-Za-z\s]+,\s*(?:United States|Canada|Brazil|UK|England|Australia|United Arab Emirates|Azerbaijan|France|Germany|Japan|Thailand|Philippines))',
+                r'([A-Za-z\s]+,\s*(?:United Arab Emirates|Azerbaijan|France|Germany|Japan|Thailand|Philippines))',
+                r'(Abu Dhabi,\s*Dubai,\s*United Arab Emirates)',
+                r'(Baku,\s*Azerbaijan)',
+                r'([A-Za-z\s]+,\s*[A-Za-z\s]+)'  # Generic city, country pattern as final fallback
+            ]
+            
+            for pattern in location_patterns:
+                location_match = re.search(pattern, page_text)
+                if location_match:
+                    potential_location = location_match.group(1).strip()
+                    # Validate it looks like a real location (contains comma, reasonable length)
+                    if ',' in potential_location and 3 <= len(potential_location) <= 100:
+                        location = potential_location
+                        break
+    
+    except Exception as e:
+        print(f"⚠️ Error parsing venue info: {e}")
+    
+    return venue, location
+
+
+def download_event_image(soup, event_title):
+    """Download fight card image if available"""
+    image_url = None
+    image_local_path = None
+    
+    try:
+        # Look for fight card image - common selectors
+        image_selectors = [
+            "img[alt*='UFC']",
+            "img[src*='poster']",
+            "img[src*='fight']",
+            "img.w-4/5",
+            "img[alt*='Fight Night']",
+            "img[alt*='fight card']"
+        ]
+        
+        for selector in image_selectors:
+            img_element = soup.select_one(selector)
+            if img_element and img_element.get('src'):
+                src = img_element['src'].strip()
+                
+                # Convert relative URLs to absolute
+                if src.startswith('//'):
+                    image_url = 'https:' + src
+                elif src.startswith('/'):
+                    image_url = 'https://www.tapology.com' + src
+                elif src.startswith('http'):
+                    image_url = src
+                else:
+                    continue
+                
+                # Skip small images (likely not fight cards)
+                if any(size in src.lower() for size in ['thumb', 'small', 'icon']):
+                    continue
+                
+                print(f"🖼️ Found potential fight card image: {image_url}")
+                break
+        
+        if image_url:
+            # Create safe filename from event title
+            safe_filename = sanitize_filename(event_title)
+            
+            # Determine file extension from URL
+            file_extension = '.jpg'  # default
+            if image_url.lower().endswith('.png'):
+                file_extension = '.png'
+            elif image_url.lower().endswith('.webp'):
+                file_extension = '.webp'
+            elif image_url.lower().endswith('.jpeg'):
+                file_extension = '.jpeg'
+            
+            # Create file path
+            image_dir = os.path.join("..", "ufc-tracker", "public", "fight_cards")
+            image_filename = f"{safe_filename}{file_extension}"
+            image_path = os.path.join(image_dir, image_filename)
+            
+            # Download image
+            if download_fight_card_image(image_url, image_path):
+                image_local_path = f"/fight_cards/{image_filename}"
+                print(f"✅ Fight card image saved: {image_local_path}")
+            else:
+                print(f"❌ Failed to download fight card image for {event_title}")
+    
+    except Exception as e:
+        print(f"⚠️ Error downloading event image: {e}")
+    
+    return image_url, image_local_path
+
+
 def parse_fights(soup, event_title, event_type, event_date, event_time):
     fight_blocks = soup.select("li[data-controller='table-row-background']")
     if not fight_blocks:
@@ -118,6 +289,13 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
     from datetime import datetime, timezone
     now = datetime.now(timezone.utc).date()
 
+    # Extract venue and location info
+    venue, location = parse_venue_info(soup)
+    print(f"🏟️ Venue: {venue if venue else 'Not found'}")
+    print(f"📍 Location: {location if location else 'Not found'}")
+    
+    # Download event image
+    image_url, image_local_path = download_event_image(soup, event_title)
 
     for idx, block in enumerate(reversed(fight_blocks), start=1):  # reverse so main = 1
         try:
@@ -135,7 +313,6 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
             card_section = section_tag.get_text(strip=True) if section_tag else "Unknown"
             if "rumor" in card_section.lower():
                 continue  # Skip rumor fights
-
 
             weight_tag = block.select_one("span.bg-tap_darkgold")
             weight_class = weight_tag.get_text(strip=True) if weight_tag else "TBD"
@@ -155,22 +332,23 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
             if not uuid2:
                 print(f"❌ Missing UUID for: {fighter2}")
 
-            # Skip past events with better date handling
+            # Skip past events
             try:
                 fight_date_obj = datetime.strptime(event_date, "%Y-%m-%d").date()
                 if fight_date_obj < now:
-                    print(f"⏭️ Skipping past event: {event_title} ({event_date})")
                     continue
-            except Exception as e:
-                if event_date != "TBD":
-                    print(f"⚠️ Could not parse date '{event_date}' for {event_title}: {e}")
-                # Include TBD dates but log malformed ones
+            except Exception:
+                pass  # If date is TBD or malformed, include it just in case
 
             fights.append({
                 "event": event_title,
                 "event_type": event_type,
                 "event_date": event_date,
                 "event_time": event_time,
+                "venue": venue,
+                "location": location,
+                "fight_card_image_url": image_url,
+                "fight_card_image_local_path": image_local_path,
                 "fighter1": fighter1,
                 "fighter2": fighter2,
                 "uuid1": uuid1,
@@ -188,41 +366,21 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
     print(f"✅ Scraped {len(fights)} fights")
     return fights
 
-def scrape_event(driver, url, max_retries=3):
+def scrape_event(driver, url):
     print(f"\n🔍 Scraping: {url}")
-    
-    for attempt in range(max_retries):
-        try:
-            driver.set_page_load_timeout(30)  # Set explicit timeout
-            driver.get(url)
-            break  # Success, exit retry loop
-        except Exception as e:
-            print(f"❌ Attempt {attempt + 1}/{max_retries} failed for {url}: {e}")
-            if attempt == max_retries - 1:
-                print(f"❌ Final attempt failed, skipping event")
-                return []
-            time.sleep(2 ** attempt)  # Exponential backoff
-
+    try:
+        driver.get(url)
+    except Exception as e:
+        print(f"❌ Failed to load event page: {url}\n  → {e}")
+        return []
 
     try:
-        # Wait for fight cards with longer timeout and better error handling
-        WebDriverWait(driver, 20).until(
+        WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "li[data-controller='table-row-background']"))
         )
-        # Additional wait for dynamic content
-        time.sleep(2)
-    except Exception as e:
-        print(f"⚠️  Fight cards did not load after 20s: {e}")
-        # Try alternative selectors
-        try:
-            WebDriverWait(driver, 5).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "table tr, .fight-card"))
-            )
-            print("✅ Found alternative fight card elements")
-        except:
-            print("❌ No fight card elements found with any selector")
-            return []
-
+    except Exception:
+        print("⚠️  Fight cards did not load")
+        return []
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
 
@@ -245,7 +403,7 @@ def scrape_event(driver, url, max_retries=3):
     event_date, event_time = parse_event_datetime(soup)
     return parse_fights(soup, event_title, event_type, event_date, event_time)
 
-def main(event_filter=None):
+def main():
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     driver = setup_browser()
 
@@ -255,28 +413,14 @@ def main(event_filter=None):
     all_fights = []
     try:
         links = get_event_links(driver)
-        
-        # Apply filtering if specified
-        if event_filter:
-            print(f"🔍 Filtering events containing: '{event_filter}'")
-            filtered_links = []
-            for link in links:
-                if event_filter.lower() in link.lower():
-                    filtered_links.append(link)
-            links = filtered_links
-            print(f"📅 Found {len(links)} matching events")
-        
-        for idx, link in enumerate(links, 1):
-            print(f"\n📅 Event {idx}/{len(links)}")
+        for link in links:
             try:
                 fights = scrape_event(driver, link)
                 all_fights.extend(fights)
-                print(f"✅ Scraped {len(fights)} fights from this event")
                 time.sleep(random.uniform(1.5, 3.5))
             except Exception as e:
                 print(f"❌ Failed to scrape: {link}\n   {e}")
                 # Log failed events for retry
-                from datetime import timezone
                 error_event = {"url": link, "error": str(e), "timestamp": datetime.now(timezone.utc).isoformat()}
                 error_file = "data/errors/upcoming_event_errors.json"
                 try:
@@ -295,7 +439,6 @@ def main(event_filter=None):
             driver.quit()
         except Exception as e:
             print(f"⚠️  Chrome quit() failed: {e}")
-
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(all_fights, f, indent=2, ensure_ascii=False)
@@ -319,17 +462,13 @@ def main(event_filter=None):
 
 if __name__ == "__main__":
     print("Select run mode:")
-    print("[1] Full scrape (rewrites file)")
+    print("[1] Full scrape")
     print("[2] Only try missing UUIDs")
     print("[3] Retry failed event cards")
-    print("[4] Scrape specific events (with filter)")
-    mode = input("Enter 1, 2, 3, or 4: ").strip()
+    mode = input("Enter 1, 2, or 3: ").strip()
 
     if mode == "1":
         main()
-    elif mode == "4":
-        event_filter = input("Enter event name filter (e.g. 'UFC 310', '311'): ").strip()
-        main(event_filter=event_filter)
     elif mode == "2":
         error_file = "data/errors/upcoming_errors.json"
         if not os.path.exists(error_file):
@@ -338,7 +477,6 @@ if __name__ == "__main__":
 
         with open(error_file, "r", encoding="utf-8") as f:
             missing_names = set(normalize_name(name.strip()) for name in json.load(f))
-
 
         driver = setup_browser()
         uuid_lookup = load_uuid_lookup()
@@ -378,7 +516,6 @@ if __name__ == "__main__":
 
         # Match events to retry using exact title
         filtered_links = [event_title_map[evt] for evt in events_to_retry if evt in event_title_map]
-
 
         # Step 4: Scrape only those events
         all_fights = []
@@ -489,4 +626,3 @@ if __name__ == "__main__":
             print("No fights scraped on retry.")
     else:
         print("❌ Invalid option.")
-
