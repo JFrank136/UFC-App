@@ -14,6 +14,10 @@ Have a badge if they are top 10 overall for a stat. Men vs women
 Improvements/Ideas
 ----
 ALL PAGES - Improve for mobile
+Favorites.js - Sort by division and have them vertically stacked. 
+    Maybe have multiple views
+    Include stats about favorites?
+Rankings.js - Glove icon if they have a fight booked, click it to see details
 FighterSearch.js - Fix filtering for women, look through file
 FighterSearch.js - Better layout for P4P badge
 Favorites.js - Fix formatting for fighter images
@@ -51,26 +55,3 @@ Cannot change the picks 3 days after or something
 Conversational page where you can ask questions to see data or get betting insights
 Betting model based on all data
 
-SCRAPERS
-----
-Overall
-----
-Find way to make things more efficient
-Keep more historic data
-
-
-scrape_rankings.py - See how scraper captures changes for champion, currently missing
-When I rescrape roster, it should still keep uuid's
-Get odds data
-Scraper for betting data round to start, ML, and more
-Add field for gender
-    -- Update both Supabase files based on this
-Update UFC details (incorrect avg fight time and add more stats)
-
-
-Events.js: Everything but user_favorites
-Favorites.js: Every table
-FighterStats.js: Every table but user_favorites
-Rankings.js: Every table but user_favorites
-SearchFighter.js: Every table but fight_history and upcoming_fights
-UpcomingFights.js: Every table

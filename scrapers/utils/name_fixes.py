@@ -203,10 +203,12 @@ POWER_SLAP = {
     "TESTY TEST",
     "TIMOTHY THOMAS",
     "AUSTIN WALL",
-    "DAKOTA WEIGHER"
+    "DAKOTA WEIGHER",
+    "BRIAN JACKSON"
 }
 
 TAPOLOGY_FIXES = {
+    # TAPOLOGY : UFC RAW
     "ARIANE LIPSKI DA SILVA": "Ariane Da Silva",
     "CONG WANG": "WANG CONG",
     "Darya Zheleznyakova": "DARIA ZHELEZNIAKOVA",
@@ -216,8 +218,11 @@ TAPOLOGY_FIXES = {
     "Raffael Cerqueira": "RAFAEL CERQUEIRA",
     "SEOK HYUN KO": "SEOKHYEON KO",
     "WALDO CORTES-ACOSTA": "WALDO CORTES ACOSTA",
-    "ZACH REESE": "ZACHARY REESE",  # if full name used in JSON
-    "Jose Delgado": "Jose Miguel Delgado"
+    "ZACH REESE": "ZACHARY REESE",
+    "Jose Delgado": "Jose Miguel Delgado",
+    "Lone'er Kavanagh": "LONE’ER KAVANAGH",
+    "Lupita Godinez": "Loopy Godinez",
+    "Michał Oleksiejczuk": "MICHAL OLEKSIEJCZUK"
 }
 
 UFC_ROSTER = {
@@ -274,5 +279,6 @@ UFC_ROSTER = {
     "Jose Miguel Delgado": "https://www.ufc.com/athlete/jose-delgado",
     "Steve Garcia": "https://www.ufc.com/athlete/steve-garcia",
     "Jamey-Lyn Horth": "https://www.ufc.com/athlete/jamey-lyn-horth",
-    "Bruno Silva": "https://www.ufc.com/athlete/bruno-silva"
+    "Bruno Silva": "https://www.ufc.com/athlete/bruno-silva",
+    "Tofiq Musayev": "https://www.ufc.com/athlete/tofiq-musayev"
 }

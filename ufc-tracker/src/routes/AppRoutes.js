@@ -7,6 +7,7 @@ import Events from "../pages/Events";
 import Rankings from "../pages/Rankings";
 import FighterStats from "../pages/FighterStats";
 import Favorites from "../pages/Favorites";
+import UFCpicks from '../pages/UFCpicks';
 
 const AppRoutes = () => (
   <Routes>
@@ -16,6 +17,7 @@ const AppRoutes = () => (
     <Route path="/rankings" element={<Rankings />} />
     <Route path="/stats" element={<FighterStats />} />
     <Route path="/favorites" element={<Favorites />} />
+    <Route path="/picks" element={<UFCpicks />} />
   </Routes>
 );
 

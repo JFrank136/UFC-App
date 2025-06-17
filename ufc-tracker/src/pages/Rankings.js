@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Crown, TrendingUp, TrendingDown, Calendar, MapPin, ArrowUp, ArrowDown, Minus, Search, X, Sun, Moon, Filter, Users, Zap, Shield, BarChart3, Star } from 'lucide-react';
+import { Crown, TrendingUp, TrendingDown, Calendar, MapPin, ArrowUp, ArrowDown, Minus, Sun, Moon, Filter, Search, X, Users, Zap, Shield, BarChart3 } from 'lucide-react';
 import supabase from '../api/supabaseClient';
+import countryCodes from '../utils/countryCodes';
 
 const Rankings = () => {
-  const [selectedDivision, setSelectedDivision] = useState('Pound-for-Pound');
+  const [selectedDivision, setSelectedDivision] = useState("Men's Pound-for-Pound");
   const [showMoversOnly, setShowMoversOnly] = useState(false);
   const [rankedFighters, setRankedFighters] = useState([]);
   const [upcomingFights, setUpcomingFights] = useState([]);
@@ -12,11 +13,14 @@ const Rankings = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showChampionsOnly, setShowChampionsOnly] = useState(false);
   const [sortBy, setSortBy] = useState('rank');
-  const [darkMode, setDarkMode] = useState(true);
-  const [showFilters, setShowFilters] = useState(false);
+const [darkMode, setDarkMode] = useState(true);
+const [showFilters, setShowFilters] = useState(false);
+const [selectedFight, setSelectedFight] = useState(null);
+const [divisionScrollIndex, setDivisionScrollIndex] = useState(0);
+const [touchStart, setTouchStart] = useState(null);
+const [touchEnd, setTouchEnd] = useState(null);
 
   const divisions = [
-    'Pound-for-Pound',
     'Flyweight',
     'Bantamweight', 
     'Featherweight',
@@ -31,11 +35,9 @@ const Rankings = () => {
     "Women's Featherweight"
   ];
 
-  const sortOptions = [
-    { value: 'rank', label: 'Rank' },
-    { value: 'name', label: 'Name (A-Z)' },
-    { value: 'upcoming', label: 'Upcoming Fights' },
-    { value: 'movement', label: 'Recent Movement' }
+  const p4pDivisions = [
+    "Men's Pound-for-Pound",
+    "Women's Pound-for-Pound"
   ];
 
   useEffect(() => {
@@ -63,40 +65,67 @@ const Rankings = () => {
   };
 
   const fetchRankingsWithFighters = async () => {
-    const { data, error } = await supabase
+    // First, get all rankings
+    const { data: rankings, error: rankingsError } = await supabase
       .from('rankings')
-      .select(`
-        *,
-        fighters:uuid (
-          id,
-          name,
-          nickname,
-          country,
-          wins_total,
-          losses_total,
-          image_url,
-          age,
-          weight_class,
-          height,
-          reach,
-          strikes_landed_per_min,
-          striking_defense,
-          takedown_avg
-        )
-      `)
+      .select('*')
       .not('rank', 'eq', 'NR')
       .order('division')
       .order('rank');
 
-    if (error) throw error;
+    if (rankingsError) throw rankingsError;
 
-    return data.map(ranking => ({
-      ...ranking.fighters,
-      division: ranking.division,
-      rank: ranking.rank,
-      change: ranking.change,
-      country_code: getCountryCode(ranking.fighters?.country)
-    }));
+    console.log('Rankings data:', rankings);
+    console.log('Number of rankings:', rankings?.length);
+
+    // Get all unique fighter IDs
+    const fighterIds = [...new Set(rankings.map(r => r.uuid).filter(Boolean))];
+    console.log('Fighter IDs:', fighterIds);
+
+    // Then get all fighters for those IDs
+    const { data: fighters, error: fightersError } = await supabase
+      .from('fighters')
+      .select('id, name, nickname, country, wins_total, losses_total, image_url')
+      .in('id', fighterIds);
+
+    if (fightersError) throw fightersError;
+
+    console.log('Fighters data:', fighters);
+    console.log('Number of fighters:', fighters?.length);
+
+    // Create a map for quick lookups
+    const fightersMap = {};
+    fighters?.forEach(fighter => {
+      fightersMap[fighter.id] = fighter;
+    });
+
+    console.log('Fighters map keys (first 5):', Object.keys(fightersMap).slice(0, 5));
+    console.log('Sample fighter from map:', fightersMap[Object.keys(fightersMap)[0]]);
+
+    // Combine the data
+    const result = rankings.map((ranking, index) => {
+      const fighter = fightersMap[ranking.uuid] || {};
+      
+      if (index < 3) { // Log first 3 for debugging
+        console.log(`Ranking ${index}:`, {
+          rankingUuid: ranking.uuid,
+          fighterFound: !!fighter.id,
+          fighter: fighter,
+          ranking: ranking
+        });
+      }
+      
+      return {
+        ...fighter,
+        division: ranking.division,
+        rank: ranking.rank,
+        change: ranking.change,
+        country_code: fighter.country
+      };
+    });
+
+    console.log('Final result:', result);
+    return result;
   };
 
   const fetchUpcomingFights = async () => {
@@ -109,51 +138,10 @@ const Rankings = () => {
     return data;
   };
 
-  const getCountryCode = (country) => {
-    const countryCodeMap = {
-      'United States': 'US', 'Brazil': 'BR', 'Russia': 'RU', 'Armenia': 'AM',
-      'United Kingdom': 'GB', 'Canada': 'CA', 'Mexico': 'MX', 'Australia': 'AU',
-      'Ireland': 'IE', 'Poland': 'PL', 'Sweden': 'SE', 'Norway': 'NO',
-      'Netherlands': 'NL', 'Germany': 'DE', 'France': 'FR', 'Spain': 'ES',
-      'Italy': 'IT', 'Japan': 'JP', 'South Korea': 'KR', 'China': 'CN',
-      'New Zealand': 'NZ', 'Argentina': 'AR', 'Chile': 'CL', 'Venezuela': 'VE',
-      'Colombia': 'CO', 'Peru': 'PE', 'Ecuador': 'EC', 'Uruguay': 'UY',
-      'Kazakhstan': 'KZ', 'Georgia': 'GE', 'Ukraine': 'UA', 'Belarus': 'BY',
-      'Lithuania': 'LT', 'Latvia': 'LV', 'Estonia': 'EE', 'Finland': 'FI',
-      'Denmark': 'DK', 'Austria': 'AT', 'Switzerland': 'CH', 'Belgium': 'BE',
-      'Czech Republic': 'CZ', 'Slovakia': 'SK', 'Hungary': 'HU', 'Romania': 'RO',
-      'Bulgaria': 'BG', 'Serbia': 'RS', 'Croatia': 'HR', 'Slovenia': 'SI',
-      'Bosnia and Herzegovina': 'BA', 'Montenegro': 'ME', 'North Macedonia': 'MK',
-      'Albania': 'AL', 'Greece': 'GR', 'Turkey': 'TR', 'Cyprus': 'CY',
-      'Malta': 'MT', 'Portugal': 'PT', 'Israel': 'IL', 'Lebanon': 'LB',
-      'Jordan': 'JO', 'Syria': 'SY', 'Iraq': 'IQ', 'Iran': 'IR',
-      'Afghanistan': 'AF', 'Pakistan': 'PK', 'India': 'IN', 'Bangladesh': 'BD',
-      'Sri Lanka': 'LK', 'Nepal': 'NP', 'Bhutan': 'BT', 'Myanmar': 'MM',
-      'Thailand': 'TH', 'Laos': 'LA', 'Cambodia': 'KH', 'Vietnam': 'VN',
-      'Malaysia': 'MY', 'Singapore': 'SG', 'Indonesia': 'ID', 'Philippines': 'PH',
-      'Mongolia': 'MN', 'Taiwan': 'TW', 'Hong Kong': 'HK', 'Macau': 'MO',
-      'North Korea': 'KP', 'South Africa': 'ZA', 'Egypt': 'EG', 'Morocco': 'MA',
-      'Algeria': 'DZ', 'Tunisia': 'TN', 'Libya': 'LY', 'Sudan': 'SD',
-      'Ethiopia': 'ET', 'Kenya': 'KE', 'Uganda': 'UG', 'Tanzania': 'TZ',
-      'Rwanda': 'RW', 'Burundi': 'BI', 'Democratic Republic of the Congo': 'CD',
-      'Republic of the Congo': 'CG', 'Central African Republic': 'CF', 'Chad': 'TD',
-      'Niger': 'NE', 'Mali': 'ML', 'Burkina Faso': 'BF', 'Senegal': 'SN',
-      'Gambia': 'GM', 'Guinea-Bissau': 'GW', 'Guinea': 'GN', 'Sierra Leone': 'SL',
-      'Liberia': 'LR', 'Ivory Coast': 'CI', 'Ghana': 'GH', 'Togo': 'TG',
-      'Benin': 'BJ', 'Nigeria': 'NG', 'Cameroon': 'CM', 'Equatorial Guinea': 'GQ',
-      'Gabon': 'GA', 'Sao Tome and Principe': 'ST', 'Angola': 'AO', 'Zambia': 'ZM',
-      'Malawi': 'MW', 'Mozambique': 'MZ', 'Madagascar': 'MG', 'Mauritius': 'MU',
-      'Comoros': 'KM', 'Seychelles': 'SC', 'Djibouti': 'DJ', 'Eritrea': 'ER',
-      'Somalia': 'SO', 'Botswana': 'BW', 'Namibia': 'NA', 'Lesotho': 'LS',
-      'Swaziland': 'SZ', 'Zimbabwe': 'ZW'
-    };
-    
-    return countryCodeMap[country] || null;
-  };
-
   const parseRankChange = (changeText) => {
     if (!changeText) return null;
     
+    // Handle special cases
     if (changeText.toLowerCase().includes('new') || changeText.toLowerCase().includes('debut')) {
       return 'NEW';
     }
@@ -164,6 +152,7 @@ const Rankings = () => {
       return 'INTERIM';
     }
     
+    // Extract numeric changes - updated patterns for your data
     const increaseMatch = changeText.match(/increased by (\d+)/i);
     if (increaseMatch) {
       return parseInt(increaseMatch[1]);
@@ -174,6 +163,18 @@ const Rankings = () => {
       return -parseInt(decreaseMatch[1]);
     }
     
+    // Handle "RANK INCREASED BY X" format from your schema
+    const rankIncreaseMatch = changeText.match(/rank increased by (\d+)/i);
+    if (rankIncreaseMatch) {
+      return parseInt(rankIncreaseMatch[1]);
+    }
+    
+    const rankDecreaseMatch = changeText.match(/rank decreased by (\d+)/i);
+    if (rankDecreaseMatch) {
+      return -parseInt(rankDecreaseMatch[1]);
+    }
+    
+    // Look for +/- patterns
     const plusMatch = changeText.match(/\+(\d+)/);
     if (plusMatch) {
       return parseInt(plusMatch[1]);
@@ -193,6 +194,9 @@ const Rankings = () => {
     // Division filter
     if (!showMoversOnly) {
       filtered = filtered.filter(fighter => fighter.division === selectedDivision);
+    } else {
+      // For movers only, include all divisions
+      filtered = rankedFighters;
     }
 
     // Search filter
@@ -204,14 +208,14 @@ const Rankings = () => {
       );
     }
 
-    // Champions only filter
+    // Champions only filter - show champions across all divisions
     if (showChampionsOnly) {
-      filtered = filtered.filter(fighter => fighter.rank === 'C');
+      filtered = rankedFighters.filter(fighter => fighter.rank === 'C');
     }
 
     // Movers only filter
     if (showMoversOnly) {
-      filtered = filtered.filter(fighter => {
+      filtered = rankedFighters.filter(fighter => {
         const parsedChange = parseRankChange(fighter.change);
         return parsedChange !== null && parsedChange !== 0;
       });
@@ -231,52 +235,45 @@ const Rankings = () => {
       };
     });
 
-    // Sort fighters
-    switch (sortBy) {
-      case 'name':
-        filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-        break;
-      case 'upcoming':
-        filtered.sort((a, b) => {
-          if (a.hasUpcomingFight && !b.hasUpcomingFight) return -1;
-          if (!a.hasUpcomingFight && b.hasUpcomingFight) return 1;
-          return 0;
-        });
-        break;
-      case 'movement':
-        filtered.sort((a, b) => {
-          const aChange = Math.abs(a.parsedChange || 0);
-          const bChange = Math.abs(b.parsedChange || 0);
-          return bChange - aChange;
-        });
-        break;
-      default: // rank
-        filtered.sort((a, b) => {
-          if (a.rank === 'C') return -1;
-          if (b.rank === 'C') return 1;
-          return parseInt(a.rank) - parseInt(b.rank);
-        });
-        break;
-    }
-
-    // If showing movers only, also sort by division
+    // Sort fighters based on current view
     if (showMoversOnly) {
+      // Sort movers by magnitude of change, then by division
       filtered.sort((a, b) => {
-        const divisionOrder = divisions.indexOf(a.division) - divisions.indexOf(b.division);
-        if (divisionOrder !== 0) return divisionOrder;
+        const aChange = Math.abs(a.parsedChange || 0);
+        const bChange = Math.abs(b.parsedChange || 0);
+        if (aChange !== bChange) return bChange - aChange;
         
+        // Secondary sort by division order
+        const aDivIndex = [...divisions, ...p4pDivisions].indexOf(a.division);
+        const bDivIndex = [...divisions, ...p4pDivisions].indexOf(b.division);
+        if (aDivIndex !== bDivIndex) return aDivIndex - bDivIndex;
+        
+        // Tertiary sort by rank
         if (a.rank === 'C') return -1;
         if (b.rank === 'C') return 1;
-        return parseInt(a.rank) - parseInt(b.rank);
+        return parseInt(a.rank || 999) - parseInt(b.rank || 999);
+      });
+    } else if (showChampionsOnly) {
+      // Sort champions by division order
+      filtered.sort((a, b) => {
+        const aDivIndex = [...divisions, ...p4pDivisions].indexOf(a.division);
+        const bDivIndex = [...divisions, ...p4pDivisions].indexOf(b.division);
+        return aDivIndex - bDivIndex;
+      });
+    } else {
+      // Default rank sorting
+      filtered.sort((a, b) => {
+        if (a.rank === 'C') return -1;
+        if (b.rank === 'C') return 1;
+        return parseInt(a.rank || 999) - parseInt(b.rank || 999);
       });
     }
 
     return filtered;
   };
 
-  const getCountryFlag = (countryCode) => {
-    if (!countryCode) return null;
-    return `https://flagcdn.com/w20/${countryCode.toLowerCase()}.png`;
+  const getCountryFlag = (country) => {
+    return countryCodes[country] || '🏴';
   };
 
   const getRankChangeIcon = (change) => {
@@ -305,7 +302,43 @@ const Rankings = () => {
     });
   };
 
-  const formatStat = (value, decimals = 1) => {
+  const navigateDivision = (direction) => {
+  if (showMoversOnly) return;
+  
+  const totalDivisions = divisions.length;
+  if (direction === 'next') {
+    setDivisionScrollIndex((prev) => (prev + 1) % totalDivisions);
+    setSelectedDivision(divisions[(divisionScrollIndex + 1) % totalDivisions]);
+  } else {
+    setDivisionScrollIndex((prev) => (prev - 1 + totalDivisions) % totalDivisions);
+    setSelectedDivision(divisions[(divisionScrollIndex - 1 + totalDivisions) % totalDivisions]);
+  }
+};
+
+const handleTouchStart = (e) => {
+  setTouchEnd(null);
+  setTouchStart(e.targetTouches[0].clientX);
+};
+
+const handleTouchMove = (e) => {
+  setTouchEnd(e.targetTouches[0].clientX);
+};
+
+const handleTouchEnd = () => {
+  if (!touchStart || !touchEnd) return;
+  const distance = touchStart - touchEnd;
+  const isLeftSwipe = distance > 50;
+  const isRightSwipe = distance < -50;
+
+  if (isLeftSwipe) {
+    navigateDivision('next');
+  }
+  if (isRightSwipe) {
+    navigateDivision('prev');
+  }
+};
+
+const formatStat = (value, decimals = 1) => {
     if (!value) return 'N/A';
     if (typeof value === 'string' && value.includes('(')) return value;
     const num = parseFloat(value);
@@ -314,6 +347,53 @@ const Rankings = () => {
   };
 
   const filteredFighters = getFilteredAndSortedFighters();
+
+  const FightModal = ({ fight, onClose }) => {
+    if (!fight) return null;
+    
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-lg max-w-md w-full p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">Fight Details</h3>
+            <button 
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 text-xl"
+            >
+              ×
+            </button>
+          </div>
+          
+          <div className="space-y-3">
+            <div>
+              <span className="font-medium text-gray-900">Event:</span>
+              <span className="ml-2 text-gray-700">{fight.event}</span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-900">Date:</span>
+              <span className="ml-2 text-gray-700">{formatDate(fight.event_date)}</span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-900">Fighters:</span>
+              <span className="ml-2 text-gray-700">{fight.fighter1} vs {fight.fighter2}</span>
+            </div>
+            {fight.weight_class && (
+              <div>
+                <span className="font-medium text-gray-900">Weight Class:</span>
+                <span className="ml-2 text-gray-700">{fight.weight_class}</span>
+              </div>
+            )}
+            {fight.location && (
+              <div>
+                <span className="font-medium text-gray-900">Location:</span>
+                <span className="ml-2 text-gray-700">{fight.location}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   if (loading) {
     return (
@@ -402,71 +482,112 @@ const Rankings = () => {
               <label>Division</label>
               <select 
                 value={selectedDivision} 
-                onChange={(e) => setSelectedDivision(e.target.value)}
+                onChange={(e) => {
+                  setSelectedDivision(e.target.value);
+                  const index = divisions.indexOf(e.target.value);
+                  if (index !== -1) setDivisionScrollIndex(index);
+                }}
                 disabled={showMoversOnly}
               >
-                {divisions.map(division => (
+                {[...divisions, ...p4pDivisions].map(division => (
                   <option key={division} value={division}>{division}</option>
                 ))}
               </select>
             </div>
+
+            {!showMoversOnly && (
+              <div className="division-navigation">
+                <button 
+                  className="nav-btn prev"
+                  onClick={() => navigateDivision('prev')}
+                  disabled={showMoversOnly}
+                >
+                  ←
+                </button>
+                <span className="division-indicator">
+                  {divisionScrollIndex + 1} / {divisions.length}
+                </span>
+                <button 
+                  className="nav-btn next"
+                  onClick={() => navigateDivision('next')}
+                  disabled={showMoversOnly}
+                >
+                  →
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Sort Options */}
-          <div className="control-group">
-            <label>Sort By</label>
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-              {sortOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Toggle Filters */}
-          <div className="toggle-filters">
-            <button
-              className={`filter-btn ${showMoversOnly ? 'active' : ''}`}
-              onClick={() => setShowMoversOnly(!showMoversOnly)}
-            >
-              <TrendingUp size={16} />
-              <span>{showMoversOnly ? 'All Movers' : 'Movers Only'}</span>
-            </button>
-            
+          {/* Filter Buttons */}
+          <div className="filter-buttons">
             <button
               className={`filter-btn ${showChampionsOnly ? 'active' : ''}`}
-              onClick={() => setShowChampionsOnly(!showChampionsOnly)}
+              onClick={() => {
+                setShowChampionsOnly(!showChampionsOnly);
+                setShowMoversOnly(false);
+                if (!showChampionsOnly) {
+                  setSelectedDivision(divisions[0]);
+                }
+              }}
             >
               <Crown size={16} />
               <span>Champions</span>
             </button>
+            
+            <button
+              className={`filter-btn ${showMoversOnly ? 'active' : ''}`}
+              onClick={() => {
+                setShowMoversOnly(!showMoversOnly);
+                setShowChampionsOnly(false);
+                if (!showMoversOnly) {
+                  setSelectedDivision(divisions[0]);
+                }
+              }}
+            >
+              <TrendingUp size={16} />
+              <span>Movers</span>
+            </button>
+            
+            <button
+              className={`filter-btn ${selectedDivision === "Men's Pound-for-Pound" ? 'active' : ''}`}
+              onClick={() => {
+                setSelectedDivision("Men's Pound-for-Pound");
+                setShowMoversOnly(false);
+                setShowChampionsOnly(false);
+              }}
+            >
+              <span>Men's P4P</span>
+            </button>
+            
+            <button
+              className={`filter-btn ${selectedDivision === "Women's Pound-for-Pound" ? 'active' : ''}`}
+              onClick={() => {
+                setSelectedDivision("Women's Pound-for-Pound");
+                setShowMoversOnly(false);
+                setShowChampionsOnly(false);
+              }}
+            >
+              <span>Women's P4P</span>
+            </button>
           </div>
         </div>
 
-        {/* Results Summary */}
-        <div className="results-summary">
-          <div className="summary-stats">
-            <div className="stat-item">
-              <Users size={16} />
-              <span>{filteredFighters.length} fighters</span>
-            </div>
-            {showMoversOnly && (
-              <div className="stat-item">
-                <TrendingUp size={16} />
-                <span>across all divisions</span>
-              </div>
-            )}
-            {searchQuery && (
-              <div className="stat-item search-indicator">
-                <Search size={16} />
-                <span>"{searchQuery}"</span>
-              </div>
-            )}
+        {/* Search indicator only */}
+        {searchQuery && (
+          <div className="search-indicator">
+            <Search size={16} />
+            <span>"{searchQuery}"</span>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Enhanced Fighters List */}
-      <div className="fighters-container">
+      <div 
+        className="fighters-container"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {filteredFighters.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">🥊</div>
@@ -475,116 +596,73 @@ const Rankings = () => {
           </div>
         ) : (
           <>
-            {/* Desktop Table */}
-            <div className="desktop-table">
-              <table className="fighters-table">
-                <thead>
-                  <tr>
-                    <th>Rank</th>
-                    {showMoversOnly && <th>Division</th>}
-                    <th>Fighter</th>
-                    <th>Record</th>
-                    <th>Country</th>
-                    <th>Stats</th>
-                    <th>Change</th>
-                    <th>Next Fight</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredFighters.map((fighter, index) => (
-                    <tr key={`${fighter.id}-${fighter.division}`} className="fighter-row">
-                      <td className="rank-cell">
-                        {fighter.rank === 'C' ? (
-                          <div className="champion-rank">
-                            <Crown className="w-5 h-5 text-yellow-500" />
-                            <span className="champion-text">C</span>
-                          </div>
-                        ) : (
-                          <span className="rank-number">#{fighter.rank}</span>
-                        )}
-                      </td>
-                      
-                      {showMoversOnly && (
-                        <td className="division-cell">
-                          <span className="division-badge">{fighter.division}</span>
-                        </td>
+            {/* Grid Layout */}
+            <div className="fighters-grid">
+              {filteredFighters.map((fighter, index) => (
+                <div key={`${fighter.id}-${fighter.division}`} className={`fighter-card ${fighter.rank === 'C' ? 'champion-card' : ''}`}>
+                  {fighter.rank === 'C' && (
+                    <div className="champion-banner">
+                      <Crown size={16} />
+                      <span>CHAMPION</span>
+                    </div>
+                  )}
+                  
+                  <div className="fighter-image-container">
+                    <img
+                      src={fighter.image_url}
+                      alt={fighter.name}
+                      onError={(e) => {
+                        e.target.src = `https://via.placeholder.com/120x120/333/white?text=${fighter.name?.charAt(0) || '?'}`;
+                      }}
+                    />
+                    {fighter.hasUpcomingFight && (
+                      <div className="fight-indicator">
+                        <span>NEXT FIGHT</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="fighter-info">
+                    <div className="rank-section">
+                      <span className="rank-number">
+                        {fighter.rank === 'C' ? 'C' : `#${fighter.rank}`}
+                      </span>
+                      {(showMoversOnly || showChampionsOnly) && (
+                        <span className="division-badge">{fighter.division}</span>
                       )}
-                      
-                      <td className="fighter-cell">
-                        <div className="fighter-info">
-                          <div className="fighter-image-container">
-                            <img
-                              src={fighter.image_url}
-                              alt={fighter.name}
-                              onError={(e) => {
-                                e.target.src = 'https://via.placeholder.com/48x48/gray/white?text=' + fighter.name?.charAt(0);
-                              }}
-                            />
-                            {fighter.hasUpcomingFight && (
-                              <div className="fight-indicator">🥊</div>
-                            )}
-                          </div>
-                          <div className="fighter-details">
-                            <div className="fighter-name">{fighter.name}</div>
-                            {fighter.nickname && (
-                              <div className="fighter-nickname">"{fighter.nickname}"</div>
-                            )}
-                          </div>
-                        </div>
-                      </td>
-                      
-                      <td className="record-cell">
-                        <span className="record">{fighter.wins_total}-{fighter.losses_total}</span>
-                      </td>
-                      
-                      <td className="country-cell">
-                        <div className="country-info">
-                          {fighter.country_code && (
-                            <img
-                              src={getCountryFlag(fighter.country_code)}
-                              alt={fighter.country}
-                              className="flag-img"
-                              onError={(e) => e.target.style.display = 'none'}
-                            />
-                          )}
-                          <span className="country-name">{fighter.country}</span>
-                        </div>
-                      </td>
-                      
-                      <td className="stats-cell">
-                        <div className="quick-stats">
-                          <div className="stat-item">
-                            <Zap size={12} />
-                            <span>{formatStat(fighter.strikes_landed_per_min)}</span>
-                          </div>
-                          <div className="stat-item">
-                            <Shield size={12} />
-                            <span>{formatStat(fighter.striking_defense)}</span>
-                          </div>
-                        </div>
-                      </td>
-                      
-                      <td className="change-cell">
+                    </div>
+                    
+                    <h3 className="fighter-name">{fighter.name}</h3>
+                    {fighter.nickname && (
+                      <p className="fighter-nickname">"{fighter.nickname}"</p>
+                    )}
+                    
+                    <div className="fighter-meta">
+                      <div className="record">{fighter.wins_total}-{fighter.losses_total}</div>
+                      <div className="country">
+                        <span className="flag">{getCountryFlag(fighter.country)}</span>
+                        <span className="country-name">{fighter.country}</span>
+                      </div>
+                    </div>
+                    
+                    {fighter.parsedChange !== null && fighter.parsedChange !== 0 && (
+                      <div className="rank-change">
                         {getRankChangeIcon(fighter.parsedChange)}
-                      </td>
-                      
-                      <td className="fight-cell">
-                        {fighter.upcomingFight ? (
-                          <div className="next-fight">
-                            <div className="fight-event">{fighter.upcomingFight.event}</div>
-                            <div className="fight-date">
-                              <Calendar size={12} />
-                              {formatDate(fighter.upcomingFight.event_date)}
-                            </div>
-                          </div>
-                        ) : (
-                          <span className="no-fight">No fight scheduled</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    )}
+                    
+                    {fighter.upcomingFight && (
+                      <button 
+                        className="upcoming-fight"
+                        onClick={() => setSelectedFight(fighter.upcomingFight)}
+                      >
+                        <Calendar size={14} />
+                        <span>{formatDate(fighter.upcomingFight.event_date)}</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* Mobile Cards */}
@@ -634,14 +712,7 @@ const Rankings = () => {
                         
                         <div className="fighter-meta">
                           <div className="country-info">
-                            {fighter.country_code && (
-                              <img
-                                src={getCountryFlag(fighter.country_code)}
-                                alt={fighter.country}
-                                className="flag-img"
-                                onError={(e) => e.target.style.display = 'none'}
-                              />
-                            )}
+                            <span className="text-lg">{getCountryFlag(fighter.country)}</span>
                             <span>{fighter.country}</span>
                           </div>
                           <span className="record">{fighter.wins_total}-{fighter.losses_total}</span>
@@ -652,20 +723,23 @@ const Rankings = () => {
                     <div className="card-stats">
                       <div className="stat-item">
                         <Zap size={14} />
-                        <span>Strikes: {formatStat(fighter.strikes_landed_per_min)}/min</span>
+                        <span>Strikes: {formatStat(fighter.sig_strikes_landed_per_min)}/min</span>
                       </div>
                       <div className="stat-item">
                         <Shield size={14} />
-                        <span>Defense: {formatStat(fighter.striking_defense)}</span>
+                        <span>Defense: {formatStat(fighter.sig_str_defense)}</span>
                       </div>
                       <div className="stat-item">
                         <BarChart3 size={14} />
-                        <span>Takedowns: {formatStat(fighter.takedown_avg)}/15min</span>
+                        <span>Takedowns: {formatStat(fighter.takedown_avg_per_15min)}/15min</span>
                       </div>
                     </div>
 
                     {fighter.upcomingFight && (
-                      <div className="upcoming-fight">
+                      <button 
+                        className="upcoming-fight clickable"
+                        onClick={() => setSelectedFight(fighter.upcomingFight)}
+                      >
                         <div className="fight-header">
                           <Calendar size={14} />
                           <span>Next Fight</span>
@@ -674,7 +748,7 @@ const Rankings = () => {
                           <div className="fight-event">{fighter.upcomingFight.event}</div>
                           <div className="fight-date">{formatDate(fighter.upcomingFight.event_date)}</div>
                         </div>
-                      </div>
+                      </button>
                     )}
                   </div>
                 </div>
@@ -684,6 +758,13 @@ const Rankings = () => {
         )}
       </div>
 
+      {selectedFight && (
+        <FightModal 
+          fight={selectedFight} 
+          onClose={() => setSelectedFight(null)} 
+        />
+      )}
+
       <style jsx>{`
         .rankings-container {
           min-height: 100vh;
@@ -692,7 +773,7 @@ const Rankings = () => {
         }
 
         .rankings-container.dark {
-          background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+          background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
           color: #fff;
         }
 
@@ -709,8 +790,8 @@ const Rankings = () => {
         }
 
         .dark .page-header {
-          --border-color: rgba(255, 255, 255, 0.1);
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+          --border-color: rgba(220, 38, 38, 0.3);
+          background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(26, 26, 26, 0.9) 100%);
         }
 
         .light .page-header {
@@ -730,7 +811,7 @@ const Rankings = () => {
           font-size: 2.5rem;
           font-weight: 800;
           margin: 0 0 0.5rem 0;
-          background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+          background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -764,7 +845,7 @@ const Rankings = () => {
         .dark .theme-toggle, .dark .filter-toggle {
           --btn-bg: rgba(251, 191, 36, 0.1);
           --btn-border: rgba(251, 191, 36, 0.3);
-          --btn-color: #fbbf24;
+          --btn-color: #dc2626;
         }
 
         .light .theme-toggle, .light .filter-toggle {
@@ -834,7 +915,7 @@ const Rankings = () => {
         }
 
         .search-bar:focus-within {
-          border-color: #fbbf24;
+          border-color: #dc2626;
           box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
         }
 
@@ -894,6 +975,68 @@ const Rankings = () => {
 
         .division-selector {
           min-width: 200px;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .division-navigation {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          justify-content: center;
+        }
+
+        .nav-btn {
+          background: var(--nav-btn-bg);
+          border: 1px solid var(--nav-btn-border);
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.2rem;
+          font-weight: bold;
+          color: #dc2626;
+        }
+
+        .dark .nav-btn {
+          --nav-btn-bg: rgba(30, 64, 175, 0.1);
+          --nav-btn-border: rgba(30, 64, 175, 0.3);
+        }
+
+        .light .nav-btn {
+          --nav-btn-bg: rgba(30, 64, 175, 0.05);
+          --nav-btn-border: rgba(30, 64, 175, 0.2);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+          background: var(--nav-btn-hover);
+          transform: scale(1.1);
+        }
+
+        .dark .nav-btn:hover:not(:disabled) {
+          --nav-btn-hover: rgba(30, 64, 175, 0.2);
+        }
+
+        .light .nav-btn:hover:not(:disabled) {
+          --nav-btn-hover: rgba(30, 64, 175, 0.1);
+        }
+
+        .nav-btn:disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
+
+        .division-indicator {
+          font-size: 0.9rem;
+          color: #dc2626;
+          font-weight: 600;
+          min-width: 60px;
+          text-align: center;
         }
 
         .control-group {
@@ -905,7 +1048,7 @@ const Rankings = () => {
 
         .control-group label {
           font-size: 0.85rem;
-          color: #fbbf24;
+          color: #dc2626;
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.5px;
@@ -935,7 +1078,7 @@ const Rankings = () => {
 
         .control-group select:hover,
         .control-group select:focus {
-          border-color: #fbbf24;
+          border-color: #dc2626;
           box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
         }
 
@@ -949,10 +1092,11 @@ const Rankings = () => {
           color: #1e293b;
         }
 
-        .toggle-filters {
+        .filter-buttons {
           display: flex;
           gap: 1rem;
           align-items: center;
+          flex-wrap: wrap;
         }
 
         .filter-btn {
@@ -982,7 +1126,7 @@ const Rankings = () => {
 
         .filter-btn:hover {
           background: var(--filter-btn-hover);
-          border-color: #fbbf24;
+          border-color: #dc2626;
         }
 
         .dark .filter-btn:hover {
@@ -995,8 +1139,8 @@ const Rankings = () => {
 
         .filter-btn.active {
           background: var(--filter-btn-active);
-          border-color: #fbbf24;
-          color: #fbbf24;
+          border-color: #dc2626;
+          color: #dc2626;
         }
 
         .dark .filter-btn.active {
@@ -1041,13 +1185,28 @@ const Rankings = () => {
         }
 
         .stat-item svg {
-          color: #fbbf24;
+          color: #dc2626;
         }
 
         .search-indicator {
-          color: #fbbf24;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: #dc2626;
           opacity: 1;
           font-weight: 500;
+          padding: 0.75rem;
+          background: var(--search-indicator-bg);
+          border-radius: 8px;
+          margin-bottom: 1rem;
+        }
+
+        .dark .search-indicator {
+          --search-indicator-bg: rgba(220, 38, 38, 0.1);
+        }
+
+        .light .search-indicator {
+          --search-indicator-bg: rgba(220, 38, 38, 0.05);
         }
 
         /* Fighters Container */
@@ -1057,13 +1216,12 @@ const Rankings = () => {
           padding: 2rem;
         }
 
-        /* Desktop Table */
-        .desktop-table {
-          display: block;
-          background: var(--table-bg);
-          border-radius: 16px;
-          overflow: hidden;
-          box-shadow: 0 4px 20px var(--table-shadow);
+        /* Fighters Grid */
+        .fighters-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 1.5rem;
+          margin-top: 2rem;
         }
 
         .dark .desktop-table {
@@ -1098,7 +1256,7 @@ const Rankings = () => {
           text-align: left;
           font-weight: 600;
           font-size: 0.9rem;
-          color: #fbbf24;
+          color: #dc2626;
           text-transform: uppercase;
           letter-spacing: 0.5px;
           border-bottom: 2px solid rgba(251, 191, 36, 0.2);
@@ -1139,6 +1297,25 @@ const Rankings = () => {
           font-size: 1.1rem;
         }
 
+        .champion-section {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.25rem;
+        }
+
+        .champion-header {
+          font-size: 0.7rem;
+          font-weight: 800;
+          color: #fbbf24;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          background: linear-gradient(45deg, #fbbf24, #f59e0b);
+          padding: 0.2rem 0.5rem;
+          border-radius: 4px;
+          color: #000;
+        }
+
         .champion-rank {
           display: flex;
           align-items: center;
@@ -1152,7 +1329,7 @@ const Rankings = () => {
         }
 
         .rank-number {
-          color: #fbbf24;
+          color: #dc2626;
         }
 
         .division-cell {
@@ -1161,7 +1338,7 @@ const Rankings = () => {
 
         .division-badge {
           background: var(--division-bg);
-          color: #fbbf24;
+          color: #dc2626;
           padding: 0.25rem 0.75rem;
           border-radius: 6px;
           font-weight: 600;
@@ -1209,6 +1386,7 @@ const Rankings = () => {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: center top;
         }
 
         .fight-indicator {
@@ -1253,7 +1431,7 @@ const Rankings = () => {
 
         .record-cell {
           font-weight: 600;
-          color: #fbbf24;
+          color: #dc2626;
         }
 
         .country-cell {
@@ -1296,7 +1474,7 @@ const Rankings = () => {
         }
 
         .quick-stats .stat-item svg {
-          color: #fbbf24;
+          color: #dc2626;
         }
 
         .change-cell {
@@ -1326,7 +1504,7 @@ const Rankings = () => {
         }
 
         .fight-date svg {
-          color: #fbbf24;
+          color: #dc2626;
         }
 
         .no-fight {
@@ -1335,10 +1513,236 @@ const Rankings = () => {
           font-size: 0.85rem;
         }
 
-        /* Mobile Cards */
+        .next-fight.clickable,
+        .upcoming-fight.clickable {
+          background: none;
+          border: none;
+          color: inherit;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-align: left;
+          width: 100%;
+          padding: 0.5rem;
+          border-radius: 6px;
+        }
+
+        .next-fight.clickable:hover,
+        .upcoming-fight.clickable:hover {
+          background: var(--fight-hover);
+          transform: scale(1.02);
+        }
+
+        .dark .next-fight.clickable:hover,
+        .dark .upcoming-fight.clickable:hover {
+          --fight-hover: rgba(239, 68, 68, 0.1);
+        }
+
+        .light .next-fight.clickable:hover,
+        .light .upcoming-fight.clickable:hover {
+          --fight-hover: rgba(239, 68, 68, 0.05);
+        }
+
+        /* Fighter Cards */
+        .fighter-card {
+          background: var(--card-bg);
+          border-radius: 12px;
+          overflow: hidden;
+          transition: all 0.3s ease;
+          position: relative;
+          border: none;
+          box-shadow: 0 4px 12px var(--card-shadow);
+        }
+
+        .dark .fighter-card {
+          --card-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+          --card-shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        .light .fighter-card {
+          --card-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9));
+          --card-shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        .fighter-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 25px var(--card-hover-shadow);
+        }
+
+        .dark .fighter-card:hover {
+          --card-hover-shadow: rgba(220, 38, 38, 0.2);
+        }
+
+        .light .fighter-card:hover {
+          --card-hover-shadow: rgba(220, 38, 38, 0.15);
+        }
+
+        .fighter-card.champion-card {
+          border: 2px solid #ffd700;
+          box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        }
+
+        .champion-banner {
+          background: linear-gradient(135deg, #ffd700, #ffed4e);
+          color: #000;
+          padding: 0.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          font-weight: 700;
+          font-size: 0.8rem;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .fighter-image-container {
+          position: relative;
+          width: 100%;
+          height: 200px;
+          overflow: hidden;
+        }
+
+        .fighter-image-container img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center top;
+          transition: transform 0.3s ease;
+        }
+
+        .fighter-card:hover .fighter-image-container img {
+          transform: scale(1.05);
+        }
+
+        .fight-indicator {
+          position: absolute;
+          bottom: 0.5rem;
+          right: 0.5rem;
+          background: #dc2626;
+          color: #fff;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.7rem;
+          font-weight: 600;
+        }
+
+        .fighter-info {
+          padding: 1rem;
+        }
+
+        .rank-section {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.75rem;
+        }
+
+        .rank-number {
+          font-size: 1.5rem;
+          font-weight: 800;
+          color: #dc2626;
+        }
+
+        .division-badge {
+          background: var(--division-bg);
+          color: #dc2626;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-weight: 600;
+          font-size: 0.7rem;
+          text-transform: uppercase;
+        }
+
+        .dark .division-badge {
+          --division-bg: rgba(220, 38, 38, 0.1);
+        }
+
+        .light .division-badge {
+          --division-bg: rgba(220, 38, 38, 0.08);
+        }
+
+        .fighter-name {
+          font-size: 1.2rem;
+          font-weight: 700;
+          margin: 0 0 0.25rem 0;
+          line-height: 1.2;
+        }
+
+        .fighter-nickname {
+          font-size: 0.9rem;
+          opacity: 0.7;
+          font-style: italic;
+          margin: 0 0 0.75rem 0;
+        }
+
+        .fighter-meta {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.75rem;
+          padding: 0.5rem 0;
+          border-top: 1px solid var(--border-color);
+          border-bottom: 1px solid var(--border-color);
+        }
+
+        .record {
+          font-weight: 700;
+          color: #dc2626;
+          font-size: 1rem;
+        }
+
+        .country {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .flag {
+          font-size: 1.2rem;
+        }
+
+        .country-name {
+          font-size: 0.85rem;
+          opacity: 0.8;
+        }
+
+        .rank-change {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 0.75rem;
+        }
+
+        .upcoming-fight {
+          width: 100%;
+          background: var(--fight-bg);
+          border: 1px solid rgba(220, 38, 38, 0.3);
+          border-radius: 6px;
+          padding: 0.5rem;
+          color: inherit;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          font-size: 0.85rem;
+        }
+
+        .dark .upcoming-fight {
+          --fight-bg: rgba(220, 38, 38, 0.1);
+        }
+
+        .light .upcoming-fight {
+          --fight-bg: rgba(220, 38, 38, 0.05);
+        }
+
+        .upcoming-fight:hover {
+          background: rgba(220, 38, 38, 0.2);
+        }
+
+        /* Mobile Cards - Remove */
         .mobile-cards {
           display: none;
-          gap: 1.5rem;
         }
 
         .fighter-card {
@@ -1360,7 +1764,7 @@ const Rankings = () => {
         }
 
         .fighter-card:hover {
-          border-color: #fbbf24;
+          border-color: #dc2626;
           box-shadow: 0 8px 25px var(--card-shadow);
           transform: translateY(-2px);
         }
@@ -1456,7 +1860,7 @@ const Rankings = () => {
         }
 
         .card-stats .stat-item svg {
-          color: #fbbf24;
+          color: #dc2626;
         }
 
         .upcoming-fight {
@@ -1510,7 +1914,7 @@ const Rankings = () => {
           width: 50px;
           height: 50px;
           border: 3px solid var(--spinner-track);
-          border-top-color: #fbbf24;
+          border-top-color: #dc2626;
           border-radius: 50%;
           animation: spin 1s linear infinite;
           margin-bottom: 1rem;
@@ -1561,7 +1965,7 @@ const Rankings = () => {
         }
 
         .empty-state h3 {
-          color: #fbbf24;
+          color: #dc2626;
           margin-bottom: 1rem;
         }
 

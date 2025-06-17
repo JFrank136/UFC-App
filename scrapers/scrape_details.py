@@ -12,29 +12,65 @@ import re
 from typing import Dict, List, Optional
 import logging
 
+def clean_stat_value(value):
+    """Clean stat values - return None only for truly empty/missing values"""
+    if not value or value in ["00:00", "-", "Unknown", "N/A", ""]:
+        return None
+    return value
+
+def clean_stats_group(stats_dict):
+    """Clean a group of related stats - null them all if they're all zeros"""
+    if not stats_dict:
+        return stats_dict
+    
+    # Check if all non-None values are effectively zero
+    non_null_values = [v for v in stats_dict.values() if v is not None]
+    if not non_null_values:
+        return stats_dict
+    
+    # Check if all values are zero-like
+    zero_patterns = ["0", "0.0", "0 (0 %)", "0 (0%)", "00:00"]
+    all_zeros = all(str(v).strip() in zero_patterns for v in non_null_values)
+    
+    if all_zeros:
+        # If all stats in this group are zero, likely no data available
+        return {k: None for k in stats_dict.keys()}
+    
+    return stats_dict
+
 
 def download_image(url, save_path):
+    """Download image with minimal logging"""
     try:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
             "Referer": "https://www.ufc.com/"
         }
-        res = requests.get(url, stream=True, headers=headers, timeout=10)
+        
+        res = session_manager.get(url, stream=True, timeout=10)
         if res.status_code == 200:
             with open(save_path, 'wb') as f:
                 for chunk in res.iter_content(1024):
-                    f.write(chunk)
-            logger.info(f"✅ Downloaded image: {save_path}")
+                    if chunk:
+                        f.write(chunk)
             return True
-        else:
-            logger.warning(f"❌ Image download failed: HTTP {res.status_code} for {url}")
-    except Exception as e:
-        logger.error(f"❌ Failed to download image: {e}")
+    except Exception:
+        pass
     return False
 
 # Setup logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+# Create a minimal progress logger
+def show_progress(current, total, current_fighter=""):
+    if current % 25 == 0 or current == 1 or current == total:
+        if current_fighter:
+            print(f"[{current}/{total}] Processing: {current_fighter}")
+        else:
+            print(f"[{current}/{total}] Processing fighters...")
 
 class SessionManager:
     """Thread-safe session with connection pooling and rate limiting"""
@@ -57,19 +93,19 @@ class SessionManager:
     
     def get(self, url, **kwargs):
         with self.lock:
-            # Rate limiting
+            # Simplified rate limiting
             now = time.time()
-            self.request_times = [t for t in self.request_times if now - t < 60]  # Keep last minute
+            self.request_times = [t for t in self.request_times if now - t < 60]
             
-            if len(self.request_times) > 30:  # Max 30 requests per minute
+            # More conservative rate limiting
+            if len(self.request_times) > 20:  # Max 20 requests per minute
                 sleep_time = 60 - (now - self.request_times[0])
                 if sleep_time > 0:
                     time.sleep(sleep_time)
             
-            # Ensure minimum delay
+            # Minimum delay between requests
             if self.request_times:
-                last_request = self.request_times[-1]
-                time_since_last = now - last_request
+                time_since_last = now - self.request_times[-1]
                 if time_since_last < self.min_delay:
                     time.sleep(self.min_delay - time_since_last)
             
@@ -85,6 +121,35 @@ def extract_stats_by_structure(soup):
     """Extract stats based on the specific UFC page structure shown in screenshots"""
     stats = {}
     
+    def is_valid_stat_value(value, expected_type="number"):
+        """Validate that extracted value is actually a stat, not help text"""
+        if not value or not isinstance(value, str):
+            return False
+        
+        value = value.strip().lower()
+        
+        # Common invalid patterns that indicate help text
+        invalid_patterns = [
+            "per min", "per 15 min", "percentage", "attempted", "landed",
+            "defense is", "average number", "window", "fighter", "takedown",
+            "significant strikes", "submissions", "knockdown", "is the percentage",
+            "accuracy is", "average time"
+        ]
+        
+        # If it contains help text patterns, it's invalid
+        if any(pattern in value for pattern in invalid_patterns):
+            return False
+        
+        # For numeric stats, should contain digits
+        if expected_type == "number" and not any(char.isdigit() for char in value):
+            return False
+        
+        # For time stats, should have time format
+        if expected_type == "time" and ":" not in value:
+            return False
+            
+        return True
+    
     # Find all stat comparison groups
     stat_groups = soup.select(".c-stat-compare__group")
     
@@ -99,41 +164,121 @@ def extract_stats_by_structure(soup):
         number = number_el.get_text(strip=True)
         label = label_el.get_text(strip=True).lower()
         
-        # Map based on label content
+        # Skip zero/empty values
+        if number in ["00:00", "0", "0.0", "0 (0 %)", "0 (0%)", "-"]:
+            number = None
+        
+        # Map based on label content with validation
         if "sig. str. landed" in label:
-            stats["sig_strikes_landed_per_min"] = number
+            if is_valid_stat_value(number):
+                stats["sig_strikes_landed_per_min"] = number
+            else:
+                stats["sig_strikes_landed_per_min"] = None
         elif "sig. str. absorbed" in label:
-            stats["sig_strikes_absorbed_per_min"] = number
+            if is_valid_stat_value(number):
+                stats["sig_strikes_absorbed_per_min"] = number
+            else:
+                stats["sig_strikes_absorbed_per_min"] = None
         elif "takedown avg" in label:
-            stats["takedown_avg_per_15min"] = number
+            if is_valid_stat_value(number):
+                stats["takedown_avg_per_15min"] = number
+            else:
+                stats["takedown_avg_per_15min"] = None
         elif "submission avg" in label:
-            stats["submission_avg_per_15min"] = number
+            if is_valid_stat_value(number):
+                stats["submission_avg_per_15min"] = number
+            else:
+                stats["submission_avg_per_15min"] = None
         elif "sig. str. defense" in label:
-            stats["sig_str_defense"] = number
+            if is_valid_stat_value(number):
+                stats["sig_str_defense"] = number
+            else:
+                stats["sig_str_defense"] = None
         elif "takedown defense" in label:
-            stats["takedown_defense"] = number
+            if is_valid_stat_value(number):
+                stats["takedown_defense"] = number
+            else:
+                stats["takedown_defense"] = None
         elif "knockdown avg" in label:
-            stats["knockdown_avg"] = number
+            if is_valid_stat_value(number):
+                stats["knockdown_avg"] = number
+            else:
+                stats["knockdown_avg"] = None
         elif "average fight time" in label:
-            stats["average_fight_time"] = number
+            if is_valid_stat_value(number, "time"):
+                stats["avg_fight_time"] = number
+            else:
+                stats["avg_fight_time"] = None
     
     return stats
 
-
 def extract_accuracy_and_defense_stats_combined(soup, page_text):
-    """Extract striking/takedown accuracy and defense as combined strings"""
+    """Extract striking/takedown accuracy in format: '54% 106/195'"""
     combined_stats = {}
     
-    try:
-        # Extract from overlap stats sections (most reliable for UFC pages)
-        overlap_stats = soup.select(".c-overlap__stats")
+    def is_valid_stat_value(value):
+        """Check if a value is actually a stat and not help text"""
+        if not value or not isinstance(value, str):
+            return False
         
-        # Dictionary to store found values temporarily
+        value = value.strip().lower()
+        
+        # Reject obvious help text patterns
+        invalid_patterns = [
+            "per min", "per 15 min", "percentage", "attempted", "landed",
+            "defense is", "average number", "window", "fighter", "takedown",
+            "significant strikes", "submissions", "knockdown"
+        ]
+        
+        if any(pattern in value for pattern in invalid_patterns):
+            return False
+            
+        # Must contain digits to be valid
+        return any(char.isdigit() for char in value)
+    
+    def calculate_accuracy_format(landed=None, attempted=None, percentage=None):
+        """Calculate accuracy in format: '54% 106/195'"""
+        try:
+            # Convert inputs to integers if they're strings
+            if landed is not None:
+                landed = int(str(landed).strip())
+            if attempted is not None:
+                attempted = int(str(attempted).strip())
+            if percentage is not None:
+                if isinstance(percentage, str):
+                    # Extract number from percentage string like "54%" 
+                    perc_match = re.search(r"(\d+)", percentage)
+                    if perc_match:
+                        percentage = int(perc_match.group(1))
+                    else:
+                        percentage = None
+            
+            # Case 1: Have landed and attempted, calculate percentage
+            if landed is not None and attempted is not None and attempted > 0:
+                calculated_percentage = round((landed / attempted) * 100)
+                return f"{calculated_percentage}% {landed}/{attempted}"
+            
+            # Case 2: Have percentage and landed, calculate attempted
+            elif percentage is not None and landed is not None and percentage > 0:
+                attempted = round((landed * 100) / percentage)
+                return f"{percentage}% {landed}/{attempted}"
+            
+            # Case 3: Have percentage and attempted, calculate landed
+            elif percentage is not None and attempted is not None and attempted > 0:
+                landed = round((percentage * attempted) / 100)
+                return f"{percentage}% {landed}/{attempted}"
+            
+            return None
+        except (ValueError, ZeroDivisionError, TypeError):
+            return None
+    
+    try:
+        # Method 1: Extract from overlap stats sections
+        overlap_stats = soup.select(".c-overlap__stats")
         temp_values = {}
         
         for stat_section in overlap_stats:
             try:
-                # Get the title and value
                 title_el = stat_section.select_one(".c-overlap__stats-title")
                 value_el = stat_section.select_one(".c-overlap__stats-value")
                 text_el = stat_section.select_one(".c-overlap__stats-text")
@@ -145,91 +290,85 @@ def extract_accuracy_and_defense_stats_combined(soup, page_text):
                 value = value_el.get_text(strip=True)
                 text = text_el.get_text(strip=True).lower() if text_el else ""
                 
-                # Striking accuracy (Sig. Strikes Landed)
-                if "sig. strikes landed" in title:
-                    if value.isdigit() and "attempted" in text:
-                        attempted_match = re.search(r"(\d+)", text)
-                        if attempted_match:
-                            attempted = attempted_match.group(1)
-                            try:
-                                percent = round((int(value) / int(attempted)) * 100)
-                                combined_stats["striking_accuracy"] = f"{value}/{attempted} ({percent}%)"
-                            except (ValueError, ZeroDivisionError):
-                                combined_stats["striking_accuracy"] = f"{value}/{attempted}"
+                # Skip if value looks like help text
+                if not is_valid_stat_value(value):
+                    continue
                 
-                # Striking defense (Sig. Strikes Attempted - needs to be calculated)
-                elif "sig. strikes attempted" in title:
-                    temp_values["sig_strikes_attempted"] = value
-                    
-                # Takedown accuracy (Takedowns Landed)
-                elif "takedowns landed" in title:
-                    if value.isdigit() and "attempted" in text:
-                        attempted_match = re.search(r"(\d+)", text)
-                        if attempted_match:
-                            attempted = attempted_match.group(1)
-                            try:
-                                percent = round((int(value) / int(attempted)) * 100)
-                                combined_stats["takedown_accuracy"] = f"{value}/{attempted} ({percent}%)"
-                            except (ValueError, ZeroDivisionError):
-                                combined_stats["takedown_accuracy"] = f"{value}/{attempted}"
+                # Store relevant values
+                if "sig. strikes landed" in title and value.isdigit():
+                    temp_values["strikes_landed"] = value
+                    # Look for attempted in text
+                    attempted_match = re.search(r"(\d+)", text)
+                    if attempted_match:
+                        temp_values["strikes_attempted"] = attempted_match.group(1)
                 
-                # Takedown defense (Takedowns Attempted - needs to be calculated)
-                elif "takedowns attempted" in title:
-                    temp_values["takedowns_attempted"] = value
-                    
+                elif "takedowns landed" in title and value.isdigit():
+                    temp_values["takedowns_landed"] = value
+                    # Look for attempted in text
+                    attempted_match = re.search(r"(\d+)", text)
+                    if attempted_match:
+                        temp_values["takedowns_attempted"] = attempted_match.group(1)
+                        
             except Exception as e:
                 logger.warning(f"Error processing overlap stat section: {e}")
                 continue
         
-        # Calculate defense stats if we have the necessary data
-        try:
-            # For striking defense: (attempted - landed) / attempted
-            if "sig_strikes_attempted" in temp_values and combined_stats.get("striking_accuracy"):
-                striking_accuracy = combined_stats["striking_accuracy"]
-                landed_match = re.search(r"(\d+)/(\d+)", striking_accuracy)
-                if landed_match:
-                    landed = int(landed_match.group(1))
-                    attempted = int(temp_values["sig_strikes_attempted"])
-                    if attempted > 0:
-                        defended = attempted - landed
-                        defense_percent = round((defended / attempted) * 100)
-                        combined_stats["sig_str_defense"] = f"{defended}/{attempted} ({defense_percent}%)"
-        except Exception as e:
-            logger.warning(f"Error calculating striking defense: {e}")
+        # Calculate striking accuracy
+        if "strikes_landed" in temp_values:
+            striking_accuracy = calculate_accuracy_format(
+                landed=temp_values.get("strikes_landed"),
+                attempted=temp_values.get("strikes_attempted")
+            )
+            if striking_accuracy:
+                combined_stats["striking_accuracy"] = striking_accuracy
         
-        try:
-            # For takedown defense: (attempted - landed) / attempted  
-            if "takedowns_attempted" in temp_values and combined_stats.get("takedown_accuracy"):
-                takedown_accuracy = combined_stats["takedown_accuracy"]
-                landed_match = re.search(r"(\d+)/(\d+)", takedown_accuracy)
-                if landed_match:
-                    landed = int(landed_match.group(1))
-                    attempted = int(temp_values["takedowns_attempted"])
-                    if attempted > 0:
-                        defended = attempted - landed
-                        defense_percent = round((defended / attempted) * 100)
-                        combined_stats["takedown_defense"] = f"{defended}/{attempted} ({defense_percent}%)"
-        except Exception as e:
-            logger.warning(f"Error calculating takedown defense: {e}")
+        # Calculate takedown accuracy
+        if "takedowns_landed" in temp_values:
+            takedown_accuracy = calculate_accuracy_format(
+                landed=temp_values.get("takedowns_landed"),
+                attempted=temp_values.get("takedowns_attempted")
+            )
+            if takedown_accuracy:
+                combined_stats["takedown_accuracy"] = takedown_accuracy
         
-        # Fallback: Look for pre-formatted accuracy/defense sections
+        # Method 2: Look for pre-formatted accuracy sections as fallback
         if not combined_stats.get("striking_accuracy"):
             try:
-                striking_sections = soup.find_all(string=re.compile(r"STRIKING.*ACCURACY", re.IGNORECASE))
-                for section in striking_sections:
+                # Look for existing formatted accuracy like "54%" with "106/195"
+                accuracy_sections = soup.find_all(string=re.compile(r"STRIKING.*ACCURACY", re.IGNORECASE))
+                for section in accuracy_sections:
                     parent = section.find_parent()
                     if parent:
                         section_text = parent.get_text()
                         
-                        # Look for pattern like "1734/3460 (50%)" or separate values
-                        combined_match = re.search(r"(\d+)/(\d+)\s*\((\d+%)\)", section_text)
-                        if combined_match:
-                            landed, attempted, percent = combined_match.groups()
-                            combined_stats["striking_accuracy"] = f"{landed}/{attempted} ({percent})"
+                        # Look for pattern like "54% 106/195" or "106/195 (54%)"
+                        patterns = [
+                            r"(\d+)%\s*(\d+)/(\d+)",  # "54% 106/195"
+                            r"(\d+)/(\d+)\s*\((\d+)%\)",  # "106/195 (54%)"
+                            r"(\d+)/(\d+)\s*(\d+)%"  # "106/195 54%"
+                        ]
+                        
+                        for pattern in patterns:
+                            match = re.search(pattern, section_text)
+                            if match:
+                                if len(match.groups()) == 3:
+                                    if pattern == patterns[0]:  # percentage first
+                                        percentage, landed, attempted = match.groups()
+                                    else:  # landed/attempted first
+                                        landed, attempted, percentage = match.groups()
+                                    
+                                    result = calculate_accuracy_format(
+                                        landed=landed, attempted=attempted, percentage=percentage
+                                    )
+                                    if result:
+                                        combined_stats["striking_accuracy"] = result
+                                        break
+                        if combined_stats.get("striking_accuracy"):
                             break
             except Exception as e:
                 logger.warning(f"Error in striking accuracy fallback: {e}")
         
+        # Similar fallback for takedown accuracy
         if not combined_stats.get("takedown_accuracy"):
             try:
                 takedown_sections = soup.find_all(string=re.compile(r"TAKEDOWN.*ACCURACY", re.IGNORECASE))
@@ -238,11 +377,28 @@ def extract_accuracy_and_defense_stats_combined(soup, page_text):
                     if parent:
                         section_text = parent.get_text()
                         
-                        # Look for pattern like "33/73 (55%)" or separate values
-                        combined_match = re.search(r"(\d+)/(\d+)\s*\((\d+%)\)", section_text)
-                        if combined_match:
-                            landed, attempted, percent = combined_match.groups()
-                            combined_stats["takedown_accuracy"] = f"{landed}/{attempted} ({percent})"
+                        patterns = [
+                            r"(\d+)%\s*(\d+)/(\d+)",
+                            r"(\d+)/(\d+)\s*\((\d+)%\)",
+                            r"(\d+)/(\d+)\s*(\d+)%"
+                        ]
+                        
+                        for pattern in patterns:
+                            match = re.search(pattern, section_text)
+                            if match:
+                                if len(match.groups()) == 3:
+                                    if pattern == patterns[0]:
+                                        percentage, landed, attempted = match.groups()
+                                    else:
+                                        landed, attempted, percentage = match.groups()
+                                    
+                                    result = calculate_accuracy_format(
+                                        landed=landed, attempted=attempted, percentage=percentage
+                                    )
+                                    if result:
+                                        combined_stats["takedown_accuracy"] = result
+                                        break
+                        if combined_stats.get("takedown_accuracy"):
                             break
             except Exception as e:
                 logger.warning(f"Error in takedown accuracy fallback: {e}")
@@ -459,22 +615,16 @@ def _scrape_details(profile_url_ufc):
             image_path = os.path.join(image_dir, f"{fighter_slug}.jpg")
 
             if os.path.exists(image_path):
-                logger.info(f"Image already exists for {fighter_slug}, skipping download.")
                 data["image_local_path"] = f"/images/{fighter_slug}.jpg"
             else:
-                logger.info(f"Downloading image for {fighter_slug}: {image_url}")
                 success = download_image(image_url, image_path)
                 if success:
                     data["image_local_path"] = f"/images/{fighter_slug}.jpg"
-                else:
-                    logger.warning(f"Failed to download image for {fighter_slug}")
             data["image_url"] = image_url
             data["image_verified"] = True
-            logger.info(f"✅ Image verified for {fighter_slug}")
         else:
             data["image_url"] = "/static/images/placeholder.jpg"
             data["image_local_path"] = "/images/placeholder.jpg"
-            logger.info(f"📷 Using placeholder for {fighter_slug}")
             data["image_verified"] = False
 
         # Bio extraction (preserved from original)
@@ -495,46 +645,70 @@ def _scrape_details(profile_url_ufc):
         })
 
         # ===== NEW IMPROVED STAT EXTRACTION =====
-        
+
         # Primary method: extract using the specific structure
         structure_stats = extract_stats_by_structure(soup)
-        data.update(structure_stats)
+        
+        # Group related stats for intelligent cleaning
+        core_stats = {
+            "sig_strikes_landed_per_min": structure_stats.get("sig_strikes_landed_per_min"),
+            "sig_strikes_absorbed_per_min": structure_stats.get("sig_strikes_absorbed_per_min"),
+            "takedown_avg_per_15min": structure_stats.get("takedown_avg_per_15min"),
+            "submission_avg_per_15min": structure_stats.get("submission_avg_per_15min"),
+            "avg_fight_time": structure_stats.get("avg_fight_time")
+        }
+        
+        defense_stats = {
+            "sig_str_defense": structure_stats.get("sig_str_defense"),
+            "takedown_defense": structure_stats.get("takedown_defense"),
+            "knockdown_avg": structure_stats.get("knockdown_avg")
+        }
+        
+        # Clean groups intelligently
+        cleaned_core = clean_stats_group(core_stats)
+        cleaned_defense = clean_stats_group(defense_stats)
+        
+        # Merge cleaned stats
+        cleaned_structure_stats = {**cleaned_core, **cleaned_defense}
+        data.update(cleaned_structure_stats)
         
         # Fallback method: use the original extraction if primary fails
-        if not structure_stats:
+        if not any(v is not None for v in cleaned_structure_stats.values()):
             logger.info(f"Using fallback stat extraction for {fighter_slug}")
-            data["sig_strikes_landed_per_min"] = extract_stat_by_label(soup, "SIG. STR. LANDED", page_text) or extract_stat_by_label(soup, "SIG STR LANDED", page_text)
-            data["sig_strikes_absorbed_per_min"] = extract_stat_by_label(soup, "SIG. STR. ABSORBED", page_text) or extract_stat_by_label(soup, "SIG STR ABSORBED", page_text)
-            data["takedown_avg_per_15min"] = extract_stat_by_label(soup, "TAKEDOWN AVG", page_text)
-            data["submission_avg_per_15min"] = extract_stat_by_label(soup, "SUBMISSION AVG", page_text)
-            data["knockdown_avg"] = extract_stat_by_label(soup, "KNOCKDOWN AVG", page_text)
-            data["average_fight_time"] = extract_stat_by_label(soup, "AVERAGE FIGHT TIME", page_text)
+            data["sig_strikes_landed_per_min"] = clean_stat_value(extract_stat_by_label(soup, "SIG. STR. LANDED", page_text) or extract_stat_by_label(soup, "SIG STR LANDED", page_text))
+            data["sig_strikes_absorbed_per_min"] = clean_stat_value(extract_stat_by_label(soup, "SIG. STR. ABSORBED", page_text) or extract_stat_by_label(soup, "SIG STR ABSORBED", page_text))
+            data["takedown_avg_per_15min"] = clean_stat_value(extract_stat_by_label(soup, "TAKEDOWN AVG", page_text))
+            data["submission_avg_per_15min"] = clean_stat_value(extract_stat_by_label(soup, "SUBMISSION AVG", page_text))
+            data["knockdown_avg"] = clean_stat_value(extract_stat_by_label(soup, "KNOCKDOWN AVG", page_text))
+            data["avg_fight_time"] = clean_stat_value(extract_stat_by_label(soup, "AVERAGE FIGHT TIME", page_text))
             
             # Only extract simple defense percentages if combined stats weren't found
             if not data.get("sig_str_defense"):
-                data["sig_str_defense"] = extract_stat_by_label(soup, "SIG. STR. DEFENSE", page_text) or extract_stat_by_label(soup, "SIG STR DEFENSE", page_text)
+                data["sig_str_defense"] = clean_stat_value(extract_stat_by_label(soup, "SIG. STR. DEFENSE", page_text) or extract_stat_by_label(soup, "SIG STR DEFENSE", page_text))
             if not data.get("takedown_defense"):
-                data["takedown_defense"] = extract_stat_by_label(soup, "TAKEDOWN DEFENSE", page_text)
+                data["takedown_defense"] = clean_stat_value(extract_stat_by_label(soup, "TAKEDOWN DEFENSE", page_text))
 
         # Third fallback: try to extract from stat value containers directly
         if not any([data.get("sig_strikes_landed_per_min"), data.get("sig_strikes_absorbed_per_min")]):
             stat_values = soup.select(".c-stat-3bar__value, .c-stat-compare__number")
             if len(stat_values) >= 6:
                 try:
-                    data["sig_strikes_landed_per_min"] = stat_values[0].text.strip()
-                    data["sig_strikes_absorbed_per_min"] = stat_values[1].text.strip()
-                    data["takedown_avg_per_15min"] = stat_values[2].text.strip()
-                    data["submission_avg_per_15min"] = stat_values[3].text.strip()
-                    data["sig_str_defense"] = stat_values[4].text.strip() if len(stat_values) > 4 else None
-                    data["knockdown_avg"] = stat_values[5].text.strip() if len(stat_values) > 5 else None
+                    data["sig_strikes_landed_per_min"] = clean_stat_value(stat_values[0].text.strip())
+                    data["sig_strikes_absorbed_per_min"] = clean_stat_value(stat_values[1].text.strip())
+                    data["takedown_avg_per_15min"] = clean_stat_value(stat_values[2].text.strip())
+                    data["submission_avg_per_15min"] = clean_stat_value(stat_values[3].text.strip())
+                    data["sig_str_defense"] = clean_stat_value(stat_values[4].text.strip()) if len(stat_values) > 4 else None
+                    data["knockdown_avg"] = clean_stat_value(stat_values[5].text.strip()) if len(stat_values) > 5 else None
                     
                     # Average fight time often in different container
                     time_elements = soup.select("div.c-stat-compare__number")
                     for elem in time_elements:
                         text = elem.text.strip()
-                        if ":" in text:  # Time format
-                            data["average_fight_time"] = text
+                        if ":" in text and text != "00:00":  # Time format, but not empty
+                            data["avg_fight_time"] = text
                             break
+                    if not data.get("avg_fight_time"):  # Ensure it's None if no valid time found
+                        data["avg_fight_time"] = None
                 except IndexError:
                     logger.warning(f"Could not extract stats from stat containers for {fighter_slug}")
 
@@ -547,12 +721,20 @@ def _scrape_details(profile_url_ufc):
         # Strikes by position
         position_stats = extract_position_stats(soup, page_text)
         if position_stats:
-            data["sig_strikes_by_position"] = position_stats
+            # Only null out position stats if ALL are zero (indicating no fight data)
+            cleaned_position = clean_stats_group(position_stats)
+            if any(v is not None for v in cleaned_position.values()):
+                data["sig_strikes_by_position"] = position_stats  # Keep original if any real data
+            # If all were nulled, don't add the field at all
 
         # Strikes by target
         target_stats = extract_target_stats(soup, page_text)
         if target_stats:
-            data["sig_strikes_by_target"] = target_stats
+            # Only null out target stats if ALL are zero (indicating no fight data)
+            cleaned_target = clean_stats_group(target_stats)
+            if any(v is not None for v in cleaned_target.values()):
+                data["sig_strikes_by_target"] = target_stats  # Keep original if any real data
+            # If all were nulled, don't add the field at all
 
         # ===== ADDITIONAL BETTING-RELEVANT STATS (PRESERVED) =====
         
@@ -617,46 +799,42 @@ def scrape_details(profile_url_ufc):
     return _scrape_details(profile_url_ufc)
     
 def process_fighter(fighter_info):
-    """Process a single fighter with enhanced error handling"""
+    """Process a single fighter with minimal logging"""
     idx, total, fighter = fighter_info
     
     # Validate UUID
     try:
         UUID(fighter["id"])
     except (ValueError, KeyError):
-        logger.error(f"Invalid UUID for {fighter.get('name', 'Unknown')}: {fighter.get('id', 'Missing')}")
         return None
 
     fighter_name = fighter.get('name', 'Unknown')
-    logger.info(f"[{idx}/{total}] Processing {fighter_name} ({total - idx} remaining)")
+    
+    # Show progress for every 25th fighter
+    show_progress(idx, total, fighter_name)
 
-    # Skip if image already verified AND file exists
-    if (fighter.get("image_verified") is True and 
-        fighter.get("image_local_path") and 
-        os.path.exists(fighter.get("image_local_path", ""))):
-        logger.info(f"🛑 Skipping {fighter_name} (image already verified and exists)")
-        return fighter
+    # Skip if already processed and image exists
+    fighter_slug = fighter.get("profile_url_ufc", "").rstrip('/').split('/')[-1]
+    if fighter_slug:
+        image_path = os.path.join("..", "ufc-tracker", "public", "images", f"{fighter_slug}.jpg")
+        if (fighter.get("image_verified") and os.path.exists(image_path)):
+            return fighter
 
-    # Get profile URL - handle both possible keys
+    # Get profile URL
     profile_url_ufc = fighter.get("profile_url_ufc") or fighter.get("profile_url")
     if not profile_url_ufc:
-        logger.warning(f"No profile URL for {fighter_name}")
         return None
 
-    # Scrape detailed profile information
+    # Scrape profile
     details = scrape_details(profile_url_ufc)
     if not details:
-        logger.warning(f"Failed to scrape profile details for {fighter_name}")
         return None
 
-    # Create enriched fighter data
+    # Merge data
     enriched_fighter = fighter.copy()
     enriched_fighter.update(details)
-
-    # Add scraping metadata
     enriched_fighter["last_updated"] = time.time()
     
-    logger.info(f"✅ Successfully enriched: {fighter_name}")
     return enriched_fighter
 
 def thread_safe_save(enriched, output_file):
@@ -753,45 +931,34 @@ def enrich_roster(input_file="data/ufc_fighters_raw.json", output_file="data/ufc
                 logger.error(f"Exception processing {fighter_name}: {e}")
                 failed_fighters.append(fighter_info)
 
-    # Handle retries for failed fighters
-    max_retries = 2
-    retry_count = 0
-    
-    while failed_fighters and retry_count < max_retries:
-        retry_count += 1
-        logger.info(f"🔄 Retry attempt {retry_count}/{max_retries} for {len(failed_fighters)} failed fighters...")
+    # Single retry for failed fighters
+    if failed_fighters:
+        print(f"🔄 Retrying {len(failed_fighters)} failed fighters...")
         
-        current_failures = failed_fighters.copy()
-        failed_fighters = []
-        
-        # Use fewer workers for retries
-        retry_workers = min(2, len(current_failures))
+        retry_workers = min(2, len(failed_fighters))
+        retry_successes = []
         
         with ThreadPoolExecutor(max_workers=retry_workers) as executor:
-            future_to_fighter = {
+            retry_futures = {
                 executor.submit(process_fighter, fighter_info): fighter_info 
-                for fighter_info in current_failures
+                for fighter_info in failed_fighters
             }
             
-            for future in as_completed(future_to_fighter):
+            for future in as_completed(retry_futures):
                 try:
-                    enriched_fighter = future.result(timeout=45)
-                    
-                    if enriched_fighter:
-                        enriched.append(enriched_fighter)
-                        logger.info(f"✅ Retry success: {enriched_fighter['name']}")
-                    else:
-                        fighter_info = future_to_fighter[future]
-                        failed_fighters.append(fighter_info)
-                        
-                except Exception as e:
-                    fighter_info = future_to_fighter[future]
-                    fighter_name = fighter_info[2].get('name', 'Unknown')
-                    logger.error(f"Retry exception for {fighter_name}: {e}")
-                    failed_fighters.append(fighter_info)
-            
-            # Small delay to be respectful
-            time.sleep(0.1)
+                    result = future.result(timeout=60)
+                    if result:
+                        retry_successes.append(result)
+                        enriched.append(result)
+                except Exception:
+                    pass
+        
+        # Update failed list
+        failed_fighters = [f for f in failed_fighters 
+                          if f[2].get('name') not in [r.get('name') for r in retry_successes]]
+        
+        if retry_successes:
+            print(f"✅ Retry recovered {len(retry_successes)} fighters")
 
     # Final save
     thread_safe_save(enriched, output_file)
@@ -801,13 +968,13 @@ def enrich_roster(input_file="data/ufc_fighters_raw.json", output_file="data/ufc
     failure_count = len(failed_fighters)
     success_rate = (success_count / total) * 100 if total > 0 else 0
     
-    logger.info(f"\n📊 SUMMARY REPORT")
-    logger.info(f"✅ Successfully processed: {success_count}/{total} fighters ({success_rate:.1f}%)")
+    print(f"\n📊 SUMMARY REPORT")
+    print(f"✅ Successfully processed: {success_count}/{total} fighters ({success_rate:.1f}%)")
     
     if failed_fighters:
-        logger.warning(f"❌ Failed to process: {failure_count} fighters")
+        print(f"❌ Failed to process: {failure_count} fighters")
         
-        # Save failed fighters in simple retry format
+        # Save failed fighters
         failures_file = "data/errors/details_errors.json"
         os.makedirs(os.path.dirname(failures_file), exist_ok=True)
 
@@ -815,7 +982,7 @@ def enrich_roster(input_file="data/ufc_fighters_raw.json", output_file="data/ufc
             {
                 "name": fighter[2].get('name', 'Unknown'),
                 "uuid": fighter[2].get('id', 'Unknown'),
-                "profile_url_ufc": fighter[2].get('profile_url_ufc') or fighter[2].get('profile_url_ufc', 'Unknown'),
+                "profile_url_ufc": fighter[2].get('profile_url_ufc', 'Unknown'),
                 "reason": "scrape failed"
             }
             for fighter in failed_fighters
@@ -824,9 +991,9 @@ def enrich_roster(input_file="data/ufc_fighters_raw.json", output_file="data/ufc
         with open(failures_file, "w", encoding="utf-8") as f:
             json.dump(failed_data, f, indent=2, ensure_ascii=False)
 
-        logger.info(f"💾 Failed fighters report saved to {failures_file}")
+        print(f"💾 Failed fighters report saved to {failures_file}")
 
-    logger.info(f"📁 Final data saved to {output_file}")
+    print(f"📁 Final data saved to {output_file}")
 
 def enrich_roster_sequential(input_file="data/ufc_fighters_raw.json", output_file="data/ufc_details.json"):
     """Sequential version for debugging or when concurrent processing causes issues"""
@@ -920,7 +1087,8 @@ def update_ranked_fighter_images(rankings_file="data/ufc_rankings.json", roster_
             failed_count += 1
             continue
         
-        logger.info(f"[{idx}/{len(fighters_to_update)}] Updating {fighter_name} (Rank {rank}, {division})")
+        if idx % 10 == 0 or idx == 1 or idx == len(fighters_to_update):
+            print(f"[{idx}/{len(fighters_to_update)}] Updating ranked fighter images...")
         
         try:
             # Scrape the profile page for updated image
@@ -980,14 +1148,11 @@ def update_ranked_fighter_images(rankings_file="data/ufc_rankings.json", roster_
             os.makedirs(image_dir, exist_ok=True)
             image_path = os.path.join(image_dir, f"{fighter_slug}.jpg")
             
-            logger.info(f"🔄 Force downloading updated image for {fighter_name}: {image_url}")
             success = download_image(image_url, image_path)
             
             if success:
-                logger.info(f"✅ Updated image for {fighter_name} (Rank {rank})")
                 updated_count += 1
             else:
-                logger.warning(f"❌ Failed to download image for {fighter_name}")
                 failed_count += 1
             
             # Be respectful with requests
@@ -1030,102 +1195,105 @@ if __name__ == "__main__":
     elif mode == "2":
         retry_file = "data/errors/details_errors.json"
         input_roster_file = "data/ufc_fighters_raw.json"
-        output_file = "data/ufc_details.json"
+        
+        try:
+            with open(retry_file, "r", encoding="utf-8") as f:
+                failures = json.load(f)
+        except FileNotFoundError:
+            print("✅ No failure file found.")
+            sys.exit(0)
 
-        # Load main roster and error list
+        # Load main roster to get complete fighter data
         try:
             with open(input_roster_file, "r", encoding="utf-8") as f:
                 full_roster = json.load(f)
-            with open(retry_file, "r", encoding="utf-8") as f:
-                retry_list = json.load(f)
         except Exception as e:
-            logger.error(f"❌ Failed to load input files: {e}")
+            print(f"❌ Failed to load input roster: {e}")
             sys.exit(1)
 
-        # Build a map of current active fighters: name.lower() and uuid => fighter
-        active_fighters = { 
-            (f.get("name", "").strip().lower(), str(f.get("id", "")).strip()): f 
-            for f in full_roster if f.get("status", "").lower() == "active"
-        }
-        active_names = set(name for (name, uid) in active_fighters.keys())
-        active_uuids = set(uid for (name, uid) in active_fighters.keys())
+        # Build fighter lookup by name and UUID
+        fighter_lookup = {}
+        for fighter in full_roster:
+            if fighter.get("status", "").lower() == "active":
+                name_key = fighter.get("name", "").strip().lower()
+                uuid_key = str(fighter.get("id", "")).strip()
+                fighter_lookup[name_key] = fighter
+                fighter_lookup[uuid_key] = fighter
 
-        # Prepare retry list with up-to-date info from roster, or use error file info if missing
+        # Prepare fighters to retry
         to_retry = []
-        for entry in retry_list:
+        for entry in failures:
             name = entry.get("name", "").strip()
-            uuid_ = str(entry.get("uuid", "")).strip()
-            key = (name.lower(), uuid_)
-            # Prefer current info from active roster (keeps freshest profile_url_ufc, etc)
-            match = active_fighters.get(key)
-            if not match:
-                # Try matching by name only (in case uuid changed)
-                alt_key = next((k for k in active_fighters if k[0] == name.lower()), None)
-                if alt_key:
-                    match = active_fighters[alt_key]
-            if match:
-                to_retry.append(match)
+            uuid = entry.get("uuid", "").strip()
+            
+            # Try to find fighter in roster
+            fighter = fighter_lookup.get(name.lower()) or fighter_lookup.get(uuid)
+            if fighter:
+                to_retry.append(fighter)
             else:
-                # Fallback to error entry data if not found in active roster
-                # This shouldn't happen unless you have a mismatch, but is safe
-                new_fighter = dict(entry)
-                new_fighter["id"] = uuid_
-                new_fighter["status"] = "active"
-                to_retry.append(new_fighter)
+                print(f"⚠️ Fighter '{name}' not found in active roster")
 
         if not to_retry:
-            logger.warning("⚠️ No matching fighters found for retry.")
+            print("⚠️ No matching fighters found for retry.")
             sys.exit(0)
 
-        # Enrich and merge results (only for to_retry list)
+        print(f"🚀 Retrying {len(to_retry)} fighters...")
+        
+        # Process fighters (same as main function)
         enriched = []
-        for idx, fighter in enumerate(to_retry, 1):
-            result = process_fighter((idx, len(to_retry), fighter))
-            if result:
-                enriched.append(result)
-            else:
-                logger.warning(f"❌ Retry failed for {fighter.get('name')}")
+        failed_fighters = []
+        
+        for idx, fighter in enumerate(to_retry, start=1):
+            try:
+                result = process_fighter((idx, len(to_retry), fighter))
+                if result:
+                    enriched.append(result)
+                    print(f"✅ Success: {fighter.get('name')}")
+                else:
+                    failed_fighters.append(fighter)
+                    print(f"❌ Failed: {fighter.get('name')}")
+            except Exception as e:
+                print(f"❌ Error processing {fighter.get('name')}: {e}")
+                failed_fighters.append(fighter)
+            
             time.sleep(1)
 
-        # Merge into existing details, only for active fighters!
+        # Load existing details and merge with new results
         try:
-            with open(output_file, "r", encoding="utf-8") as f:
+            with open("data/ufc_details.json", "r", encoding="utf-8") as f:
                 existing_details = json.load(f)
         except FileNotFoundError:
             existing_details = []
-
-        # Build a map of existing details by both name (lower) and uuid (id)
-        details_by_name = {f.get("name", "").strip().lower(): f for f in existing_details}
-        details_by_uuid = {str(f.get("id", "")).strip(): f for f in existing_details}
-
-        # Remove any details for fighters no longer active
-        active_names_set = set([f.get("name", "").strip().lower() for f in full_roster if f.get("status", "").lower() == "active"])
-        active_uuids_set = set([str(f.get("id", "")).strip() for f in full_roster if f.get("status", "").lower() == "active"])
-        filtered_existing_details = [
-            f for f in existing_details
-            if f.get("name", "").strip().lower() in active_names_set and str(f.get("id", "")).strip() in active_uuids_set
+        
+        # Create lookup by UUID for existing details
+        existing_by_uuid = {str(f.get("id", "")).strip(): f for f in existing_details}
+        
+        # Merge new results (overwrite existing fighters with same UUID)
+        for fighter in enriched:
+            fighter_uuid = str(fighter.get("id", "")).strip()
+            existing_by_uuid[fighter_uuid] = fighter
+        
+        # Save merged results
+        merged_fighters = list(existing_by_uuid.values())
+        with open("data/ufc_details.json", "w", encoding="utf-8") as f:
+            json.dump(merged_fighters, f, indent=2, ensure_ascii=False)
+        
+        # Update error file - remove successful entries
+        successful_names = {f.get("name", "").strip().lower() for f in enriched}
+        remaining_errors = [
+            entry for entry in failures 
+            if entry.get("name", "").strip().lower() not in successful_names
         ]
-
-        # Merge/replace enriched fighters into filtered details (no duplicates)
-        merged = {str(f.get("id", "")).strip(): f for f in filtered_existing_details}
-        for f in enriched:
-            merged[str(f.get("id", "")).strip()] = f
-            # Also allow name match (in case UUID changed), but UUID is preferred
-            merged[f.get("name", "").strip().lower()] = f
-
-        # Final output: unique by UUID, and only for active fighters
-        out_fighters = {}
-        for key, fighter in merged.items():
-            uuid_ = str(fighter.get("id", "")).strip()
-            name = fighter.get("name", "").strip().lower()
-            # Only include if in active set
-            if (name in active_names_set and uuid_ in active_uuids_set):
-                out_fighters[uuid_] = fighter
-
-        # Save
-        with open(output_file, "w", encoding="utf-8") as f:
-            json.dump(list(out_fighters.values()), f, indent=2, ensure_ascii=False)
-        logger.info(f"✅ Saved retried and refreshed data to {output_file}")
+        
+        with open(retry_file, "w", encoding="utf-8") as f:
+            json.dump(remaining_errors, f, indent=2, ensure_ascii=False)
+        
+        print(f"\n📊 RETRY SUMMARY:")
+        print(f"✅ Successfully processed: {len(enriched)} fighters")
+        print(f"❌ Failed to process: {len(failed_fighters)} fighters")
+        print(f"🧹 Removed {len(successful_names)} entries from error file")
+        print(f"📁 Merged {len(enriched)} fighters into existing data")
+        print(f"📁 Total fighters in file: {len(merged_fighters)}")
     
     else:
         print("❌ Invalid choice.")

@@ -9128,7 +9128,7 @@
   {
     "name": "MICHAEL PAGE",
     "profile_url": "https://www.ufc.com/athlete/michael-page",
-    "status": "unknown",
+    "status": "Active",
     "id": "dcdd01a8-a88a-4579-9821-1b7904865a18"
   },
   {
@@ -13652,7 +13652,7 @@
   {
     "name": "Adam Fugitt",
     "profile_url": "https://www.ufc.com/athlete/adam-fugitt",
-    "status": "unknown",
+    "status": "Active",
     "id": "42a25d18-559c-4606-bd40-35ecede2e8b8"
   },
   {
@@ -14324,7 +14324,7 @@
   {
     "name": "GABRIEL BONFIM",
     "profile_url": "https://www.ufc.com/athlete/gabriel-bonfim",
-    "status": "unknown",
+    "status": "Active",
     "id": "2e5bb5d1-f719-413b-b389-a91877ba24ca"
   },
   {
@@ -15344,7 +15344,7 @@
   {
     "name": "BRIAN JACKSON",
     "profile_url": "https://www.ufc.com/athlete/brian-jackson",
-    "status": "Active",
+    "status": "Power Slap",
     "id": "16671280-16a6-4cee-b4a1-599b1a3dfe57"
   },
   {
@@ -16058,7 +16058,7 @@
   {
     "name": "KRIS MOUTINHO",
     "profile_url": "https://www.ufc.com/athlete/kris-moutinho",
-    "status": "Not Fighting",
+    "status": "Active",
     "id": "4607d684-1d29-4b75-a737-056008dc35a4"
   },
   {
@@ -17434,5 +17434,11 @@
     "profile_url": "https://www.ufc.com/athlete/bruno-silva",
     "status": "Active",
     "id": "baf44b15-1a19-4bdb-b833-136f314c7be7"
+  },
+  {
+    "name": "Tofiq Musayev",
+    "profile_url": "https://www.ufc.com/athlete/tofiq-musayev",
+    "status": "Active",
+    "id": "a49510fc-5d9b-4953-80b1-31c8e39505aa"
   }
 ]

@@ -252,3 +252,28 @@ export const getFullUpcomingFights = async () => {
     fighter2_data: fightersMap[fight.fighter2_id] || null
   }));
 };
+
+// UFC Picks
+export const saveUFCGame = async (gameData) => {
+  const { data, error } = await supabase
+    .from('ufc_games')
+    .insert(gameData)
+    .select()
+    .single();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const getActiveGame = async () => {
+  const { data, error } = await supabase
+    .from('ufc_games')
+    .select('*')
+    .eq('game_status', 'active')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+    
+  if (error) throw error;
+  return data;
+};

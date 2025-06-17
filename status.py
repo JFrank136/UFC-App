@@ -19,11 +19,21 @@ def check_file_status(filepath: Path) -> dict:
     records = 0
     if filepath.suffix == '.json':
         try:
-            with open(filepath, 'r') as f:
+            with open(filepath, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                records = len(data) if isinstance(data, list) else 1
-        except:
-            pass
+                if isinstance(data, list):
+                    records = len(data)
+                elif isinstance(data, dict):
+                    # Handle special cases for different file structures
+                    if 'fighters' in data:  # Some files might be wrapped
+                        records = len(data['fighters'])
+                    else:
+                        records = 1
+                else:
+                    records = 1
+        except Exception as e:
+            print(f"  ⚠️ Error reading {filepath.name}: {e}")
+            records = -1  # Indicate parsing error
     
     return {
         "exists": True,
@@ -34,12 +44,33 @@ def check_file_status(filepath: Path) -> dict:
 
 def main():
     base_path = Path(__file__).parent
-    data_path = base_path / "data"
+    
+    # Try multiple possible data directory locations
+    possible_data_paths = [
+        base_path / "data",                    # If status.py is in scrapers/
+        base_path / "scrapers" / "data",       # If status.py is in root/
+        base_path.parent / "scrapers" / "data" # If status.py is in subfolder
+    ]
+    
+    data_path = None
+    for path in possible_data_paths:
+        if path.exists():
+            data_path = path
+            break
+    
+    if not data_path:
+        print("❌ Could not find data directory in any of these locations:")
+        for path in possible_data_paths:
+            print(f"   - {path}")
+        print("\nPlease ensure your data files are in one of these locations.")
+        return
+    
     errors_path = data_path / "errors"
     
     print("🥊 UFC Pipeline Status Report")
     print("=" * 60)
     print(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Data directory: {data_path}")
     print()
     
     # Core data files

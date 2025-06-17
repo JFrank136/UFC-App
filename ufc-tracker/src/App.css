@@ -2,8 +2,19 @@ body {
   font-family: Arial, sans-serif;
   background-color: #f9fafb;
   margin: 0;
-  padding: 2rem;
+  padding: 0;
 }
+
+.navbar {
+  width: 100%;
+  background-color: white;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
 
 .app-container {
   display: flex;

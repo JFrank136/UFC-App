@@ -18,7 +18,7 @@ def normalize_name(name):
 utils_path = Path(__file__).resolve().parent / "utils"
 sys.path.append(str(utils_path))
 
-from name_fixes import URL_OVERRIDES
+from name_fixes import URL_OVERRIDES, NAME_FIXES
 
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 OUTPUT_FILE = "data/sherdog_fighters.json"
@@ -53,7 +53,6 @@ def search_sherdog_internal(fighter_name):
     # Check if this name has a direct override
     override = URL_OVERRIDES.get(fighter_name.upper())
     if override:
-        print(f"🔗 Using URL override for {fighter_name}")
         return override
 
     # Default search behavior
@@ -92,7 +91,6 @@ def search_sherdog_internal(fighter_name):
             
             # Exact match gets highest priority
             if name_lower == result_lower:
-                print(f"  ✅ Exact match found: {result_name}")
                 return "https://www.sherdog.com" + link['href']
             
             # Check if search name is contained in result or vice versa
@@ -100,24 +98,19 @@ def search_sherdog_internal(fighter_name):
                 # Calculate simple similarity score based on length difference
                 score = min(len(name_lower), len(result_lower)) / max(len(name_lower), len(result_lower)) * 100
                 
-                print(f"  Comparing '{fighter_name}' vs '{result_name}' - Score: {score:.1f}")
-                
                 if score > best_score:
                     best_score = score
                     best_match = link
         
         # Only return if we have a reasonable match (>= 70% similarity)
         if best_match and best_score >= 70:
-            print(f"  ✅ Best match: {best_match.text.strip()} (Score: {best_score:.1f})")
             return "https://www.sherdog.com" + best_match['href']
         else:
-            print(f"  ❌ No good match found. Best score: {best_score:.1f}")
             # Fall back to first result if we can't find a good match
-            print(f"  🔄 Falling back to first result: {links[0].text.strip()}")
             return "https://www.sherdog.com" + links[0]['href']
             
     except Exception as e:
-        print(f"⚠️ Search error for {fighter_name}: {e}")
+        pass  # Silent fail for individual searches
     
     return None
 
@@ -294,7 +287,6 @@ def scrape_fighter(url, original_fighter=None):
 
 
     except Exception as e:
-        print(f"⚠️ Error scraping {url}: {e}")
         return None
 
 def save_progress(data):
@@ -316,28 +308,26 @@ def save_progress(data):
 def process_fighter(fighter_info):
     """Process a single fighter - designed for threading"""
     idx, total, fighter = fighter_info
-    from name_fixes import NAME_FIXES
-
+    
     name = fighter.get("name")
     name = NAME_FIXES.get(name.upper(), name)
 
     
-    print(f"[{idx}/{total}] Searching for {name} on Sherdog...")
+    # Show progress every 25 fighters or at milestones
+    if idx % 25 == 0 or idx == 1 or idx == total:
+        print(f"[{idx}/{total}] Processing fighters...")
+    
     profile_url = search_sherdog(name)
     
     if not profile_url:
-        print(f"❌ No Sherdog profile found for: {name}")
         return None, {"name": name, "reason": "not found in search"}
 
-    print(f"→ Scraping profile: {profile_url}")
     fighter_data = scrape_fighter(profile_url, fighter)
 
-    
     if fighter_data:
-        print(f"✅ Scraped: {fighter_data['name']}")
         return fighter_data, None
     else:
-        print(f"❌ Failed to scrape data from profile: {profile_url}")
+        return None, {"name": name, "reason": "scrape failed"}
        
 
 def main():
@@ -346,10 +336,12 @@ def main():
 
     active_fighters = [f for f in roster if f.get("status", "").lower() == "active"]
 
+    # Start fresh for full scrape
     results = []
+    
+    # Optional: Clear existing file to avoid confusion
     if os.path.exists(OUTPUT_FILE):
-        with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
-            results = json.load(f)
+        print("🗑️ Starting fresh Sherdog scrape (existing data will be replaced)...")
 
     fighters_to_scrape = [
         (idx, len(active_fighters), fighter)
@@ -391,7 +383,6 @@ def main():
                     
             except Exception as e:
                 fighter_info = future_to_fighter[future]
-                print(f"⚠️ Exception processing {fighter_info[2].get('name')}: {e}")
                 failures.append({
                     "name": fighter_info[2].get('name'), 
                     "reason": f"exception: {e}"
@@ -413,7 +404,17 @@ def main():
         print(f"  - Not found in search: {sum(1 for f in failures if f.get('reason') == 'not found in search')}")
         print(f"  - Scrape failed:       {sum(1 for f in failures if f.get('reason') == 'scrape failed')}")
         print(f"  - Other exceptions:    {sum(1 for f in failures if 'exception' in f.get('reason', ''))}")
-        print(f"\n🎯 Done. Scraped {len(results)} fighters. Data saved to: {OUTPUT_FILE}")
+    
+    # Final accurate summary
+    final_count = len(results)
+    expected_count = len(active_fighters)
+    
+    print(f"\n📊 SCRAPING SUMMARY:")
+    print(f"🎯 Target fighters: {expected_count}")
+    print(f"✅ Successfully scraped: {final_count}")
+    print(f"❌ Failed: {len(failures)}")
+    print(f"📈 Success rate: {(final_count/expected_count*100):.1f}%")
+    print(f"💾 Data saved to: {OUTPUT_FILE}")
 
 def run_full_scrape():
     # your existing full scrape logic here
@@ -421,6 +422,8 @@ def run_full_scrape():
 
 def run_retry_only():
     FAILURE_FILE = "data/errors/sherdog_failures.json"
+    input_roster_file = "data/ufc_fighters_raw.json"
+    
     try:
         with open(FAILURE_FILE, "r", encoding="utf-8") as f:
             failures = json.load(f)
@@ -428,10 +431,26 @@ def run_retry_only():
         print("No failure file found.")
         return
 
+    # Load main roster to get complete fighter data with correct UUIDs
+    try:
+        with open(input_roster_file, "r", encoding="utf-8") as f:
+            full_roster = json.load(f)
+    except Exception as e:
+        print(f"❌ Failed to load input roster: {e}")
+        return
+
+    # Build a map of current active fighters: name.lower() and uuid => fighter
+    active_fighters = { 
+        (f.get("name", "").strip().lower(), str(f.get("id", "")).strip()): f 
+        for f in full_roster if f.get("status", "").lower() == "active"
+    }
+    active_names = set(name for (name, uid) in active_fighters.keys())
+    active_uuids = set(uid for (name, uid) in active_fighters.keys())
+
     retry_these = [f for f in failures if f.get("reason") in {"scrape failed", "not found in search"}]
     unrelated_failures = [
-    f for f in failures 
-    if f.get("reason") not in {"scrape failed", "not found in search"}
+        f for f in failures 
+        if f.get("reason") not in {"scrape failed", "not found in search"}
     ]
 
     if not retry_these:
@@ -444,45 +463,117 @@ def run_retry_only():
     except FileNotFoundError:
         results = []
 
-    existing_names = {f["name"] for f in results}
+    # Prepare retry list with up-to-date info from roster, or use error file info if missing
+    to_retry = []
+    for entry in retry_these:
+        name = entry.get("name", "").strip()
+        
+        # Try to find the fighter in active roster by name
+        matched_fighter = None
+        for (roster_name, roster_uuid), fighter_data in active_fighters.items():
+            if roster_name == name.lower():
+                matched_fighter = fighter_data
+                break
+        
+        if matched_fighter:
+            to_retry.append(matched_fighter)
+        else:
+            # Fallback to error entry data if not found in active roster
+            print(f"⚠️ Fighter '{name}' not found in active roster, using error data")
+            new_fighter = dict(entry)
+            new_fighter["id"] = str(uuid.uuid4())  # Generate new UUID as fallback
+            new_fighter["status"] = "active"
+            to_retry.append(new_fighter)
+
+    if not to_retry:
+        print("⚠️ No matching fighters found for retry.")
+        return
+
     still_failed = []
 
-    for i, entry in enumerate(retry_these, 1):
-        from name_fixes import NAME_FIXES
+    for i, fighter in enumerate(to_retry, 1):
 
-        name_raw = entry["name"]
-        name = NAME_FIXES.get(name_raw.upper(), name_raw)
-        print(f"[{i}/{len(retry_these)}] Retrying: {name_raw} → {name}" if name != name_raw else f"[{i}/{len(retry_these)}] Retrying: {name}")
-
-
-        url = entry.get("url")
+        # Show progress every 10 fighters
+        if i % 10 == 0 or i == 1 or i == len(to_retry):
+            print(f"[{i}/{len(to_retry)}] Retrying failed fighters...")
+            
+        name_raw = fighter.get("name", "").strip()
+        
+        # DEBUG: Show what we're working with
+        print(f"🔍 Processing: '{name_raw}'")
+        
+        # Try to find the UFC name that maps to this Sherdog name (reverse lookup)
+        search_name = name_raw
+        found_reverse = False
+        for ufc_name, sherdog_name in NAME_FIXES.items():
+            if sherdog_name.upper() == name_raw.upper():
+                search_name = ufc_name
+                found_reverse = True
+                print(f"🔄 Reverse mapped: '{name_raw}' → '{search_name}'")
+                break
+        
+        # If no reverse mapping found, try direct mapping
+        if not found_reverse:
+            original_search = search_name
+            search_name = NAME_FIXES.get(name_raw.upper(), name_raw)
+            if search_name != original_search:
+                print(f"🔧 Direct mapped: '{name_raw}' → '{search_name}'")
+            else:
+                print(f"❌ No NAME_FIXES mapping for: '{name_raw}'")
+        
+        # Check URL overrides BEFORE calling search_sherdog
+        override_url = URL_OVERRIDES.get(search_name.upper())
+        if override_url:
+            print(f"🔗 URL Override found: '{search_name}' → {override_url}")
+            url = override_url
+        else:
+            print(f"❌ No URL Override for: '{search_name}' (checking: '{search_name.upper()}')")
+            url = search_sherdog(search_name)
+        
+        if url:
+            print(f"✅ Final URL: {url}")
+        else:
+            print(f"❌ No URL found for: '{search_name}'")
         if not url:
-            url = search_sherdog(name)
-            if not url:
-                print(f"❌ Still could not find URL for: {name}")
-                still_failed.append(entry)
-                continue
+            still_failed.append({"name": name_raw, "reason": "not found in search"})
+            continue
 
-        fighter_data = scrape_fighter(url, original_fighter=entry)
+        fighter_data = scrape_fighter(url, original_fighter=fighter)
         if fighter_data:
             results.append(fighter_data)
-            print(f"✅ Re-scraped: {fighter_data['name']}")
         else:
-            still_failed.append(entry)
-            print(f"❌ Still failed: {name}")
+            still_failed.append({"name": name_raw, "reason": "scrape failed"})
         time.sleep(1)
 
+    # Merge into existing details, only for active fighters!
     try:
         with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
-            existing_data = {f["name"]: f for f in json.load(f)}
+            existing_details = json.load(f)
     except FileNotFoundError:
-        existing_data = {}
+        existing_details = []
 
-    for new_fighter in results:
-        existing_data[new_fighter["name"]] = new_fighter  # add or update
+    # Build a map of existing details by both name (lower) and uuid (id)
+    details_by_name = {f.get("name", "").strip().lower(): f for f in existing_details}
+    details_by_uuid = {str(f.get("id", "")).strip(): f for f in existing_details}
 
+    # Don't filter - just merge new results with existing data
+    # Build lookup by UUID to avoid duplicates
+    merged = {str(f.get("id", "")).strip(): f for f in existing_details}
+    
+    # Add/update with new results from retry
+    for f in results:
+        fighter_uuid = str(f.get("id", "")).strip()
+        merged[fighter_uuid] = f
+    
+    print(f"📊 Total fighters after merge: {len(merged)}")
+    
+    # Convert back to list
+    out_fighters = list(merged.values())
+
+    # Save
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        json.dump(list(existing_data.values()), f, indent=2, ensure_ascii=False)
+        json.dump(out_fighters, f, indent=2, ensure_ascii=False)
+    
     with open(FAILURE_FILE, "w", encoding="utf-8") as f:
         json.dump(still_failed + unrelated_failures, f, indent=2, ensure_ascii=False)
 

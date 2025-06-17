@@ -15,6 +15,13 @@ import requests
 import re
 from pathlib import Path
 
+def print_progress_bar(current, total, prefix='Progress', bar_length=50):
+    """Print a progress bar"""
+    percent = float(current) * 100 / total
+    filled_length = int(bar_length * current // total)
+    bar = '█' * filled_length + '-' * (bar_length - filled_length)
+    print(f'\r{prefix}: |{bar}| {percent:.1f}% ({current}/{total})', end='', flush=True)
+
 def normalize_name(name: str) -> str:
     nfkd_form = unicodedata.normalize('NFKD', name)
     ascii_name = "".join([c for c in nfkd_form if not unicodedata.combining(c)])
@@ -141,74 +148,93 @@ def parse_event_datetime(soup):
 
 
 def parse_venue_info(soup):
-    """Extract venue name and location from event page"""
+    """Extract venue name and location from event page using Tapology's specific HTML structure"""
     venue = None
     location = None
     
     try:
-        # Method 1: Look for venue in spans with "font-bold text-neutral-900" class
-        venue_spans = soup.select("span.font-bold.text-neutral-900")
-        for span in venue_spans:
-            text = span.get_text(strip=True)
-            # Check if this looks like a venue (contains common venue words)
-            if any(word in text.lower() for word in ['arena', 'center', 'centre', 'stadium', 'dome', 'hall', 'pavilion', 'coliseum']):
-                venue = text
-                break
+        # Method 1: Target Tapology's specific HTML structure
+        # Look for list items with the venue/location labels
+        list_items = soup.select("li.leading-normal")
         
-        # Method 1b: Look for UFC Apex and other venues in "text-neutral-700" spans
-        if not venue:
-            venue_spans_alt = soup.select("span.text-neutral-700")
-            for span in venue_spans_alt:
-                text = span.get_text(strip=True)
-                # Check for UFC Apex specifically or other venue patterns
-                if (text.lower() == "ufc apex" or 
-                    any(word in text.lower() for word in ['arena', 'center', 'centre', 'stadium', 'dome', 'hall', 'pavilion', 'coliseum'])):
-                    venue = text
-                    break
-        
-        # Method 2: Look for location in links that might contain geographic info
-        location_links = soup.select("a[href*='/regions/']")
-        for link in location_links:
-            text = link.get_text(strip=True)
-            # Accept any location text from regions links (expanded beyond just US/common countries)
-            if text and len(text) > 2:  # Basic validation - not empty and meaningful length
-                location = text
-                break
-        
-        # Method 3: Fallback - look for common venue patterns in text
-        if not venue:
-            page_text = soup.get_text()
-            venue_pattern = r'(?:venue|location)[:\s]*([^,\n]*(?:arena|center|centre|stadium|dome|hall|pavilion|coliseum|apex)[^,\n]*)'
-            venue_match = re.search(venue_pattern, page_text, re.IGNORECASE)
-            if venue_match:
-                venue = venue_match.group(1).strip()
-        
-        # Method 4: Look for expanded location patterns (international locations)
-        if not location:
-            page_text = soup.get_text()
-            # Broader location patterns for international events
-            location_patterns = [
-                r'([A-Za-z\s]+,\s*[A-Za-z\s]+,\s*(?:United States|Canada|Brazil|UK|England|Australia|United Arab Emirates|Azerbaijan|France|Germany|Japan|Thailand|Philippines))',
-                r'([A-Za-z\s]+,\s*(?:United Arab Emirates|Azerbaijan|France|Germany|Japan|Thailand|Philippines))',
-                r'(Abu Dhabi,\s*Dubai,\s*United Arab Emirates)',
-                r'(Baku,\s*Azerbaijan)',
-                r'([A-Za-z\s]+,\s*[A-Za-z\s]+)'  # Generic city, country pattern as final fallback
-            ]
+        for li in list_items:
+            # Get all spans in this list item
+            bold_span = li.select_one("span.font-bold.text-neutral-900")
+            value_span = li.select_one("span.text-neutral-700")
             
-            for pattern in location_patterns:
-                location_match = re.search(pattern, page_text)
+            if bold_span and value_span:
+                label_text = bold_span.get_text(strip=True).lower()
+                
+                # Check for venue
+                if "venue:" in label_text:
+                    venue = value_span.get_text(strip=True)
+                
+                # Check for location
+                elif "location:" in label_text:
+                    # Location might contain a link, so get all text content
+                    location = value_span.get_text(strip=True)
+        
+        # Method 2: Alternative approach using direct text search for labels
+        if not venue or not location:
+            # Find spans that contain "Venue:" or "Location:" as text
+            all_spans = soup.find_all("span", class_="font-bold")
+            
+            for span in all_spans:
+                span_text = span.get_text(strip=True).lower()
+                
+                if "venue:" in span_text and not venue:
+                    # Look for the next span with venue info
+                    next_span = span.find_next_sibling("span")
+                    if not next_span:
+                        # Try looking in parent element for text-neutral-700 span
+                        parent = span.find_parent()
+                        if parent:
+                            next_span = parent.select_one("span.text-neutral-700")
+                    
+                    if next_span:
+                        venue = next_span.get_text(strip=True)
+                
+                elif "location:" in span_text and not location:
+                    # Look for the next span with location info
+                    next_span = span.find_next_sibling("span")
+                    if not next_span:
+                        # Try looking in parent element for text-neutral-700 span
+                        parent = span.find_parent()
+                        if parent:
+                            next_span = parent.select_one("span.text-neutral-700")
+                    
+                    if next_span:
+                        location = next_span.get_text(strip=True)
+        
+        # Method 3: Regex fallback on page text (last resort)
+        if not venue or not location:
+            page_text = soup.get_text()
+            
+            if not venue:
+                venue_match = re.search(r'Venue:\s*([^\n\r]+)', page_text, re.IGNORECASE)
+                if venue_match:
+                    venue = venue_match.group(1).strip()
+            
+            if not location:
+                location_match = re.search(r'Location:\s*([^\n\r]+)', page_text, re.IGNORECASE)
                 if location_match:
-                    potential_location = location_match.group(1).strip()
-                    # Validate it looks like a real location (contains comma, reasonable length)
-                    if ',' in potential_location and 3 <= len(potential_location) <= 100:
-                        location = potential_location
-                        break
+                    location = location_match.group(1).strip()
+        
+        # Method 4: Look for common venue names if still missing
+        if not venue:
+            venue_keywords = ['ufc apex', 'arena', 'center', 'centre', 'stadium', 'dome', 'hall', 'pavilion', 'coliseum']
+            all_text_spans = soup.select("span.text-neutral-700")
+            
+            for span in all_text_spans:
+                text = span.get_text(strip=True).lower()
+                if any(keyword in text for keyword in venue_keywords):
+                    venue = span.get_text(strip=True)
+                    break
     
     except Exception as e:
         print(f"⚠️ Error parsing venue info: {e}")
     
     return venue, location
-
 
 def download_event_image(soup, event_title):
     """Download fight card image if available"""
@@ -244,8 +270,7 @@ def download_event_image(soup, event_title):
                 # Skip small images (likely not fight cards)
                 if any(size in src.lower() for size in ['thumb', 'small', 'icon']):
                     continue
-                
-                print(f"🖼️ Found potential fight card image: {image_url}")
+                               
                 break
         
         if image_url:
@@ -269,9 +294,8 @@ def download_event_image(soup, event_title):
             # Download image
             if download_fight_card_image(image_url, image_path):
                 image_local_path = f"/fight_cards/{image_filename}"
-                print(f"✅ Fight card image saved: {image_local_path}")
-            else:
-                print(f"❌ Failed to download fight card image for {event_title}")
+                # Fight card image saved successfully
+                pass
     
     except Exception as e:
         print(f"⚠️ Error downloading event image: {e}")
@@ -291,8 +315,6 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
 
     # Extract venue and location info
     venue, location = parse_venue_info(soup)
-    print(f"🏟️ Venue: {venue if venue else 'Not found'}")
-    print(f"📍 Location: {location if location else 'Not found'}")
     
     # Download event image
     image_url, image_local_path = download_event_image(soup, event_title)
@@ -319,40 +341,33 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
 
             fixed1 = apply_name_fixes(fighter1)
             fixed2 = apply_name_fixes(fighter2)
-            print(f"🔎 UUID lookup: '{fighter1}' → fixed: '{fixed1}' → normalized: '{normalize_name(fixed1)}'")
-            print(f"     → Matched UUID: {uuid_lookup.get(normalize_name(fixed1))}")
-            print(f"🔎 UUID lookup: '{fighter2}' → fixed: '{fixed2}' → normalized: '{normalize_name(fixed2)}'")
-            print(f"     → Matched UUID: {uuid_lookup.get(normalize_name(fixed2))}")
 
-            uuid1 = uuid_lookup.get(normalize_name(fixed1))
-            uuid2 = uuid_lookup.get(normalize_name(fixed2))
+            fighter1_id = uuid_lookup.get(normalize_name(fixed1))
+            fighter2_id = uuid_lookup.get(normalize_name(fixed2))
 
-            if not uuid1:
-                print(f"❌ Missing UUID for: {fighter1}")
-            if not uuid2:
-                print(f"❌ Missing UUID for: {fighter2}")
-
-            # Skip past events
+            # Mark event status (upcoming vs past) but keep all events
+            event_status = "upcoming"
             try:
                 fight_date_obj = datetime.strptime(event_date, "%Y-%m-%d").date()
                 if fight_date_obj < now:
-                    continue
+                    event_status = "past"
             except Exception:
-                pass  # If date is TBD or malformed, include it just in case
+                event_status = "tbd"  # If date is TBD or malformed
 
             fights.append({
                 "event": event_title,
                 "event_type": event_type,
                 "event_date": event_date,
                 "event_time": event_time,
+                "event_status": event_status,
                 "venue": venue,
                 "location": location,
                 "fight_card_image_url": image_url,
                 "fight_card_image_local_path": image_local_path,
                 "fighter1": fighter1,
                 "fighter2": fighter2,
-                "uuid1": uuid1,
-                "uuid2": uuid2,
+                "fighter1_id": fighter1_id,
+                "fighter2_id": fighter2_id,
                 "fight_order": fight_order,
                 "card_section": card_section,
                 "weight_class": weight_class,
@@ -363,11 +378,9 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
             print(f"❌ Failed to parse fight block: {fe}")
             continue
 
-    print(f"✅ Scraped {len(fights)} fights")
     return fights
 
 def scrape_event(driver, url):
-    print(f"\n🔍 Scraping: {url}")
     try:
         driver.get(url)
     except Exception as e:
@@ -413,13 +426,15 @@ def main():
     all_fights = []
     try:
         links = get_event_links(driver)
-        for link in links:
+        total_links = len(links)
+        for idx, link in enumerate(links, 1):
             try:
+                print_progress_bar(idx, total_links, "Scraping Events")
                 fights = scrape_event(driver, link)
                 all_fights.extend(fights)
                 time.sleep(random.uniform(1.5, 3.5))
             except Exception as e:
-                print(f"❌ Failed to scrape: {link}\n   {e}")
+                # Log failed events for retry without verbose output
                 # Log failed events for retry
                 error_event = {"url": link, "error": str(e), "timestamp": datetime.now(timezone.utc).isoformat()}
                 error_file = "data/errors/upcoming_event_errors.json"
@@ -443,22 +458,32 @@ def main():
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(all_fights, f, indent=2, ensure_ascii=False)
 
-    print(f"\n🎯 Done. Saved {len(all_fights)} fights to {OUTPUT_PATH}")
-
-    # Output a flat, deduped list of missing fighter names (either side)
+    # Generate summary statistics
+    upcoming_fights = [f for f in all_fights if f.get("event_status") == "upcoming"]
+    past_fights = [f for f in all_fights if f.get("event_status") == "past"]
+    tbd_fights = [f for f in all_fights if f.get("event_status") == "tbd"]
+    
+    # Count missing UUIDs
     missing_names = set()
     for f in all_fights:
-        if not f["uuid1"]:
+        if not f["fighter1_id"]:
             missing_names.add(f["fighter1"])
-        if not f["uuid2"]:
+        if not f["fighter2_id"]:
             missing_names.add(f["fighter2"])
     missing_names = sorted(missing_names)
+
+    print(f"\n📊 SCRAPING SUMMARY")
+    print(f"✅ Total fights: {len(all_fights)}")
+    print(f"   • Upcoming: {len(upcoming_fights)}")
+    print(f"   • Past: {len(past_fights)}")
+    print(f"   • TBD: {len(tbd_fights)}")
+    if missing_names:
+        print(f"⚠️ Missing UUIDs: {len(missing_names)} fighters")
 
     if missing_names:
         os.makedirs("data/errors", exist_ok=True)
         with open("data/errors/upcoming_errors.json", "w", encoding="utf-8") as f:
             json.dump(missing_names, f, indent=2, ensure_ascii=False)
-        print(f"⚠️ Logged {len(missing_names)} fighter names with missing UUIDs to data/errors/upcoming_errors.json")
 
 if __name__ == "__main__":
     print("Select run mode:")
@@ -475,91 +500,56 @@ if __name__ == "__main__":
             print("No missing UUID file found.")
             sys.exit(0)
 
-        with open(error_file, "r", encoding="utf-8") as f:
-            missing_names = set(normalize_name(name.strip()) for name in json.load(f))
-
-        driver = setup_browser()
-        uuid_lookup = load_uuid_lookup()
-
-        # Step 1: Load past fights to find matching events
         if not os.path.exists(OUTPUT_PATH):
-            print("⚠️ Cannot retry — no past scraped fight data found.")
+            print("⚠️ Cannot update UUIDs — no existing fight data found.")
             sys.exit(1)
+
+        print("🔄 Loading fresh UUID lookup and updating existing fights...")
+        uuid_lookup = load_uuid_lookup()
 
         with open(OUTPUT_PATH, "r", encoding="utf-8") as f:
             existing_fights = json.load(f)
 
-        # Step 2: Find relevant event URLs
-        events_to_retry = set()
-        for f in existing_fights:
-            name1 = normalize_name(f["fighter1"]).lower()
-            name2 = normalize_name(f["fighter2"]).lower()
-            if name1 in missing_names or name2 in missing_names:
-                events_to_retry.add(f["event"])
-
-        print(f"🔁 Retrying {len(events_to_retry)} events based on missing fighters...")
-
-        # Step 3: Load event links
-        all_event_links = get_event_links(driver)
-       
-        # Build a map of event title → URL
-        event_title_map = {}
-        for link in all_event_links:
-            driver.get(link)
-            soup = BeautifulSoup(driver.page_source, "html.parser")
-            try:
-                title_tag = soup.find("h1") or soup.find("title")
-                event_title = title_tag.get_text(strip=True).split("|")[0].strip()
-                event_title_map[event_title] = link
-            except Exception:
-                continue
-
-        # Match events to retry using exact title
-        filtered_links = [event_title_map[evt] for evt in events_to_retry if evt in event_title_map]
-
-        # Step 4: Scrape only those events
-        all_fights = []
-        for link in filtered_links:
-            fights = scrape_event(driver, link)
-            all_fights.extend(fights)
-            time.sleep(random.uniform(1.5, 3.5))
-
-        try:
-            driver.quit()
-        except Exception as e:
-            print(f"⚠️ Chrome quit() failed: {e}")
-
-        # Merge into output
-        if os.path.exists(OUTPUT_PATH):
-            with open(OUTPUT_PATH, "r", encoding="utf-8") as f:
-                existing = json.load(f)
-        else:
-            existing = []
-
-        def fight_key(f):
-            return (f.get("event"), f.get("fighter1"), f.get("fighter2"), f.get("event_date"))
-        
-        existing_keys = {fight_key(f) for f in existing}
-        new_fights = [f for f in all_fights if fight_key(f) not in existing_keys]
-        merged = existing + new_fights
-
-        with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-            json.dump(merged, f, indent=2, ensure_ascii=False)
-
-        print(f"✅ Retried {len(all_fights)} fights and merged {len(new_fights)} new ones.")
-
-        # Update missing UUIDs
+        updated_count = 0
         still_missing = set()
-        for f in all_fights:
-            if not f["uuid1"]:
-                still_missing.add(f["fighter1"])
-            if not f["uuid2"]:
-                still_missing.add(f["fighter2"])
-        still_missing = sorted(still_missing)
 
+        for fight in existing_fights:
+            # Update fighter1 UUID if missing
+            if not fight.get("fighter1_id"):
+                # Apply name fixes before lookup
+                fixed_name1 = apply_name_fixes(fight["fighter1"])
+                new_uuid1 = uuid_lookup.get(normalize_name(fixed_name1))
+                if new_uuid1:
+                    fight["fighter1_id"] = new_uuid1
+                    updated_count += 1
+                else:
+                    still_missing.add(fight["fighter1"])
+
+            # Update fighter2 UUID if missing  
+            if not fight.get("fighter2_id"):
+                # Apply name fixes before lookup
+                fixed_name2 = apply_name_fixes(fight["fighter2"])
+                new_uuid2 = uuid_lookup.get(normalize_name(fixed_name2))
+                if new_uuid2:
+                    fight["fighter2_id"] = new_uuid2
+                    updated_count += 1
+                else:
+                    still_missing.add(fight["fighter2"])
+
+        # Save updated fights
+        with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+            json.dump(existing_fights, f, indent=2, ensure_ascii=False)
+
+        # Update error file with remaining missing fighters
+        still_missing_list = sorted(still_missing)
         with open(error_file, "w", encoding="utf-8") as f:
-            json.dump(still_missing, f, indent=2, ensure_ascii=False)
-        print(f"⚠️ Updated UUID error list with {len(still_missing)} fighters.")
+            json.dump(still_missing_list, f, indent=2, ensure_ascii=False)
+
+        print(f"✅ Updated {updated_count} missing UUIDs")
+        if still_missing_list:
+            print(f"⚠️ Still missing UUIDs for {len(still_missing_list)} fighters")
+        else:
+            print("🎉 All fighters now have UUIDs!")
 
     elif mode == "3":
         # Retry failed events

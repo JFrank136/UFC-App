@@ -26,7 +26,48 @@ def load_fighter_index(file_path="data/ufc_fighters_raw.json"):
         return {}
 
 
+def parse_change_indicator(change_text):
+    """Parse change indicators from the UFC page"""
+    if not change_text:
+        return None
+    
+    change_text = change_text.strip().upper()
+    
+    # Map common change indicators
+    change_map = {
+        "NEW": "NEW",
+        "INTERIM": "INTERIM",
+        "↑": "↑",
+        "↓": "↓",
+        "UP": "↑",
+        "DOWN": "↓"
+    }
+    
+    for indicator, mapped in change_map.items():
+        if indicator in change_text:
+            return change_text  # Return the original text for now
+    
+    return change_text if change_text else None
+
+
+def validate_division_structure(division_name, fighters):
+    """Validate that division has proper champion structure"""
+    issues = []
+    champions = [f for f in fighters if f["rank"] == "C"]
+    interim_champions = [f for f in fighters if f.get("change") == "INTERIM"]
+    
+    # Check for champion count
+    if len(champions) == 0 and "pound-for-pound" not in division_name.lower():
+        issues.append(f"{division_name} has no champion")
+    elif len(champions) > 1:
+        issues.append(f"{division_name} has multiple champions")
+    
+    return issues
+
+
 def scrape_rankings():
+    print("🏆 Starting UFC rankings scrape...")
+    
     name_to_uuid = load_fighter_index()
 
     url = "https://www.ufc.com/rankings"
@@ -37,52 +78,51 @@ def scrape_rankings():
     driver = webdriver.Chrome(options=options)
     driver.get(url)
 
+    print("📄 Loading rankings page...")
     WebDriverWait(driver, 30).until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, "div.view-grouping table tbody tr"))
+        EC.presence_of_element_located((By.CSS_SELECTOR, "div.view-grouping table tbody tr"))
     )
-
 
     WebDriverWait(driver, 15).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "div.view-grouping"))
     )
 
-    with open("debug_rankings_page.html", "w", encoding="utf-8") as f:
-        f.write(driver.page_source)
-
+    # Close any popups
     try:
         close_btn = driver.find_element(By.CSS_SELECTOR, ".onetrust-close-btn-handler, .cc-btn.cc-dismiss")
         close_btn.click()
-        print("Closed cookie/banner popup.")
         time.sleep(1)
     except Exception:
         pass
 
-
     headers = driver.find_elements(By.CSS_SELECTOR, "div.view-grouping-header")
     divisions = driver.find_elements(By.CSS_SELECTOR, "div.view-grouping")
 
-    print(f"Found {len(headers)} headers and {len(divisions)} division blocks")
+    print(f"📊 Processing {len(headers)} divisions...")
 
     if len(headers) != len(divisions):
-        print("⚠️ Header and division block count mismatch. Proceeding with minimum pair count.")
+        print("⚠️ Header and division block count mismatch.")
 
     all_rankings = []
     missing_fighters = []
+    warnings = []
 
-    for header, div in zip(headers, divisions):
+    for idx, (header, div) in enumerate(zip(headers, divisions), 1):
         division_name = header.get_attribute("textContent").replace("Top Rank", "").strip()
 
-
         if not division_name:
-            print("⚠️ Blank division header, skipping")
+            warnings.append("Blank division header found")
             continue
+        
+        # Show progress every few divisions
+        if idx % 3 == 0 or idx == len(headers):
+            print(f"[{idx}/{len(headers)}] Processing divisions...")
 
-        # Get table
         try:
             table = div.find_element(By.CSS_SELECTOR, "table")
             caption = table.find_element(By.TAG_NAME, "caption")
         except Exception as e:
-            print(f"⚠️ Could not find table for division {division_name}: {e}")
+            warnings.append(f"Could not find table for division {division_name}")
             continue
 
         fighters = []
@@ -91,12 +131,9 @@ def scrape_rankings():
         try:
             champ_name = None
             champ_url = None
-            # Champion's name and url
             champ_blocks = caption.find_elements(By.CSS_SELECTOR, ".rankings--athlete--champion")
 
-            # If no blocks or first ones are empty, fallback to parsing caption itself
             blocks_to_try = champ_blocks if champ_blocks else [caption]
-
             champ_parsed = False
 
             for block in blocks_to_try:
@@ -108,7 +145,6 @@ def scrape_rankings():
                     champ_name = champ_a.get_attribute("textContent").strip()
                     champ_url = champ_a.get_attribute("href")
                 except:
-                    # fallback: maybe a <h5> without <a>, and separate <a> inside block
                     try:
                         h5 = block.find_element(By.CSS_SELECTOR, "h5")
                         champ_name = h5.text.strip()
@@ -120,6 +156,7 @@ def scrape_rankings():
                     norm = normalize(champ_name)
                     uuid = name_to_uuid.get(norm)
                     missing = uuid is None
+                    
                     if missing:
                         missing_fighters.append({
                             "name": champ_name,
@@ -128,20 +165,30 @@ def scrape_rankings():
                             "rank": "C",
                             "profile_url": champ_url
                         })
+                    
+                    # For champions, check if UFC website shows any change indicator
+                    change = None
+                    try:
+                        change_el = block.find_element(By.CSS_SELECTOR, ".views-field-weight-class-rank-change")
+                        change_text = change_el.text.strip()
+                        if change_text:
+                            change = parse_change_indicator(change_text)
+                    except:
+                        pass  # No change indicator, leave as None
+                    
                     fighters.append({
                         "rank": "C",
                         "name": champ_name,
                         "profile_url": champ_url,
                         "uuid": uuid,
                         "missing": missing,
-                        "is_champion": True
+                        "change": change  # Only use website-provided changes
                     })
                     champ_parsed = True
-                    break  # ✅ Break after the first valid champ
+                    break
 
         except Exception as e:
-            print(f"⚠️ Error parsing champion for division {division_name}: {e}")
-            pass
+            warnings.append(f"Error parsing champion for division {division_name}")
 
         # -------- Contenders Parsing --------
         try:
@@ -152,7 +199,7 @@ def scrape_rankings():
                     rank_col = row.find_element(By.CSS_SELECTOR, ".views-field-weight-class-rank").text.strip()
                     if rank_col.upper() == "C":
                         if "pound-for-pound" in division_name.lower():
-                            print(f"⚠️ Skipping P4P fake champ row: {row.text}")
+                            warnings.append(f"Skipping P4P fake champ row")
                         continue
                 except Exception:
                     pass
@@ -164,6 +211,7 @@ def scrape_rankings():
                     norm = normalize(name)
                     uuid = name_to_uuid.get(norm)
                     missing = uuid is None
+                    
                     if missing:
                         missing_fighters.append({
                             "name": name,
@@ -172,60 +220,129 @@ def scrape_rankings():
                             "rank": idx,
                             "profile_url": href
                         })
+                    
+                    # Parse change indicator from UFC website (trust this)
+                    parsed_change = None
                     try:
                         change_el = row.find_element(By.CSS_SELECTOR, ".views-field-weight-class-rank-change")
                         change_text = change_el.text.strip()
+                        if change_text:  # Only use if not empty
+                            parsed_change = parse_change_indicator(change_text)
                     except:
-                        change_text = None
-
+                        pass  # No change indicator on website, leave as None
+                    
+                    # Don't compute changes - trust UFC website only
+                    # If UFC shows no change, assume no change (None)
+                    
                     fighter_data = {
                         "rank": idx,
                         "name": name,
                         "profile_url": href,
                         "uuid": uuid,
                         "missing": missing,
-                        "change": change_text if change_text else None
+                        "change": parsed_change  # Only use website-provided changes
                     }
                     fighters.append(fighter_data)
+                    
                 except Exception as e:
-                    print(f"⚠️ Error parsing row: {e}")
+                    warnings.append(f"Error parsing fighter row in {division_name}")
                     continue
         except Exception as e:
-            print(f"⚠️ Error parsing contenders for {division_name}: {e}")
+            warnings.append(f"Error parsing contenders for {division_name}")
+
+        # Validate division structure
+        validation_issues = validate_division_structure(division_name, fighters)
+        if validation_issues:
+            warnings.extend(validation_issues)
 
         all_rankings.append({
             "division": division_name,
             "fighters": fighters
         })
 
-    
     driver.quit()
 
+    print("💾 Saving rankings data...")
+
+    # Save rankings
     with open("data/ufc_rankings.json", "w", encoding="utf-8") as f:
         json.dump(all_rankings, f, indent=2, ensure_ascii=False)
 
+    # Summary statistics
     all_fighter_names = []
+    rank_changes = 0
+    
     for division in all_rankings:
         for fighter in division['fighters']:
             all_fighter_names.append(fighter['name'])
+            if fighter.get('change') and fighter['change'] not in ["CHAMPION", "INTERIM", None]:
+                rank_changes += 1
 
     expected_total = 11*16 + 30  # 11 weight classes with champ + 15, 2 P4P lists with 15
-    count_check = "✅" if len(all_fighter_names) == expected_total else "❌"
-    print(f"{count_check} {len(all_fighter_names)} total fighters (including duplicates, expected {expected_total})")
+    
+    print("\n" + "="*50)
+    print("📊 RANKINGS SUMMARY")
+    print("="*50)
+    print(f"✅ Total fighters: {len(all_fighter_names)} (expected ~{expected_total})")
+    if rank_changes > 0:
+        print(f"📈 Rank changes detected: {rank_changes}")
 
-
-
+    # Handle missing fighters
     if missing_fighters:
         os.makedirs("data/errors", exist_ok=True)
         with open("data/errors/rankings_errors.json", "w", encoding="utf-8") as f:
             json.dump(missing_fighters, f, indent=2, ensure_ascii=False)
-        print(f"⚠️ Logged {len(missing_fighters)} fighters with missing UUIDs.")
+        print(f"⚠️ Missing UUIDs: {len(missing_fighters)} fighters")
     else:
         error_path = "data/errors/rankings_errors.json"
         if os.path.exists(error_path):
             os.remove(error_path)
-            print("✅ All fighters matched. rankings_errors.json deleted.")
+        print("✅ All fighters matched")
 
+    # Show warnings if any
+    if warnings:
+        print(f"⚠️ Warnings: {len(warnings)} issues encountered")
+        # Only show first few warnings to avoid spam
+        for warning in warnings[:3]:
+            print(f"   • {warning}")
+        if len(warnings) > 3:
+            print(f"   • ... and {len(warnings) - 3} more")
+    
+    print("="*50)
+
+
+def fix_missing_uuids():
+    """Fix fighters with missing UUIDs from error file"""
+    print("🔄 Fixing missing UUIDs...")
+    
+    try:
+        with open("data/errors/rankings_errors.json", "r", encoding="utf-8") as f:
+            missing = json.load(f)
+    except FileNotFoundError:
+        print("⚠️ No rankings_errors.json file found.")
+        return
+
+    uuid_map = load_fighter_index()
+    updated = []
+    matched_count = 0
+    
+    for fighter in missing:
+        norm = normalize(fighter["name"])
+        uuid = uuid_map.get(norm)
+        if uuid:
+            matched_count += 1
+        else:
+            updated.append(fighter)
+
+    print(f"✅ Matched {matched_count} fighters")
+    
+    if updated:
+        with open("data/errors/rankings_errors.json", "w", encoding="utf-8") as f:
+            json.dump(updated, f, indent=2, ensure_ascii=False)
+        print(f"⚠️ Still unmatched: {len(updated)} fighters")
+    else:
+        os.remove("data/errors/rankings_errors.json")
+        print("✅ All fighters matched - error file deleted")
 
 
 if __name__ == "__main__":
@@ -237,35 +354,6 @@ if __name__ == "__main__":
     if choice == "1":
         scrape_rankings()
     elif choice == "2":
-        try:
-            with open("data/errors/rankings_errors.json", "r", encoding="utf-8") as f:
-                missing = json.load(f)
-        except FileNotFoundError:
-            print("⚠️ No rankings_errors.json file found.")
-            exit()
-
-        uuid_map = load_fighter_index()
-        updated = []
-        matched_count = 0
-        for fighter in missing:
-            norm = normalize(fighter["name"])
-            uuid = uuid_map.get(norm)
-            if uuid:
-                fighter["uuid"] = uuid
-                fighter["missing"] = False
-                matched_count += 1
-                print(f"✅ Matched: {fighter['name']} → {uuid}")
-            else:
-                updated.append(fighter)
-
-
-        if updated:
-            with open("data/errors/rankings_errors.json", "w", encoding="utf-8") as f:
-                json.dump(updated, f, indent=2, ensure_ascii=False)
-            print(f"✅ Matched {matched_count} fighters. Still unmatched: {len(updated)}")
-        else:
-            os.remove("data/errors/rankings_errors.json")
-            print(f"✅ Matched all {matched_count} fighters. rankings_errors.json deleted.")
-
+        fix_missing_uuids()
     else:
         print("Invalid input. Exiting.")

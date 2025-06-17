@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 import re
 import unicodedata
+from datetime import datetime
 
 
 def create_normalized_name(name: str) -> str:
@@ -30,7 +31,13 @@ def load_json_file(filepath: str) -> Any:
 
 def normalize_name(name: str) -> str:
     """Normalize fighter name for consistent matching."""
-    return name.strip().upper()
+    if not name:
+        return ""
+    # Remove extra whitespace and normalize case
+    name = " ".join(name.strip().split()).upper()
+    # Remove common variations that cause mismatches
+    name = name.replace("'", "").replace("-", " ").replace(".", "")
+    return name
 
 def build_sherdog_lookup(sherdog_data: List[Dict]) -> Dict[str, Dict]:
     """Build lookup dictionary from Sherdog data."""
@@ -55,7 +62,25 @@ def build_sherdog_lookup(sherdog_data: List[Dict]) -> Dict[str, Dict]:
 
 def create_name_fixes_lookup(name_fixes: Dict[str, str]) -> Dict[str, str]:
     """Create normalized name fixes lookup (UFC → Sherdog)."""
-    return {normalize_name(k): normalize_name(v) for k, v in name_fixes.items()}
+    lookup = {}
+    for ufc_name, sherdog_name in name_fixes.items():
+        # Normalize the UFC name (key)
+        normalized_ufc = normalize_name(ufc_name)
+        # Normalize the Sherdog name (value) 
+        normalized_sherdog = normalize_name(sherdog_name)
+        lookup[normalized_ufc] = normalized_sherdog
+        
+        # Also add variations of the UFC name
+        ufc_variations = [
+            ufc_name.strip().upper(),  # Original case handling
+            ufc_name.replace("'", "").replace("-", " ").strip().upper(),
+            " ".join(ufc_name.strip().split()).upper()
+        ]
+        for variation in ufc_variations:
+            if variation and variation != normalized_ufc:
+                lookup[normalize_name(variation)] = normalized_sherdog
+    
+    return lookup
 
 def merge_fighter_data(ufc_fighter: Dict, sherdog_fighter: Dict) -> Dict:
     """Merge UFC and Sherdog fighter data."""
@@ -97,24 +122,46 @@ def find_sherdog_match(ufc_name: str, sherdog_lookup: Dict, name_fixes: Dict) ->
     if normalized_name in sherdog_lookup:
         return sherdog_lookup[normalized_name]
     
-    # Strategy 2: Use name fixes
+    # Strategy 2: Use name fixes - try the fixed name in sherdog lookup
     if normalized_name in name_fixes:
         fixed_name = name_fixes[normalized_name]
         if fixed_name in sherdog_lookup:
             return sherdog_lookup[fixed_name]
+        # Also try variations of the fixed name
+        fixed_variations = [
+            fixed_name.replace("JR.", "").replace("SR.", "").strip(),
+            fixed_name.replace("'", "").replace("-", " ").strip(),
+            " ".join(fixed_name.split())
+        ]
+        for variation in fixed_variations:
+            if variation in sherdog_lookup and variation != fixed_name:
+                return sherdog_lookup[variation]
     
-    # Strategy 3: Fuzzy matching (basic - remove common prefixes/suffixes)
-    # Remove common MMA name variations
+    # Strategy 3: Fuzzy matching - try common name variations
     variations = [
-        normalized_name.replace("JR.", "").replace("SR.", "").strip(),
-        normalized_name.replace("'", "").replace("-", " ").strip(),
+        normalized_name.replace("JR", "").replace("SR", "").strip(),
+        normalized_name.replace("JR.", "").replace("SR.", "").strip(), 
+        normalized_name.replace("'", "").replace("-", "").strip(),
+        normalized_name.replace(".", "").strip(),
         " ".join(normalized_name.split()),  # Normalize whitespace
     ]
     
+    # Remove empty variations and duplicates
+    variations = list(set([v for v in variations if v and v != normalized_name]))
+    
     for variation in variations:
-        if variation in sherdog_lookup and variation != normalized_name:
+        if variation in sherdog_lookup:
             print(f"📝 Fuzzy match found: '{ufc_name}' → '{variation}'")
             return sherdog_lookup[variation]
+    
+    # Strategy 4: Try partial matching (last resort)
+    ufc_parts = normalized_name.split()
+    if len(ufc_parts) >= 2:
+        # Try just first and last name
+        partial_name = f"{ufc_parts[0]} {ufc_parts[-1]}"
+        if partial_name in sherdog_lookup and partial_name != normalized_name:
+            print(f"📝 Partial match found: '{ufc_name}' → '{partial_name}'")
+            return sherdog_lookup[partial_name]
     
     return None
 
@@ -141,6 +188,52 @@ def save_merged_data(data: List[Dict], filepath: str) -> None:
         print(f"❌ Error saving to {filepath}: {e}")
         sys.exit(1)
 
+def extract_fight_history(fighters: List[Dict], output_path: str) -> None:
+    """Extract flat fight history from merged fighters data."""
+    print("🥊 Extracting fight history...")
+    
+    # Helper to normalize opponent names
+    def normalize_name_for_history(name: str) -> str:
+        name = name.strip()
+        name = re.sub(r"\s+", " ", name)
+        return name.lower()
+
+    # Extract only relevant fight history entries
+    flat_fight_history = []
+
+    for fighter in fighters:
+        fighter_id = fighter.get("id")
+        for fight in fighter.get("fight_history", []):
+            try:
+                opponent_name = fight.get("fighter", "").strip()
+
+                # Parse fight date safely
+                raw_date = fight.get("Date") or fight.get("fight_date")
+                fight_date = None
+                if raw_date:
+                    try:
+                        fight_date = datetime.strptime(raw_date, "%m/%d/%Y").date().isoformat()
+                    except ValueError:
+                        print(f"⚠️ Invalid date format: '{raw_date}' for fighter {fighter.get('name')}")
+
+                flat_fight_history.append({
+                    "fighter_id": fighter_id,
+                    "opponent": opponent_name,
+                    "result": fight.get("result"),
+                    "method": fight.get("method"),
+                    "round": fight.get("round"),
+                    "time": fight.get("time"),
+                    "fight_date": fight_date
+                })
+
+            except Exception as e:
+                print(f"⚠️ Error processing fight for {fighter.get('name', 'UNKNOWN')}: {e}")
+                continue
+
+    # Save clean flat fight history
+    save_merged_data(flat_fight_history, output_path)
+    print(f"✅ Saved flat fight history to {output_path} with {len(flat_fight_history)} entries")
+
 def main():
     """Main execution function."""
     print("🥊 Starting fighter data merge...")
@@ -149,7 +242,6 @@ def main():
     print("📂 Loading data files...")
     ufc_data = load_json_file("../data/ufc_details.json")
     sherdog_data = load_json_file("../data/sherdog_fighters.json")
-    rankings_data = load_json_file("../data/ufc_rankings.json")
 
     
     # Load name fixes
@@ -167,24 +259,8 @@ def main():
     sherdog_lookup = build_sherdog_lookup(sherdog_data)
     name_fixes = create_name_fixes_lookup(NAME_FIXES)
 
-    def build_rankings_lookup(rankings_list):
-        lookup = {}
-        for division in rankings_list:
-            div_name = division.get("division", "Pound-for-Pound").strip()
-            for fighter in division.get("fighters", []):
-                uuid = fighter.get("uuid")
-                if uuid:
-                    entry = {"division": div_name, "rank": fighter["rank"]}
-                    lookup.setdefault(uuid, []).append(entry)
-        return lookup
-
-    rankings_lookup = build_rankings_lookup(rankings_data)
-
     # Start with a clean slate – don't use existing data
     existing_lookup = {}
-
-
-
     
     # Merge data
     print("🔄 Merging fighter data...")
@@ -226,21 +302,15 @@ def main():
             pass
 
 
-        uuid = merged.get("id")
-        if uuid and uuid in rankings_lookup:
-            # Insert rankings early so it's not buried below fight_history
-            merged_rankings = rankings_lookup[uuid]
-            merged["ufc_rankings"] = merged_rankings
-
-            # Move fight history (if present) to the end
-            if "fight_history" in merged:
-                fight_history = merged.pop("fight_history")
-                merged["fight_history"] = fight_history
+        # Rankings no longer added to fighter data
+        # Move fight history to the end if present
+        if "fight_history" in merged:
+            fight_history = merged.pop("fight_history")
+            merged["fight_history"] = fight_history
 
 
         existing_lookup[merged["id"]] = merged
         merged_fighters.append(merged)
-
 
    
     # Save results
@@ -274,6 +344,11 @@ def main():
     match_rate = (matched_count / len(ufc_data)) * 100 if ufc_data else 0
 
     print(f"📊 Match rate: {match_rate:.1f}%")
+    
+    # Automatically extract fight history
+    print("\n" + "="*50)
+    extract_fight_history(list(existing_lookup.values()), "../data/fight_history.json")
+
 
 if __name__ == "__main__":
     main()

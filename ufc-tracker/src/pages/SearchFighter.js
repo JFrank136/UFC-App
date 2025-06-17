@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {addToFavorites, removeFavorite, getUserFavorites } from "../api/fighters";
+import { searchFightersWithRanking } from "../api/supabaseQueries";
 import supabase from "../api/supabaseClient";
 import countryCodes from '../utils/countryCodes';
 
@@ -152,40 +153,57 @@ const SearchFighter = () => {
   const [selectedGender, setSelectedGender] = useState('All');
   const [showRankedOnly, setShowRankedOnly] = useState(false);
   const [showP4POnly, setShowP4POnly] = useState(false);
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [showInterestedOnly, setShowInterestedOnly] = useState(false);
+  const [sortBy, setSortBy] = useState('name');
   const [genderDropdownOpen, setGenderDropdownOpen] = useState(false);
+  const [filtersCollapsed, setFiltersCollapsed] = useState(false);
 
   // Available options for filters
   const [availableCountries, setAvailableCountries] = useState([]);
   const [availableDivisions, setAvailableDivisions] = useState([]);
 
-  // Gender inference helper
-  const inferGender = (weightClass) => {
-    if (!weightClass) return 'Unknown';
-    const lowerClass = weightClass.toLowerCase();
-    return (lowerClass.includes("women's") || lowerClass.includes('women')) ? 'Women' : 'Men';
-  };
+  // Sort options
+  const sortOptions = [
+    { value: 'name', label: 'Name (A-Z)' },
+    { value: 'recent_fights', label: 'Most Recent Fights' },
+    { value: 'upcoming_fights', label: 'Upcoming Fights' },
+    { value: 'ranking', label: 'Ranking' }
+  ];
 
-  // Group divisions by gender for better display
-  const groupDivisionsByGender = (divisions) => {
-    const mensDivisions = divisions.filter(div => inferGender(div) === 'Men').sort();
-    const womensDivisions = divisions.filter(div => inferGender(div) === 'Women').sort();
-    
-    // Return with gender prefixes for clarity
-    return [
-      ...mensDivisions.map(div => `Men's ${div}`),
-      ...womensDivisions.map(div => `Women's ${div.replace("Women's ", "")}`)
-    ];
-  };
-
-  // Clean division name for filtering
-  const cleanDivisionName = (displayName) => {
-    if (displayName.startsWith("Men's ")) return displayName.substring(6);
-    if (displayName.startsWith("Women's ")) return displayName; // Keep Women's prefix for actual filtering
-    return displayName;
-  };
+  // Gender inference helper - now uses database column
+const inferGender = (fighter) => {
+  return fighter.gender || 'Unknown';
+};
+  
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
+  };
+
+  const clearAllFilters = () => {
+    setSelectedGender('All');
+    setSelectedCountries([]);
+    setSelectedDivisions([]);
+    setShowRankedOnly(false);
+    setShowP4POnly(false);
+    setShowFavoritesOnly(false);
+    setShowInterestedOnly(false);
+    setSortBy('name');
+    setQuery('');
+    showToast('Filters cleared', 'info');
+  };
+
+  const hasActiveFilters = () => {
+    return selectedGender !== 'All' || 
+          selectedCountries.length > 0 || 
+          selectedDivisions.length > 0 || 
+          showRankedOnly || 
+          showP4POnly ||
+          showFavoritesOnly ||
+          showInterestedOnly ||
+          sortBy !== 'name' ||
+          query.trim() !== '';
   };
 
   const closeToast = () => {
@@ -219,38 +237,31 @@ const SearchFighter = () => {
   // Extract unique countries and divisions from fighters
   const extractFilterOptions = useCallback((fightersData) => {
     const countries = [...new Set(fightersData.map(f => f.country).filter(Boolean))].sort();
-    const divisions = [...new Set(fightersData.map(f => f.weight_class).filter(Boolean))];
-    const groupedDivisions = groupDivisionsByGender(divisions);
+    const divisions = [...new Set(fightersData.map(f => f.weight_class).filter(Boolean))].sort();
     
     setAvailableCountries(countries);
-    setAvailableDivisions(groupedDivisions);
+    setAvailableDivisions(divisions);
   }, []);
 
   // Filter fighters based on all criteria
   const filterFighters = useCallback((searchQuery) => {
     let filtered = fighters;
 
-    console.log('Filtering with gender:', selectedGender);
-    console.log('Total fighters:', filtered.length);
-
-    // Text search
+    // Text search - name and nickname only
     if (searchQuery.trim()) {
       filtered = filtered.filter(fighter => 
         fighter.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        fighter.weight_class?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        fighter.country?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         fighter.nickname?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    // Gender filter - improved logic
+    // Gender filter - using database column
     if (selectedGender !== 'All') {
+      const targetGender = selectedGender === 'Men' ? 'Male' : selectedGender === 'Women' ? 'Female' : selectedGender;
       filtered = filtered.filter(fighter => {
-        const fighterGender = inferGender(fighter.weight_class);
-        console.log(`Fighter: ${fighter.name}, Weight Class: ${fighter.weight_class}, Inferred Gender: ${fighterGender}`);
-        return fighterGender === selectedGender;
+        const fighterGender = inferGender(fighter);
+        return fighterGender === targetGender;
       });
-      console.log('After gender filter:', filtered.length);
     }
 
     // Country filter
@@ -260,18 +271,17 @@ const SearchFighter = () => {
       );
     }
 
-    // Division filter - need to clean the display names
+    // Division filter
     if (selectedDivisions.length > 0 && selectedDivisions.length < availableDivisions.length) {
-      const actualDivisions = selectedDivisions.map(cleanDivisionName);
       filtered = filtered.filter(fighter => 
-        actualDivisions.includes(fighter.weight_class)
+        selectedDivisions.includes(fighter.weight_class)
       );
     }
 
     // Ranked filter (has divisional ranking)
     if (showRankedOnly) {
       filtered = filtered.filter(fighter => {
-        const rankings = getRankingDisplay(fighter.ufc_rankings);
+        const rankings = getRankingDisplay(fighter.rankings);
         return rankings && rankings.divisionRank;
       });
     }
@@ -279,41 +289,76 @@ const SearchFighter = () => {
     // P4P filter
     if (showP4POnly) {
       filtered = filtered.filter(fighter => {
-        const rankings = getRankingDisplay(fighter.ufc_rankings);
+        const rankings = getRankingDisplay(fighter.rankings);
         return rankings && rankings.p4p;
       });
     }
 
-    // Sort by ranking if ranking or P4P filters are active
-    if (showRankedOnly || showP4POnly) {
-      filtered = filtered.sort((a, b) => {
-        const aRankings = getRankingDisplay(a.ufc_rankings);
-        const bRankings = getRankingDisplay(b.ufc_rankings);
-        
-        // P4P rankings take priority
-        if (aRankings?.p4p && bRankings?.p4p) {
-          return aRankings.p4p.rank - bRankings.p4p.rank;
-        }
-        if (aRankings?.p4p && !bRankings?.p4p) return -1;
-        if (!aRankings?.p4p && bRankings?.p4p) return 1;
-        
-        // Then divisional rankings
-        if (aRankings?.divisionRank && bRankings?.divisionRank) {
-          return aRankings.divisionRank.rank - bRankings.divisionRank.rank;
-        }
-        if (aRankings?.divisionRank && !bRankings?.divisionRank) return -1;
-        if (!aRankings?.divisionRank && bRankings?.divisionRank) return 1;
-        
-        // Fallback to alphabetical
-        return a.name.localeCompare(b.name);
-      });
-    } else {
-      // Default alphabetical sort
-      filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
+    // Favorites filter
+    if (showFavoritesOnly) {
+      filtered = filtered.filter(fighter => 
+        favStatus[fighter.name]?.status === 'favorite'
+      );
     }
+
+    // Interested filter
+    if (showInterestedOnly) {
+      filtered = filtered.filter(fighter => 
+        favStatus[fighter.name]?.status === 'interested'
+      );
+    }
+
+    // Sorting
+    filtered = filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'recent_fights':
+          const aRecentFight = a.fight_history?.length > 0 ? 
+            new Date(Math.max(...a.fight_history.map(f => new Date(f.fight_date)))) : new Date(0);
+          const bRecentFight = b.fight_history?.length > 0 ? 
+            new Date(Math.max(...b.fight_history.map(f => new Date(f.fight_date)))) : new Date(0);
+          return bRecentFight - aRecentFight;
+          
+        case 'upcoming_fights':
+          const today = new Date();
+          const aUpcoming = a.upcoming_fights?.filter(f => new Date(f.event_date) > today);
+          const bUpcoming = b.upcoming_fights?.filter(f => new Date(f.event_date) > today);
+          
+          if (aUpcoming?.length > 0 && bUpcoming?.length === 0) return -1;
+          if (aUpcoming?.length === 0 && bUpcoming?.length > 0) return 1;
+          if (aUpcoming?.length > 0 && bUpcoming?.length > 0) {
+            const aNextFight = new Date(Math.min(...aUpcoming.map(f => new Date(f.event_date))));
+            const bNextFight = new Date(Math.min(...bUpcoming.map(f => new Date(f.event_date))));
+            return aNextFight - bNextFight;
+          }
+          return a.name.localeCompare(b.name);
+          
+        case 'ranking':
+          const aRankings = getRankingDisplay(a.rankings);
+          const bRankings = getRankingDisplay(b.rankings);
+          
+          // P4P rankings take priority
+          if (aRankings?.p4p && bRankings?.p4p) {
+            return aRankings.p4p.rank - bRankings.p4p.rank;
+          }
+          if (aRankings?.p4p && !bRankings?.p4p) return -1;
+          if (!aRankings?.p4p && bRankings?.p4p) return 1;
+          
+          // Then divisional rankings
+          if (aRankings?.divisionRank && bRankings?.divisionRank) {
+            return aRankings.divisionRank.rank - bRankings.divisionRank.rank;
+          }
+          if (aRankings?.divisionRank && !bRankings?.divisionRank) return -1;
+          if (!aRankings?.divisionRank && bRankings?.divisionRank) return 1;
+          
+          return a.name.localeCompare(b.name);
+          
+        default: // name
+          return a.name.localeCompare(b.name);
+      }
+    });
     
     setFilteredFighters(filtered);
-  }, [fighters, selectedGender, selectedCountries, selectedDivisions, showRankedOnly, showP4POnly, availableCountries.length, availableDivisions.length]);
+  }, [fighters, selectedGender, selectedCountries, selectedDivisions, showRankedOnly, showP4POnly, showFavoritesOnly, showInterestedOnly, sortBy, favStatus, availableCountries.length, availableDivisions.length]);
 
   // Handle query change with debouncing
   const handleQueryChange = (value) => {
@@ -333,24 +378,53 @@ const SearchFighter = () => {
   // Re-filter when filter criteria change
   useEffect(() => {
     filterFighters(query);
-  }, [filterFighters, query, selectedGender]);
+  }, [filterFighters, query]);
 
-  // Load all fighters on component mount
+  // Load all fighters on component mount with rankings
   useEffect(() => {
     const fetchFighters = async () => {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("fighters")
-        .select("*");
-      if (error) {
+      try {
+        // First get all fighters for filtering options
+        const { data: allFighters, error: fightersError } = await supabase
+          .from("fighters")
+          .select("*");
+          
+        if (fightersError) throw fightersError;
+        
+        // Get rankings, fight history, and upcoming fights data
+        const [
+          { data: allRankings, error: rankingsError },
+          { data: allFightHistory, error: fightHistoryError },
+          { data: allUpcomingFights, error: upcomingFightsError }
+        ] = await Promise.all([
+          supabase.from("rankings").select("*"),
+          supabase.from("fight_history").select("*"),
+          supabase.from("upcoming_fights").select("*")
+        ]);
+          
+        if (rankingsError) throw rankingsError;
+        if (fightHistoryError) throw fightHistoryError;
+        if (upcomingFightsError) throw upcomingFightsError;
+        
+        // Combine fighters with their data
+        const fightersWithRankings = allFighters.map(fighter => ({
+          ...fighter,
+          rankings: allRankings?.filter(r => r.uuid === fighter.id) || [],
+          fight_history: allFightHistory?.filter(f => f.fighter_id === fighter.id) || [],
+          upcoming_fights: allUpcomingFights?.filter(f => 
+            f.fighter1_id === fighter.id || f.fighter2_id === fighter.id) || []
+        }));
+        
+        setFighters(fightersWithRankings);
+        setFilteredFighters(fightersWithRankings);
+        extractFilterOptions(fightersWithRankings);
+        setError("");
+      } catch (err) {
+        console.error("Error fetching fighters:", err);
         setError("Error fetching fighters.");
         setFighters([]);
         setFilteredFighters([]);
-      } else {
-        setFighters(data);
-        setFilteredFighters(data);
-        extractFilterOptions(data);
-        setError("");
       }
       setLoading(false);
     };
@@ -408,7 +482,7 @@ const SearchFighter = () => {
     if (!rankings || !Array.isArray(rankings)) return null;
     
     const p4p = rankings.find(r => r.division?.toLowerCase().includes('pound-for-pound'));
-    const divisionRank = rankings.find(r => !r.division?.toLowerCase().includes('pound-for-pound'));
+    const divisionRank = rankings.find(r => !r.division?.toLowerCase().includes('pound-for-pound') && r.rank !== 'NR');
     
     return { p4p, divisionRank };
   };
@@ -435,16 +509,60 @@ const SearchFighter = () => {
         }
         
         .header {
+          position: relative;
           text-align: center;
           margin-bottom: 2rem;
+          padding: 3rem 2rem;
+          border-radius: 20px;
+          overflow: hidden;
+          background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-background {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(45deg, 
+            rgba(255, 215, 0, 0.1) 0%, 
+            rgba(255, 140, 0, 0.1) 25%,
+            rgba(220, 38, 38, 0.1) 50%,
+            rgba(59, 130, 246, 0.1) 75%,
+            rgba(16, 185, 129, 0.1) 100%
+          );
+          animation: gradientShift 8s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+          0%, 100% { opacity: 0.3; }
+          50% { opacity: 0.6; }
+        }
+
+        .header-content {
+          position: relative;
+          z-index: 2;
         }
         
         .header h1 {
-          font-size: 2.5rem;
-          font-weight: 700;
-          color: #1a1a1a;
+          font-size: 3rem;
+          font-weight: 800;
+          color: #ffffff;
+          margin: 0 0 0.5rem 0;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+          background: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #ff4500 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .header p {
+          font-size: 1.2rem;
+          color: rgba(255, 255, 255, 0.9);
           margin: 0;
-          text-align: center;
+          font-weight: 500;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
         
         .controls {
@@ -492,6 +610,77 @@ const SearchFighter = () => {
           gap: 0.75rem;
           position: relative;
           margin-bottom: 1.5rem;
+        }
+
+        .filter-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1rem;
+        }
+
+        .mobile-filter-toggle {
+          display: none;
+          background: none;
+          border: 2px solid var(--theme-primary-border);
+          border-radius: 8px;
+          padding: 0.75rem 1rem;
+          color: inherit;
+          font-weight: 600;
+          cursor: pointer;
+          align-items: center;
+          gap: 0.5rem;
+          transition: all 0.3s ease;
+        }
+
+        .mobile-filter-toggle:hover {
+          border-color: var(--theme-primary);
+          background: var(--theme-primary-light);
+        }
+
+        .toggle-icon {
+          transition: transform 0.3s ease;
+          font-size: 0.8rem;
+        }
+
+        .toggle-icon.collapsed {
+          transform: rotate(-90deg);
+        }
+
+        .clear-filters-btn {
+          background: rgba(239, 68, 68, 0.1);
+          border: 1px solid rgba(239, 68, 68, 0.3);
+          border-radius: 6px;
+          padding: 0.5rem 1rem;
+          color: #ef4444;
+          font-size: 0.85rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .clear-filters-btn:hover {
+          background: rgba(239, 68, 68, 0.2);
+          transform: scale(1.05);
+        }
+
+        .country-display {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .country-flag {
+          font-size: 1.2rem;
+          min-width: 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .country-name {
+          font-size: 0.85rem;
+          opacity: 0.8;
         }
         
         .search-input {
@@ -778,19 +967,60 @@ const SearchFighter = () => {
         
         .fighter-card.favorited-card {
           background: ${user === 'Mars' ? 
-            'linear-gradient(145deg, #fef2f2, #fee2e2)' : 
-            'linear-gradient(145deg, #eff6ff, #dbeafe)'
+            'linear-gradient(145deg, #fee2e2, #fecaca)' : 
+            'linear-gradient(145deg, #dbeafe, #bfdbfe)'
           };
-          border: 2px solid ${user === 'Mars' ? '#fca5a5' : '#93c5fd'};
+          border: 3px solid ${user === 'Mars' ? '#ef4444' : '#3b82f6'};
+          box-shadow: 0 8px 25px ${user === 'Mars' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(59, 130, 246, 0.3)'};
+          transform: scale(1.02);
         }
-        
+
+        .control-group select:focus, .sort-select:focus {
+          border-color: var(--theme-primary);
+          box-shadow: 0 0 0 3px var(--theme-primary-light);
+        }
+
+        .control-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          min-width: 160px;
+          flex-shrink: 0;
+        }
+
+        .control-group label {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: var(--theme-primary);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .sort-select {
+          padding: 0.75rem 1rem;
+          border: 2px solid #e5e7eb;
+          border-radius: 8px;
+          background: #ffffff;
+          color: #1a1a1a;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          outline: none;
+          font-weight: 500;
+        }
+
+        .sort-select:hover {
+          border-color: var(--theme-primary);
+        }
+
         .fighter-card.interested-card {
           background: ${user === 'Mars' ? 
-            'linear-gradient(145deg, #fef2f2, #fee2e2)' : 
+            'linear-gradient(145deg, #fef2f2, #fecaca)' : 
             'linear-gradient(145deg, #eff6ff, #dbeafe)'
           };
-          border: 2px solid ${user === 'Mars' ? '#fca5a5' : '#93c5fd'};
-          opacity: 0.8;
+          border: 2px solid ${user === 'Mars' ? '#dc2626' : '#2563eb'};
+          box-shadow: 0 6px 20px ${user === 'Mars' ? 'rgba(220, 38, 38, 0.25)' : 'rgba(37, 99, 235, 0.25)'};
+          transform: scale(1.01);
         }
         
         .p4p-badge {
@@ -900,6 +1130,12 @@ const SearchFighter = () => {
           background: rgba(37, 99, 235, 0.1);
           color: var(--theme-primary);
           border: 1px solid var(--theme-primary-border);
+        }
+        
+        .rank-p4p {
+          background: rgba(255, 215, 0, 0.1);
+          color: #b8860b;
+          border: 1px solid rgba(255, 215, 0, 0.3);
         }
         
         .action-buttons {
@@ -1070,10 +1306,16 @@ const SearchFighter = () => {
 
           .controls {
             padding: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
           }
           
           .results-grid {
             grid-template-columns: 1fr;
+            gap: 1rem;
           }
           
           .search-input-container {
@@ -1086,9 +1328,22 @@ const SearchFighter = () => {
             gap: 0.75rem;
           }
 
-          .gender-selector, .multi-select-container, .checkbox-filter {
+          .gender-selector, .multi-select-container, .checkbox-filter, .control-group {
             min-width: auto;
             flex-shrink: 1;
+          }
+
+          .header {
+            padding: 2rem 1rem;
+            margin-bottom: 1.5rem;
+          }
+
+          .header h1 {
+            font-size: 2.2rem;
+          }
+
+          .header p {
+            font-size: 1rem;
           }
           
           .fighter-header {
@@ -1102,12 +1357,15 @@ const SearchFighter = () => {
           }
           
           .action-buttons {
-            flex-direction: column;
-            align-items: stretch;
+            flex-direction: row;
+            gap: 0.5rem;
           }
           
           .action-btn {
             min-width: auto;
+            flex: 1;
+            padding: 0.75rem 0.5rem;
+            font-size: 0.9rem;
           }
 
           .p4p-badge {
@@ -1115,6 +1373,14 @@ const SearchFighter = () => {
             right: 0;
             padding: 0.3rem 0.6rem 0.2rem 0.4rem;
             font-size: 0.65rem;
+          }
+
+          .fighter-card {
+            padding: 1rem;
+          }
+
+          .fighter-name {
+            font-size: 1.1rem;
           }
         }
 
@@ -1131,12 +1397,20 @@ const SearchFighter = () => {
           .gender-selector {
             min-width: 140px;
           }
+
+          .control-group {
+            min-width: 140px;
+          }
         }
       `}</style>
 
       <div className="search-container">
         <div className="header">
-          <h1>🥊 Fighter Search</h1>
+          <div className="header-background"></div>
+          <div className="header-content">
+            <h1>🥊 Fighter Search</h1>
+            <p>Discover and track your favorite UFC fighters</p>
+          </div>
         </div>
 
         <div className="controls">
@@ -1166,13 +1440,44 @@ const SearchFighter = () => {
               <input
                 type="text"
                 className="search-input"
-                placeholder="Search fighters by name, division, or country..."
+                placeholder="Search fighters by name or nickname..."
                 value={query}
                 onChange={(e) => handleQueryChange(e.target.value)}
               />
             </div>
             
-            <div className="filter-controls">
+            <div className="filter-header">
+              <button 
+                className="mobile-filter-toggle"
+                onClick={() => setFiltersCollapsed(!filtersCollapsed)}
+              >
+                <span>Filters</span>
+                <span className={`toggle-icon ${filtersCollapsed ? 'collapsed' : ''}`}>▼</span>
+              </button>
+              
+              {hasActiveFilters() && (
+                <button className="clear-filters-btn" onClick={clearAllFilters}>
+                  Clear All
+                </button>
+              )}
+            </div>
+
+            <div className={`filter-controls ${filtersCollapsed ? 'collapsed' : ''}`}>
+              <div className="control-group">
+                <label>Sort By</label>
+                <select 
+                  value={sortBy} 
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="sort-select"
+                >
+                  {sortOptions.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="gender-selector">
                 <div 
                   className="gender-dropdown-trigger" 
@@ -1244,21 +1549,46 @@ const SearchFighter = () => {
                 />
                 P4P Only
               </label>
+
+              <label 
+                className={`checkbox-filter ${showFavoritesOnly ? 'active' : ''}`}
+              >
+                <input
+                  type="checkbox"
+                  checked={showFavoritesOnly}
+                  onChange={(e) => setShowFavoritesOnly(e.target.checked)}
+                />
+                ⭐ Favorites
+              </label>
+
+              <label 
+                className={`checkbox-filter ${showInterestedOnly ? 'active' : ''}`}
+              >
+                <input
+                  type="checkbox"
+                  checked={showInterestedOnly}
+                  onChange={(e) => setShowInterestedOnly(e.target.checked)}
+                />
+                👀 Interested
+              </label>
             </div>
 
             {/* Filter Summary */}
-            {(selectedGender !== 'All' || selectedCountries.length > 0 || selectedDivisions.length > 0 || showRankedOnly || showP4POnly) && (
+            {hasActiveFilters() && (
               <div className="filter-summary">
                 Showing {filteredFighters.length} fighters
+                {sortBy !== 'name' && ` • Sorted by ${sortOptions.find(opt => opt.value === sortBy)?.label}`}
                 {selectedGender !== 'All' && ` • ${selectedGender === 'Men' ? 'Men\'s' : 'Women\'s'} divisions`}
                 {selectedCountries.length > 0 && selectedCountries.length < availableCountries.length && 
                   ` • Countries: ${selectedCountries.slice(0, 3).join(', ')}${selectedCountries.length > 3 ? ` +${selectedCountries.length - 3} more` : ''}`
                 }
                 {selectedDivisions.length > 0 && selectedDivisions.length < availableDivisions.length && 
-                  ` • Divisions: ${selectedDivisions.slice(0, 2).join(', ').replace(/Men's |Women's /g, '')}${selectedDivisions.length > 2 ? ` +${selectedDivisions.length - 2} more` : ''}`
+                  ` • Divisions: ${selectedDivisions.slice(0, 2).join(', ')}${selectedDivisions.length > 2 ? ` +${selectedDivisions.length - 2} more` : ''}`
                 }
                 {showRankedOnly && ' • Ranked fighters only'}
                 {showP4POnly && ' • P4P fighters only'}
+                {showFavoritesOnly && ' • Favorites only'}
+                {showInterestedOnly && ' • Interested only'}
               </div>
             )}
           </div>
@@ -1289,8 +1619,8 @@ const SearchFighter = () => {
             const status = favStatus[fighterName]?.status;
             const favoriteLoading = loadingStates[`${fighterName}-favorite`];
             const interestedLoading = loadingStates[`${fighterName}-interested`];
-            const rankings = getRankingDisplay(fighter.ufc_rankings);
-            const isP4PChampion = rankings?.p4p && rankings.p4p.rank === 1;
+            const rankings = getRankingDisplay(fighter.rankings);
+            const isP4PChampion = rankings?.p4p && rankings.p4p.rank !== 'NR';
             
             return (
               <div 
@@ -1360,11 +1690,18 @@ const SearchFighter = () => {
                   </div>
                 </div>
                 
-                {rankings && rankings.divisionRank && (
+                {rankings && (rankings.divisionRank || rankings.p4p) && (
                   <div className="ranking-info">
-                    <span className="rank-badge rank-division">
-                      #{rankings.divisionRank.rank} {rankings.divisionRank.division}
-                    </span>
+                    {rankings.divisionRank && (
+                      <span className="rank-badge rank-division">
+                        {rankings.divisionRank.rank === 'C' ? 'Champion' : `#${rankings.divisionRank.rank}`} {rankings.divisionRank.division}
+                      </span>
+                    )}
+                    {rankings.p4p && (
+                      <span className="rank-badge rank-p4p">
+                        P4P #{rankings.p4p.rank}
+                      </span>
+                    )}
                   </div>
                 )}
                 
