@@ -12,7 +12,7 @@ def print_progress(current, total, prefix='Progress', bar_length=50):
     """Print a progress bar to show upload status"""
     percent = float(current) * 100 / total
     filled_length = int(bar_length * current // total)
-    bar = '█' * filled_length + '-' * (bar_length - filled_length)
+    bar = '' * filled_length + '-' * (bar_length - filled_length)
     sys.stdout.write(f'\r{prefix}: |{bar}| {percent:.1f}% ({current}/{total})')
     sys.stdout.flush()
 
@@ -72,9 +72,9 @@ class DatabaseUploader:
                 port=os.getenv("SUPABASE_DB_PORT")
             )
             self.cur = self.conn.cursor()
-            print("✅ Connected to database")
+            print(" Connected to database")
         except Exception as e:
-            print(f"❌ Database connection failed: {e}")
+            print(f" Database connection failed: {e}")
             sys.exit(1)
     
     def close(self):
@@ -86,19 +86,19 @@ class DatabaseUploader:
     
     def upload_fighters(self, file_path="../data/fighters.json"):
         """Upload fighters to database"""
-        print("🥊 Uploading fighters...")
+        print(" Uploading fighters...")
         
         # Load data
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 fighters = json.load(f)
-            print(f"📊 Loaded {len(fighters):,} fighters from {file_path}")
+            print(f" Loaded {len(fighters):,} fighters from {file_path}")
         except Exception as e:
-            print(f"❌ Failed to load fighters file: {e}")
+            print(f" Failed to load fighters file: {e}")
             return False
         
         # Clear existing data
-        print("⚠️ Clearing existing fighters from the database...")
+        print(" Clearing existing fighters from the database...")
         self.cur.execute("DELETE FROM fighters;")
         self.conn.commit()
         
@@ -231,27 +231,27 @@ class DatabaseUploader:
                 self.conn.commit()
         
         except Exception as e:
-            print(f"\n❌ Fighter upload failed: {e}")
+            print(f"\n Fighter upload failed: {e}")
             self.conn.rollback()
             return False
         
-        print(f"\n✅ Fighters: {successful_inserts:,} uploaded, {validation_failures:,} failed validation")
+        print(f"\n Fighters: {successful_inserts:,} uploaded, {validation_failures:,} failed validation")
         return True
     
     def upload_fight_history(self, file_path="../data/fight_history.json"):
         """Upload fight history to database"""
-        print("🥊 Uploading fight history...")
+        print(" Uploading fight history...")
         
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 fight_history = json.load(f)
-            print(f"📊 Loaded {len(fight_history):,} fight records")
+            print(f" Loaded {len(fight_history):,} fight records")
         except Exception as e:
-            print(f"❌ Failed to load fight history file: {e}")
+            print(f" Failed to load fight history file: {e}")
             return False
         
         # Clear existing data
-        print("⚠️ Clearing existing fight history from the database...")
+        print(" Clearing existing fight history from the database...")
         self.cur.execute("TRUNCATE TABLE fight_history;")
         self.conn.commit()
         
@@ -319,26 +319,26 @@ class DatabaseUploader:
                 self.conn.commit()
         
         except Exception as e:
-            print(f"\n❌ Fight history upload failed: {e}")
+            print(f"\n Fight history upload failed: {e}")
             self.conn.rollback()
             return False
         
-        print(f"\n✅ Fight History: {successful_inserts:,} uploaded, {skipped_dates:,} skipped (no date)")
+        print(f"\n Fight History: {successful_inserts:,} uploaded, {skipped_dates:,} skipped (no date)")
         return True
     
     def upload_rankings(self, file_path="../data/ufc_rankings.json"):
         """Upload rankings to database"""
-        print("📋 Uploading rankings...")
+        print(" Uploading rankings...")
         
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
         except Exception as e:
-            print(f"❌ Failed to load rankings file: {e}")
+            print(f" Failed to load rankings file: {e}")
             return False
         
         # Clear existing data
-        print("⚠️ Clearing existing rankings from the database...")
+        print(" Clearing existing rankings from the database...")
         self.cur.execute("TRUNCATE TABLE rankings;")
         self.conn.commit()
         
@@ -388,27 +388,27 @@ class DatabaseUploader:
                 self.conn.commit()
         
         except Exception as e:
-            print(f"\n❌ Rankings upload failed: {e}")
+            print(f"\n Rankings upload failed: {e}")
             self.conn.rollback()
             return False
         
-        print(f"\n✅ Rankings: {inserted:,} uploaded")
+        print(f"\n Rankings: {inserted:,} uploaded")
         return True
     
     def upload_upcoming_fights(self, file_path="../data/upcoming_fights.json"):
         """Upload upcoming fights to database"""
-        print("🥊 Uploading upcoming fights...")
+        print(" Uploading upcoming fights...")
         
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 fights = json.load(f)
-            print(f"📊 Loaded {len(fights):,} upcoming fights")
+            print(f" Loaded {len(fights):,} upcoming fights")
         except Exception as e:
-            print(f"❌ Failed to load upcoming fights file: {e}")
+            print(f" Failed to load upcoming fights file: {e}")
             return False
         
         # Clear existing data
-        print("⚠️ Truncating upcoming_fights table...")
+        print(" Truncating upcoming_fights table...")
         self.cur.execute("TRUNCATE TABLE upcoming_fights;")
         self.conn.commit()
         
@@ -482,16 +482,16 @@ class DatabaseUploader:
                 self.conn.commit()
         
         except Exception as e:
-            print(f"\n❌ Upcoming fights upload failed: {e}")
+            print(f"\n Upcoming fights upload failed: {e}")
             self.conn.rollback()
             return False
         
-        print(f"\n✅ Upcoming Fights: {successful_inserts:,} uploaded, {skipped:,} skipped (no UUIDs)")
+        print(f"\n Upcoming Fights: {successful_inserts:,} uploaded, {skipped:,} skipped (no UUIDs)")
         return True
     
     def validate_upload_integrity(self):
         """Validate data integrity after upload"""
-        print("🔍 Validating upload integrity...")
+        print(" Validating upload integrity...")
         
         try:
             # Check table counts
@@ -509,7 +509,7 @@ class DatabaseUploader:
             """)
             orphaned_fights = self.cur.fetchone()[0]
             if orphaned_fights > 0:
-                print(f"  ⚠️ Warning: {orphaned_fights} orphaned fight history records")
+                print(f"   Warning: {orphaned_fights} orphaned fight history records")
             
             # Check for orphaned records in rankings
             self.cur.execute("""
@@ -519,7 +519,7 @@ class DatabaseUploader:
             """)
             orphaned_rankings = self.cur.fetchone()[0]
             if orphaned_rankings > 0:
-                print(f"  ⚠️ Warning: {orphaned_rankings} orphaned ranking records")
+                print(f"   Warning: {orphaned_rankings} orphaned ranking records")
             
             # Check for orphaned records in upcoming_fights
             self.cur.execute("""
@@ -531,7 +531,7 @@ class DatabaseUploader:
             """)
             orphaned_upcoming = self.cur.fetchone()[0]
             if orphaned_upcoming > 0:
-                print(f"  ⚠️ Warning: {orphaned_upcoming} upcoming fights with invalid fighter IDs")
+                print(f"   Warning: {orphaned_upcoming} upcoming fights with invalid fighter IDs")
                 
                 # Show missing fighter names
                 self.cur.execute("""
@@ -553,18 +553,18 @@ class DatabaseUploader:
                         missing_fighters.add(row[1])
                 
                 if missing_fighters:
-                    print(f"  🔍 Missing fighters: {', '.join(sorted(missing_fighters))}")
+                    print(f"   Missing fighters: {', '.join(sorted(missing_fighters))}")
             
             if orphaned_fights == 0 and orphaned_rankings == 0 and orphaned_upcoming == 0:
-                print("  ✅ All foreign key relationships are valid")
+                print("   All foreign key relationships are valid")
         
         except Exception as e:
-            print(f"  ❌ Validation failed: {e}")
+            print(f"   Validation failed: {e}")
 
 
 def main():
     """Main execution function"""
-    print("🚀 Starting comprehensive database upload...")
+    print(" Starting comprehensive database upload...")
     print("="*60)
     
     uploader = DatabaseUploader()
@@ -594,21 +594,21 @@ def main():
         
         # Summary
         print("\n" + "="*60)
-        print("📊 UPLOAD SUMMARY")
+        print(" UPLOAD SUMMARY")
         print("="*60)
         print(f"Successfully uploaded: {success_count}/4 tables")
         
         if success_count == 4:
-            print("🎉 All data uploaded successfully!")
+            print(" All data uploaded successfully!")
         else:
-            print(f"⚠️ {4 - success_count} table(s) failed to upload")
+            print(f" {4 - success_count} table(s) failed to upload")
         
         print("="*60)
     
     except KeyboardInterrupt:
-        print("\n⚠️ Upload interrupted by user")
+        print("\n Upload interrupted by user")
     except Exception as e:
-        print(f"\n❌ Unexpected error: {e}")
+        print(f"\n Unexpected error: {e}")
     
     finally:
         uploader.close()

@@ -16,7 +16,7 @@ def print_progress(current, total, prefix='Progress', bar_length=50):
     """Print a progress bar to show upload status"""
     percent = float(current) * 100 / total
     filled_length = int(bar_length * current // total)
-    bar = '█' * filled_length + '-' * (bar_length - filled_length)
+    bar = '' * filled_length + '-' * (bar_length - filled_length)
     sys.stdout.write(f'\r{prefix}: |{bar}| {percent:.1f}% ({current}/{total})')
     sys.stdout.flush()
 
@@ -51,18 +51,18 @@ def batch_insert_fights(cursor, fights_batch):
     return len(values)
 
 def main():
-    print("🥊 Starting fight history upload...")
+    print(" Starting fight history upload...")
     
     # Load fight history data
     try:
         with open(FIGHT_HISTORY_PATH, "r", encoding="utf-8") as f:
             fight_history = json.load(f)
-        print(f"📊 Loaded {len(fight_history):,} fight records")
+        print(f" Loaded {len(fight_history):,} fight records")
     except FileNotFoundError:
-        print(f"❌ Fight history file not found: {FIGHT_HISTORY_PATH}")
+        print(f" Fight history file not found: {FIGHT_HISTORY_PATH}")
         return
     except json.JSONDecodeError as e:
-        print(f"❌ Invalid JSON in fight history file: {e}")
+        print(f" Invalid JSON in fight history file: {e}")
         return
     
     # Connect to database
@@ -74,13 +74,13 @@ def main():
             host=os.getenv("SUPABASE_DB_HOST"),
             port=os.getenv("SUPABASE_DB_PORT")
         )
-        print("✅ Connected to database")
+        print(" Connected to database")
     except psycopg2.Error as e:
-        print(f"❌ Database connection failed: {e}")
+        print(f" Database connection failed: {e}")
         return
     
     cur = conn.cursor()
-    print("⚠️ Clearing existing fight history from the database...")
+    print(" Clearing existing fight history from the database...")
     cur.execute("TRUNCATE TABLE fight_history;")
     conn.commit()
 
@@ -96,7 +96,7 @@ def main():
     BATCH_SIZE = 1000  # Insert in batches for better performance
     batch = []
     
-    print(f"📤 Processing {total_fights:,} fights in batches of {BATCH_SIZE:,}...")
+    print(f" Processing {total_fights:,} fights in batches of {BATCH_SIZE:,}...")
     
     try:
         for i, fight in enumerate(fight_history):
@@ -131,16 +131,16 @@ def main():
                         conn.commit()
                         batch = []  # Clear batch
                     except Exception as e:
-                        print(f"\n⚠️ Batch insert failed: {e}")
+                        print(f"\n Batch insert failed: {e}")
                         conn.rollback()
                         failed_inserts += len(batch)
                         batch = []
                 
             except ValueError as e:
-                print(f"\n⚠️ Invalid date format for fight: {fight.get('fight_date')} - {e}")
+                print(f"\n Invalid date format for fight: {fight.get('fight_date')} - {e}")
                 failed_inserts += 1
             except Exception as e:
-                print(f"\n⚠️ Error processing fight: {e}")
+                print(f"\n Error processing fight: {e}")
                 failed_inserts += 1
             
             # Update progress every 100 items or at the end
@@ -154,19 +154,19 @@ def main():
                 successful_inserts += inserted_count
                 conn.commit()
             except Exception as e:
-                print(f"\n⚠️ Final batch insert failed: {e}")
+                print(f"\n Final batch insert failed: {e}")
                 conn.rollback()
                 failed_inserts += len(batch)
     
     except KeyboardInterrupt:
-        print(f"\n⚠️ Upload interrupted by user")
+        print(f"\n Upload interrupted by user")
         conn.rollback()
     
     finally:
         cur.close()
         conn.close()
         print("\n" + "="*60)
-        print("📊 UPLOAD SUMMARY")
+        print(" UPLOAD SUMMARY")
         print("="*60)
         print(f"Total records processed: {processed:,}")
         print(f"Successfully inserted: {successful_inserts:,}")
@@ -176,9 +176,9 @@ def main():
         print("="*60)
         
         if successful_inserts > 0:
-            print("✅ Upload completed successfully!")
+            print(" Upload completed successfully!")
         else:
-            print("❌ No records were inserted")
+            print(" No records were inserted")
 
 if __name__ == "__main__":
     # Import execute_values for batch inserts

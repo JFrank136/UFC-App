@@ -582,7 +582,7 @@ def _scrape_details(profile_url_ufc):
                 image_url = src
 
             if "ufc.com" not in image_url.lower():
-                logger.warning(f"⚠️ Non-UFC image URL for {fighter_slug}: {image_url}")
+                logger.warning(f" Non-UFC image URL for {fighter_slug}: {image_url}")
                 image_url = None
         else:
             backup_selectors = [
@@ -603,11 +603,11 @@ def _scrape_details(profile_url_ufc):
                         image_url = "https://www.ufc.com" + src
                     else:
                         image_url = src
-                    logger.info(f"🔍 Found backup image for {fighter_slug}: {selector}")
+                    logger.info(f" Found backup image for {fighter_slug}: {selector}")
                     break
             
             if not image_url:
-                logger.warning(f"⚠️ Could not find any image for {fighter_slug}")
+                logger.warning(f" Could not find any image for {fighter_slug}")
 
         if image_url:
             image_dir = os.path.join("..", "ufc-tracker", "public", "images")
@@ -849,7 +849,7 @@ def thread_safe_save(enriched, output_file):
             if os.path.exists(output_file):
                 os.rename(output_file, backup_file)
 
-            # ✅ This actually saves the file
+            #  This actually saves the file
             with open(output_file, "w", encoding="utf-8") as f:
                 json.dump(enriched, f, indent=2, ensure_ascii=False)
 
@@ -857,7 +857,7 @@ def thread_safe_save(enriched, output_file):
             if os.path.exists(backup_file):
                 os.remove(backup_file)
 
-            logger.info(f"✅ File saved at: {os.path.abspath(output_file)}")
+            logger.info(f" File saved at: {os.path.abspath(output_file)}")
 
         except Exception as e:
             logger.error(f"Error saving data: {e}")
@@ -887,7 +887,7 @@ def enrich_roster(input_file="data/ufc_fighters_raw.json", output_file="data/ufc
         logger.warning("No active fighters found in input data")
         return
     
-    logger.info(f"🚀 Processing {total} active fighters with {max_workers} concurrent workers...")
+    logger.info(f" Processing {total} active fighters with {max_workers} concurrent workers...")
     
     # Create output directory if it doesn't exist
     output_dir = os.path.dirname(output_file) or "."
@@ -920,7 +920,7 @@ def enrich_roster(input_file="data/ufc_fighters_raw.json", output_file="data/ufc
                     # Batch save for progress preservation
                     if len(enriched) % batch_save_interval == 0:
                         thread_safe_save(enriched, output_file)
-                        logger.info(f"💾 Batch saved {len(enriched)} records...")
+                        logger.info(f" Batch saved {len(enriched)} records...")
                 else:
                     fighter_info = future_to_fighter[future]
                     failed_fighters.append(fighter_info)
@@ -933,7 +933,7 @@ def enrich_roster(input_file="data/ufc_fighters_raw.json", output_file="data/ufc
 
     # Single retry for failed fighters
     if failed_fighters:
-        print(f"🔄 Retrying {len(failed_fighters)} failed fighters...")
+        print(f" Retrying {len(failed_fighters)} failed fighters...")
         
         retry_workers = min(2, len(failed_fighters))
         retry_successes = []
@@ -958,7 +958,7 @@ def enrich_roster(input_file="data/ufc_fighters_raw.json", output_file="data/ufc
                           if f[2].get('name') not in [r.get('name') for r in retry_successes]]
         
         if retry_successes:
-            print(f"✅ Retry recovered {len(retry_successes)} fighters")
+            print(f" Retry recovered {len(retry_successes)} fighters")
 
     # Final save
     thread_safe_save(enriched, output_file)
@@ -968,11 +968,11 @@ def enrich_roster(input_file="data/ufc_fighters_raw.json", output_file="data/ufc
     failure_count = len(failed_fighters)
     success_rate = (success_count / total) * 100 if total > 0 else 0
     
-    print(f"\n📊 SUMMARY REPORT")
-    print(f"✅ Successfully processed: {success_count}/{total} fighters ({success_rate:.1f}%)")
+    print(f"\n SUMMARY REPORT")
+    print(f" Successfully processed: {success_count}/{total} fighters ({success_rate:.1f}%)")
     
     if failed_fighters:
-        print(f"❌ Failed to process: {failure_count} fighters")
+        print(f" Failed to process: {failure_count} fighters")
         
         # Save failed fighters
         failures_file = "data/errors/details_errors.json"
@@ -991,13 +991,13 @@ def enrich_roster(input_file="data/ufc_fighters_raw.json", output_file="data/ufc
         with open(failures_file, "w", encoding="utf-8") as f:
             json.dump(failed_data, f, indent=2, ensure_ascii=False)
 
-        print(f"💾 Failed fighters report saved to {failures_file}")
+        print(f" Failed fighters report saved to {failures_file}")
 
-    print(f"📁 Final data saved to {output_file}")
+    print(f" Final data saved to {output_file}")
 
 def enrich_roster_sequential(input_file="data/ufc_fighters_raw.json", output_file="data/ufc_details.json"):
     """Sequential version for debugging or when concurrent processing causes issues"""
-    logger.info("🐌 Running in sequential mode...")
+    logger.info(" Running in sequential mode...")
     
     with open(input_file, "r", encoding="utf-8") as f:
         roster = json.load(f)
@@ -1024,12 +1024,12 @@ def enrich_roster_sequential(input_file="data/ufc_fighters_raw.json", output_fil
         time.sleep(1)  # Be extra respectful in sequential mode
 
     thread_safe_save(enriched, output_file)
-    logger.info(f"✅ Sequential processing complete. Saved {len(enriched)} fighters to {output_file}")
+    logger.info(f" Sequential processing complete. Saved {len(enriched)} fighters to {output_file}")
 
 
 def update_ranked_fighter_images(rankings_file="data/ufc_rankings.json", roster_file="data/ufc_fighters_raw.json"):
     """Update images for top 5 ranked fighters + champions from each division"""
-    logger.info("🏆 Starting ranked fighter image update...")
+    logger.info(" Starting ranked fighter image update...")
     
     # Load rankings and roster data
     try:
@@ -1038,10 +1038,10 @@ def update_ranked_fighter_images(rankings_file="data/ufc_rankings.json", roster_
         with open(roster_file, "r", encoding="utf-8") as f:
             roster_data = json.load(f)
     except FileNotFoundError as e:
-        logger.error(f"❌ Required file not found: {e}")
+        logger.error(f" Required file not found: {e}")
         return
     except json.JSONDecodeError as e:
-        logger.error(f"❌ Invalid JSON: {e}")
+        logger.error(f" Invalid JSON: {e}")
         return
     
     # Build UUID to fighter mapping
@@ -1052,7 +1052,7 @@ def update_ranked_fighter_images(rankings_file="data/ufc_rankings.json", roster_
     
     for division in rankings_data:
         division_name = division.get("division", "Unknown")
-        logger.info(f"📋 Processing division: {division_name}")
+        logger.info(f" Processing division: {division_name}")
         
         for fighter_rank in division.get("fighters", []):
             rank = fighter_rank.get("rank")
@@ -1064,15 +1064,15 @@ def update_ranked_fighter_images(rankings_file="data/ufc_rankings.json", roster_
                 if uuid and uuid in uuid_to_fighter:
                     fighter_data = uuid_to_fighter[uuid]
                     fighters_to_update.append((fighter_data, rank, division_name))
-                    logger.info(f"  🎯 Queued for update: {name} (Rank {rank})")
+                    logger.info(f"   Queued for update: {name} (Rank {rank})")
                 else:
-                    logger.warning(f"  ⚠️ Fighter not found in roster: {name} (UUID: {uuid})")
+                    logger.warning(f"   Fighter not found in roster: {name} (UUID: {uuid})")
     
     if not fighters_to_update:
         logger.warning("No ranked fighters found to update")
         return
     
-    logger.info(f"🚀 Updating images for {len(fighters_to_update)} ranked fighters...")
+    logger.info(f" Updating images for {len(fighters_to_update)} ranked fighters...")
     
     # Process each fighter
     updated_count = 0
@@ -1163,10 +1163,10 @@ def update_ranked_fighter_images(rankings_file="data/ufc_rankings.json", roster_
             failed_count += 1
     
     # Summary
-    logger.info(f"\n📊 RANKED FIGHTER IMAGE UPDATE SUMMARY")
-    logger.info(f"✅ Successfully updated: {updated_count} images")
-    logger.info(f"❌ Failed to update: {failed_count} images")
-    logger.info(f"📁 Images saved to: ../ufc-tracker/public/images/")
+    logger.info(f"\n RANKED FIGHTER IMAGE UPDATE SUMMARY")
+    logger.info(f" Successfully updated: {updated_count} images")
+    logger.info(f" Failed to update: {failed_count} images")
+    logger.info(f" Images saved to: ../ufc-tracker/public/images/")
 
 
 if __name__ == "__main__":
@@ -1185,11 +1185,11 @@ if __name__ == "__main__":
                 logger.warning("Invalid worker count, using default (4)")
 
     if mode == "1":
-        logger.info(f"🚀 Running full scrape with {max_workers} workers...")
+        logger.info(f" Running full scrape with {max_workers} workers...")
         enrich_roster(max_workers=max_workers)
 
     elif mode == "3":
-        logger.info("🏆 Running ranked fighter image update...")
+        logger.info(" Running ranked fighter image update...")
         update_ranked_fighter_images()
     
     elif mode == "2":
@@ -1200,7 +1200,7 @@ if __name__ == "__main__":
             with open(retry_file, "r", encoding="utf-8") as f:
                 failures = json.load(f)
         except FileNotFoundError:
-            print("✅ No failure file found.")
+            print(" No failure file found.")
             sys.exit(0)
 
         # Load main roster to get complete fighter data
@@ -1208,7 +1208,7 @@ if __name__ == "__main__":
             with open(input_roster_file, "r", encoding="utf-8") as f:
                 full_roster = json.load(f)
         except Exception as e:
-            print(f"❌ Failed to load input roster: {e}")
+            print(f" Failed to load input roster: {e}")
             sys.exit(1)
 
         # Build fighter lookup by name and UUID
@@ -1231,13 +1231,13 @@ if __name__ == "__main__":
             if fighter:
                 to_retry.append(fighter)
             else:
-                print(f"⚠️ Fighter '{name}' not found in active roster")
+                print(f" Fighter '{name}' not found in active roster")
 
         if not to_retry:
-            print("⚠️ No matching fighters found for retry.")
+            print(" No matching fighters found for retry.")
             sys.exit(0)
 
-        print(f"🚀 Retrying {len(to_retry)} fighters...")
+        print(f" Retrying {len(to_retry)} fighters...")
         
         # Process fighters (same as main function)
         enriched = []
@@ -1248,12 +1248,12 @@ if __name__ == "__main__":
                 result = process_fighter((idx, len(to_retry), fighter))
                 if result:
                     enriched.append(result)
-                    print(f"✅ Success: {fighter.get('name')}")
+                    print(f" Success: {fighter.get('name')}")
                 else:
                     failed_fighters.append(fighter)
-                    print(f"❌ Failed: {fighter.get('name')}")
+                    print(f" Failed: {fighter.get('name')}")
             except Exception as e:
-                print(f"❌ Error processing {fighter.get('name')}: {e}")
+                print(f" Error processing {fighter.get('name')}: {e}")
                 failed_fighters.append(fighter)
             
             time.sleep(1)
@@ -1288,12 +1288,12 @@ if __name__ == "__main__":
         with open(retry_file, "w", encoding="utf-8") as f:
             json.dump(remaining_errors, f, indent=2, ensure_ascii=False)
         
-        print(f"\n📊 RETRY SUMMARY:")
-        print(f"✅ Successfully processed: {len(enriched)} fighters")
-        print(f"❌ Failed to process: {len(failed_fighters)} fighters")
-        print(f"🧹 Removed {len(successful_names)} entries from error file")
-        print(f"📁 Merged {len(enriched)} fighters into existing data")
-        print(f"📁 Total fighters in file: {len(merged_fighters)}")
+        print(f"\n RETRY SUMMARY:")
+        print(f" Successfully processed: {len(enriched)} fighters")
+        print(f" Failed to process: {len(failed_fighters)} fighters")
+        print(f" Removed {len(successful_names)} entries from error file")
+        print(f" Merged {len(enriched)} fighters into existing data")
+        print(f" Total fighters in file: {len(merged_fighters)}")
     
     else:
-        print("❌ Invalid choice.")
+        print(" Invalid choice.")

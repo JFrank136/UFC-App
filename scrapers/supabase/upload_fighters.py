@@ -55,7 +55,7 @@ def print_progress(current, total, prefix='Progress', bar_length=50):
     """Print a progress bar to show upload status"""
     percent = float(current) * 100 / total
     filled_length = int(bar_length * current // total)
-    bar = '█' * filled_length + '-' * (bar_length - filled_length)
+    bar = '' * filled_length + '-' * (bar_length - filled_length)
     sys.stdout.write(f'\r{prefix}: |{bar}| {percent:.1f}% ({current}/{total})')
     sys.stdout.flush()
 
@@ -202,19 +202,19 @@ def main():
     
     # Verify file exists
     if not os.path.exists(FIGHTERS_PATH):
-        print(f"❌ File not found: {FIGHTERS_PATH}")
+        print(f" File not found: {FIGHTERS_PATH}")
         sys.exit(1)
     
     # Load and validate JSON
     try:
         with open(FIGHTERS_PATH, "r", encoding="utf-8") as f:
             fighters = json.load(f)
-        print(f"✅ Loaded {len(fighters):,} fighters from {FIGHTERS_PATH}")
+        print(f" Loaded {len(fighters):,} fighters from {FIGHTERS_PATH}")
     except json.JSONDecodeError as e:
-        print(f"❌ Invalid JSON format: {e}")
+        print(f" Invalid JSON format: {e}")
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Failed to load file: {e}")
+        print(f" Failed to load file: {e}")
         sys.exit(1)
     
     
@@ -231,11 +231,11 @@ def main():
             port=os.getenv("SUPABASE_DB_PORT")
         )
     except Exception as e:
-        print(f"❌ Database connection failed: {e}")
+        print(f" Database connection failed: {e}")
         sys.exit(1)
     
     cur = conn.cursor()
-    print("⚠️ Deleting existing fighters from the database...")
+    print(" Deleting existing fighters from the database...")
     cur.execute("DELETE FROM fighters;")
     conn.commit()
 
@@ -280,7 +280,7 @@ def main():
                     conn.commit()
                     batch = []
                 except Exception as e:
-                    print(f"\n⚠️ Batch insert failed: {e}")
+                    print(f"\n Batch insert failed: {e}")
                     conn.rollback()
                     database_failures += len(batch)
                     batch = []
@@ -296,12 +296,12 @@ def main():
                 successful_inserts += inserted_count
                 conn.commit()
             except Exception as e:
-                print(f"\n⚠️ Final batch insert failed: {e}")
+                print(f"\n Final batch insert failed: {e}")
                 conn.rollback()
                 database_failures += len(batch)
     
     except KeyboardInterrupt:
-        print(f"\n⚠️ Upload interrupted by user")
+        print(f"\n Upload interrupted by user")
         conn.rollback()
     
     finally:
@@ -310,7 +310,7 @@ def main():
         
         # Print detailed summary
         print("\n" + "="*60)
-        print("📊 FIGHTER UPLOAD SUMMARY")
+        print(" FIGHTER UPLOAD SUMMARY")
         print("="*60)
         print(f"Total fighters processed: {processed:,}")
         print(f"Successfully inserted: {successful_inserts:,}")
@@ -319,20 +319,20 @@ def main():
         print(f"Success rate: {(successful_inserts/max(processed, 1)*100):.1f}%")
         
         if validation_errors and len(validation_errors) <= 10:
-            print("\n❌ Validation Errors:")
+            print("\n Validation Errors:")
             for error in validation_errors:
                 print(f"  [{error['index']}] {error['name']}: {', '.join(error['errors'])}")
         elif validation_errors:
-            print(f"\n❌ {len(validation_errors)} validation errors (showing first 5):")
+            print(f"\n {len(validation_errors)} validation errors (showing first 5):")
             for error in validation_errors[:5]:
                 print(f"  [{error['index']}] {error['name']}: {', '.join(error['errors'])}")
         
         print("="*60)
         
         if successful_inserts > 0:
-            print("✅ Fighter upload completed!")
+            print(" Fighter upload completed!")
         else:
-            print("❌ No fighters were successfully uploaded")
+            print(" No fighters were successfully uploaded")
 
 
 if __name__ == "__main__":

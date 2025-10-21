@@ -21,7 +21,7 @@ def main():
     cur = conn.cursor()
 
     # Wipe the table before reuploading
-    print("⚠️ Truncating upcoming_fights table...")
+    print(" Truncating upcoming_fights table...")
     cur.execute("TRUNCATE TABLE upcoming_fights;")
     conn.commit()
 
@@ -42,11 +42,11 @@ def main():
         uuid2 = fight.get("uuid2")
 
         if not uuid1 and not uuid2:
-            print(f"❌ Skipped: {fight['fighter1']} vs {fight['fighter2']} (no UUIDs)")
+            print(f" Skipped: {fight['fighter1']} vs {fight['fighter2']} (no UUIDs)")
             continue
 
         if not uuid1 or not uuid2:
-            print(f"⚠️ Partial UUID: {fight['fighter1']} vs {fight['fighter2']} (one missing)")
+            print(f" Partial UUID: {fight['fighter1']} vs {fight['fighter2']} (one missing)")
 
         values.append((
             str(uuid4()),
@@ -72,7 +72,7 @@ def main():
     conn.commit()
     conn.close()
 
-    print(f"✅ Uploaded {len(values)} fights with venue and image information.")
+    print(f" Uploaded {len(values)} fights with venue and image information.")
 
 if __name__ == "__main__":
     main()

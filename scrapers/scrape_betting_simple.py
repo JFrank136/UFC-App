@@ -36,13 +36,13 @@ def setup_browser():
 
 def enhanced_fighter_detection(soup):
     """Enhanced fighter name detection with multiple strategies"""
-    print("\n🥊 ENHANCED FIGHTER DETECTION:")
+    print("\n ENHANCED FIGHTER DETECTION:")
     
     potential_fights = []
     
     # Strategy 1: Look for table headers with scope="row" (fighter matchups)
     fight_headers = soup.select('th[scope="row"]')
-    print(f"📋 Found {len(fight_headers)} table headers with scope='row':")
+    print(f" Found {len(fight_headers)} table headers with scope='row':")
     
     for i, header in enumerate(fight_headers):
         text = header.get_text(strip=True)
@@ -73,12 +73,12 @@ def enhanced_fighter_detection(soup):
                         "original_text": text,
                         "header_element": header
                     })
-                    print(f"    ✅ MATCH: {fighter1} vs {fighter2}")
+                    print(f"     MATCH: {fighter1} vs {fighter2}")
                     break
     
     # Strategy 2: Look in link text (fighter profile links)
     fighter_links = soup.select('a[href*="fighter"]')
-    print(f"\n🔗 Found {len(fighter_links)} fighter profile links:")
+    print(f"\n Found {len(fighter_links)} fighter profile links:")
     
     link_fighters = []
     for link in fighter_links[:10]:  # Show first 10
@@ -91,7 +91,7 @@ def enhanced_fighter_detection(soup):
     
     # Try to pair up fighters from links
     if len(link_fighters) >= 2:
-        print(f"\n🔄 Attempting to pair {len(link_fighters)} fighters from links:")
+        print(f"\n Attempting to pair {len(link_fighters)} fighters from links:")
         for i in range(0, len(link_fighters)-1, 2):
             if i+1 < len(link_fighters):
                 fighter1 = link_fighters[i]
@@ -107,7 +107,7 @@ def enhanced_fighter_detection(soup):
     
     # Strategy 3: Look for divs or spans with fighter names
     potential_name_elements = soup.select('span.fighter-name, div.fighter-name, .fighter, .matchup')
-    print(f"\n👤 Found {len(potential_name_elements)} potential fighter name elements:")
+    print(f"\n Found {len(potential_name_elements)} potential fighter name elements:")
     
     for elem in potential_name_elements:
         text = elem.get_text(strip=True)
@@ -117,7 +117,7 @@ def enhanced_fighter_detection(soup):
     all_text = soup.get_text()
     lines = [line.strip() for line in all_text.split('\n') if line.strip()]
     
-    print(f"\n📄 Scanning {len(lines)} text lines for fighter patterns:")
+    print(f"\n Scanning {len(lines)} text lines for fighter patterns:")
     name_patterns = [
         r'([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+vs\.?\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)',
         r'([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+v\.?\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)',
@@ -160,7 +160,7 @@ def enhanced_fighter_detection(soup):
             seen_combinations.add(fight_key)
             unique_fights.append(fight)
     
-    print(f"\n✅ Total unique fights detected: {len(unique_fights)}")
+    print(f"\n Total unique fights detected: {len(unique_fights)}")
     for i, fight in enumerate(unique_fights, 1):
         print(f"  {i}. {fight['fighter1']} vs {fight['fighter2']} (from: {fight['source']})")
     
@@ -168,11 +168,11 @@ def enhanced_fighter_detection(soup):
 
 def enhanced_odds_analysis(soup, detected_fights):
     """Enhanced odds analysis with better mapping"""
-    print("\n💰 ENHANCED ODDS ANALYSIS:")
+    print("\n ENHANCED ODDS ANALYSIS:")
     
     # Get all cells with data-li attributes
     data_li_cells = soup.select('td[data-li]')
-    print(f"📊 Found {len(data_li_cells)} cells with data-li")
+    print(f" Found {len(data_li_cells)} cells with data-li")
     
     # Group cells by row to understand table structure
     row_analysis = {}
@@ -201,7 +201,7 @@ def enhanced_odds_analysis(soup, detected_fights):
                 "classes": cell.get('class', [])
             })
     
-    print(f"📋 Organized into {len(row_analysis)} rows")
+    print(f" Organized into {len(row_analysis)} rows")
     
     # Try to associate rows with fight headers
     for row_id, row_data in row_analysis.items():
@@ -221,7 +221,7 @@ def enhanced_odds_analysis(soup, detected_fights):
                     break
     
     # Analyze sportsbook structure
-    print(f"\n🏪 SPORTSBOOK ANALYSIS:")
+    print(f"\n SPORTSBOOK ANALYSIS:")
     
     # Look for sportsbook headers in table
     sportsbook_headers = soup.select('th')
@@ -252,7 +252,7 @@ def enhanced_odds_analysis(soup, detected_fights):
             # Try to map cells to sportsbooks
             cells_with_odds = [cell for cell in row_data["cells"] if cell["has_odds"]]
             
-            print(f"\n🥊 Processing fight: {fight['fighter1']} vs {fight['fighter2']}")
+            print(f"\n Processing fight: {fight['fighter1']} vs {fight['fighter2']}")
             print(f"    Found {len(cells_with_odds)} cells with odds")
             
             for i, cell in enumerate(cells_with_odds):
@@ -293,7 +293,7 @@ def enhanced_odds_analysis(soup, detected_fights):
 
 def comprehensive_page_analysis(soup):
     """Comprehensive analysis of page structure"""
-    print("\n🔍 COMPREHENSIVE PAGE ANALYSIS:")
+    print("\n COMPREHENSIVE PAGE ANALYSIS:")
     
     analysis = {
         "page_title": soup.title.string if soup.title else "No title",
@@ -305,13 +305,13 @@ def comprehensive_page_analysis(soup):
         "odds_found": len(re.findall(r'[+\-]\d{2,4}', soup.get_text()))
     }
     
-    print(f"📄 Page title: {analysis['page_title']}")
-    print(f"📊 Tables: {analysis['total_tables']}")
-    print(f"📋 Rows: {analysis['total_rows']}")
-    print(f"🔢 Elements with data-li: {analysis['data_li_elements']}")
-    print(f"🔘 Buttons: {analysis['button_elements']}")
-    print(f"🔗 Links: {analysis['link_elements']}")
-    print(f"💰 Odds found: {analysis['odds_found']}")
+    print(f" Page title: {analysis['page_title']}")
+    print(f" Tables: {analysis['total_tables']}")
+    print(f" Rows: {analysis['total_rows']}")
+    print(f" Elements with data-li: {analysis['data_li_elements']}")
+    print(f" Buttons: {analysis['button_elements']}")
+    print(f" Links: {analysis['link_elements']}")
+    print(f" Odds found: {analysis['odds_found']}")
     
     # Look for specific BestFightOdds elements
     specific_elements = {
@@ -322,7 +322,7 @@ def comprehensive_page_analysis(soup):
         "event_headers": len(soup.select('h1, h2, h3'))
     }
     
-    print(f"\n🎯 BestFightOdds specific elements:")
+    print(f"\n BestFightOdds specific elements:")
     for element, count in specific_elements.items():
         print(f"  {element}: {count}")
     
@@ -330,7 +330,7 @@ def comprehensive_page_analysis(soup):
 
 def improved_button_clicking(driver):
     """Improved button clicking strategy"""
-    print("\n🔘 IMPROVED BUTTON CLICKING:")
+    print("\n IMPROVED BUTTON CLICKING:")
     
     # Wait for initial page load
     time.sleep(2)
@@ -386,12 +386,12 @@ def improved_button_clicking(driver):
         except Exception as e:
             print(f"  Error with {strategy_name}: {e}")
     
-    print(f"✅ Total buttons clicked: {total_clicked}")
+    print(f" Total buttons clicked: {total_clicked}")
     return total_clicked
 
 def simple_scrape_event(driver, event_url: str):
     """Enhanced event scraper with improved detection"""
-    print(f"\n🥊 ENHANCED EVENT SCRAPING: {event_url}")
+    print(f"\n ENHANCED EVENT SCRAPING: {event_url}")
     
     try:
         # Navigate to event
@@ -446,12 +446,12 @@ def simple_scrape_event(driver, event_url: str):
         return result
         
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f" Error: {e}")
         return {"error": str(e), "event_url": event_url}
 
 def main():
     """Main enhanced debug function"""
-    print("🚀 ENHANCED BestFightOdds Debug Scraper")
+    print(" ENHANCED BestFightOdds Debug Scraper")
     print("=" * 60)
     
     driver = setup_browser()
@@ -460,7 +460,7 @@ def main():
         # Test with the same URL
         test_url = "https://www.bestfightodds.com/events/ufc-3725"
         
-        print(f"🎯 Testing with: {test_url}")
+        print(f" Testing with: {test_url}")
         
         result = simple_scrape_event(driver, test_url)
         
@@ -469,31 +469,31 @@ def main():
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
         
-        print(f"\n💾 Enhanced results saved to: {OUTPUT_FILE}")
+        print(f"\n Enhanced results saved to: {OUTPUT_FILE}")
         
         if result and not result.get("error"):
-            print(f"\n📊 SUMMARY:")
+            print(f"\n SUMMARY:")
             print(f"  Fights detected: {result['debug_info']['total_fights_detected']}")
             print(f"  Odds records: {result['debug_info']['total_odds_records']}")
             print(f"  Buttons clicked: {result['page_analysis']['buttons_clicked']}")
             print(f"  Expansion successful: {result['debug_info']['expansion_success']}")
             
             if result['detected_fights']:
-                print(f"\n🥊 DETECTED FIGHTS:")
+                print(f"\n DETECTED FIGHTS:")
                 for i, fight in enumerate(result['detected_fights'], 1):
                     print(f"  {i}. {fight['fighter1']} vs {fight['fighter2']}")
             
             if result['extracted_odds']:
-                print(f"\n💰 EXTRACTED ODDS:")
+                print(f"\n EXTRACTED ODDS:")
                 for odds in result['extracted_odds']:
                     sportsbooks = list(odds['sportsbooks'].keys())
                     print(f"  {odds['fighter1']} vs {odds['fighter2']} - {len(sportsbooks)} sportsbooks")
         
-        print(f"\n✅ Enhanced debugging completed!")
-        print(f"📁 Check the output file for detailed analysis")
+        print(f"\n Enhanced debugging completed!")
+        print(f" Check the output file for detailed analysis")
     
     except Exception as e:
-        print(f"❌ Critical error: {e}")
+        print(f" Critical error: {e}")
     
     finally:
         input("\nPress Enter to close browser...")

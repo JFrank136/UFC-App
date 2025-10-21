@@ -3,7 +3,7 @@ import os
 import sys  # ADD THIS
 
 def run_script(script_path, input_choice):
-    print(f"\n▶️ Running {os.path.basename(script_path)} with choice: {input_choice}")
+    print(f"\n Running {os.path.basename(script_path)} with choice: {input_choice}")
     proc = subprocess.Popen(
         [sys.executable, script_path],
         stdin=subprocess.PIPE,
@@ -14,7 +14,7 @@ def run_script(script_path, input_choice):
     try:
         proc.communicate(input=input_choice + "\n", timeout=300)
     except subprocess.TimeoutExpired:
-        print(f"⏱️ Timeout during {script_path}, killing process.")
+        print(f"⏱ Timeout during {script_path}, killing process.")
         proc.kill()
 
 if __name__ == "__main__":
@@ -31,4 +31,4 @@ if __name__ == "__main__":
         script_path = os.path.join(base_path, script_name)
         run_script(script_path, input_choice)
 
-    print("\n✅ New fighter pipeline complete.")
+    print("\n New fighter pipeline complete.")

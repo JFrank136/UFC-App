@@ -23,10 +23,10 @@ def load_json_file(filepath: str) -> Any:
         with open(filepath, "r", encoding="utf-8") as f:
             return json.load(f)
     except FileNotFoundError:
-        print(f"❌ Error: File not found - {filepath}")
+        print(f" Error: File not found - {filepath}")
         sys.exit(1)
     except json.JSONDecodeError as e:
-        print(f"❌ Error: Invalid JSON in {filepath} - {e}")
+        print(f" Error: Invalid JSON in {filepath} - {e}")
         sys.exit(1)
 
 def normalize_name(name: str) -> str:
@@ -56,7 +56,7 @@ def build_sherdog_lookup(sherdog_data: List[Dict]) -> Dict[str, Dict]:
             lookup[key] = fighter
     
     if duplicates:
-        print(f"⚠️ Warning: Found {len(duplicates)} duplicate names in Sherdog data")
+        print(f" Warning: Found {len(duplicates)} duplicate names in Sherdog data")
     
     return lookup
 
@@ -151,7 +151,7 @@ def find_sherdog_match(ufc_name: str, sherdog_lookup: Dict, name_fixes: Dict) ->
     
     for variation in variations:
         if variation in sherdog_lookup:
-            print(f"📝 Fuzzy match found: '{ufc_name}' → '{variation}'")
+            print(f" Fuzzy match found: '{ufc_name}' → '{variation}'")
             return sherdog_lookup[variation]
     
     # Strategy 4: Try partial matching (last resort)
@@ -160,7 +160,7 @@ def find_sherdog_match(ufc_name: str, sherdog_lookup: Dict, name_fixes: Dict) ->
         # Try just first and last name
         partial_name = f"{ufc_parts[0]} {ufc_parts[-1]}"
         if partial_name in sherdog_lookup and partial_name != normalized_name:
-            print(f"📝 Partial match found: '{ufc_name}' → '{partial_name}'")
+            print(f" Partial match found: '{ufc_name}' → '{partial_name}'")
             return sherdog_lookup[partial_name]
     
     return None
@@ -185,12 +185,12 @@ def save_merged_data(data: List[Dict], filepath: str) -> None:
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
     except Exception as e:
-        print(f"❌ Error saving to {filepath}: {e}")
+        print(f" Error saving to {filepath}: {e}")
         sys.exit(1)
 
 def extract_fight_history(fighters: List[Dict], output_path: str) -> None:
     """Extract flat fight history from merged fighters data."""
-    print("🥊 Extracting fight history...")
+    print(" Extracting fight history...")
     
     # Helper to normalize opponent names
     def normalize_name_for_history(name: str) -> str:
@@ -214,7 +214,7 @@ def extract_fight_history(fighters: List[Dict], output_path: str) -> None:
                     try:
                         fight_date = datetime.strptime(raw_date, "%m/%d/%Y").date().isoformat()
                     except ValueError:
-                        print(f"⚠️ Invalid date format: '{raw_date}' for fighter {fighter.get('name')}")
+                        print(f" Invalid date format: '{raw_date}' for fighter {fighter.get('name')}")
 
                 flat_fight_history.append({
                     "fighter_id": fighter_id,
@@ -227,19 +227,19 @@ def extract_fight_history(fighters: List[Dict], output_path: str) -> None:
                 })
 
             except Exception as e:
-                print(f"⚠️ Error processing fight for {fighter.get('name', 'UNKNOWN')}: {e}")
+                print(f" Error processing fight for {fighter.get('name', 'UNKNOWN')}: {e}")
                 continue
 
     # Save clean flat fight history
     save_merged_data(flat_fight_history, output_path)
-    print(f"✅ Saved flat fight history to {output_path} with {len(flat_fight_history)} entries")
+    print(f" Saved flat fight history to {output_path} with {len(flat_fight_history)} entries")
 
 def main():
     """Main execution function."""
-    print("🥊 Starting fighter data merge...")
+    print(" Starting fighter data merge...")
     
     # Load data files
-    print("📂 Loading data files...")
+    print(" Loading data files...")
     ufc_data = load_json_file("../data/ufc_details.json")
     sherdog_data = load_json_file("../data/sherdog_fighters.json")
 
@@ -249,13 +249,13 @@ def main():
     try:
         from name_fixes import NAME_FIXES
     except ImportError:
-        print("⚠️ Warning: Could not import NAME_FIXES, using empty dict")
+        print(" Warning: Could not import NAME_FIXES, using empty dict")
         NAME_FIXES = {}
     
-    print(f"📊 Loaded {len(ufc_data)} UFC fighters, {len(sherdog_data)} Sherdog fighters")
+    print(f" Loaded {len(ufc_data)} UFC fighters, {len(sherdog_data)} Sherdog fighters")
     
     # Build lookups
-    print("🔍 Building lookup tables...")
+    print(" Building lookup tables...")
     sherdog_lookup = build_sherdog_lookup(sherdog_data)
     name_fixes = create_name_fixes_lookup(NAME_FIXES)
 
@@ -263,7 +263,7 @@ def main():
     existing_lookup = {}
     
     # Merge data
-    print("🔄 Merging fighter data...")
+    print(" Merging fighter data...")
     merged_fighters = []
     unmatched = []
     
@@ -272,7 +272,7 @@ def main():
 
         ufc_name = ufc_fighter.get("name", "").strip()
         if not ufc_name:
-            print(f"⚠️ Warning: UFC fighter with empty name: {ufc_fighter}")
+            print(f" Warning: UFC fighter with empty name: {ufc_fighter}")
             continue
         
         sherdog_fighter = find_sherdog_match(ufc_name, sherdog_lookup, name_fixes)
@@ -318,32 +318,32 @@ def main():
     if mismatched_uuids:
         mismatch_path = "../data/errors/uuid_mismatches.json"
         save_merged_data(mismatched_uuids, mismatch_path)
-        print(f"📄 UUID mismatches report: {mismatch_path}")
+        print(f" UUID mismatches report: {mismatch_path}")
 
-    print("💾 Saving results...")
+    print(" Saving results...")
     save_merged_data(list(existing_lookup.values()), "../data/fighters.json")
 
     
     # Generate reports
-    print("\n📈 Results Summary:")
-    print(f"✅ Successfully merged: {len(merged_fighters)} fighters")
-    print(f"❌ Unmatched: {len(unmatched)} fighters")
+    print("\n Results Summary:")
+    print(f" Successfully merged: {len(merged_fighters)} fighters")
+    print(f" Unmatched: {len(unmatched)} fighters")
     
     if unmatched:
         errors_path = "../data/errors/unmatched_fighters.txt"
         write_unmatched_report(unmatched, errors_path)
-        print(f"📄 Unmatched fighters report: {errors_path}")
+        print(f" Unmatched fighters report: {errors_path}")
         
         # Show worst offenders
         if len(unmatched) <= 10:
-            print(f"\n❌ Unmatched fighters: {', '.join(unmatched)}")
+            print(f"\n Unmatched fighters: {', '.join(unmatched)}")
     else:
-        print("🎉 All UFC fighters matched successfully!")
+        print(" All UFC fighters matched successfully!")
     
     matched_count = len(ufc_data) - len(unmatched)
     match_rate = (matched_count / len(ufc_data)) * 100 if ufc_data else 0
 
-    print(f"📊 Match rate: {match_rate:.1f}%")
+    print(f" Match rate: {match_rate:.1f}%")
     
     # Automatically extract fight history
     print("\n" + "="*50)
