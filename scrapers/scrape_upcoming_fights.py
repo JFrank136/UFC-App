@@ -49,12 +49,12 @@ def download_fight_card_image(url, save_path):
             with open(save_path, 'wb') as f:
                 for chunk in res.iter_content(1024):
                     f.write(chunk)
-            print(f"✅ Downloaded fight card image: {save_path}")
+            print(f"[OK] Downloaded fight card image: {save_path}")
             return True
         else:
-            print(f"❌ Image download failed: HTTP {res.status_code} for {url}")
+            print(f"[X] Image download failed: HTTP {res.status_code} for {url}")
     except Exception as e:
-        print(f"❌ Failed to download fight card image: {e}")
+        print(f"[X] Failed to download fight card image: {e}")
     return False
 
 
@@ -71,7 +71,7 @@ try:
     from name_fixes import TAPOLOGY_FIXES as RAW_FIXES
     TAPOLOGY_FIXES = {name.upper(): fixed for name, fixed in RAW_FIXES.items()}
 except ImportError:
-    print("⚠️ Could not import TAPOLOGY_FIXES. Continuing without it.")
+    print("[WARN] Could not import TAPOLOGY_FIXES. Continuing without it.")
     TAPOLOGY_FIXES = {}
 
 
@@ -88,7 +88,7 @@ def load_uuid_lookup():
                 for fighter in data if "name" in fighter and "id" in fighter
             }
     except Exception as e:
-        print(f"⚠️ Failed to load fighters_raw: {e}")
+        print(f"[WARN] Failed to load fighters_raw: {e}")
         return {}
     
 OUTPUT_PATH = "data/upcoming_fights.json"
@@ -117,7 +117,7 @@ def setup_browser():
 
 
 def get_event_links(driver):
-    print("🌐 Fetching UFC event list...")
+    print("[WEB] Fetching UFC event list...")
     driver.get(BASE_URL)
     WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CSS_SELECTOR, "a[href^='/fightcenter/events/']"))
@@ -128,7 +128,7 @@ def get_event_links(driver):
         "https://www.tapology.com" + a["href"]
         for a in links if "ufc" in a["href"].lower()
     }
-    print(f"📆 Found {len(urls)} UFC events")
+    print(f"[DATE] Found {len(urls)} UFC events")
     return list(urls)
 
 def parse_event_datetime(soup):
@@ -143,7 +143,7 @@ def parse_event_datetime(soup):
         dt = parser.parse(raw, ignoretz=True)
         return dt.strftime("%Y-%m-%d"), dt.strftime("%H:%M")
     except Exception as e:
-        print(f"⚠️  Failed to parse date/time: {e}")
+        print(f"[WARN]  Failed to parse date/time: {e}")
         return "TBD", "TBD"
 
 
@@ -232,7 +232,7 @@ def parse_venue_info(soup):
                     break
     
     except Exception as e:
-        print(f"⚠️ Error parsing venue info: {e}")
+        print(f"[WARN] Error parsing venue info: {e}")
     
     return venue, location
 
@@ -298,7 +298,7 @@ def download_event_image(soup, event_title):
                 pass
     
     except Exception as e:
-        print(f"⚠️ Error downloading event image: {e}")
+        print(f"[WARN] Error downloading event image: {e}")
     
     return image_url, image_local_path
 
@@ -306,7 +306,7 @@ def download_event_image(soup, event_title):
 def parse_fights(soup, event_title, event_type, event_date, event_time):
     fight_blocks = soup.select("li[data-controller='table-row-background']")
     if not fight_blocks:
-        print("⚠️  No fight blocks found")
+        print("[WARN]  No fight blocks found")
         return []
 
     fights = []
@@ -375,7 +375,7 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
             })
 
         except Exception as fe:
-            print(f"❌ Failed to parse fight block: {fe}")
+            print(f"[X] Failed to parse fight block: {fe}")
             continue
 
     return fights
@@ -384,7 +384,7 @@ def scrape_event(driver, url):
     try:
         driver.get(url)
     except Exception as e:
-        print(f"❌ Failed to load event page: {url}\n  → {e}")
+        print(f"[X] Failed to load event page: {url}\n  → {e}")
         return []
 
     try:
@@ -392,7 +392,7 @@ def scrape_event(driver, url):
             EC.presence_of_element_located((By.CSS_SELECTOR, "li[data-controller='table-row-background']"))
         )
     except Exception:
-        print("⚠️  Fight cards did not load")
+        print("[WARN]  Fight cards did not load")
         return []
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -402,7 +402,7 @@ def scrape_event(driver, url):
         title_tag = soup.find("h1") or soup.find("title")
         event_title = title_tag.get_text(strip=True).split("|")[0].strip()
     except Exception as e:
-        print(f"❌ Failed to get event title: {e}")
+        print(f"[X] Failed to get event title: {e}")
         return []
 
     # Determine type
@@ -448,12 +448,12 @@ def main():
                     with open(error_file, "w", encoding="utf-8") as f:
                         json.dump(existing, f, indent=2, ensure_ascii=False)
                 except Exception as err:
-                    print(f"⚠️ Could not write to event error log: {err}")
+                    print(f"[WARN] Could not write to event error log: {err}")
     finally:
         try:
             driver.quit()
         except Exception as e:
-            print(f"⚠️  Chrome quit() failed: {e}")
+            print(f"[WARN]  Chrome quit() failed: {e}")
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(all_fights, f, indent=2, ensure_ascii=False)
@@ -472,13 +472,13 @@ def main():
             missing_names.add(f["fighter2"])
     missing_names = sorted(missing_names)
 
-    print(f"\n📊 SCRAPING SUMMARY")
-    print(f"✅ Total fights: {len(all_fights)}")
+    print(f"\n[STATS] SCRAPING SUMMARY")
+    print(f"[OK] Total fights: {len(all_fights)}")
     print(f"   • Upcoming: {len(upcoming_fights)}")
     print(f"   • Past: {len(past_fights)}")
     print(f"   • TBD: {len(tbd_fights)}")
     if missing_names:
-        print(f"⚠️ Missing UUIDs: {len(missing_names)} fighters")
+        print(f"[WARN] Missing UUIDs: {len(missing_names)} fighters")
 
     if missing_names:
         os.makedirs("data/errors", exist_ok=True)
@@ -501,7 +501,7 @@ if __name__ == "__main__":
             sys.exit(0)
 
         if not os.path.exists(OUTPUT_PATH):
-            print("⚠️ Cannot update UUIDs — no existing fight data found.")
+            print("[WARN] Cannot update UUIDs — no existing fight data found.")
             sys.exit(1)
 
         print("🔄 Loading fresh UUID lookup and updating existing fights...")
@@ -545,11 +545,11 @@ if __name__ == "__main__":
         with open(error_file, "w", encoding="utf-8") as f:
             json.dump(still_missing_list, f, indent=2, ensure_ascii=False)
 
-        print(f"✅ Updated {updated_count} missing UUIDs")
+        print(f"[OK] Updated {updated_count} missing UUIDs")
         if still_missing_list:
-            print(f"⚠️ Still missing UUIDs for {len(still_missing_list)} fighters")
+            print(f"[WARN] Still missing UUIDs for {len(still_missing_list)} fighters")
         else:
-            print("🎉 All fighters now have UUIDs!")
+            print("[SUCCESS] All fighters now have UUIDs!")
 
     elif mode == "3":
         # Retry failed events
@@ -570,7 +570,7 @@ if __name__ == "__main__":
             url = entry.get("url")
             if not url:
                 continue
-            print(f"🔁 Retrying failed event: {url}")
+            print(f"[REPEAT] Retrying failed event: {url}")
             fights = scrape_event(driver, url)
             if fights:
                 all_fights.extend(fights)
@@ -579,7 +579,7 @@ if __name__ == "__main__":
         try:
             driver.quit()
         except Exception as e:
-            print(f"⚠️ Chrome quit() failed: {e}")
+            print(f"[WARN] Chrome quit() failed: {e}")
 
         # --- Merge retried fights into main output file, deduping by all fight info ---
         output_path = "data/upcoming_fights.json"
@@ -604,15 +604,15 @@ if __name__ == "__main__":
 
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(merged_fights, f, indent=2, ensure_ascii=False)
-        print(f"✅ Retried and scraped {len(all_fights)} fights from failed events. Merged {len(new_fights)} new fights.")
+        print(f"[OK] Retried and scraped {len(all_fights)} fights from failed events. Merged {len(new_fights)} new fights.")
 
         # --- Remove successfully retried events from error log ---
         remaining_errors = [entry for entry in failed_events if entry.get("url") not in retried_urls]
         with open(error_file, "w", encoding="utf-8") as f:
             json.dump(remaining_errors, f, indent=2, ensure_ascii=False)
-        print(f"🧹 Cleaned up {len(retried_urls)} retried events from error log.")
+        print(f"[CLEAN] Cleaned up {len(retried_urls)} retried events from error log.")
 
         if not all_fights:
             print("No fights scraped on retry.")
     else:
-        print("❌ Invalid option.")
+        print("[X] Invalid option.")

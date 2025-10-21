@@ -22,7 +22,7 @@ def load_fighter_index(file_path="data/ufc_fighters_raw.json"):
             for f in fighters if f.get("name")
         }
     except Exception as e:
-        print(f"⚠️ Failed to load fighter DB: {e}")
+        print(f"[WARN] Failed to load fighter DB: {e}")
         return {}
 
 
@@ -66,7 +66,7 @@ def validate_division_structure(division_name, fighters):
 
 
 def scrape_rankings():
-    print("🏆 Starting UFC rankings scrape...")
+    print("[TROPHY] Starting UFC rankings scrape...")
     
     name_to_uuid = load_fighter_index()
 
@@ -78,7 +78,7 @@ def scrape_rankings():
     driver = webdriver.Chrome(options=options)
     driver.get(url)
 
-    print("📄 Loading rankings page...")
+    print("[PAGE] Loading rankings page...")
     WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "div.view-grouping table tbody tr"))
     )
@@ -98,10 +98,10 @@ def scrape_rankings():
     headers = driver.find_elements(By.CSS_SELECTOR, "div.view-grouping-header")
     divisions = driver.find_elements(By.CSS_SELECTOR, "div.view-grouping")
 
-    print(f"📊 Processing {len(headers)} divisions...")
+    print(f"[STATS] Processing {len(headers)} divisions...")
 
     if len(headers) != len(divisions):
-        print("⚠️ Header and division block count mismatch.")
+        print("[WARN] Header and division block count mismatch.")
 
     all_rankings = []
     missing_fighters = []
@@ -262,7 +262,7 @@ def scrape_rankings():
 
     driver.quit()
 
-    print("💾 Saving rankings data...")
+    print("[SAVE] Saving rankings data...")
 
     # Save rankings
     with open("data/ufc_rankings.json", "w", encoding="utf-8") as f:
@@ -281,27 +281,27 @@ def scrape_rankings():
     expected_total = 11*16 + 30  # 11 weight classes with champ + 15, 2 P4P lists with 15
     
     print("\n" + "="*50)
-    print("📊 RANKINGS SUMMARY")
+    print("[STATS] RANKINGS SUMMARY")
     print("="*50)
-    print(f"✅ Total fighters: {len(all_fighter_names)} (expected ~{expected_total})")
+    print(f"[OK] Total fighters: {len(all_fighter_names)} (expected ~{expected_total})")
     if rank_changes > 0:
-        print(f"📈 Rank changes detected: {rank_changes}")
+        print(f"[UP] Rank changes detected: {rank_changes}")
 
     # Handle missing fighters
     if missing_fighters:
         os.makedirs("data/errors", exist_ok=True)
         with open("data/errors/rankings_errors.json", "w", encoding="utf-8") as f:
             json.dump(missing_fighters, f, indent=2, ensure_ascii=False)
-        print(f"⚠️ Missing UUIDs: {len(missing_fighters)} fighters")
+        print(f"[WARN] Missing UUIDs: {len(missing_fighters)} fighters")
     else:
         error_path = "data/errors/rankings_errors.json"
         if os.path.exists(error_path):
             os.remove(error_path)
-        print("✅ All fighters matched")
+        print("[OK] All fighters matched")
 
     # Show warnings if any
     if warnings:
-        print(f"⚠️ Warnings: {len(warnings)} issues encountered")
+        print(f"[WARN] Warnings: {len(warnings)} issues encountered")
         # Only show first few warnings to avoid spam
         for warning in warnings[:3]:
             print(f"   • {warning}")
@@ -313,13 +313,13 @@ def scrape_rankings():
 
 def fix_missing_uuids():
     """Fix fighters with missing UUIDs from error file"""
-    print("🔄 Fixing missing UUIDs...")
+    print("[RETRY] Fixing missing UUIDs...")
     
     try:
         with open("data/errors/rankings_errors.json", "r", encoding="utf-8") as f:
             missing = json.load(f)
     except FileNotFoundError:
-        print("⚠️ No rankings_errors.json file found.")
+        print("[WARN] No rankings_errors.json file found.")
         return
 
     uuid_map = load_fighter_index()
@@ -334,15 +334,15 @@ def fix_missing_uuids():
         else:
             updated.append(fighter)
 
-    print(f"✅ Matched {matched_count} fighters")
+    print(f"[OK] Matched {matched_count} fighters")
     
     if updated:
         with open("data/errors/rankings_errors.json", "w", encoding="utf-8") as f:
             json.dump(updated, f, indent=2, ensure_ascii=False)
-        print(f"⚠️ Still unmatched: {len(updated)} fighters")
+        print(f"[WARN] Still unmatched: {len(updated)} fighters")
     else:
         os.remove("data/errors/rankings_errors.json")
-        print("✅ All fighters matched - error file deleted")
+        print("[OK] All fighters matched - error file deleted")
 
 
 if __name__ == "__main__":

@@ -41,7 +41,7 @@ error_details = []
 
 
 def scrape_ufc_fighters():
-    print("🚀 Starting UFC roster scrape...")
+    print("[START] Starting UFC roster scrape...")
     url = "https://www.ufc.com/athletes/all"
 
     # --- Browser setup ---
@@ -55,7 +55,7 @@ def scrape_ufc_fighters():
     driver.get(url)
 
     # --- Load all fighters by repeatedly clicking "Load More" ---
-    print("📄 Loading fighter cards...")
+    print("[PAGE] Loading fighter cards...")
     prev_count = 0
     stall_count = 0
     max_stalls = 3
@@ -111,7 +111,7 @@ def scrape_ufc_fighters():
 
 
     print(f"   Loaded {len(cards)} fighter cards")
-    print("⏳ Processing fighter profiles...")
+    print("[WAIT] Processing fighter profiles...")
     
     fighters = []
     timeout_count = 0
@@ -175,7 +175,7 @@ def scrape_ufc_fighters():
             
             # Warn if too many consecutive errors
             if consecutive_errors >= 5:
-                print(f"\n⚠️ Warning: {consecutive_errors} consecutive errors. Check connection or site changes.")
+                print(f"\n[WARN] Warning: {consecutive_errors} consecutive errors. Check connection or site changes.")
                 consecutive_errors = 0  # Reset warning counter
             
             continue  # skip to next card
@@ -234,26 +234,26 @@ def scrape_ufc_fighters():
         json.dump(list(existing_map.values()), f, indent=2, ensure_ascii=False)
 
     # Print condensed summary
-    print("\n📊 SCRAPING SUMMARY:")
-    print(f"✅ Successfully scraped: {len(fighters) - roster_added} fighters")
+    print("\n[STATS] SCRAPING SUMMARY:")
+    print(f"[OK] Successfully scraped: {len(fighters) - roster_added} fighters")
     if timeout_count > 0:
-        print(f"⚠️  Timeout/retry issues: {timeout_count} requests")
+        print(f"[WARN]  Timeout/retry issues: {timeout_count} requests")
     if len(error_details) > 0:
-        print(f"❌ Parse failures: {len(error_details)} fighters")
+        print(f"[X] Parse failures: {len(error_details)} fighters")
     if roster_added > 0:
-        print(f"📁 Added from UFC_ROSTER: {roster_added} fighters")
-    print(f"💾 Saved to: {output_file}")
+        print(f"[FILE] Added from UFC_ROSTER: {roster_added} fighters")
+    print(f"[SAVE] Saved to: {output_file}")
 
     # write detailed error summary if any failures occurred
     if error_details:
         with open("data/errors/roster_errors.json", "w", encoding="utf-8") as ef:
             json.dump(error_details, ef, indent=2, ensure_ascii=False)
-        print(f"\n⚠️  Error details saved to:")
+        print(f"\n[WARN]  Error details saved to:")
         print(f"   • data/errors/roster_errors.log (full details)")
         print(f"   • data/errors/roster_errors.json (retry format)")
 
 def inject_new_ufc_roster_entries(output_file="data/ufc_fighters_raw.json"):
-    print("🔍 Checking for new UFC_ROSTER fighters...")
+    print("[SEARCH] Checking for new UFC_ROSTER fighters...")
     
     try:
         with open(output_file, "r", encoding="utf-8") as f:
@@ -273,7 +273,7 @@ def inject_new_ufc_roster_entries(output_file="data/ufc_fighters_raw.json"):
             new_fighter_names.append(name)
 
     if new_fighter_names:
-        print(f"📥 Found {len(new_fighter_names)} new fighters to inject:")
+        print(f"[INBOX] Found {len(new_fighter_names)} new fighters to inject:")
         for name in new_fighter_names[:5]:  # Show first 5
             print(f"   • {name}")
         if len(new_fighter_names) > 5:
@@ -302,15 +302,15 @@ def inject_new_ufc_roster_entries(output_file="data/ufc_fighters_raw.json"):
         existing.extend(new_entries)
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(existing, f, indent=2, ensure_ascii=False)
-        print(f"✅ Successfully injected {len(new_entries)} fighters")
-        print(f"📁 Updated: {output_file}")
+        print(f"[OK] Successfully injected {len(new_entries)} fighters")
+        print(f"[FILE] Updated: {output_file}")
     else:
-        print("✅ No new fighters found in UFC_ROSTER")
+        print("[OK] No new fighters found in UFC_ROSTER")
         return
     
     # Update error files - deduplicate by UUID and remove successfully added fighters
     if new_error_entries:
-        print("🔄 Updating error files for downstream scrapers:")
+        print("[RETRY] Updating error files for downstream scrapers:")
         
         error_log_file = "data/errors/roster_errors.json"
         
@@ -342,7 +342,7 @@ def inject_new_ufc_roster_entries(output_file="data/ufc_fighters_raw.json"):
             if error_uuid not in existing_uuids:
                 filtered_errors.append(error)
             else:
-                print(f"   🧹 Removed {error.get('name', 'Unknown')} from error file (successfully added)")
+                print(f"   [CLEAN] Removed {error.get('name', 'Unknown')} from error file (successfully added)")
         
         # Save deduplicated and filtered errors
         with open(error_log_file, "w", encoding="utf-8") as ef:
@@ -379,11 +379,11 @@ def inject_new_ufc_roster_entries(output_file="data/ufc_fighters_raw.json"):
             json.dump(sherdog_entries, sf, indent=2, ensure_ascii=False)
         print(f"   • {sherdog_retry_file}")
         
-        print(f"🎯 Final error file contains {len(filtered_errors)} unresolved fighters")
+        print(f"[TARGET] Final error file contains {len(filtered_errors)} unresolved fighters")
 
 
 if __name__ == "__main__":
-    print("🔄 Full scrape or just inject new UFC_ROSTER fighters?")
+    print("[RETRY] Full scrape or just inject new UFC_ROSTER fighters?")
     print("[1] Full scrape")
     print("[2] Only add new fighters from UFC_ROSTER")
     choice = input("Enter 1 or 2: ").strip()
@@ -393,4 +393,4 @@ if __name__ == "__main__":
     elif choice == "2":
         inject_new_ufc_roster_entries()
     else:
-        print("❌ Invalid choice. Exiting.")
+        print("[X] Invalid choice. Exiting.")

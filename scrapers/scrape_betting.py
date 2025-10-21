@@ -26,7 +26,7 @@ try:
     from name_fixes import TAPOLOGY_FIXES
     TAPOLOGY_FIXES = {name.upper(): fixed for name, fixed in TAPOLOGY_FIXES.items()}
 except ImportError:
-    print("⚠️ Could not import TAPOLOGY_FIXES. Continuing without name fixes.")
+    print("[WARN] Could not import TAPOLOGY_FIXES. Continuing without name fixes.")
     TAPOLOGY_FIXES = {}
 
 OUTPUT_FILE = "data/bestfightodds_data.json"
@@ -120,19 +120,19 @@ def load_upcoming_fights() -> List[Dict]:
             if fight.get("event_status") == "upcoming"
         ]
         
-        print(f"📅 Loaded {len(upcoming_fights)} upcoming fights for matching")
+        print(f"[DATE] Loaded {len(upcoming_fights)} upcoming fights for matching")
         return upcoming_fights
         
     except FileNotFoundError:
-        print(f"⚠️ Upcoming fights file not found: {UPCOMING_FIGHTS_FILE}")
+        print(f"[WARN] Upcoming fights file not found: {UPCOMING_FIGHTS_FILE}")
         return []
     except json.JSONDecodeError as e:
-        print(f"❌ Invalid JSON in upcoming fights file: {e}")
+        print(f"[X] Invalid JSON in upcoming fights file: {e}")
         return []
 
 def scrape_ufc_events(driver) -> List[str]:
     """Get list of UFC event URLs from BestFightOdds using Selenium"""
-    print("🔍 Finding UFC events on BestFightOdds with browser...")
+    print("[SEARCH] Finding UFC events on BestFightOdds with browser...")
     
     try:
         # Navigate to BestFightOdds
@@ -149,7 +149,7 @@ def scrape_ufc_events(driver) -> List[str]:
         # Get page source and parse with BeautifulSoup
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         
-        print(f"📄 Page title: {soup.title.string if soup.title else 'No title'}")
+        print(f"[PAGE] Page title: {soup.title.string if soup.title else 'No title'}")
         
         # Look for UFC event links
         event_links = []
@@ -180,18 +180,18 @@ def scrape_ufc_events(driver) -> List[str]:
                         break
         
         if not event_links:
-            print("⚠️ No UFC event links found, using manual fallback URLs")
+            print("[WARN] No UFC event links found, using manual fallback URLs")
             event_links = [
                 f"{BASE_URL}/events/ufc-316-dvalishvili-vs-omalley-2",
                 f"{BASE_URL}/events/ufc-317-topuria-vs-oliveira",
                 f"{BASE_URL}/events/ufc-318-holloway-vs-poirier-3"
             ]
         
-        print(f"✅ Found {len(event_links)} UFC event URLs")
+        print(f"[OK] Found {len(event_links)} UFC event URLs")
         return event_links[:5]  # Limit to recent events
         
     except Exception as e:
-        print(f"❌ Error finding UFC events: {e}")
+        print(f"[X] Error finding UFC events: {e}")
         # Return manual fallback
         return [
             f"{BASE_URL}/events/ufc-316-dvalishvili-vs-omalley-2",
@@ -200,7 +200,7 @@ def scrape_ufc_events(driver) -> List[str]:
 
 def scrape_event_odds(driver, event_url: str) -> List[Dict]:
     """Scrape betting odds for a specific UFC event using Selenium"""
-    print(f"🥊 Scraping event: {event_url}")
+    print(f"[FIGHT] Scraping event: {event_url}")
     
     try:
         # Navigate to event page
@@ -235,10 +235,10 @@ def scrape_event_odds(driver, event_url: str) -> List[Dict]:
         # Find tables with betting data
         tables = soup.find_all('table')
         if not tables:
-            print("⚠️ No tables found on page")
+            print("[WARN] No tables found on page")
             return []
         
-        print(f"📊 Processing {len(tables)} tables...")
+        print(f"[STATS] Processing {len(tables)} tables...")
         
         for table in tables:
             # Extract fight odds from table
@@ -308,11 +308,11 @@ def scrape_event_odds(driver, event_url: str) -> List[Dict]:
                 if fight_odds:
                     odds_data.append(fight_odds)
         
-        print(f"✅ Extracted odds for {len(odds_data)} fights")
+        print(f"[OK] Extracted odds for {len(odds_data)} fights")
         return odds_data
         
     except Exception as e:
-        print(f"❌ Error scraping event {event_url}: {e}")
+        print(f"[X] Error scraping event {event_url}: {e}")
         return []
 
 def extract_over_under_from_odds(odds_values) -> Optional[Dict]:
@@ -371,7 +371,7 @@ def create_fight_odds_record(fight_info: Dict, sportsbooks: Dict, event_title: s
 
 def match_odds_to_upcoming_fights(odds_data: List[Dict], upcoming_fights: List[Dict]) -> List[Dict]:
     """Match scraped odds to upcoming fights data"""
-    print("🔗 Matching odds to upcoming fights...")
+    print("[LINK] Matching odds to upcoming fights...")
     
     matched_odds = []
     unmatched_odds = []
@@ -406,14 +406,14 @@ def match_odds_to_upcoming_fights(odds_data: List[Dict], upcoming_fights: List[D
             })
             
             matched_odds.append(enriched_odds)
-            print(f"✅ Matched: {odds['fighter1']} vs {odds['fighter2']}")
+            print(f"[OK] Matched: {odds['fighter1']} vs {odds['fighter2']}")
         else:
             unmatched_odds.append(odds)
-            print(f"⚠️ Unmatched: {odds['fighter1']} vs {odds['fighter2']}")
+            print(f"[WARN] Unmatched: {odds['fighter1']} vs {odds['fighter2']}")
     
-    print(f"\n📊 Matching Results:")
-    print(f"✅ Matched: {len(matched_odds)} fights")
-    print(f"⚠️ Unmatched: {len(unmatched_odds)} fights")
+    print(f"\n[STATS] Matching Results:")
+    print(f"[OK] Matched: {len(matched_odds)} fights")
+    print(f"[WARN] Unmatched: {len(unmatched_odds)} fights")
     
     return matched_odds
 
@@ -425,14 +425,14 @@ def save_odds_data(odds_data: List[Dict], output_file: str = OUTPUT_FILE):
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(odds_data, f, indent=2, ensure_ascii=False)
         
-        print(f"💾 Saved {len(odds_data)} comprehensive odds records to {output_file}")
+        print(f"[SAVE] Saved {len(odds_data)} comprehensive odds records to {output_file}")
         
     except Exception as e:
-        print(f"❌ Error saving odds data: {e}")
+        print(f"[X] Error saving odds data: {e}")
 
 def main():
     """Main execution function with Selenium"""
-    print("🎲 UFC Comprehensive Betting Odds Scraper - BestFightOdds.com")
+    print("[DICE] UFC Comprehensive Betting Odds Scraper - BestFightOdds.com")
     print("=" * 70)
     
     # Load upcoming fights for cross-referencing
@@ -446,10 +446,10 @@ def main():
         event_urls = scrape_ufc_events(driver)
         
         if not event_urls:
-            print("❌ No UFC event URLs found")
+            print("[X] No UFC event URLs found")
             return
         
-        print(f"🎯 Found {len(event_urls)} UFC events to scrape")
+        print(f"[TARGET] Found {len(event_urls)} UFC events to scrape")
         
         # Scrape odds from all events
         all_odds = []
@@ -463,10 +463,10 @@ def main():
             time.sleep(random.uniform(3, 6))
         
         if not all_odds:
-            print("❌ No odds data scraped")
+            print("[X] No odds data scraped")
             return
         
-        print(f"\n🎯 Successfully scraped odds for {len(all_odds)} fights across all events")
+        print(f"\n[TARGET] Successfully scraped odds for {len(all_odds)} fights across all events")
         
         # Match odds to existing fight data if available
         if upcoming_fights:
@@ -478,10 +478,10 @@ def main():
             if unmatched:
                 debug_file = "data/errors/unmatched_bestfightodds.json"
                 save_odds_data(unmatched, debug_file)
-                print(f"🔍 Saved {len(unmatched)} unmatched odds to {debug_file}")
+                print(f"[SEARCH] Saved {len(unmatched)} unmatched odds to {debug_file}")
         else:
             final_odds = all_odds
-            print("⚠️ No upcoming fights data available - saving all scraped odds")
+            print("[WARN] No upcoming fights data available - saving all scraped odds")
         
         # Save comprehensive odds data
         save_odds_data(final_odds)
@@ -503,24 +503,24 @@ def main():
                     bet_type_counts["props"] += 1
         
         print("\n" + "=" * 70)
-        print("📊 COMPREHENSIVE SCRAPING SUMMARY")
+        print("[STATS] COMPREHENSIVE SCRAPING SUMMARY")
         print("=" * 70)
         print(f"Total fights scraped: {len(final_odds)}")
         print(f"Total odds records: {sum(sportsbook_counts.values())}")
         
-        print(f"\n📈 Sportsbook Coverage:")
+        print(f"\n[UP] Sportsbook Coverage:")
         for book, count in sorted(sportsbook_counts.items()):
             print(f"  {book}: {count} fights")
         
-        print(f"\n🎯 Bet Type Coverage:")
+        print(f"\n[TARGET] Bet Type Coverage:")
         for bet_type, count in bet_type_counts.items():
             print(f"  {bet_type.title()}: {count} records")
         
         if final_odds:
-            print(f"\n✅ BestFightOdds scraping completed successfully!")
-            print(f"📁 Data saved to: {OUTPUT_FILE}")
+            print(f"\n[OK] BestFightOdds scraping completed successfully!")
+            print(f"[FILE] Data saved to: {OUTPUT_FILE}")
         else:
-            print("\n⚠️ No odds data was successfully processed")
+            print("\n[WARN] No odds data was successfully processed")
         
         print("=" * 70)
     
