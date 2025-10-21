@@ -4,6 +4,14 @@
     "fighters": [
       {
         "rank": 1,
+        "name": "Ilia Topuria",
+        "profile_url": "https://www.ufc.com/athlete/ilia-topuria",
+        "uuid": "69a6c895-93a5-48f8-be38-9792d7033741",
+        "missing": false,
+        "change": null
+      },
+      {
+        "rank": 2,
         "name": "Islam Makhachev",
         "profile_url": "https://www.ufc.com/athlete/islam-makhachev",
         "uuid": "7d448188-a2f5-4577-90ad-c8184cb792be",
@@ -11,28 +19,20 @@
         "change": null
       },
       {
-        "rank": 2,
+        "rank": 3,
         "name": "Merab Dvalishvili",
         "profile_url": "https://www.ufc.com/athlete/merab-dvalishvili",
         "uuid": "9a960727-5ea9-4185-b6c3-3bc25b6be3b7",
         "missing": false,
-        "change": "RANK INCREASED BY 2"
-      },
-      {
-        "rank": 3,
-        "name": "Jon Jones",
-        "profile_url": "https://www.ufc.com/athlete/jon-jones",
-        "uuid": "d1ea97e2-b386-432d-a2ae-5db30cb709c6",
-        "missing": false,
-        "change": "RANK DECREASED BY 1"
+        "change": null
       },
       {
         "rank": 4,
-        "name": "Ilia Topuria",
-        "profile_url": "https://www.ufc.com/athlete/ilia-topuria",
-        "uuid": "69a6c895-93a5-48f8-be38-9792d7033741",
+        "name": "Alexandre Pantoja",
+        "profile_url": "https://www.ufc.com/athlete/alexandre-pantoja",
+        "uuid": "55bc9daa-c3f2-4dc7-9039-c87be46892d6",
         "missing": false,
-        "change": "RANK DECREASED BY 1"
+        "change": "RANK INCREASED BY 1"
       },
       {
         "rank": 5,
@@ -44,17 +44,17 @@
       },
       {
         "rank": 6,
-        "name": "Magomed Ankalaev",
-        "profile_url": "https://www.ufc.com/athlete/magomed-ankalaev",
-        "uuid": "a2942468-7095-4155-a4c1-ac1cf31e8713",
+        "name": "Alexander Volkanovski",
+        "profile_url": "https://www.ufc.com/athlete/alexander-volkanovski",
+        "uuid": "79c3d148-9137-49c2-9ec1-4595ba630677",
         "missing": false,
         "change": null
       },
       {
         "rank": 7,
-        "name": "Alexander Volkanovski",
-        "profile_url": "https://www.ufc.com/athlete/alexander-volkanovski",
-        "uuid": "79c3d148-9137-49c2-9ec1-4595ba630677",
+        "name": "Magomed Ankalaev",
+        "profile_url": "https://www.ufc.com/athlete/magomed-ankalaev",
+        "uuid": "a2942468-7095-4155-a4c1-ac1cf31e8713",
         "missing": false,
         "change": null
       },
@@ -64,26 +64,10 @@
         "profile_url": "https://www.ufc.com/athlete/jack-della-maddalena",
         "uuid": "1ee84372-9354-4133-9782-c1a6ab5b7a96",
         "missing": false,
-        "change": "RANK INCREASED BY 1"
-      },
-      {
-        "rank": 9,
-        "name": "Alex Pereira",
-        "profile_url": "https://www.ufc.com/athlete/alex-pereira",
-        "uuid": "78837b72-6200-4537-8315-0e7246dfa12c",
-        "missing": false,
-        "change": "RANK DECREASED BY 1"
-      },
-      {
-        "rank": 10,
-        "name": "Alexandre Pantoja",
-        "profile_url": "https://www.ufc.com/athlete/alexandre-pantoja",
-        "uuid": "55bc9daa-c3f2-4dc7-9039-c87be46892d6",
-        "missing": false,
         "change": null
       },
       {
-        "rank": 11,
+        "rank": 9,
         "name": "Tom Aspinall",
         "profile_url": "https://www.ufc.com/athlete/tom-aspinall",
         "uuid": "985df70b-329a-4e45-add2-0497fcbf4b02",
@@ -91,7 +75,15 @@
         "change": null
       },
       {
-        "rank": 12,
+        "rank": 10,
+        "name": "Alex Pereira",
+        "profile_url": "https://www.ufc.com/athlete/alex-pereira",
+        "uuid": "78837b72-6200-4537-8315-0e7246dfa12c",
+        "missing": false,
+        "change": null
+      },
+      {
+        "rank": 11,
         "name": "Max Holloway",
         "profile_url": "https://www.ufc.com/athlete/max-holloway",
         "uuid": "988c3cf7-7f06-412e-b508-f1ac7ea7a632",
@@ -99,7 +91,7 @@
         "change": null
       },
       {
-        "rank": 13,
+        "rank": 12,
         "name": "Belal Muhammad",
         "profile_url": "https://www.ufc.com/athlete/belal-muhammad",
         "uuid": "f4eb4d76-2072-4ad4-a015-fdac5e1369c8",
@@ -107,20 +99,28 @@
         "change": null
       },
       {
-        "rank": 14,
-        "name": "Charles Oliveira",
-        "profile_url": "https://www.ufc.com/athlete/charles-oliveira",
-        "uuid": "a89cc18d-b58c-4a13-9861-e2dee14b84c6",
-        "missing": false,
-        "change": "RANK INCREASED BY 1"
-      },
-      {
-        "rank": 15,
+        "rank": 13,
         "name": "Arman Tsarukyan",
         "profile_url": "https://www.ufc.com/athlete/arman-tsarukyan",
         "uuid": "d0403483-8b75-4c24-a5be-aac9388c1814",
         "missing": false,
-        "change": "NR"
+        "change": null
+      },
+      {
+        "rank": 14,
+        "name": "Khamzat Chimaev",
+        "profile_url": "https://www.ufc.com/athlete/khamzat-chimaev",
+        "uuid": "ff356d1a-9921-489a-8b34-e8ec00c614e7",
+        "missing": false,
+        "change": null
+      },
+      {
+        "rank": 15,
+        "name": "Charles Oliveira",
+        "profile_url": "https://www.ufc.com/athlete/charles-oliveira",
+        "uuid": "a89cc18d-b58c-4a13-9861-e2dee14b84c6",
+        "missing": false,
+        "change": null
       }
     ]
   },
@@ -137,9 +137,9 @@
       },
       {
         "rank": 1,
-        "name": "Brandon Royval",
-        "profile_url": "https://www.ufc.com/athlete/brandon-royval",
-        "uuid": "03fa6a59-3304-4a63-8e63-c787ec4b9392",
+        "name": "Joshua Van",
+        "profile_url": "https://www.ufc.com/athlete/joshua-van",
+        "uuid": "b7383c43-a51f-43b1-a8f8-194e21d4286f",
         "missing": false,
         "change": null
       },
@@ -153,6 +153,14 @@
       },
       {
         "rank": 3,
+        "name": "Brandon Royval",
+        "profile_url": "https://www.ufc.com/athlete/brandon-royval",
+        "uuid": "03fa6a59-3304-4a63-8e63-c787ec4b9392",
+        "missing": false,
+        "change": null
+      },
+      {
+        "rank": 4,
         "name": "Amir Albazi",
         "profile_url": "https://www.ufc.com/athlete/amir-albazi",
         "uuid": "1ed38442-1e16-4f6a-ab5a-990275e3cce3",
@@ -160,7 +168,7 @@
         "change": null
       },
       {
-        "rank": 4,
+        "rank": 5,
         "name": "Kai Kara-France",
         "profile_url": "https://www.ufc.com/athlete/kai-kara-france",
         "uuid": "3a0cecd4-487c-4e77-84b6-dfd2a0e1c5ed",
@@ -168,7 +176,7 @@
         "change": null
       },
       {
-        "rank": 5,
+        "rank": 6,
         "name": "Tatsuro Taira",
         "profile_url": "https://www.ufc.com/athlete/tatsuro-taira",
         "uuid": "d823fa8b-66b1-4e3c-a82d-c82d095db07c",
@@ -176,7 +184,7 @@
         "change": null
       },
       {
-        "rank": 6,
+        "rank": 7,
         "name": "Manel Kape",
         "profile_url": "https://www.ufc.com/athlete/manel-kape",
         "uuid": "2bb451d1-aab4-407f-9782-4f51c027085e",
@@ -184,7 +192,7 @@
         "change": null
       },
       {
-        "rank": 7,
+        "rank": 8,
         "name": "Alex Perez",
         "profile_url": "https://www.ufc.com/athlete/alex-perez",
         "uuid": "861af8bd-f91f-4ea8-9f70-9440f42c1442",
@@ -192,7 +200,7 @@
         "change": null
       },
       {
-        "rank": 8,
+        "rank": 9,
         "name": "Asu Almabayev",
         "profile_url": "https://www.ufc.com/athlete/assu-almabayev",
         "uuid": "8937b9f4-1fd5-498e-ad5f-bce92b8905f7",
@@ -200,20 +208,12 @@
         "change": null
       },
       {
-        "rank": 9,
+        "rank": 10,
         "name": "Steve Erceg",
         "profile_url": "https://www.ufc.com/athlete/steve-erceg",
         "uuid": "6a3095b0-3994-4750-b9c3-1306613f3304",
         "missing": false,
         "change": null
-      },
-      {
-        "rank": 10,
-        "name": "Joshua Van",
-        "profile_url": "https://www.ufc.com/athlete/joshua-van",
-        "uuid": "b7383c43-a51f-43b1-a8f8-194e21d4286f",
-        "missing": false,
-        "change": "RANK INCREASED BY 4"
       },
       {
         "rank": 11,
@@ -229,7 +229,7 @@
         "profile_url": "https://www.ufc.com/athlete/tagir-ulanbekov",
         "uuid": "c4f80972-83d7-4586-9c2a-077a79b40bc2",
         "missing": false,
-        "change": "RANK DECREASED BY 2"
+        "change": null
       },
       {
         "rank": 13,
@@ -245,7 +245,7 @@
         "profile_url": "https://www.ufc.com/athlete/bruno-silva",
         "uuid": "baf44b15-1a19-4bdb-b833-136f314c7be7",
         "missing": false,
-        "change": "RANK DECREASED BY 2"
+        "change": null
       },
       {
         "rank": 15,
@@ -282,7 +282,7 @@
         "profile_url": "https://www.ufc.com/athlete/umar-nurmagomedov",
         "uuid": "882dec39-ce28-4994-8820-c08dc39eed78",
         "missing": false,
-        "change": "RANK INCREASED BY 1"
+        "change": null
       },
       {
         "rank": 3,
@@ -290,7 +290,7 @@
         "profile_url": "https://www.ufc.com/athlete/petr-yan",
         "uuid": "80acc5cb-6af0-4431-a481-b17919f56ae1",
         "missing": false,
-        "change": "RANK DECREASED BY 1"
+        "change": null
       },
       {
         "rank": 4,
@@ -326,6 +326,14 @@
       },
       {
         "rank": 8,
+        "name": "Mario Bautista",
+        "profile_url": "https://www.ufc.com/athlete/mario-bautista",
+        "uuid": "aff6c90e-a8f8-44db-a04f-183bcc3875ec",
+        "missing": false,
+        "change": null
+      },
+      {
+        "rank": 9,
         "name": "Rob Font",
         "profile_url": "https://www.ufc.com/athlete/rob-font",
         "uuid": "a21ec7d9-ff1b-4513-8123-20f3d9a12a36",
@@ -333,20 +341,12 @@
         "change": null
       },
       {
-        "rank": 9,
-        "name": "Mario Bautista",
-        "profile_url": "https://www.ufc.com/athlete/mario-bautista",
-        "uuid": "aff6c90e-a8f8-44db-a04f-183bcc3875ec",
-        "missing": false,
-        "change": "RANK INCREASED BY 1"
-      },
-      {
         "rank": 10,
         "name": "Henry Cejudo",
         "profile_url": "https://www.ufc.com/athlete/henry-cejudo",
         "uuid": "956786cc-56cd-4e44-8cd7-008bc0649ec7",
         "missing": false,
-        "change": "RANK DECREASED BY 1"
+        "change": null
       },
       {
         "rank": 11,
@@ -403,11 +403,11 @@
       },
       {
         "rank": 1,
-        "name": "Max Holloway",
-        "profile_url": "https://www.ufc.com/athlete/max-holloway",
-        "uuid": "988c3cf7-7f06-412e-b508-f1ac7ea7a632",
+        "name": "Movsar Evloev",
+        "profile_url": "https://www.ufc.com/athlete/movsar-evloev",
+        "uuid": "af27e58c-073f-4e24-b2fc-1e5de389cf1a",
         "missing": false,
-        "change": null
+        "change": "RANK INCREASED BY 1"
       },
       {
         "rank": 2,
@@ -415,87 +415,87 @@
         "profile_url": "https://www.ufc.com/athlete/diego-lopes",
         "uuid": "fef09234-877a-47cd-8d82-db8e50aa06fc",
         "missing": false,
-        "change": null
+        "change": "RANK INCREASED BY 1"
       },
       {
         "rank": 3,
-        "name": "Ilia Topuria",
-        "profile_url": "https://www.ufc.com/athlete/ilia-topuria",
-        "uuid": "69a6c895-93a5-48f8-be38-9792d7033741",
-        "missing": false,
-        "change": null
-      },
-      {
-        "rank": 4,
         "name": "Yair Rodriguez",
         "profile_url": "https://www.ufc.com/athlete/yair-rodriguez",
         "uuid": "bde0f300-8e00-49dd-babc-714b1ee8e1aa",
         "missing": false,
-        "change": null
+        "change": "RANK INCREASED BY 1"
       },
       {
-        "rank": 5,
-        "name": "Movsar Evloev",
-        "profile_url": "https://www.ufc.com/athlete/movsar-evloev",
-        "uuid": "af27e58c-073f-4e24-b2fc-1e5de389cf1a",
-        "missing": false,
-        "change": null
-      },
-      {
-        "rank": 6,
+        "rank": 4,
         "name": "Arnold Allen",
         "profile_url": "https://www.ufc.com/athlete/arnold-allen",
         "uuid": "20c34c32-b788-4f9d-be7d-021855900485",
         "missing": false,
-        "change": null
+        "change": "RANK INCREASED BY 1"
       },
       {
-        "rank": 7,
+        "rank": 5,
         "name": "Brian Ortega",
         "profile_url": "https://www.ufc.com/athlete/brian-ortega",
         "uuid": "3922aeaa-4de8-4b5b-a063-e82fc17ebc05",
         "missing": false,
-        "change": null
+        "change": "RANK INCREASED BY 1"
       },
       {
-        "rank": 8,
+        "rank": 6,
         "name": "Lerone Murphy",
         "profile_url": "https://www.ufc.com/athlete/lerone-murphy",
         "uuid": "8902627a-96ce-4849-b558-f4da01662d42",
         "missing": false,
-        "change": null
+        "change": "RANK INCREASED BY 1"
       },
       {
-        "rank": 9,
+        "rank": 7,
         "name": "Aljamain Sterling",
         "profile_url": "https://www.ufc.com/athlete/aljamain-sterling",
         "uuid": "f02b41f1-04e6-4fae-b881-8db9b019d0ee",
         "missing": false,
-        "change": null
+        "change": "RANK INCREASED BY 1"
       },
       {
-        "rank": 10,
+        "rank": 8,
         "name": "Josh Emmett",
         "profile_url": "https://www.ufc.com/athlete/josh-emmett",
         "uuid": "2237a0df-c77b-4c1f-b429-b76504025d66",
         "missing": false,
-        "change": null
+        "change": "RANK INCREASED BY 1"
       },
       {
-        "rank": 11,
+        "rank": 9,
+        "name": "Youssef Zalal",
+        "profile_url": "https://www.ufc.com/athlete/youssef-zalal",
+        "uuid": "f78cc61b-c1c3-4448-b2a8-6a88e8527611",
+        "missing": false,
+        "change": "RANK INCREASED BY 2"
+      },
+      {
+        "rank": 10,
         "name": "Jean Silva",
-        "profile_url": "https://www.ufc.com/athlete/jean-silva-lord",
+        "profile_url": "https://www.ufc.com/athlete/jean-silva",
         "uuid": "045cd8f1-4442-418e-9bea-2c555644353e",
         "missing": false,
         "change": null
       },
       {
-        "rank": 12,
-        "name": "Youssef Zalal",
-        "profile_url": "https://www.ufc.com/athlete/youssef-zalal",
-        "uuid": "f78cc61b-c1c3-4448-b2a8-6a88e8527611",
+        "rank": 11,
+        "name": "Dan Ige",
+        "profile_url": "https://www.ufc.com/athlete/dan-ige",
+        "uuid": "f0f03729-57e8-49ed-b09c-194e17fcd381",
         "missing": false,
-        "change": null
+        "change": "RANK INCREASED BY 1"
+      },
+      {
+        "rank": 12,
+        "name": "Steve Garcia",
+        "profile_url": "https://www.ufc.com/athlete/steve-garcia",
+        "uuid": "f3ac3d11-e298-41ea-9391-90b8129a413b",
+        "missing": false,
+        "change": "NR"
       },
       {
         "rank": 13,
@@ -507,19 +507,27 @@
       },
       {
         "rank": 14,
-        "name": "Dan Ige",
-        "profile_url": "https://www.ufc.com/athlete/dan-ige",
-        "uuid": "f0f03729-57e8-49ed-b09c-194e17fcd381",
+        "name": "Giga Chikadze",
+        "profile_url": "https://www.ufc.com/athlete/giga-chikadze",
+        "uuid": "5807964f-ed9b-45e3-8ca6-b6d06ce50097",
         "missing": false,
-        "change": null
+        "change": "RANK INCREASED BY 1"
       },
       {
         "rank": 15,
+        "name": "Bryce Mitchell",
+        "profile_url": "https://www.ufc.com/athlete/bryce-mitchell",
+        "uuid": "8cf33782-c76c-4a05-a2a3-e78362b548d6",
+        "missing": false,
+        "change": "NR"
+      },
+      {
+        "rank": 16,
         "name": "Calvin Kattar",
         "profile_url": "https://www.ufc.com/athlete/calvin-kattar",
         "uuid": "5159b663-35ba-425a-9285-5dbc44c8b878",
         "missing": false,
-        "change": null
+        "change": "RANK DECREASED BY 1"
       }
     ]
   },
@@ -528,6 +536,14 @@
     "fighters": [
       {
         "rank": "C",
+        "name": "Ilia Topuria",
+        "profile_url": "https://www.ufc.com/athlete/ilia-topuria",
+        "uuid": "69a6c895-93a5-48f8-be38-9792d7033741",
+        "missing": false,
+        "change": null
+      },
+      {
+        "rank": 1,
         "name": "Islam Makhachev",
         "profile_url": "https://www.ufc.com/athlete/islam-makhachev",
         "uuid": "7d448188-a2f5-4577-90ad-c8184cb792be",
@@ -535,7 +551,7 @@
         "change": null
       },
       {
-        "rank": 1,
+        "rank": 2,
         "name": "Arman Tsarukyan",
         "profile_url": "https://www.ufc.com/athlete/arman-tsarukyan",
         "uuid": "d0403483-8b75-4c24-a5be-aac9388c1814",
@@ -543,7 +559,7 @@
         "change": null
       },
       {
-        "rank": 2,
+        "rank": 3,
         "name": "Charles Oliveira",
         "profile_url": "https://www.ufc.com/athlete/charles-oliveira",
         "uuid": "a89cc18d-b58c-4a13-9861-e2dee14b84c6",
@@ -551,7 +567,7 @@
         "change": null
       },
       {
-        "rank": 3,
+        "rank": 4,
         "name": "Justin Gaethje",
         "profile_url": "https://www.ufc.com/athlete/justin-gaethje",
         "uuid": "2560b38b-c09f-4f06-8400-de17d1386cc6",
@@ -559,7 +575,7 @@
         "change": null
       },
       {
-        "rank": 4,
+        "rank": 5,
         "name": "Max Holloway",
         "profile_url": "https://www.ufc.com/athlete/max-holloway",
         "uuid": "988c3cf7-7f06-412e-b508-f1ac7ea7a632",
@@ -567,7 +583,7 @@
         "change": null
       },
       {
-        "rank": 5,
+        "rank": 6,
         "name": "Dustin Poirier",
         "profile_url": "https://www.ufc.com/athlete/dustin-poirier",
         "uuid": "a75e5ee2-1e69-444d-985a-41be55d43b3f",
@@ -575,7 +591,7 @@
         "change": null
       },
       {
-        "rank": 6,
+        "rank": 7,
         "name": "Dan Hooker",
         "profile_url": "https://www.ufc.com/athlete/dan-hooker",
         "uuid": "078fd41a-b39f-4e4a-98e8-42589d86d48f",
@@ -583,18 +599,10 @@
         "change": null
       },
       {
-        "rank": 7,
+        "rank": 8,
         "name": "Mateusz Gamrot",
         "profile_url": "https://www.ufc.com/athlete/mateusz-gamrot",
         "uuid": "c65eb6c9-9e65-4b1f-865e-3cd8401dca70",
-        "missing": false,
-        "change": null
-      },
-      {
-        "rank": 8,
-        "name": "Paddy Pimblett",
-        "profile_url": "https://www.ufc.com/athlete/paddy-pimblett",
-        "uuid": "83a7da9d-1acb-4451-8997-f5caec896e64",
         "missing": false,
         "change": null
       },
@@ -608,9 +616,9 @@
       },
       {
         "rank": 10,
-        "name": "Renato Moicano",
-        "profile_url": "https://www.ufc.com/athlete/renato-moicano",
-        "uuid": "af927c40-765c-4cd2-8b06-5817181497c8",
+        "name": "Paddy Pimblett",
+        "profile_url": "https://www.ufc.com/athlete/paddy-pimblett",
+        "uuid": "83a7da9d-1acb-4451-8997-f5caec896e64",
         "missing": false,
         "change": null
       },
@@ -624,6 +632,14 @@
       },
       {
         "rank": 12,
+        "name": "Renato Moicano",
+        "profile_url": "https://www.ufc.com/athlete/renato-moicano",
+        "uuid": "af927c40-765c-4cd2-8b06-5817181497c8",
+        "missing": false,
+        "change": null
+      },
+      {
+        "rank": 13,
         "name": "Michael Chandler",
         "profile_url": "https://www.ufc.com/athlete/michael-chandler",
         "uuid": "8d067467-7f61-4ad0-8ae5-fa3b585e63dd",
@@ -631,7 +647,7 @@
         "change": null
       },
       {
-        "rank": 13,
+        "rank": 14,
         "name": "Benoît Saint Denis",
         "profile_url": "https://www.ufc.com/athlete/benoit-saint-denis",
         "uuid": "70de50c9-a2cd-4d28-84f3-c4da9cbeff50",
@@ -639,18 +655,10 @@
         "change": null
       },
       {
-        "rank": 14,
+        "rank": 15,
         "name": "Grant Dawson",
         "profile_url": "https://www.ufc.com/athlete/grant-dawson",
         "uuid": "0ab36ecf-6a9a-4cad-a988-3a24c3b21291",
-        "missing": false,
-        "change": null
-      },
-      {
-        "rank": 15,
-        "name": "Joel Álvarez",
-        "profile_url": "https://www.ufc.com/athlete/joel-alvarez",
-        "uuid": "4061f34b-cd66-414b-8a4c-6ce4ca29aa6a",
         "missing": false,
         "change": null
       }
@@ -717,19 +725,19 @@
       },
       {
         "rank": 7,
-        "name": "Joaquin Buckley",
-        "profile_url": "https://www.ufc.com/athlete/joaquin-buckley",
-        "uuid": "19af6ef3-a2a5-47cd-954d-25820e3a4689",
-        "missing": false,
-        "change": null
-      },
-      {
-        "rank": 8,
         "name": "Michael Morales",
         "profile_url": "https://www.ufc.com/athlete/michael-morales",
         "uuid": "c06e18c3-30a0-499c-b3b4-8c931e178d19",
         "missing": false,
         "change": null
+      },
+      {
+        "rank": 8,
+        "name": "Joaquin Buckley",
+        "profile_url": "https://www.ufc.com/athlete/joaquin-buckley",
+        "uuid": "19af6ef3-a2a5-47cd-954d-25820e3a4689",
+        "missing": false,
+        "change": "RANK DECREASED BY 1"
       },
       {
         "rank": 9,
@@ -757,25 +765,25 @@
       },
       {
         "rank": 12,
-        "name": "Stephen Thompson",
-        "profile_url": "https://www.ufc.com/athlete/stephen-thompson",
-        "uuid": "7d0340a7-55e1-41e2-8db7-368b8c17a14a",
-        "missing": false,
-        "change": null
-      },
-      {
-        "rank": 13,
         "name": "Carlos Prates",
         "profile_url": "https://www.ufc.com/athlete/carlos-prates",
         "uuid": "c2d30047-8e77-4a8a-aac7-132f04630e5e",
         "missing": false,
-        "change": null
+        "change": "RANK INCREASED BY 1"
       },
       {
-        "rank": 14,
+        "rank": 13,
         "name": "Kevin Holland",
         "profile_url": "https://www.ufc.com/athlete/kevin-holland",
         "uuid": "5b40088d-37d4-45f2-beab-6fe94acb2cba",
+        "missing": false,
+        "change": "RANK INCREASED BY 1"
+      },
+      {
+        "rank": 14,
+        "name": "Gabriel Bonfim",
+        "profile_url": "https://www.ufc.com/athlete/gabriel-bonfim",
+        "uuid": "2e5bb5d1-f719-413b-b389-a91877ba24ca",
         "missing": false,
         "change": "NR"
       },
@@ -894,7 +902,7 @@
         "profile_url": "https://www.ufc.com/athlete/reinier-de-ridder",
         "uuid": "87145243-f84b-47f5-b268-1fe532d54875",
         "missing": false,
-        "change": "RANK INCREASED BY 1"
+        "change": null
       },
       {
         "rank": 13,
@@ -902,7 +910,7 @@
         "profile_url": "https://www.ufc.com/athlete/paulo-costa",
         "uuid": "36488d21-d173-44e2-9981-f27ec668c72b",
         "missing": false,
-        "change": "RANK DECREASED BY 1"
+        "change": null
       },
       {
         "rank": 14,
@@ -959,9 +967,9 @@
       },
       {
         "rank": 4,
-        "name": "Jamahal Hill",
-        "profile_url": "https://www.ufc.com/athlete/jamahal-hill",
-        "uuid": "2cf692fc-5816-4735-9b56-9ca20dc5a70b",
+        "name": "Khalil Rountree Jr.",
+        "profile_url": "https://www.ufc.com/athlete/khalil-rountree-jr",
+        "uuid": "1669cf76-2e9a-4850-bbdb-8ae9989862ac",
         "missing": false,
         "change": null
       },
@@ -975,17 +983,17 @@
       },
       {
         "rank": 6,
-        "name": "Aleksandar Rakić",
-        "profile_url": "https://www.ufc.com/athlete/aleksandar-rakic",
-        "uuid": "a8e4b5d0-aa4c-4a7c-be35-a81d11f33032",
+        "name": "Jamahal Hill",
+        "profile_url": "https://www.ufc.com/athlete/jamahal-hill",
+        "uuid": "2cf692fc-5816-4735-9b56-9ca20dc5a70b",
         "missing": false,
         "change": null
       },
       {
         "rank": 7,
-        "name": "Khalil Rountree Jr.",
-        "profile_url": "https://www.ufc.com/athlete/khalil-rountree-jr",
-        "uuid": "1669cf76-2e9a-4850-bbdb-8ae9989862ac",
+        "name": "Aleksandar Rakić",
+        "profile_url": "https://www.ufc.com/athlete/aleksandar-rakic",
+        "uuid": "a8e4b5d0-aa4c-4a7c-be35-a81d11f33032",
         "missing": false,
         "change": null
       },
@@ -1019,7 +1027,7 @@
         "profile_url": "https://www.ufc.com/athlete/azamat-murzakanov",
         "uuid": "38f069cb-f60b-4183-ae29-09739d41e376",
         "missing": false,
-        "change": "RANK INCREASED BY 1"
+        "change": null
       },
       {
         "rank": 12,
@@ -1027,21 +1035,21 @@
         "profile_url": "https://www.ufc.com/athlete/johnny-walker",
         "uuid": "f1d42851-c2de-4843-999a-c95c28150861",
         "missing": false,
-        "change": "RANK DECREASED BY 1"
+        "change": null
       },
       {
         "rank": 13,
-        "name": "Zhang Mingyang",
-        "profile_url": "https://www.ufc.com/athlete/zhang-mingyang",
-        "uuid": "0edbdac2-f738-44dd-b0d2-2fd498bb80a9",
+        "name": "Bogdan Guskov",
+        "profile_url": "https://www.ufc.com/athlete/bogdan-guskov",
+        "uuid": "92039308-d830-47a1-ad39-5570783e1396",
         "missing": false,
         "change": null
       },
       {
         "rank": 14,
-        "name": "Bogdan Guskov",
-        "profile_url": "https://www.ufc.com/athlete/bogdan-guskov",
-        "uuid": "92039308-d830-47a1-ad39-5570783e1396",
+        "name": "Zhang Mingyang",
+        "profile_url": "https://www.ufc.com/athlete/zhang-mingyang",
+        "uuid": "0edbdac2-f738-44dd-b0d2-2fd498bb80a9",
         "missing": false,
         "change": null
       },
@@ -1060,22 +1068,14 @@
     "fighters": [
       {
         "rank": "C",
-        "name": "Jon Jones",
-        "profile_url": "https://www.ufc.com/athlete/jon-jones",
-        "uuid": "d1ea97e2-b386-432d-a2ae-5db30cb709c6",
+        "name": "Tom Aspinall",
+        "profile_url": "https://www.ufc.com/athlete/tom-aspinall",
+        "uuid": "985df70b-329a-4e45-add2-0497fcbf4b02",
         "missing": false,
         "change": null
       },
       {
         "rank": 1,
-        "name": "Tom Aspinall",
-        "profile_url": "https://www.ufc.com/athlete/tom-aspinall",
-        "uuid": "985df70b-329a-4e45-add2-0497fcbf4b02",
-        "missing": false,
-        "change": "INTERIM"
-      },
-      {
-        "rank": 2,
         "name": "Ciryl Gane",
         "profile_url": "https://www.ufc.com/athlete/ciryl-gane",
         "uuid": "0fccfdef-4471-448e-b905-a1f34a52922e",
@@ -1083,7 +1083,7 @@
         "change": null
       },
       {
-        "rank": 3,
+        "rank": 2,
         "name": "Alexander Volkov",
         "profile_url": "https://www.ufc.com/athlete/alexander-volkov",
         "uuid": "f38cbad8-8428-4f51-8078-eae5ccaca4d6",
@@ -1091,7 +1091,7 @@
         "change": null
       },
       {
-        "rank": 4,
+        "rank": 3,
         "name": "Sergei Pavlovich",
         "profile_url": "https://www.ufc.com/athlete/sergei-pavlovich",
         "uuid": "be2fd1ac-f708-49f8-9d02-119bec7b8e27",
@@ -1099,7 +1099,7 @@
         "change": null
       },
       {
-        "rank": 5,
+        "rank": 4,
         "name": "Curtis Blaydes",
         "profile_url": "https://www.ufc.com/athlete/curtis-blaydes",
         "uuid": "f0e4a833-d3f5-49e0-a919-7c34a51ce94e",
@@ -1107,10 +1107,18 @@
         "change": null
       },
       {
-        "rank": 6,
+        "rank": 5,
         "name": "Jailton Almeida",
         "profile_url": "https://www.ufc.com/athlete/jailton-almeida",
         "uuid": "ae252a2a-d7df-41d4-bd24-0166367ba1bb",
+        "missing": false,
+        "change": null
+      },
+      {
+        "rank": 6,
+        "name": "Waldo Cortes Acosta",
+        "profile_url": "https://www.ufc.com/athlete/waldo-cortes-acosta",
+        "uuid": "55072a3b-4c34-4451-b892-566d89aef1b9",
         "missing": false,
         "change": null
       },
@@ -1120,42 +1128,34 @@
         "profile_url": "https://www.ufc.com/athlete/marcin-tybura",
         "uuid": "571ff877-54b3-419c-8463-4195277cee1d",
         "missing": false,
-        "change": "RANK INCREASED BY 1"
+        "change": null
       },
       {
         "rank": 8,
-        "name": "Waldo Cortes Acosta",
-        "profile_url": "https://www.ufc.com/athlete/waldo-cortes-acosta",
-        "uuid": "55072a3b-4c34-4451-b892-566d89aef1b9",
-        "missing": false,
-        "change": "RANK INCREASED BY 3"
-      },
-      {
-        "rank": 9,
         "name": "Serghei Spivac",
         "profile_url": "https://www.ufc.com/athlete/serghei-spivac",
         "uuid": "21cfed69-7e8b-4b45-adb7-4160d30c1d5c",
         "missing": false,
-        "change": "RANK DECREASED BY 2"
+        "change": null
       },
       {
-        "rank": 10,
+        "rank": 9,
         "name": "Derrick Lewis",
         "profile_url": "https://www.ufc.com/athlete/derrick-lewis",
         "uuid": "bbd2cb3b-a3b6-4264-bade-3beb22c337f0",
         "missing": false,
-        "change": "RANK DECREASED BY 1"
+        "change": null
       },
       {
-        "rank": 11,
+        "rank": 10,
         "name": "Tai Tuivasa",
         "profile_url": "https://www.ufc.com/athlete/tai-tuivasa",
         "uuid": "c6080003-9378-4e8a-ba73-46649489d68a",
         "missing": false,
-        "change": "RANK DECREASED BY 1"
+        "change": null
       },
       {
-        "rank": 12,
+        "rank": 11,
         "name": "Shamil Gaziev",
         "profile_url": "https://www.ufc.com/athlete/shamil-gaziev",
         "uuid": "35c38aa3-f824-49e7-a036-fd376c45ed1c",
@@ -1163,7 +1163,7 @@
         "change": null
       },
       {
-        "rank": 13,
+        "rank": 12,
         "name": "Mick Parkin",
         "profile_url": "https://www.ufc.com/athlete/mick-parkin",
         "uuid": "a0071f97-f913-4223-a965-4482bf97d6b5",
@@ -1171,18 +1171,26 @@
         "change": null
       },
       {
+        "rank": 13,
+        "name": "Martin Buday",
+        "profile_url": "https://www.ufc.com/athlete/martin-buday",
+        "uuid": "20dffe19-a936-4cdf-b5f6-55fce6c8a74c",
+        "missing": false,
+        "change": "RANK INCREASED BY 1"
+      },
+      {
         "rank": 14,
         "name": "Tallison Teixeira",
         "profile_url": "https://www.ufc.com/athlete/tallison-teixeira",
         "uuid": "c04c1c15-9a21-4ed9-a46c-9116cac15662",
         "missing": false,
-        "change": null
+        "change": "RANK DECREASED BY 1"
       },
       {
         "rank": 15,
-        "name": "Martin Buday",
-        "profile_url": "https://www.ufc.com/athlete/martin-buday",
-        "uuid": "20dffe19-a936-4cdf-b5f6-55fce6c8a74c",
+        "name": "Rizvan Kuniev",
+        "profile_url": "https://www.ufc.com/athlete/rizvan-kuniev",
+        "uuid": "ff85c834-cf41-4b74-85b6-700a60629a8f",
         "missing": false,
         "change": null
       }
@@ -1213,7 +1221,7 @@
         "profile_url": "https://www.ufc.com/athlete/kayla-harrison",
         "uuid": "3e79b196-96d2-4d1a-9d8a-0de9aba8f30f",
         "missing": false,
-        "change": "RANK INCREASED BY 4"
+        "change": null
       },
       {
         "rank": 4,
@@ -1229,7 +1237,7 @@
         "profile_url": "https://www.ufc.com/athlete/julianna-pena",
         "uuid": "f67a1349-c04c-47b7-9600-f5360ea71e07",
         "missing": false,
-        "change": "RANK DECREASED BY 2"
+        "change": null
       },
       {
         "rank": 6,
@@ -1237,7 +1245,7 @@
         "profile_url": "https://www.ufc.com/athlete/natalia-silva",
         "uuid": "979d9913-9244-4a96-aef9-10959d1aee12",
         "missing": false,
-        "change": "RANK INCREASED BY 2"
+        "change": null
       },
       {
         "rank": 7,
@@ -1245,7 +1253,7 @@
         "profile_url": "https://www.ufc.com/athlete/alexa-grasso",
         "uuid": "b52a557d-b5e2-4a1a-98c9-ca1c7ac3854d",
         "missing": false,
-        "change": "RANK DECREASED BY 2"
+        "change": null
       },
       {
         "rank": 8,
@@ -1253,7 +1261,7 @@
         "profile_url": "https://www.ufc.com/athlete/erin-blanchfield",
         "uuid": "2a96b74b-eb80-471f-8011-042ebd268445",
         "missing": false,
-        "change": "RANK DECREASED BY 2"
+        "change": null
       },
       {
         "rank": 9,
@@ -1277,7 +1285,7 @@
         "profile_url": "https://www.ufc.com/athlete/tatiana-suarez",
         "uuid": "a433c6e4-35d7-4d6c-b758-2f61be9489f1",
         "missing": false,
-        "change": "RANK INCREASED BY 1"
+        "change": null
       },
       {
         "rank": 12,
@@ -1285,7 +1293,7 @@
         "profile_url": "https://www.ufc.com/athlete/rose-namajunas",
         "uuid": "9c04eab7-f0e3-4cb3-9457-dfadf9c96c67",
         "missing": false,
-        "change": "RANK DECREASED BY 1"
+        "change": null
       },
       {
         "rank": 13,
@@ -1491,17 +1499,17 @@
       },
       {
         "rank": 5,
-        "name": "Maycee Barber",
-        "profile_url": "https://www.ufc.com/athlete/maycee-barber",
-        "uuid": "b7c1b352-85b8-42ea-b7ef-54eda77207e8",
+        "name": "Jasmine Jasudavicius",
+        "profile_url": "https://www.ufc.com/athlete/jasmine-jasudavicius",
+        "uuid": "da39c392-bb36-4c9b-97cc-e901804f22db",
         "missing": false,
         "change": null
       },
       {
         "rank": 6,
-        "name": "Jasmine Jasudavicius",
-        "profile_url": "https://www.ufc.com/athlete/jasmine-jasudavicius",
-        "uuid": "da39c392-bb36-4c9b-97cc-e901804f22db",
+        "name": "Maycee Barber",
+        "profile_url": "https://www.ufc.com/athlete/maycee-barber",
+        "uuid": "b7c1b352-85b8-42ea-b7ef-54eda77207e8",
         "missing": false,
         "change": null
       },
@@ -1515,9 +1523,9 @@
       },
       {
         "rank": 8,
-        "name": "Viviane Araújo",
-        "profile_url": "https://www.ufc.com/athlete/viviane-araujo",
-        "uuid": "46c92661-6c10-40df-8a23-427287da42d0",
+        "name": "Tracy Cortez",
+        "profile_url": "https://www.ufc.com/athlete/tracy-cortez",
+        "uuid": "6e8037af-a4bf-403a-b7b7-92dae681395d",
         "missing": false,
         "change": null
       },
@@ -1531,30 +1539,22 @@
       },
       {
         "rank": 10,
-        "name": "Tracy Cortez",
-        "profile_url": "https://www.ufc.com/athlete/tracy-cortez",
-        "uuid": "6e8037af-a4bf-403a-b7b7-92dae681395d",
-        "missing": false,
-        "change": null
-      },
-      {
-        "rank": 11,
         "name": "Miranda Maverick",
         "profile_url": "https://www.ufc.com/athlete/miranda-maverick",
         "uuid": "d4b9de5b-4f12-4873-88df-e57c5eb7b9e3",
         "missing": false,
-        "change": null
+        "change": "RANK INCREASED BY 1"
       },
       {
-        "rank": 12,
+        "rank": 11,
         "name": "Karine Silva",
         "profile_url": "https://www.ufc.com/athlete/karine-silva",
         "uuid": "df1dc915-1341-4407-98fc-b49df8a2f9f1",
         "missing": false,
-        "change": "RANK DECREASED BY 1"
+        "change": "RANK INCREASED BY 1"
       },
       {
-        "rank": 13,
+        "rank": 12,
         "name": "Casey O'Neill",
         "profile_url": "https://www.ufc.com/athlete/casey-oneill",
         "uuid": "04d7c5a0-14dc-4005-b199-19ce3a1e7845",
@@ -1562,20 +1562,28 @@
         "change": "RANK INCREASED BY 1"
       },
       {
-        "rank": 14,
+        "rank": 13,
         "name": "Wang Cong",
         "profile_url": "https://www.ufc.com/athlete/wang-cong",
         "uuid": "25bebf5a-deac-4272-9d61-050892241595",
         "missing": false,
-        "change": "NR"
+        "change": "RANK INCREASED BY 1"
+      },
+      {
+        "rank": 14,
+        "name": "JJ Aldrich",
+        "profile_url": "https://www.ufc.com/athlete/jj-aldrich",
+        "uuid": "9a862527-9f9c-4dcc-929c-21e88992dfb6",
+        "missing": false,
+        "change": "RANK INCREASED BY 1"
       },
       {
         "rank": 15,
-        "name": "Ariane Da Silva",
-        "profile_url": "https://www.ufc.com/athlete/ariane-da-silva",
-        "uuid": "4db633e4-c136-4ea0-99f5-6640c64d8c6b",
+        "name": "Eduarda Moura",
+        "profile_url": "https://www.ufc.com/athlete/eduarda-moura",
+        "uuid": "b7347575-b675-46c3-9395-51886cb0d100",
         "missing": false,
-        "change": "RANK DECREASED BY 2"
+        "change": "NR"
       }
     ]
   },
@@ -1596,7 +1604,7 @@
         "profile_url": "https://www.ufc.com/athlete/julianna-pena",
         "uuid": "f67a1349-c04c-47b7-9600-f5360ea71e07",
         "missing": false,
-        "change": "RANK DECREASED BY 1"
+        "change": null
       },
       {
         "rank": 2,
@@ -1604,7 +1612,7 @@
         "profile_url": "https://www.ufc.com/athlete/raquel-pennington",
         "uuid": "6fc35a50-4260-40bf-b038-199618035b94",
         "missing": false,
-        "change": "RANK DECREASED BY 1"
+        "change": null
       },
       {
         "rank": 3,
@@ -1704,9 +1712,9 @@
       },
       {
         "rank": 15,
-        "name": "Chelsea Chandler",
-        "profile_url": "https://www.ufc.com/athlete/chelsea-chandler",
-        "uuid": "1be7e7ff-8bd3-409a-85c5-dc7cb7e7eb7e",
+        "name": "Daria Zhelezniakova",
+        "profile_url": "https://www.ufc.com/athlete/daria-zheleznyakova",
+        "uuid": "3f5ceeab-a03f-4fa4-a87d-8d6580499fbf",
         "missing": false,
         "change": null
       }

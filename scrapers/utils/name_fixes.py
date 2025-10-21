@@ -56,7 +56,6 @@ NAME_FIXES = {
     "DONAVAN BEARD": "DONOVAN BEARD",
     "DONGHUN CHOI": "DONG HUN CHOI",
     "SEUNGGUK CHOI": "SEUNG GUK CHOI",
-    "HENRIQUE DA SILVA LOPES": "Diego Henrique da Silva",
     "JOSE DANIEL MEDINA RIVERO": "JOSE MEDINA",
     "JOSE MIGUEL DELGADO": "JOSE DELGADO",
     "MAIARA AMANDAJAS DOS SANTOS": "Maiara Amanajas dos Santos",
@@ -222,7 +221,8 @@ TAPOLOGY_FIXES = {
     "Jose Delgado": "Jose Miguel Delgado",
     "Lone'er Kavanagh": "LONE’ER KAVANAGH",
     "Lupita Godinez": "Loopy Godinez",
-    "Michał Oleksiejczuk": "MICHAL OLEKSIEJCZUK"
+    "Michał Oleksiejczuk": "MICHAL OLEKSIEJCZUK",
+    "Diego Henrique": "DIEGO HENRIQUE DA SILVA"
 }
 
 UFC_ROSTER = {

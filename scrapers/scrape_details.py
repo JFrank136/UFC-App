@@ -16,6 +16,35 @@ def clean_stat_value(value):
     """Clean stat values - return None only for truly empty/missing values"""
     if not value or value in ["00:00", "-", "Unknown", "N/A", ""]:
         return None
+    
+    # Additional validation using the same logic as is_valid_stat_value
+    if isinstance(value, str):
+        value_lower = value.strip().lower()
+        
+        # Check for common invalid patterns
+        exact_invalid = [
+            "per min", "per 15 min", "percentage", "attempted", "landed",
+            "0 (0 %)", "0 (0%)", "00:00"
+        ]
+        
+        if value_lower in exact_invalid:
+            return None
+            
+        # Check for help text patterns
+        invalid_patterns = [
+            "defense is", "average number", "window", "fighter", "takedown",
+            "significant strikes", "submissions", "knockdown", "is the percentage",
+            "accuracy is", "average time", "per 15 minutes", "percentage of",
+            "attempted against", "do not land", "knockdown avg", "average fight time"
+        ]
+        
+        if any(pattern in value_lower for pattern in invalid_patterns):
+            return None
+            
+        # If it's very long and mostly text, likely help text
+        if len(value_lower) > 50 and not any(char.isdigit() for char in value_lower):
+            return None
+    
     return value
 
 def clean_stats_group(stats_dict):
@@ -126,18 +155,32 @@ def extract_stats_by_structure(soup):
         if not value or not isinstance(value, str):
             return False
         
-        value = value.strip().lower()
+        value_original = value.strip()
+        value = value_original.lower()
+        
+        # Exact invalid matches (case-insensitive)
+        exact_invalid = [
+            "per min", "per 15 min", "percentage", "attempted", "landed",
+            "0 (0 %)", "0 (0%)", "00:00"
+        ]
+        
+        if value in exact_invalid:
+            return False
         
         # Common invalid patterns that indicate help text
         invalid_patterns = [
-            "per min", "per 15 min", "percentage", "attempted", "landed",
             "defense is", "average number", "window", "fighter", "takedown",
             "significant strikes", "submissions", "knockdown", "is the percentage",
-            "accuracy is", "average time"
+            "accuracy is", "average time", "per 15 minutes", "percentage of",
+            "attempted against", "do not land", "knockdown avg", "average fight time"
         ]
         
         # If it contains help text patterns, it's invalid
         if any(pattern in value for pattern in invalid_patterns):
+            return False
+        
+        # If it's mostly text and very long, likely help text
+        if len(value) > 50 and not any(char.isdigit() for char in value):
             return False
         
         # For numeric stats, should contain digits
@@ -216,26 +259,7 @@ def extract_accuracy_and_defense_stats_combined(soup, page_text):
     """Extract striking/takedown accuracy in format: '54% 106/195'"""
     combined_stats = {}
     
-    def is_valid_stat_value(value):
-        """Check if a value is actually a stat and not help text"""
-        if not value or not isinstance(value, str):
-            return False
         
-        value = value.strip().lower()
-        
-        # Reject obvious help text patterns
-        invalid_patterns = [
-            "per min", "per 15 min", "percentage", "attempted", "landed",
-            "defense is", "average number", "window", "fighter", "takedown",
-            "significant strikes", "submissions", "knockdown"
-        ]
-        
-        if any(pattern in value for pattern in invalid_patterns):
-            return False
-            
-        # Must contain digits to be valid
-        return any(char.isdigit() for char in value)
-    
     def calculate_accuracy_format(landed=None, attempted=None, percentage=None):
         """Calculate accuracy in format: '54% 106/195'"""
         try:
@@ -273,60 +297,86 @@ def extract_accuracy_and_defense_stats_combined(soup, page_text):
             return None
     
     try:
-        # Method 1: Extract from overlap stats sections
-        overlap_stats = soup.select(".c-overlap__stats")
+        # Method 1: Extract from overlap stats sections and chart circles based on correct HTML structure
         temp_values = {}
+        chart_percentages = {}
+                
+        svg_charts = soup.select("svg")
+        for svg in svg_charts:
+            title_el = svg.select_one("title")
+            if title_el:
+                title_text = title_el.get_text().strip()
+                
+                # Check if this is striking accuracy
+                if "striking accuracy" in title_text.lower():
+                    percent_match = re.search(r"(\d+)%", title_text)
+                    if percent_match:
+                        chart_percentages["striking_percentage"] = percent_match.group(1)
+                
+                # Check if this is takedown accuracy  
+                elif "takedown accuracy" in title_text.lower():
+                    percent_match = re.search(r"(\d+)%", title_text)
+                    if percent_match:
+                        chart_percentages["takedown_percentage"] = percent_match.group(1)
         
+        # Extract values from overlap stats sections
+        overlap_stats = soup.select(".c-overlap__stats")
         for stat_section in overlap_stats:
             try:
-                title_el = stat_section.select_one(".c-overlap__stats-title")
-                value_el = stat_section.select_one(".c-overlap__stats-value")
                 text_el = stat_section.select_one(".c-overlap__stats-text")
+                value_el = stat_section.select_one(".c-overlap__stats-value")
                 
-                if not title_el or not value_el:
+                if not text_el or not value_el:
                     continue
                     
-                title = title_el.get_text(strip=True).lower()
+                text = text_el.get_text(strip=True).lower()
                 value = value_el.get_text(strip=True)
-                text = text_el.get_text(strip=True).lower() if text_el else ""
                 
+                # Skip empty values
+                if not value or value.strip() == "":
+                    continue
+                    
                 # Skip if value looks like help text
-                if not is_valid_stat_value(value):
+                value_check = value.strip().lower()
+                exact_invalid = ["per min", "per 15 min", "percentage", "attempted", "landed", "0 (0 %)", "0 (0%)", "00:00"]
+                invalid_patterns = ["defense is", "average number", "window", "fighter", "takedown", "significant strikes", "submissions", "knockdown", "is the percentage", "accuracy is", "average time", "per 15 minutes", "percentage of", "attempted against", "do not land", "knockdown avg", "average fight time"]
+                
+                if (value_check in exact_invalid or 
+                    any(pattern in value_check for pattern in invalid_patterns) or
+                    (len(value_check) > 50 and not any(char.isdigit() for char in value_check))):
                     continue
                 
-                # Store relevant values
-                if "sig. strikes landed" in title and value.isdigit():
+                # Store relevant values based on the text labels
+                if "takedowns landed" in text:
+                    if value.isdigit():
+                        temp_values["takedowns_landed"] = value
+                elif "takedowns attempted" in text and value.isdigit():
+                    temp_values["takedowns_attempted"] = value
+                elif "sig. strikes landed" in text and value.isdigit():
                     temp_values["strikes_landed"] = value
-                    # Look for attempted in text
-                    attempted_match = re.search(r"(\d+)", text)
-                    if attempted_match:
-                        temp_values["strikes_attempted"] = attempted_match.group(1)
-                
-                elif "takedowns landed" in title and value.isdigit():
-                    temp_values["takedowns_landed"] = value
-                    # Look for attempted in text
-                    attempted_match = re.search(r"(\d+)", text)
-                    if attempted_match:
-                        temp_values["takedowns_attempted"] = attempted_match.group(1)
+                elif "sig. strikes attempted" in text and value.isdigit():
+                    temp_values["strikes_attempted"] = value
                         
             except Exception as e:
                 logger.warning(f"Error processing overlap stat section: {e}")
                 continue
         
-        # Calculate striking accuracy
-        if "strikes_landed" in temp_values:
+        # Calculate striking accuracy with chart percentage if available
+        if temp_values.get("strikes_landed") or temp_values.get("strikes_attempted") or chart_percentages.get("striking_percentage"):
             striking_accuracy = calculate_accuracy_format(
                 landed=temp_values.get("strikes_landed"),
-                attempted=temp_values.get("strikes_attempted")
+                attempted=temp_values.get("strikes_attempted"),
+                percentage=chart_percentages.get("striking_percentage")
             )
             if striking_accuracy:
                 combined_stats["striking_accuracy"] = striking_accuracy
         
-        # Calculate takedown accuracy
-        if "takedowns_landed" in temp_values:
+        # Calculate takedown accuracy with chart percentage if available  
+        if temp_values.get("takedowns_landed") or temp_values.get("takedowns_attempted") or chart_percentages.get("takedown_percentage"):
             takedown_accuracy = calculate_accuracy_format(
                 landed=temp_values.get("takedowns_landed"),
-                attempted=temp_values.get("takedowns_attempted")
+                attempted=temp_values.get("takedowns_attempted"),
+                percentage=chart_percentages.get("takedown_percentage")
             )
             if takedown_accuracy:
                 combined_stats["takedown_accuracy"] = takedown_accuracy
@@ -1192,6 +1242,7 @@ if __name__ == "__main__":
         logger.info("🏆 Running ranked fighter image update...")
         update_ranked_fighter_images()
     
+        
     elif mode == "2":
         retry_file = "data/errors/details_errors.json"
         input_roster_file = "data/ufc_fighters_raw.json"

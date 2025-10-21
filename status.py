@@ -77,7 +77,7 @@ def main():
     core_files = {
         "UFC Fighters Raw": "ufc_fighters_raw.json",
         "UFC Details": "ufc_details.json", 
-        "Sherdog Data": "sherdog_fighters.json",
+        "Tapology Data": "tapology_fighters.json",
         "Rankings": "ufc_rankings.json",
         "Upcoming Fights": "upcoming_fights.json",
         "Merged Fighters": "fighters.json",
@@ -126,9 +126,11 @@ def main():
     print("💡 RECOMMENDATIONS")
     print("-" * 40)
     
-    # Check for stale data
+    # Check for stale data (excluding UFC raw file)
     stale_threshold = timedelta(days=7)
     for name, filename in core_files.items():
+        if name == "UFC Fighters Raw":  # Skip stale check for UFC raw file
+            continue
         status = check_file_status(data_path / filename)
         if status["exists"] and status["age"] > stale_threshold:
             print(f"📅 {name} is {status['age'].days} days old - consider updating")

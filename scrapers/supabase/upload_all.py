@@ -113,11 +113,12 @@ class DatabaseUploader:
         # FIXED: Updated query to match exact schema field names
         query = """
             INSERT INTO fighters (
-                id, name, nickname, profile_url_ufc, height, weight, reach, country, age, gender, weight_class,
-                wins_total, losses_total, wins_ko, wins_sub, wins_dec, losses_ko, losses_sub, losses_dec,
+                id, name, nickname, profile_url_ufc, height, weight, reach, status, country, age, gender, weight_class,
+                wins_total, losses_total, draws_total, ufc_wins_total, ufc_losses_total, ufc_draws_total,
+                ufc_wins_ko, ufc_wins_sub, ufc_wins_dec, ufc_losses_ko, ufc_losses_sub, ufc_losses_dec,
                 sig_strikes_landed_per_min, sig_strikes_absorbed_per_min, takedown_avg_per_15min,
                 submission_avg_per_15min, sig_str_defense, knockdown_avg, avg_fight_time, created_at,
-                profile_url_sherdog, image_url, image_local_path, takedown_defense, striking_accuracy,
+                profile_url_tapology, image_url, image_local_path, takedown_defense, striking_accuracy,
                 takedown_accuracy, sig_strikes_by_position, sig_strikes_by_target
             )
             VALUES %s
@@ -128,18 +129,23 @@ class DatabaseUploader:
                 height = EXCLUDED.height,
                 weight = EXCLUDED.weight,
                 reach = EXCLUDED.reach,
+                status = EXCLUDED.status,
                 country = EXCLUDED.country,
                 age = EXCLUDED.age,
                 gender = EXCLUDED.gender,
                 weight_class = EXCLUDED.weight_class,
                 wins_total = EXCLUDED.wins_total,
                 losses_total = EXCLUDED.losses_total,
-                wins_ko = EXCLUDED.wins_ko,
-                wins_sub = EXCLUDED.wins_sub,
-                wins_dec = EXCLUDED.wins_dec,
-                losses_ko = EXCLUDED.losses_ko,
-                losses_sub = EXCLUDED.losses_sub,
-                losses_dec = EXCLUDED.losses_dec,
+                draws_total = EXCLUDED.draws_total,
+                ufc_wins_total = EXCLUDED.ufc_wins_total,
+                ufc_losses_total = EXCLUDED.ufc_losses_total,
+                ufc_draws_total = EXCLUDED.ufc_draws_total,
+                ufc_wins_ko = EXCLUDED.ufc_wins_ko,
+                ufc_wins_sub = EXCLUDED.ufc_wins_sub,
+                ufc_wins_dec = EXCLUDED.ufc_wins_dec,
+                ufc_losses_ko = EXCLUDED.ufc_losses_ko,
+                ufc_losses_sub = EXCLUDED.ufc_losses_sub,
+                ufc_losses_dec = EXCLUDED.ufc_losses_dec,
                 sig_strikes_landed_per_min = EXCLUDED.sig_strikes_landed_per_min,
                 sig_strikes_absorbed_per_min = EXCLUDED.sig_strikes_absorbed_per_min,
                 takedown_avg_per_15min = EXCLUDED.takedown_avg_per_15min,
@@ -147,7 +153,7 @@ class DatabaseUploader:
                 sig_str_defense = EXCLUDED.sig_str_defense,
                 knockdown_avg = EXCLUDED.knockdown_avg,
                 avg_fight_time = EXCLUDED.avg_fight_time,
-                profile_url_sherdog = EXCLUDED.profile_url_sherdog,
+                profile_url_tapology = EXCLUDED.profile_url_tapology,
                 image_url = EXCLUDED.image_url,
                 image_local_path = EXCLUDED.image_local_path,
                 takedown_defense = EXCLUDED.takedown_defense,
@@ -174,41 +180,46 @@ class DatabaseUploader:
                 
                 
                 fighter_data = (
-                    fighter["id"],                                                           # id (UUID)
+                    fighter["id"],                                                           # id
                     fighter["name"],                                                         # name
                     fighter.get("nickname"),                                                # nickname
                     fighter.get("profile_url_ufc"),                                        # profile_url_ufc
-                    clean_numeric(fighter.get("height")),                                  # height (decimal)
-                    clean_numeric(fighter.get("weight")),                                  # weight (decimal)
-                    clean_numeric(fighter.get("reach")),                                   # reach (decimal)
+                    clean_numeric(fighter.get("height")),                                  # height
+                    clean_numeric(fighter.get("weight")),                                  # weight
+                    clean_numeric(fighter.get("reach")),                                   # reach
+                    fighter.get("status"),                                                  # status
                     fighter.get("country"),                                                # country
-                    clean_numeric(fighter.get("age")),                                     # age (int)
-                    fighter.get("gender"),                                                 # gender (text)
+                    clean_numeric(fighter.get("age")),                                     # age
+                    fighter.get("gender"),                                                 # gender
                     fighter.get("weight_class"),                                           # weight_class
-                    clean_numeric(fighter.get("wins_total")),                              # wins_total (int)
-                    clean_numeric(fighter.get("losses_total")),                            # losses_total (int)
-                    clean_numeric(fighter.get("wins_ko")),                                 # wins_ko (int)
-                    clean_numeric(fighter.get("wins_sub")),                                # wins_sub (int)
-                    clean_numeric(fighter.get("wins_dec")),                                # wins_dec (int)
-                    clean_numeric(fighter.get("losses_ko")),                               # losses_ko (int)
-                    clean_numeric(fighter.get("losses_sub")),                              # losses_sub (int)
-                    clean_numeric(fighter.get("losses_dec")),                              # losses_dec (int)
-                    fighter.get("sig_strikes_landed_per_min"),                             # sig_strikes_landed_per_min (text)
-                    fighter.get("sig_strikes_absorbed_per_min"),                           # sig_strikes_absorbed_per_min (text)
-                    fighter.get("takedown_avg_per_15min"),                                 # takedown_avg_per_15min (text)
-                    fighter.get("submission_avg_per_15min"),                               # submission_avg_per_15min (text)
-                    fighter.get("sig_str_defense"),                                        # sig_str_defense (text)
-                    clean_numeric(fighter.get("knockdown_avg")),                           # knockdown_avg (decimal)
-                    clean_time_field(fighter.get("avg_fight_time")),                       # avg_fight_time (standardized field name)
-                    datetime.now(),                                                        # created_at (timestamp)
-                    fighter.get("profile_url_sherdog"),                                    # profile_url_sherdog
+                    clean_numeric(fighter.get("wins_total")),                              # wins_total
+                    clean_numeric(fighter.get("losses_total")),                            # losses_total
+                    clean_numeric(fighter.get("draws_total")),                             # draws_total
+                    clean_numeric(fighter.get("ufc_wins_total")),                          # ufc_wins_total
+                    clean_numeric(fighter.get("ufc_losses_total")),                        # ufc_losses_total
+                    clean_numeric(fighter.get("ufc_draws_total")),                         # ufc_draws_total
+                    clean_numeric(fighter.get("ufc_wins_ko")),                             # ufc_wins_ko
+                    clean_numeric(fighter.get("ufc_wins_sub")),                            # ufc_wins_sub
+                    clean_numeric(fighter.get("ufc_wins_dec")),                            # ufc_wins_dec
+                    clean_numeric(fighter.get("ufc_losses_ko")),                           # ufc_losses_ko
+                    clean_numeric(fighter.get("ufc_losses_sub")),                          # ufc_losses_sub
+                    clean_numeric(fighter.get("ufc_losses_dec")),                          # ufc_losses_dec
+                    fighter.get("sig_strikes_landed_per_min"),                             # sig_strikes_landed_per_min
+                    fighter.get("sig_strikes_absorbed_per_min"),                           # sig_strikes_absorbed_per_min
+                    fighter.get("takedown_avg_per_15min"),                                 # takedown_avg_per_15min
+                    fighter.get("submission_avg_per_15min"),                               # submission_avg_per_15min
+                    fighter.get("sig_str_defense"),                                        # sig_str_defense
+                    clean_numeric(fighter.get("knockdown_avg")),                           # knockdown_avg
+                    clean_time_field(fighter.get("avg_fight_time")),                       # avg_fight_time
+                    datetime.now(),                                                        # created_at
+                    fighter.get("profile_url_tapology"),                                   # profile_url_tapology
                     fighter.get("image_url"),                                              # image_url
                     fighter.get("image_local_path"),                                       # image_local_path
-                    fighter.get("takedown_defense"),                                       # takedown_defense (text)
-                    fighter.get("striking_accuracy"),                                      # striking_accuracy (text)
-                    fighter.get("takedown_accuracy"),                                      # takedown_accuracy (text)
-                    json.dumps(fighter.get("sig_strikes_by_position")) if fighter.get("sig_strikes_by_position") else None,  # sig_strikes_by_position (JSON)
-                    json.dumps(fighter.get("sig_strikes_by_target")) if fighter.get("sig_strikes_by_target") else None       # sig_strikes_by_target (JSON)
+                    fighter.get("takedown_defense"),                                       # takedown_defense
+                    fighter.get("striking_accuracy"),                                      # striking_accuracy
+                    fighter.get("takedown_accuracy"),                                      # takedown_accuracy
+                    json.dumps(fighter.get("sig_strikes_by_position")) if fighter.get("sig_strikes_by_position") else None,  # sig_strikes_by_position
+                    json.dumps(fighter.get("sig_strikes_by_target")) if fighter.get("sig_strikes_by_target") else None       # sig_strikes_by_target
                 )
                 
                 batch.append(fighter_data)
@@ -266,7 +277,8 @@ class DatabaseUploader:
         # Schema matches perfectly - no changes needed
         query = """
             INSERT INTO fight_history (
-                id, fighter_id, opponent, result, method, round, time, fight_date
+                id, fighter_id, opponent, result, method, round, time, fight_date,
+                method_detail, event, promotion, betting_odds, betting_status, pick_percentage, weight_class
             ) VALUES %s
             ON CONFLICT (id) DO NOTHING;
         """
@@ -292,7 +304,14 @@ class DatabaseUploader:
                         fight.get("method"),
                         fight.get("round"),
                         fight.get("time"),
-                        fight_date
+                        fight_date,
+                        fight.get("method_detail"),
+                        fight.get("event"),
+                        fight.get("promotion"),
+                        fight.get("betting_odds"),
+                        fight.get("betting_status"),
+                        fight.get("pick_percentage"),
+                        fight.get("weight_class")
                     )
                     
                     batch.append(fight_data)

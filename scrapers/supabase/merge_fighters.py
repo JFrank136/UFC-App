@@ -39,26 +39,32 @@ def normalize_name(name: str) -> str:
     name = name.replace("'", "").replace("-", " ").replace(".", "")
     return name
 
-def build_sherdog_lookup(sherdog_data: List[Dict]) -> Dict[str, Dict]:
-    """Build lookup dictionary from Sherdog data."""
-    lookup = {}
+def build_tapology_lookup(tapology_data: List[Dict]) -> tuple[Dict[str, Dict], Dict[str, Dict]]:
+    """Build lookup dictionaries from Tapology data - by ID and by name."""
+    id_lookup = {}
+    name_lookup = {}
     duplicates = []
     
-    for fighter in sherdog_data:
+    for fighter in tapology_data:
+        fighter_id = fighter.get("id")
         name = fighter.get("name", "").strip()
-        if not name:
-            continue
-            
-        key = normalize_name(name)
-        if key in lookup:
-            duplicates.append(name)
-        else:
-            lookup[key] = fighter
+        
+        # Build ID-based lookup (primary)
+        if fighter_id:
+            id_lookup[fighter_id] = fighter
+        
+        # Build name-based lookup (fallback)
+        if name:
+            key = normalize_name(name)
+            if key in name_lookup:
+                duplicates.append(name)
+            else:
+                name_lookup[key] = fighter
     
     if duplicates:
-        print(f"⚠️ Warning: Found {len(duplicates)} duplicate names in Sherdog data")
+        print(f"⚠️ Warning: Found {len(duplicates)} duplicate names in Tapology data")
     
-    return lookup
+    return id_lookup, name_lookup
 
 def create_name_fixes_lookup(name_fixes: Dict[str, str]) -> Dict[str, str]:
     """Create normalized name fixes lookup (UFC → Sherdog)."""
@@ -82,51 +88,78 @@ def create_name_fixes_lookup(name_fixes: Dict[str, str]) -> Dict[str, str]:
     
     return lookup
 
-def merge_fighter_data(ufc_fighter: Dict, sherdog_fighter: Dict) -> Dict:
-    """Merge UFC and Sherdog fighter data."""
-    summary = sherdog_fighter
+def clean_measurement_field(value: str) -> str:
+    """Clean height and reach fields to remove escaped quotes"""
+    if not value or not isinstance(value, str):
+        return value
+    
+    # Remove escaped quotes and normalize
+    cleaned = value.replace('\\"', '"').replace('&quot;', '"')
+    return cleaned
+
+def merge_fighter_data(ufc_fighter: Dict, tapology_fighter: Dict) -> Dict:
+    """Merge UFC and Tapology fighter data."""
     
     # Start with UFC data as base
     merged = ufc_fighter.copy()
     
-    # Add Sherdog data (only if not already present or empty)
-    sherdog_fields = {
-        "nickname": sherdog_fighter.get("nickname"),
-        "profile_url_sherdog": sherdog_fighter.get("profile_url_sherdog"),
-        "country": sherdog_fighter.get("country"),
-        "age": sherdog_fighter.get("age"),
-        "weight_class": sherdog_fighter.get("weight_class"),
-        "wins_total": sherdog_fighter.get("wins_total"),
-        "losses_total": sherdog_fighter.get("losses_total"),
-        "wins_ko": sherdog_fighter.get("wins_ko"),
-        "wins_sub": sherdog_fighter.get("wins_sub"),
-        "wins_dec": sherdog_fighter.get("wins_dec"),
-        "losses_ko": sherdog_fighter.get("losses_ko"),
-        "losses_sub": sherdog_fighter.get("losses_sub"),
-        "losses_dec": sherdog_fighter.get("losses_dec"),
-        "fight_history": sherdog_fighter.get("fight_history", []),
+    # Add Tapology data (only if not already present or empty)
+    tapology_fields = {
+        "nickname": tapology_fighter.get("nickname"),
+        "profile_url_tapology": tapology_fighter.get("profile_url_tapology"),
+        "country": tapology_fighter.get("country"),
+        "age": tapology_fighter.get("age"),
+        "weight_class": tapology_fighter.get("weight_class"),
+        "height": clean_measurement_field(tapology_fighter.get("height")),
+        "reach": clean_measurement_field(tapology_fighter.get("reach")),
+        "wins_total": tapology_fighter.get("wins_total"),
+        "losses_total": tapology_fighter.get("losses_total"),
+        "draws_total": tapology_fighter.get("draws_total"),
+        "ufc_wins_total": tapology_fighter.get("ufc_wins_total"),
+        "ufc_losses_total": tapology_fighter.get("ufc_losses_total"),
+        "ufc_draws_total": tapology_fighter.get("ufc_draws_total"),
+        "ufc_wins_ko": tapology_fighter.get("ufc_wins_ko"),
+        "ufc_wins_sub": tapology_fighter.get("ufc_wins_sub"),
+        "ufc_wins_dec": tapology_fighter.get("ufc_wins_dec"),
+        "ufc_losses_ko": tapology_fighter.get("ufc_losses_ko"),
+        "ufc_losses_sub": tapology_fighter.get("ufc_losses_sub"),
+        "ufc_losses_dec": tapology_fighter.get("ufc_losses_dec"),
+        "fight_history": tapology_fighter.get("fight_history", []),
     }
 
     # Only add non-None values
-    for key, value in sherdog_fields.items():
+    for key, value in tapology_fields.items():
         if value is not None:
             merged[key] = value
     
     return merged
 
-def find_sherdog_match(ufc_name: str, sherdog_lookup: Dict, name_fixes: Dict) -> Optional[Dict]:
-    """Find matching Sherdog fighter using various strategies."""
+def find_tapology_match(ufc_fighter: Dict, tapology_id_lookup: Dict, tapology_name_lookup: Dict, name_fixes: Dict) -> Optional[Dict]:
+    """Find matching Tapology fighter using ID first, then name-based strategies."""
+    fighter_id = ufc_fighter.get("id")
+    ufc_name = ufc_fighter.get("name", "")
+    
+    # Strategy 1: Match by ID (primary method)
+    if fighter_id and fighter_id in tapology_id_lookup:
+        return tapology_id_lookup[fighter_id]
+    
+    # Strategy 2: Fallback to name-based matching
+    if not ufc_name:
+        return None
+        
     normalized_name = normalize_name(ufc_name)
     
-    # Strategy 1: Direct match
-    if normalized_name in sherdog_lookup:
-        return sherdog_lookup[normalized_name]
+    # Strategy 2a: Direct name match
+    if normalized_name in tapology_name_lookup:
+        print(f"📝 Name match found: '{ufc_name}' (ID match failed)")
+        return tapology_name_lookup[normalized_name]
     
-    # Strategy 2: Use name fixes - try the fixed name in sherdog lookup
+    # Strategy 2b: Use name fixes - try the fixed name in tapology lookup
     if normalized_name in name_fixes:
         fixed_name = name_fixes[normalized_name]
-        if fixed_name in sherdog_lookup:
-            return sherdog_lookup[fixed_name]
+        if fixed_name in tapology_name_lookup:
+            print(f"📝 Name fix match found: '{ufc_name}' → '{fixed_name}' (ID match failed)")
+            return tapology_name_lookup[fixed_name]
         # Also try variations of the fixed name
         fixed_variations = [
             fixed_name.replace("JR.", "").replace("SR.", "").strip(),
@@ -134,10 +167,11 @@ def find_sherdog_match(ufc_name: str, sherdog_lookup: Dict, name_fixes: Dict) ->
             " ".join(fixed_name.split())
         ]
         for variation in fixed_variations:
-            if variation in sherdog_lookup and variation != fixed_name:
-                return sherdog_lookup[variation]
+            if variation in tapology_name_lookup and variation != fixed_name:
+                print(f"📝 Name fix variation match found: '{ufc_name}' → '{variation}' (ID match failed)")
+                return tapology_name_lookup[variation]
     
-    # Strategy 3: Fuzzy matching - try common name variations
+    # Strategy 2c: Fuzzy matching - try common name variations
     variations = [
         normalized_name.replace("JR", "").replace("SR", "").strip(),
         normalized_name.replace("JR.", "").replace("SR.", "").strip(), 
@@ -150,18 +184,18 @@ def find_sherdog_match(ufc_name: str, sherdog_lookup: Dict, name_fixes: Dict) ->
     variations = list(set([v for v in variations if v and v != normalized_name]))
     
     for variation in variations:
-        if variation in sherdog_lookup:
-            print(f"📝 Fuzzy match found: '{ufc_name}' → '{variation}'")
-            return sherdog_lookup[variation]
+        if variation in tapology_name_lookup:
+            print(f"📝 Fuzzy match found: '{ufc_name}' → '{variation}' (ID match failed)")
+            return tapology_name_lookup[variation]
     
-    # Strategy 4: Try partial matching (last resort)
+    # Strategy 2d: Try partial matching (last resort)
     ufc_parts = normalized_name.split()
     if len(ufc_parts) >= 2:
         # Try just first and last name
         partial_name = f"{ufc_parts[0]} {ufc_parts[-1]}"
-        if partial_name in sherdog_lookup and partial_name != normalized_name:
-            print(f"📝 Partial match found: '{ufc_name}' → '{partial_name}'")
-            return sherdog_lookup[partial_name]
+        if partial_name in tapology_name_lookup and partial_name != normalized_name:
+            print(f"📝 Partial match found: '{ufc_name}' → '{partial_name}' (ID match failed)")
+            return tapology_name_lookup[partial_name]
     
     return None
 
@@ -170,7 +204,7 @@ def write_unmatched_report(unmatched: List[str], filepath: str) -> None:
     Path(filepath).parent.mkdir(parents=True, exist_ok=True)
     
     with open(filepath, "w", encoding="utf-8") as f:
-        f.write(f"Unmatched UFC fighters (not found in Sherdog)\n")
+        f.write(f"Unmatched UFC fighters (not found in Tapology)\n")
         f.write(f"Generated: {Path(__file__).name}\n")
         f.write(f"Total unmatched: {len(unmatched)}\n\n")
         
@@ -192,31 +226,104 @@ def extract_fight_history(fighters: List[Dict], output_path: str) -> None:
     """Extract flat fight history from merged fighters data."""
     print("🥊 Extracting fight history...")
     
-    # Helper to normalize opponent names
-    def normalize_name_for_history(name: str) -> str:
-        name = name.strip()
-        name = re.sub(r"\s+", " ", name)
-        return name.lower()
+    # Helper to validate date formats
+    def is_valid_date_format(date_str: str) -> bool:
+        """Check if date string is in a valid format"""
+        if not date_str or not isinstance(date_str, str):
+            return False
+        
+        # Skip obviously invalid date patterns
+        invalid_patterns = [
+            'basic', 'professional bouts', 'amateur bouts', 'subscription',
+            'tier', 'premium', 'advanced', 'standard'
+        ]
+        
+        date_lower = date_str.lower().strip()
+        if any(pattern in date_lower for pattern in invalid_patterns):
+            return False
+        
+        # Must contain at least one digit for year
+        if not any(char.isdigit() for char in date_str):
+            return False
+            
+        # Must be reasonable length (not too short or too long)
+        if len(date_str.strip()) < 4 or len(date_str.strip()) > 20:
+            return False
+            
+        return True
+    
+    def parse_fight_date(raw_date: str) -> Optional[str]:
+        """Parse fight date with multiple format support and validation"""
+        if not is_valid_date_format(raw_date):
+            return None
+            
+        try:
+            # Method 1: Tapology format "2025-Feb 1" or "2025-Feb 15"
+            if "-" in raw_date and len(raw_date.split("-")) == 2:
+                parts = raw_date.split("-", 1)
+                year_part = parts[0].strip()
+                month_day_part = parts[1].strip()
+                
+                # Validate year is actually a year
+                if not year_part.isdigit() or len(year_part) != 4:
+                    return None
+                    
+                # Convert to parseable format
+                date_str = f"{month_day_part} {year_part}"
+                parsed_date = datetime.strptime(date_str, "%b %d %Y")
+                return parsed_date.date().isoformat()
+                
+            # Method 2: Standard format "MM/DD/YYYY"
+            elif "/" in raw_date:
+                parsed_date = datetime.strptime(raw_date, "%m/%d/%Y")
+                return parsed_date.date().isoformat()
+                
+            # Method 3: ISO format "YYYY-MM-DD"
+            elif raw_date.count("-") == 2 and len(raw_date) == 10:
+                # Validate it's actually ISO format
+                datetime.strptime(raw_date, "%Y-%m-%d")
+                return raw_date
+                
+            # Method 4: Year only "2024" -> use Jan 1st as placeholder
+            elif raw_date.isdigit() and len(raw_date) == 4:
+                year = int(raw_date)
+                if 1900 <= year <= 2030:  # Reasonable year range
+                    return f"{year}-01-01"
+                    
+        except ValueError:
+            pass  # Fall through to return None
+            
+        return None
 
     # Extract only relevant fight history entries
     flat_fight_history = []
+    skipped_invalid_dates = 0
+    total_fights_processed = 0
 
     for fighter in fighters:
         fighter_id = fighter.get("id")
         for fight in fighter.get("fight_history", []):
+            total_fights_processed += 1
             try:
-                opponent_name = fight.get("fighter", "").strip()
+                opponent_name = fight.get("opponent", "").strip()
+                
+                # Skip fights without opponent
+                if not opponent_name:
+                    continue
 
-                # Parse fight date safely
-                raw_date = fight.get("Date") or fight.get("fight_date")
+                # Parse fight date with improved validation
+                raw_date = fight.get("fight_date")
                 fight_date = None
+                
                 if raw_date:
-                    try:
-                        fight_date = datetime.strptime(raw_date, "%m/%d/%Y").date().isoformat()
-                    except ValueError:
-                        print(f"⚠️ Invalid date format: '{raw_date}' for fighter {fighter.get('name')}")
+                    fight_date = parse_fight_date(raw_date)
+                    if not fight_date:
+                        skipped_invalid_dates += 1
+                        # Don't skip - keep the fight but with null date
+                        fight_date = None
 
-                flat_fight_history.append({
+                # Create fight history entry with all Tapology fields
+                fight_entry = {
                     "fighter_id": fighter_id,
                     "opponent": opponent_name,
                     "result": fight.get("result"),
@@ -224,7 +331,16 @@ def extract_fight_history(fighters: List[Dict], output_path: str) -> None:
                     "round": fight.get("round"),
                     "time": fight.get("time"),
                     "fight_date": fight_date
-                })
+                }
+                
+                # Add additional Tapology fields if present
+                optional_fields = ["method_detail", "event", "promotion", "betting_odds", 
+                                 "betting_status", "pick_percentage", "weight_class"]
+                for field in optional_fields:
+                    if fight.get(field):
+                        fight_entry[field] = fight.get(field)
+                
+                flat_fight_history.append(fight_entry)
 
             except Exception as e:
                 print(f"⚠️ Error processing fight for {fighter.get('name', 'UNKNOWN')}: {e}")
@@ -232,7 +348,13 @@ def extract_fight_history(fighters: List[Dict], output_path: str) -> None:
 
     # Save clean flat fight history
     save_merged_data(flat_fight_history, output_path)
+    
+    # Summary
     print(f"✅ Saved flat fight history to {output_path} with {len(flat_fight_history)} entries")
+    if skipped_invalid_dates > 0:
+        print(f"⚠️ Skipped {skipped_invalid_dates} fights with invalid dates out of {total_fights_processed} total")
+
+               
 
 def main():
     """Main execution function."""
@@ -241,7 +363,7 @@ def main():
     # Load data files
     print("📂 Loading data files...")
     ufc_data = load_json_file("../data/ufc_details.json")
-    sherdog_data = load_json_file("../data/sherdog_fighters.json")
+    tapology_data = load_json_file("../data/tapology_fighters.json")
 
     
     # Load name fixes
@@ -252,11 +374,11 @@ def main():
         print("⚠️ Warning: Could not import NAME_FIXES, using empty dict")
         NAME_FIXES = {}
     
-    print(f"📊 Loaded {len(ufc_data)} UFC fighters, {len(sherdog_data)} Sherdog fighters")
+    print(f"📊 Loaded {len(ufc_data)} UFC fighters, {len(tapology_data)} Tapology fighters")
     
     # Build lookups
     print("🔍 Building lookup tables...")
-    sherdog_lookup = build_sherdog_lookup(sherdog_data)
+    tapology_id_lookup, tapology_name_lookup = build_tapology_lookup(tapology_data)
     name_fixes = create_name_fixes_lookup(NAME_FIXES)
 
     # Start with a clean slate – don't use existing data
@@ -275,24 +397,24 @@ def main():
             print(f"⚠️ Warning: UFC fighter with empty name: {ufc_fighter}")
             continue
         
-        sherdog_fighter = find_sherdog_match(ufc_name, sherdog_lookup, name_fixes)
+        tapology_fighter = find_tapology_match(ufc_fighter, tapology_id_lookup, tapology_name_lookup, name_fixes)
         
         merged = ufc_fighter.copy()
         merged["name"] = create_normalized_name(merged.get("name", ""))
 
-        if sherdog_fighter:
-            merged = merge_fighter_data(merged, sherdog_fighter)
+        if tapology_fighter:
+            merged = merge_fighter_data(merged, tapology_fighter)
 
             # UUID mismatch check
-            if merged.get("id") and sherdog_fighter.get("id") and merged["id"] != sherdog_fighter["id"]:
+            if merged.get("id") and tapology_fighter.get("id") and merged["id"] != tapology_fighter["id"]:
                 merged["uuid_mismatch"] = {
                     "ufc_id": merged["id"],
-                    "sherdog_id": sherdog_fighter["id"]
+                    "tapology_id": tapology_fighter["id"]
                 }
                 mismatched_uuids.append({
                     "name": merged["name"],
                     "ufc_id": merged["id"],
-                    "sherdog_id": sherdog_fighter["id"]
+                    "tapology_id": tapology_fighter["id"]
                 })
 
         else:

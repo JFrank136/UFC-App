@@ -5,6 +5,7 @@ import psycopg2
 import psycopg2.extras
 from uuid import UUID
 from dotenv import load_dotenv
+from datetime import datetime
 
 
 def clean_numeric(value):
@@ -86,91 +87,100 @@ def batch_insert_fighters(cursor, fighters_batch):
     
     query = """
         INSERT INTO fighters (
-            id, name, profile_url_ufc, profile_url_sherdog, status, height, weight, 
-            reach, sig_strikes_landed_per_min, sig_strikes_absorbed_per_min, takedown_avg_per_15min,
-            submission_avg_per_15min, sig_str_defense, takedown_defense, knockdown_avg, average_fight_time, 
-            striking_accuracy, takedown_accuracy, sig_strikes_by_position, sig_strikes_by_target,
-            nickname, country, age, weight_class, wins_total, losses_total, wins_ko, wins_sub, wins_dec,
-            losses_ko, losses_sub, losses_dec, image_url, image_local_path, ufc_rankings
+            id, name, nickname, profile_url_ufc, height, weight, reach, status, country, age, gender, weight_class,
+            wins_total, losses_total, draws_total, ufc_wins_total, ufc_losses_total, ufc_draws_total,
+            ufc_wins_ko, ufc_wins_sub, ufc_wins_dec, ufc_losses_ko, ufc_losses_sub, ufc_losses_dec,
+            sig_strikes_landed_per_min, sig_strikes_absorbed_per_min, takedown_avg_per_15min,
+            submission_avg_per_15min, sig_str_defense, knockdown_avg, avg_fight_time, created_at,
+            profile_url_tapology, image_url, image_local_path, takedown_defense, striking_accuracy,
+            takedown_accuracy, sig_strikes_by_position, sig_strikes_by_target
         )
-
         VALUES %s
         ON CONFLICT (id) DO UPDATE SET
             name = EXCLUDED.name,
+            nickname = EXCLUDED.nickname,
             profile_url_ufc = EXCLUDED.profile_url_ufc,
-            profile_url_sherdog = EXCLUDED.profile_url_sherdog,
-            status = EXCLUDED.status,
             height = EXCLUDED.height,
             weight = EXCLUDED.weight,
             reach = EXCLUDED.reach,
+            status = EXCLUDED.status,
+            country = EXCLUDED.country,
+            age = EXCLUDED.age,
+            gender = EXCLUDED.gender,
+            weight_class = EXCLUDED.weight_class,
+            wins_total = EXCLUDED.wins_total,
+            losses_total = EXCLUDED.losses_total,
+            draws_total = EXCLUDED.draws_total,
+            ufc_wins_total = EXCLUDED.ufc_wins_total,
+            ufc_losses_total = EXCLUDED.ufc_losses_total,
+            ufc_draws_total = EXCLUDED.ufc_draws_total,
+            ufc_wins_ko = EXCLUDED.ufc_wins_ko,
+            ufc_wins_sub = EXCLUDED.ufc_wins_sub,
+            ufc_wins_dec = EXCLUDED.ufc_wins_dec,
+            ufc_losses_ko = EXCLUDED.ufc_losses_ko,
+            ufc_losses_sub = EXCLUDED.ufc_losses_sub,
+            ufc_losses_dec = EXCLUDED.ufc_losses_dec,
             sig_strikes_landed_per_min = EXCLUDED.sig_strikes_landed_per_min,
             sig_strikes_absorbed_per_min = EXCLUDED.sig_strikes_absorbed_per_min,
             takedown_avg_per_15min = EXCLUDED.takedown_avg_per_15min,
             submission_avg_per_15min = EXCLUDED.submission_avg_per_15min,
             sig_str_defense = EXCLUDED.sig_str_defense,
-            takedown_defense = EXCLUDED.takedown_defense,
             knockdown_avg = EXCLUDED.knockdown_avg,
-            average_fight_time = EXCLUDED.average_fight_time,
+            avg_fight_time = EXCLUDED.avg_fight_time,
+            profile_url_tapology = EXCLUDED.profile_url_tapology,
+            image_url = EXCLUDED.image_url,
+            image_local_path = EXCLUDED.image_local_path,
+            takedown_defense = EXCLUDED.takedown_defense,
             striking_accuracy = EXCLUDED.striking_accuracy,
             takedown_accuracy = EXCLUDED.takedown_accuracy,
             sig_strikes_by_position = EXCLUDED.sig_strikes_by_position,
-            sig_strikes_by_target = EXCLUDED.sig_strikes_by_target,
-            nickname = EXCLUDED.nickname,
-            country = EXCLUDED.country,
-            age = EXCLUDED.age,
-            weight_class = EXCLUDED.weight_class,
-            wins_total = EXCLUDED.wins_total,
-            losses_total = EXCLUDED.losses_total,
-            wins_ko = EXCLUDED.wins_ko,
-            wins_sub = EXCLUDED.wins_sub,
-            wins_dec = EXCLUDED.wins_dec,
-            losses_ko = EXCLUDED.losses_ko,
-            losses_sub = EXCLUDED.losses_sub,
-            losses_dec = EXCLUDED.losses_dec,
-            image_url = EXCLUDED.image_url,
-            image_local_path = EXCLUDED.image_local_path,
-            ufc_rankings = EXCLUDED.ufc_rankings;
-    """
+            sig_strikes_by_target = EXCLUDED.sig_strikes_by_target;
+        """
     
     # Convert batch to tuple format with proper data conversion
     values = []
     for fighter in fighters_batch:
         values.append((
-            fighter["id"],
-            fighter["name"],
-            fighter.get("profile_url_ufc"),
-            fighter.get("profile_url_sherdog"),
-            fighter.get("status"),
-            clean_numeric(fighter.get("height")),
-            clean_numeric(fighter.get("weight")),
-            clean_numeric(fighter.get("reach")),
-            fighter.get("sig_strikes_landed_per_min"),
-            fighter.get("sig_strikes_absorbed_per_min"),
-            fighter.get("takedown_avg_per_15min"),
-            fighter.get("submission_avg_per_15min"),
-            fighter.get("sig_str_defense"),
-            fighter.get("takedown_defense"),
-            clean_numeric(fighter.get("knockdown_avg")),
-            clean_numeric(fighter.get("average_fight_time")),
-            fighter.get("striking_accuracy"),
-            fighter.get("takedown_accuracy"),
-            json.dumps(fighter.get("sig_strikes_by_position")) if fighter.get("sig_strikes_by_position") else None,
-            json.dumps(fighter.get("sig_strikes_by_target")) if fighter.get("sig_strikes_by_target") else None,
-            fighter.get("nickname"),
-            fighter.get("country"),
-            clean_numeric(fighter.get("age")),
-            fighter.get("weight_class"),  
-            clean_numeric(fighter.get("wins_total")),
-            clean_numeric(fighter.get("losses_total")),
-            clean_numeric(fighter.get("wins_ko")),
-            clean_numeric(fighter.get("wins_sub")),
-            clean_numeric(fighter.get("wins_dec")),
-            clean_numeric(fighter.get("losses_ko")),
-            clean_numeric(fighter.get("losses_sub")),
-            clean_numeric(fighter.get("losses_dec")),
-            fighter.get("image_url"),
-            fighter.get("image_local_path"),
-            json.dumps(fighter.get("ufc_rankings", []))  # convert to JSON string
+            fighter["id"],                                                           # id
+            fighter["name"],                                                         # name
+            fighter.get("nickname"),                                                # nickname
+            fighter.get("profile_url_ufc"),                                        # profile_url_ufc
+            clean_numeric(fighter.get("height")),                                  # height
+            clean_numeric(fighter.get("weight")),                                  # weight
+            clean_numeric(fighter.get("reach")),                                   # reach
+            fighter.get("status"),                                                  # status
+            fighter.get("country"),                                                # country
+            clean_numeric(fighter.get("age")),                                     # age
+            fighter.get("gender"),                                                 # gender
+            fighter.get("weight_class"),                                           # weight_class
+            clean_numeric(fighter.get("wins_total")),                              # wins_total
+            clean_numeric(fighter.get("losses_total")),                            # losses_total
+            clean_numeric(fighter.get("draws_total")),                             # draws_total
+            clean_numeric(fighter.get("ufc_wins_total")),                          # ufc_wins_total
+            clean_numeric(fighter.get("ufc_losses_total")),                        # ufc_losses_total
+            clean_numeric(fighter.get("ufc_draws_total")),                         # ufc_draws_total
+            clean_numeric(fighter.get("ufc_wins_ko")),                             # ufc_wins_ko
+            clean_numeric(fighter.get("ufc_wins_sub")),                            # ufc_wins_sub
+            clean_numeric(fighter.get("ufc_wins_dec")),                            # ufc_wins_dec
+            clean_numeric(fighter.get("ufc_losses_ko")),                           # ufc_losses_ko
+            clean_numeric(fighter.get("ufc_losses_sub")),                          # ufc_losses_sub
+            clean_numeric(fighter.get("ufc_losses_dec")),                          # ufc_losses_dec
+            fighter.get("sig_strikes_landed_per_min"),                             # sig_strikes_landed_per_min
+            fighter.get("sig_strikes_absorbed_per_min"),                           # sig_strikes_absorbed_per_min
+            fighter.get("takedown_avg_per_15min"),                                 # takedown_avg_per_15min
+            fighter.get("submission_avg_per_15min"),                               # submission_avg_per_15min
+            fighter.get("sig_str_defense"),                                        # sig_str_defense
+            clean_numeric(fighter.get("knockdown_avg")),                           # knockdown_avg
+            fighter.get("avg_fight_time"),                                         # avg_fight_time
+            datetime.now(),                                                        # created_at
+            fighter.get("profile_url_tapology"),                                   # profile_url_tapology
+            fighter.get("image_url"),                                              # image_url
+            fighter.get("image_local_path"),                                       # image_local_path
+            fighter.get("takedown_defense"),                                       # takedown_defense
+            fighter.get("striking_accuracy"),                                      # striking_accuracy
+            fighter.get("takedown_accuracy"),                                      # takedown_accuracy
+            json.dumps(fighter.get("sig_strikes_by_position")) if fighter.get("sig_strikes_by_position") else None,  # sig_strikes_by_position
+            json.dumps(fighter.get("sig_strikes_by_target")) if fighter.get("sig_strikes_by_target") else None       # sig_strikes_by_target
         ))
     
     psycopg2.extras.execute_values(cursor, query, values, template=None)

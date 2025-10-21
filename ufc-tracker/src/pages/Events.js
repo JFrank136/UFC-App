@@ -1,143 +1,17 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { Calendar, Clock, MapPin, TrendingUp, Shield, Target, BarChart3, Sun, Moon, ChevronDown, ChevronUp, Users, Trophy, Zap, ChevronLeft, ChevronRight } from 'lucide-react';
-import supabase from '../api/supabaseClient';
-import { getEventData } from '../api/supabaseQueries';
+import React, { useState, useMemo } from 'react';
+import { Sun, Moon, Calendar, Clock, MapPin, ChevronDown, ChevronUp, Users, ChevronLeft, ChevronRight, Trophy } from 'lucide-react';
+import { useEventData } from '../hooks/useEventData';
+import EventCard from '../components/Events/EventCard';
 import countryCodes from '../utils/countryCodes';
+import { formatDate, formatTime, formatRecord, getMainEvent, isPPV, isChampionshipFight, isChampionshipEvent, getRecentFights, getFinishRates } from '../utils/eventHelpers';
 
 const Events = () => {
-  const [fights, setFights] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { sortedEvents, loading, error } = useEventData();
   const [expandedEvents, setExpandedEvents] = useState(new Set());
   const [expandedFights, setExpandedFights] = useState(new Set());
   const [darkMode, setDarkMode] = useState(true);
-  const [bettingCardPages, setBettingCardPages] = useState({});
   const [activeCardSections, setActiveCardSections] = useState({});
 
-  useEffect(() => {
-    const fetchFights = async () => {
-      try {
-        setLoading(true);
-        
-        try {
-          let data = await getEventData();
-          
-          // Get all fighter IDs from the events
-          const allFighterIds = [...new Set(data.flatMap(fight => [
-            fight.fighter1_data?.id,
-            fight.fighter2_data?.id
-          ].filter(Boolean)))];
-          
-          // Fetch fight history for all fighters
-          if (allFighterIds.length > 0) {
-            const { data: fightHistory, error: historyError } = await supabase
-              .from('fight_history')
-              .select('*')
-              .in('fighter_id', allFighterIds);
-            
-            if (!historyError && fightHistory) {
-              // Add fight history to fighter data
-              data = data.map(fight => ({
-                ...fight,
-                fighter1_data: fight.fighter1_data ? {
-                  ...fight.fighter1_data,
-                  fight_history: fightHistory.filter(h => h.fighter_id === fight.fighter1_data.id) || []
-                } : null,
-                fighter2_data: fight.fighter2_data ? {
-                  ...fight.fighter2_data,
-                  fight_history: fightHistory.filter(h => h.fighter_id === fight.fighter2_data.id) || []
-                } : null
-              }));
-            }
-          }
-          // Filter to only show events within 3 days of today or future events
-          const today = new Date();
-          const threeDaysAgo = new Date(today);
-          threeDaysAgo.setDate(today.getDate() - 3);
-          
-          const filteredData = (data || []).filter(fight => {
-            const eventDate = new Date(fight.event_date);
-            return eventDate >= threeDaysAgo;
-          });
-          
-          setFights(filteredData);
-          setError(null);
-        } catch (queryError) {
-          console.log('getEventData failed, falling back to direct query:', queryError);
-          
-          const { data, error } = await supabase
-            .from('upcoming_fights')
-            .select(`
-              *,
-              fighter1:fighter1_id (
-                id, name, image_url, nickname, age, height, weight, reach, country,
-                wins_total, losses_total, wins_ko, wins_sub, wins_dec,
-                losses_ko, losses_sub, losses_dec, avg_fight_time,
-                strikes_landed_per_min, striking_defense, takedown_avg
-              ),
-              fighter2:fighter2_id (
-                id, name, image_url, nickname, age, height, weight, reach, country,
-                wins_total, losses_total, wins_ko, wins_sub, wins_dec,
-                losses_ko, losses_sub, losses_dec, avg_fight_time,
-                strikes_landed_per_min, striking_defense, takedown_avg
-              )
-            `)
-            .order('event_date')
-            .order('fight_order', { ascending: false });
-
-          if (error) throw error;
-          
-          // Filter past events
-          const today = new Date();
-          const threeDaysAgo = new Date(today);
-          threeDaysAgo.setDate(today.getDate() - 3);
-          
-          const filteredData = (data || []).filter(fight => {
-            const eventDate = new Date(fight.event_date);
-            return eventDate >= threeDaysAgo;
-          });
-          
-          setFights(filteredData);
-          setError(null);
-        }
-      } catch (err) {
-        console.error('Error fetching fights:', err);
-        setError(`Failed to load events: ${err.message || 'Unknown error'}`);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFights();
-  }, []);
-
-  // Group fights by event
-  const groupedEvents = useMemo(() => {
-    return fights.reduce((acc, fight) => {
-      const key = `${fight.event} | ${fight.event_date}`;
-      if (!acc[key]) {
-        acc[key] = {
-          info: {
-            name: fight.event,
-            date: fight.event_date,
-            time: fight.event_time,
-            type: fight.event_type,
-            location: fight.location
-          },
-          fights: []
-        };
-      }
-      acc[key].fights.push(fight);
-      return acc;
-    }, {});
-  }, [fights]);
-
-  // Sort events by date
-  const sortedEvents = useMemo(() => {
-    return Object.entries(groupedEvents).sort(([, a], [, b]) => 
-      new Date(a.info.date) - new Date(b.info.date)
-    );
-  }, [groupedEvents]);
 
   const toggleEvent = (eventKey) => {
     setExpandedEvents(prev => {
@@ -145,7 +19,8 @@ const Events = () => {
       if (newSet.has(eventKey)) {
         newSet.delete(eventKey);
         // Also collapse all fights in this event
-        groupedEvents[eventKey]?.fights.forEach(fight => {
+        const eventData = sortedEvents.find(([key]) => key === eventKey)?.[1];
+        eventData?.fights.forEach(fight => {
           setExpandedFights(prevFights => {
             const newFightsSet = new Set(prevFights);
             newFightsSet.delete(fight.id);
@@ -182,123 +57,8 @@ const Events = () => {
     });
   };
 
-  const getMainEvent = (fights) => {
-    return fights.reduce((main, fight) => {
-      if (!main || (fight.fight_order || 0) > (main.fight_order || 0)) {
-        return fight;
-      }
-      return main;
-    }, null);
-  };
-
-  const isPPV = (eventName, eventType) => {
-    return eventType?.toLowerCase().includes('ppv') || 
-           (eventName.toLowerCase().includes('ufc ') && /ufc \d+/.test(eventName.toLowerCase()));
-  };
-
-  const isChampionshipFight = (fight) => {
-    const f1 = fight.fighter1_data || fight.fighter1;
-    const f2 = fight.fighter2_data || fight.fighter2;
-    
-    const hasChampionRank = (f1?.rankings && f1.rankings.some(r => r.rank === 'C')) ||
-                           (f2?.rankings && f2.rankings.some(r => r.rank === 'C'));
-    
-    const hasTitleInName = fight.event?.toLowerCase().includes('title') ||
-                          fight.fighter1?.toLowerCase().includes('title') ||
-                          fight.fighter2?.toLowerCase().includes('title');
-    
-    return hasChampionRank || hasTitleInName;
-  };
-
-  const isChampionshipEvent = (fights) => {
-    return fights.some(fight => isChampionshipFight(fight));
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString + 'T00:00:00');
-    return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: 'UTC'
-    });
-  };
-
-  const formatTime = (timeString) => {
-    if (!timeString) return 'Time TBA';
-    try {
-      const [hours, minutes] = timeString.split(':');
-      const hour = parseInt(hours);
-      const ampm = hour >= 12 ? 'PM' : 'AM';
-      const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-      return `${displayHour}:${minutes} ${ampm} EST`;
-    } catch (error) {
-      return 'Time TBA';
-    }
-  };
-
-  const formatRecord = (fighter) => {
-    if (!fighter) return 'N/A';
-    const wins = fighter.wins_total || 0;
-    const losses = fighter.losses_total || 0;
-    return `${wins}-${losses}`;
-  };
-
-  const getDivisionFromWeight = (weightClass, fighter1, fighter2) => {
-    if (!weightClass || weightClass === 'TBA') return 'TBA';
-    
-    // First try to get division from fighters' rankings
-    const f1Division = fighter1?.rankings?.find(r => !r.division?.toLowerCase().includes('pound-for-pound'))?.division;
-    const f2Division = fighter2?.rankings?.find(r => !r.division?.toLowerCase().includes('pound-for-pound'))?.division;
-    
-    if (f1Division && f2Division && f1Division === f2Division) return f1Division;
-    if (f1Division && !f2Division) return f1Division;
-    if (f2Division && !f1Division) return f2Division;
-    
-    // Fallback to weight mapping
-    const weightMap = {
-      '125': 'Flyweight',
-      '135': 'Bantamweight', 
-      '145': 'Featherweight',
-      '155': 'Lightweight',
-      '170': 'Welterweight',
-      '185': 'Middleweight',
-      '205': 'Light Heavyweight',
-      '265': 'Heavyweight',
-      '115': "Women's Strawweight"
-    };
-    
-    let division = weightMap[weightClass] || weightClass;
-    
-    // Check if either fighter has "women's" in their division
-    const hasWomensDiv = (f1Division && f1Division.toLowerCase().includes("women's")) || 
-                        (f2Division && f2Division.toLowerCase().includes("women's"));
-    
-    if (hasWomensDiv && !division.toLowerCase().includes("women's")) {
-      const womensMap = {
-        'Flyweight': "Women's Flyweight",
-        'Bantamweight': "Women's Bantamweight",
-        'Featherweight': "Women's Featherweight"
-      };
-      division = womensMap[division] || `Women's ${division}`;
-    }
-    
-    return division;
-  };
-
-  const getFinishRates = (fighter) => {
-    if (!fighter) return { ko: 0, sub: 0, dec: 0 };
-    
-    const totalWins = fighter.wins_total || 0;
-    if (totalWins === 0) return { ko: 0, sub: 0, dec: 0 };
-    
-    const koRate = Math.round(((fighter.wins_ko || 0) / totalWins) * 100);
-    const subRate = Math.round(((fighter.wins_sub || 0) / totalWins) * 100);
-    const decRate = Math.round(((fighter.wins_dec || 0) / totalWins) * 100);
-    
-    return { ko: koRate, sub: subRate, dec: decRate };
-  };
+  
+  // Utility functions moved to src/utils/eventHelpers.js
 
   const formatStat = (value, decimals = 1, suffix = '') => {
     if (!value) return 'N/A';
@@ -315,39 +75,7 @@ const Events = () => {
     return value.toString();
   };
 
-  const getRecentFights = (fighter, limit = 3) => {
-    if (!fighter?.fight_history) return [];
-    return fighter.fight_history
-      .filter(fight => fight.opponent && fight.result) // Filter out incomplete data
-      .sort((a, b) => new Date(b.fight_date || '1900-01-01') - new Date(a.fight_date || '1900-01-01'))
-      .slice(0, limit);
-  };
-
-  const groupFightsBySection = (fights) => {
-    const sections = {
-      'Main Card': [],
-      'Preliminary Card': [],
-      'Early Prelims': []
-    };
-    
-    fights.forEach(fight => {
-      const section = fight.card_section || 'Prelim';
-      if (section === 'Main' || section === 'Main Card') {
-        sections['Main Card'].push(fight);
-      } else if (section === 'Prelim' || section === 'Preliminary Card') {
-        sections['Preliminary Card'].push(fight);
-      } else {
-        sections['Early Prelims'].push(fight);
-      }
-    });
-    
-    // Sort fights within each section by fight order (higher numbers first)
-    Object.values(sections).forEach(sectionFights => {
-      sectionFights.sort((a, b) => (b.fight_order || 0) - (a.fight_order || 0));
-    });
-    
-    return sections;
-  };
+  const [bettingCardPages, setBettingCardPages] = useState({});
 
   const changeBettingPage = (fightId, direction) => {
     setBettingCardPages(prev => {
@@ -452,31 +180,35 @@ const Events = () => {
     const getFinishRatesByType = (type) => {
       if (!fighter) return { ko: 0, sub: 0, dec: 0, total: 0 };
       
-      let fights = [];
       if (type === 'wins') {
-        const totalWins = fighter.wins_total || 0;
+        const totalWins = fighter.ufc_wins_total || fighter.wins_total || 0;
         if (totalWins === 0) return { ko: 0, sub: 0, dec: 0, total: 0 };
         return {
-          ko: Math.round(((fighter.wins_ko || 0) / totalWins) * 100),
-          sub: Math.round(((fighter.wins_sub || 0) / totalWins) * 100),
-          dec: Math.round(((fighter.wins_dec || 0) / totalWins) * 100),
+          ko: Math.round(((fighter.ufc_wins_ko || fighter.wins_ko || 0) / totalWins) * 100),
+          sub: Math.round(((fighter.ufc_wins_sub || fighter.wins_sub || 0) / totalWins) * 100),
+          dec: Math.round(((fighter.ufc_wins_dec || fighter.wins_dec || 0) / totalWins) * 100),
           total: totalWins
         };
       } else if (type === 'losses') {
-        const totalLosses = fighter.losses_total || 0;
+        const totalLosses = fighter.ufc_losses_total || fighter.losses_total || 0;
         if (totalLosses === 0) return { ko: 0, sub: 0, dec: 0, total: 0 };
         return {
-          ko: Math.round(((fighter.losses_ko || 0) / totalLosses) * 100),
-          sub: Math.round(((fighter.losses_sub || 0) / totalLosses) * 100),
-          dec: Math.round(((fighter.losses_dec || 0) / totalLosses) * 100),
+          ko: Math.round(((fighter.ufc_losses_ko || fighter.losses_ko || 0) / totalLosses) * 100),
+          sub: Math.round(((fighter.ufc_losses_sub || fighter.losses_sub || 0) / totalLosses) * 100),
+          dec: Math.round(((fighter.ufc_losses_dec || fighter.losses_dec || 0) / totalLosses) * 100),
           total: totalLosses
         };
       } else {
-        const totalFights = (fighter.wins_total || 0) + (fighter.losses_total || 0);
+        const totalUFCFights = (fighter.ufc_wins_total || 0) + (fighter.ufc_losses_total || 0);
+        const totalAllFights = (fighter.wins_total || 0) + (fighter.losses_total || 0);
+        const totalFights = totalUFCFights > 0 ? totalUFCFights : totalAllFights;
+        
         if (totalFights === 0) return { ko: 0, sub: 0, dec: 0, total: 0 };
-        const totalKO = (fighter.wins_ko || 0) + (fighter.losses_ko || 0);
-        const totalSub = (fighter.wins_sub || 0) + (fighter.losses_sub || 0);
-        const totalDec = (fighter.wins_dec || 0) + (fighter.losses_dec || 0);
+        
+        const totalKO = (fighter.ufc_wins_ko || fighter.wins_ko || 0) + (fighter.ufc_losses_ko || fighter.losses_ko || 0);
+        const totalSub = (fighter.ufc_wins_sub || fighter.wins_sub || 0) + (fighter.ufc_losses_sub || fighter.losses_sub || 0);
+        const totalDec = (fighter.ufc_wins_dec || fighter.wins_dec || 0) + (fighter.ufc_losses_dec || fighter.losses_dec || 0);
+        
         return {
           ko: Math.round((totalKO / totalFights) * 100),
           sub: Math.round((totalSub / totalFights) * 100),
@@ -494,7 +226,7 @@ const Events = () => {
           <div className="details-page">
             <div className="fighter-header-card">
               <img
-                src={fighter.image_url || '/static/images/placeholder.jpg'}
+                src={fighter.image_url || fighter.image_local_path || `https://via.placeholder.com/60x60/cccccc/666666?text=${encodeURIComponent(fighter.name?.charAt(0) || '?')}`}
                 alt={fighter.name}
                 onError={(e) => {
                   e.target.src = 'https://via.placeholder.com/60x60/cccccc/666666?text=' + 
@@ -533,7 +265,7 @@ const Events = () => {
               </div>
               <div className="detail-row">
                 <span className="label">Height</span>
-                <span className="value">{fighter.height ? `${fighter.height}"` : 'N/A'}</span>
+                <span className="value">{fighter.height ? `${Math.floor(fighter.height/12)}'${fighter.height%12}"` : 'N/A'}</span>
               </div>
               <div className="detail-row">
                 <span className="label">Reach</span>
@@ -722,6 +454,23 @@ const Events = () => {
     );
   };
 
+  const groupFightsBySection = (fights) => {
+    return fights.reduce((acc, fight) => {
+      let section;
+      if (fight.card_section === 'Main') {
+        section = 'Main Card';
+      } else if (fight.card_section === 'Prelim') {
+        section = 'Preliminary Card';
+      } else {
+        section = 'Early Prelims';
+      }
+      
+      if (!acc[section]) acc[section] = [];
+      acc[section].push(fight);
+      return acc;
+    }, {});
+  };
+
   const EventCard = ({ eventKey, eventData, isExpanded }) => {
     const mainEvent = getMainEvent(eventData.fights);
     const eventIsPPV = isPPV(eventData.info.name, eventData.info.type);
@@ -767,7 +516,10 @@ const Events = () => {
                 <div className="fighters-preview">
                   <div className="fighter-preview">
                     <img
-                      src={(mainEvent.fighter1_data || mainEvent.fighter1)?.image_url || '/static/images/placeholder.jpg'}
+                      src={(mainEvent.fighter1_data || mainEvent.fighter1)?.image_url || 
+                           (mainEvent.fighter1_data || mainEvent.fighter1)?.image_local_path || 
+                           'https://via.placeholder.com/80x80/cccccc/666666?text=' + 
+                           ((mainEvent.fighter1_data || mainEvent.fighter1)?.name?.charAt(0) || '?')}
                       alt={(mainEvent.fighter1_data || mainEvent.fighter1)?.name || 'Fighter 1'}
                       onError={(e) => {
                         e.target.src = 'https://via.placeholder.com/80x80/cccccc/666666?text=' + 
@@ -789,7 +541,10 @@ const Events = () => {
                   
                   <div className="fighter-preview">
                     <img
-                      src={(mainEvent.fighter2_data || mainEvent.fighter2)?.image_url || '/static/images/placeholder.jpg'}
+                      src={(mainEvent.fighter2_data || mainEvent.fighter2)?.image_url || 
+                           (mainEvent.fighter2_data || mainEvent.fighter2)?.image_local_path || 
+                           'https://via.placeholder.com/80x80/cccccc/666666?text=' + 
+                           ((mainEvent.fighter2_data || mainEvent.fighter2)?.name?.charAt(0) || '?')}
                       alt={(mainEvent.fighter2_data || mainEvent.fighter2)?.name || 'Fighter 2'}
                       onError={(e) => {
                         e.target.src = 'https://via.placeholder.com/80x80/cccccc/666666?text=' + 
@@ -819,21 +574,64 @@ const Events = () => {
 
         {isExpanded && (
           <div className="fights-sections">
-            {Object.entries(sectionedFights).map(([sectionName, sectionFights]) => (
-              sectionFights.length > 0 && (
-                <div key={sectionName} className="fight-section">
-                  <CardSectionNavigation 
-                    sectionName={sectionName}
-                    sectionFights={sectionFights}
-                    eventKey={eventKey}
-                    expandedFights={expandedFights}
-                    toggleFight={toggleFight}
-                    activeCardSections={activeCardSections}
-                    setActiveCardSections={setActiveCardSections}
-                  />
+            <div className="card-section-container">
+              <div className="section-navigation-header">
+                <button 
+                  className="section-nav-btn"
+                  onClick={() => {
+                    const sectionsOrder = ['Main Card', 'Preliminary Card', 'Early Prelims'];
+                    const currentIndex = sectionsOrder.indexOf(activeCardSections[eventKey] || 'Main Card');
+                    const newIndex = currentIndex === 0 ? sectionsOrder.length - 1 : currentIndex - 1;
+                    setActiveCardSections(prev => ({ ...prev, [eventKey]: sectionsOrder[newIndex] }));
+                  }}
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                
+                <div className="section-tabs">
+                  {Object.entries(sectionedFights)
+                    .filter(([sectionName, sectionFights]) => sectionFights.length > 0)
+                    .map(([sectionName, sectionFights]) => (
+                      <button
+                        key={sectionName}
+                        className={`section-tab ${(activeCardSections[eventKey] || 'Main Card') === sectionName ? 'active' : ''}`}
+                        onClick={() => setActiveCardSections(prev => ({ ...prev, [eventKey]: sectionName }))}
+                      >
+                        {sectionName}
+                      </button>
+                    ))}
                 </div>
-              )
-            ))}
+                
+                <button 
+                  className="section-nav-btn"
+                  onClick={() => {
+                    const sectionsOrder = ['Main Card', 'Preliminary Card', 'Early Prelims'];
+                    const currentIndex = sectionsOrder.indexOf(activeCardSections[eventKey] || 'Main Card');
+                    const newIndex = currentIndex === sectionsOrder.length - 1 ? 0 : currentIndex + 1;
+                    setActiveCardSections(prev => ({ ...prev, [eventKey]: sectionsOrder[newIndex] }));
+                  }}
+                >
+                  <ChevronRight size={20} />
+                </button>
+              </div>
+              
+              <div className="fights-list">
+                {Object.entries(sectionedFights).map(([sectionName, sectionFights]) => (
+                  sectionFights.length > 0 && (activeCardSections[eventKey] || 'Main Card') === sectionName && (
+                    <div key={sectionName}>
+                      {sectionFights.map(fight => (
+                        <FightCard 
+                          key={fight.id} 
+                          fight={fight} 
+                          isExpanded={expandedFights.has(fight.id)}
+                          onToggle={() => toggleFight(fight.id)}
+                        />
+                      ))}
+                    </div>
+                  )
+                ))}
+              </div>
+            </div>
             
             <div className="collapse-bottom">
               <button 
@@ -870,7 +668,6 @@ const Events = () => {
         <div className="fight-header" onClick={onToggle}>
           <div className="fight-main-info">
             <div className="fight-meta">
-              <span className="card-section">{fight.card_section || 'TBA'}</span>
               <span className="fight-time">{formatTime(fight.event_time)}</span>
               {isChampionship && <span className="championship-indicator">👑</span>}
             </div>
@@ -966,7 +763,7 @@ const Events = () => {
     );
   }
 
-  if (fights.length === 0) {
+  if (sortedEvents.length === 0) {
     return (
       <div className={`events-container ${darkMode ? 'dark' : 'light'}`}>
         <div className="empty-state">
@@ -1001,6 +798,11 @@ const Events = () => {
             eventKey={eventKey}
             eventData={eventData}
             isExpanded={expandedEvents.has(eventKey)}
+            expandedFights={expandedFights}
+            toggleEvent={toggleEvent}
+            toggleFight={toggleFight}
+            activeCardSections={activeCardSections}
+            setActiveCardSections={setActiveCardSections}
           />
         ))}
       </div>
@@ -1322,9 +1124,9 @@ const Events = () => {
         }
 
         .fighter-preview img {
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
+          width: 90px;
+          height: 90px;
+          border-radius: 8px;
           object-fit: cover;
           object-position: center top;
           border: 2px solid var(--image-border);
@@ -1754,9 +1556,9 @@ const Events = () => {
         }
 
         .fighter-summary img {
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
+          width: 70px;
+          height: 70px;
+          border-radius: 8px;
           object-fit: cover;
           object-position: center top;
           border: 2px solid var(--image-border);
@@ -2196,9 +1998,9 @@ const Events = () => {
         }
 
         .fighter-header-card img {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
+          width: 70px;
+          height: 70px;
+          border-radius: 8px;
           object-fit: cover;
           object-position: center top;
           border: 2px solid var(--image-border);
@@ -2719,21 +2521,17 @@ const Events = () => {
 
         @media (max-width: 768px) {
           .section-navigation-header {
-            flex-direction: column;
-            gap: 1rem;
             padding: 1rem;
+            gap: 1rem;
           }
 
           .section-tabs {
-            width: 100%;
-            justify-content: center;
+            flex: 1;
           }
 
           .section-tab {
-            flex: 1;
-            text-align: center;
-            padding: 0.75rem 0.5rem;
-            font-size: 0.8rem;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.85rem;
           }
 
           .section-nav-btn {
@@ -2741,14 +2539,16 @@ const Events = () => {
           }
 
           .fighter-header-card {
-            flex-direction: column;
-            text-align: center;
-            padding: 0.75rem;
+            flex-direction: row;
+            text-align: left;
+            padding: 1rem;
+            gap: 1rem;
           }
 
           .fighter-header-card img {
             width: 50px;
             height: 50px;
+            flex-shrink: 0;
           }
 
           .detail-row {
@@ -2917,13 +2717,13 @@ const Events = () => {
           }
 
           .fighter-preview img {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
           }
 
           .fighter-summary img {
-            width: 40px;
-            height: 40px;
+            width: 60px;
+            height: 60px;
           }
 
           .event-title-container {

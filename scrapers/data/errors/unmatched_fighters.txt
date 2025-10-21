@@ -1,8 +1,5 @@
-Unmatched UFC fighters (not found in Sherdog)
+Unmatched UFC fighters (not found in Tapology)
 Generated: merge_fighters.py
-Total unmatched: 4
+Total unmatched: 1
 
-  1. BENARDO SOPAJ
-  2. DAVI COSTA
-  3. LEONARDO DE OLIVEIRA
-  4. SEOKHYEON KO
+  1. HENRIQUE DA SILVA LOPES

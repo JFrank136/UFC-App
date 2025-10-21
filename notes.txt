@@ -14,6 +14,7 @@ Have a badge if they are top 10 overall for a stat. Men vs women
 Improvements/Ideas
 ----
 ALL PAGES - Improve for mobile
+Scrapers - Update Tuesday after UFC events since that's when it updates
 Favorites.js - Sort by division and have them vertically stacked. 
     Maybe have multiple views
     Include stats about favorites?
@@ -31,6 +32,7 @@ UpcomingFights.js - Sort by fight order
 UpcomingFights.js - Different highlighting for PPV vs Fight Night
 UpcomingFights.js - Fix date formatting
 UpcomingFights.js - Countdown timers?
+UpcomingFights.js - Have venue and location icons
 UpcomingFights.js - Fix filtering (try "Mars" + "Favorites")
 FighterStats.js - Longest unbeaten streak and longest losing streak
 FighterStats.js - Whole page filter for top 5/bottom 5?

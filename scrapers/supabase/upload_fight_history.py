@@ -28,7 +28,8 @@ def batch_insert_fights(cursor, fights_batch):
     # Prepare batch insert query
     query = """
         INSERT INTO fight_history (
-            id, fighter_id, opponent, result, method, round, time, fight_date
+            id, fighter_id, opponent, result, method, round, time, fight_date,
+            method_detail, event, promotion, betting_odds, betting_status, pick_percentage, weight_class
         ) VALUES %s
         ON CONFLICT (id) DO NOTHING;
     """
@@ -44,7 +45,14 @@ def batch_insert_fights(cursor, fights_batch):
             fight_data["method"],
             fight_data["round"],
             fight_data["time"],
-            fight_data["fight_date"]
+            fight_data["fight_date"],
+            fight_data["method_detail"],
+            fight_data["event"],
+            fight_data["promotion"],
+            fight_data["betting_odds"],
+            fight_data["betting_status"],
+            fight_data["pick_percentage"],
+            fight_data["weight_class"]
         ))
     
     psycopg2.extras.execute_values(cursor, query, values, template=None)
@@ -120,7 +128,14 @@ def main():
                     "method": fight.get("method"),
                     "round": fight.get("round"),
                     "time": fight.get("time"),
-                    "fight_date": fight_date
+                    "fight_date": fight_date,
+                    "method_detail": fight.get("method_detail"),
+                    "event": fight.get("event"),
+                    "promotion": fight.get("promotion"),
+                    "betting_odds": fight.get("betting_odds"),
+                    "betting_status": fight.get("betting_status"),
+                    "pick_percentage": fight.get("pick_percentage"),
+                    "weight_class": fight.get("weight_class")
                 })
                 
                 # Insert batch when it reaches the batch size
