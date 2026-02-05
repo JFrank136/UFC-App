@@ -4,16 +4,8 @@ import { searchFightersWithRanking } from "../api/supabaseQueries";
 import supabase from "../api/supabaseClient";
 import countryCodes from '../utils/countryCodes';
 
-const USERS = ["Jared", "Mars"];
-
-const getThemeColors = (user) => {
-  return user === "Mars" ? {
-    primary: '#dc2626', // Red
-    primaryLight: 'rgba(220, 38, 38, 0.1)',
-    primaryBorder: 'rgba(220, 38, 38, 0.3)',
-    gradient: 'linear-gradient(45deg, #dc2626, #ef4444)',
-    secondary: '#b91c1c'
-  } : {
+const getThemeColors = () => {
+  return {
     primary: '#2563eb', // Blue  
     primaryLight: 'rgba(37, 99, 235, 0.1)',
     primaryBorder: 'rgba(37, 99, 235, 0.3)', 
@@ -139,8 +131,6 @@ const SearchFighter = () => {
   const [filteredFighters, setFilteredFighters] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [user, setUser] = useState(USERS[0]);
-  const [userTheme, setUserTheme] = useState('jared');
   const [favStatus, setFavStatus] = useState({});
   const [loadingStates, setLoadingStates] = useState({});
   const [toast, setToast] = useState(null);
@@ -431,12 +421,12 @@ const inferGender = (fighter) => {
     fetchFighters();
   }, [extractFilterOptions]);
 
-  // Update favorite status when fighters or user changes
+  // Update favorite status when fighters change
   useEffect(() => {
     if (filteredFighters.length) {
       fetchFavStatus(filteredFighters);
     }
-  }, [filteredFighters, user]);
+  }, [filteredFighters]);
 
   const updateStatus = async (fighter, newStatus) => {
     const loadingKey = `${fighter.name}-${newStatus}`;
@@ -455,7 +445,7 @@ const inferGender = (fighter) => {
         const newRow = await addToFavorites({
           fighterName: fighter.name,
           fighter_id: fighter.id,
-          group: user,
+          group: "Jared",
           priority: newStatus,
         });
         setFavStatus((s) => ({
@@ -491,11 +481,11 @@ const inferGender = (fighter) => {
     <>
       <style jsx>{`
         :root {
-          --theme-primary: ${getThemeColors(user).primary};
-          --theme-primary-light: ${getThemeColors(user).primaryLight};
-          --theme-primary-border: ${getThemeColors(user).primaryBorder};
-          --theme-gradient: ${getThemeColors(user).gradient};
-          --theme-secondary: ${getThemeColors(user).secondary};
+          --theme-primary: ${getThemeColors().primary};
+          --theme-primary-light: ${getThemeColors().primaryLight};
+          --theme-primary-border: ${getThemeColors().primaryBorder};
+          --theme-gradient: ${getThemeColors().gradient};
+          --theme-secondary: ${getThemeColors().secondary};
         }
         
         .search-container {
@@ -966,12 +956,9 @@ const inferGender = (fighter) => {
         }
         
         .fighter-card.favorited-card {
-          background: ${user === 'Mars' ? 
-            'linear-gradient(145deg, #fee2e2, #fecaca)' : 
-            'linear-gradient(145deg, #dbeafe, #bfdbfe)'
-          };
-          border: 3px solid ${user === 'Mars' ? '#ef4444' : '#3b82f6'};
-          box-shadow: 0 8px 25px ${user === 'Mars' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(59, 130, 246, 0.3)'};
+          background: linear-gradient(145deg, #dbeafe, #bfdbfe);
+          border: 3px solid #3b82f6;
+          box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
           transform: scale(1.02);
         }
 
@@ -1014,12 +1001,9 @@ const inferGender = (fighter) => {
         }
 
         .fighter-card.interested-card {
-          background: ${user === 'Mars' ? 
-            'linear-gradient(145deg, #fef2f2, #fecaca)' : 
-            'linear-gradient(145deg, #eff6ff, #dbeafe)'
-          };
-          border: 2px solid ${user === 'Mars' ? '#dc2626' : '#2563eb'};
-          box-shadow: 0 6px 20px ${user === 'Mars' ? 'rgba(220, 38, 38, 0.25)' : 'rgba(37, 99, 235, 0.25)'};
+          background: linear-gradient(145deg, #eff6ff, #dbeafe);
+          border: 2px solid #2563eb;
+          box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
           transform: scale(1.01);
         }
         
@@ -1414,27 +1398,6 @@ const inferGender = (fighter) => {
         </div>
 
         <div className="controls">
-          <div className="user-selector">
-            <label>Select user:</label>
-            <select 
-              value={user} 
-              onChange={async (e) => {
-                const newUser = e.target.value;
-                setUser(newUser);
-                setUserTheme(newUser.toLowerCase());
-                if (filteredFighters.length) {
-                  await fetchFavStatus(filteredFighters);
-                }
-              }}
-            >
-              {USERS.map((u) => (
-                <option key={u} value={u}>
-                  {u}
-                </option>
-              ))}
-            </select>
-          </div>
-
           <div className="search-section">
             <div className="search-input-container">
               <input

@@ -6,7 +6,6 @@ import countryCodes from '../utils/countryCodes';
 
 const UpcomingFights = () => {
   const [fights, setFights] = useState([]);
-  const [userFilter, setUserFilter] = useState('All');
   const [priorityFilter, setPriorityFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -103,23 +102,12 @@ const UpcomingFights = () => {
       );
     }
     
-    // User filter
-    if (userFilter !== 'All') {
-      filtered = filtered.filter(fight => {
-        const f1HasUser = fight.fighter1_favorites?.some(f => f.user === userFilter);
-        const f2HasUser = fight.fighter2_favorites?.some(f => f.user === userFilter);
-        
-        if (userFilter === 'Both') {
-          const fightHasBothUsers = 
-            ((fight.fighter1_favorites?.some(f => f.user === 'Jared')) || (fight.fighter2_favorites?.some(f => f.user === 'Jared'))) &&
-            ((fight.fighter1_favorites?.some(f => f.user === 'Mars')) || (fight.fighter2_favorites?.some(f => f.user === 'Mars')));
-          
-          return fightHasBothUsers;
-        }
-        
-        return f1HasUser || f2HasUser;
-      });
-    }
+    // Filter to only show fights with Jared's favorites
+    filtered = filtered.filter(fight => {
+      const f1HasJared = fight.fighter1_favorites?.some(f => f.user === 'Jared');
+      const f2HasJared = fight.fighter2_favorites?.some(f => f.user === 'Jared');
+      return f1HasJared || f2HasJared;
+    });
     
     // Priority filter
     if (priorityFilter !== 'All') {
@@ -130,7 +118,7 @@ const UpcomingFights = () => {
     }
     
     return filtered;
-  }, [fights, searchQuery, userFilter, priorityFilter]);
+  }, [fights, searchQuery, priorityFilter]);
 
   // Group fights by event
   const groupedFights = useMemo(() => {
@@ -271,20 +259,17 @@ const toggleFightExpansion = (fightId) => {
   const getUserLabels = (favorites) => {
     if (!favorites || favorites.length === 0) return [];
     
-    return favorites.map(fav => ({
-      user: fav.user,
-      priority: fav.priority,
-      color: fav.user === 'Jared' ? '#3b82f6' : '#ef4444'
-    }));
+    // Only show Jared's favorites
+    return favorites
+      .filter(fav => fav.user === 'Jared')
+      .map(fav => ({
+        user: fav.user,
+        priority: fav.priority,
+        color: '#3b82f6'
+      }));
   };
 
-  const checkBothUsersInterested = (fight) => {
-    const hasJared = (fight.fighter1_favorites?.some(f => f.user === 'Jared')) || 
-                     (fight.fighter2_favorites?.some(f => f.user === 'Jared'));
-    const hasMars = (fight.fighter1_favorites?.some(f => f.user === 'Mars')) || 
-                    (fight.fighter2_favorites?.some(f => f.user === 'Mars'));
-    return hasJared && hasMars;
-  };
+  
 
   const getRankDisplay = (fighter) => {
     if (!fighter?.rankings || fighter.rankings.length === 0) return { divisional: null, p4p: null };
@@ -489,7 +474,6 @@ const actualDivision = getDivisionFromRankings(f1) || getDivisionFromRankings(f2
     const f2Rankings = getRankDisplay(f2);
     const f1Labels = getUserLabels(fight.fighter1_favorites);
     const f2Labels = getUserLabels(fight.fighter2_favorites);
-    const isBothUsersInterested = checkBothUsersInterested(fight);
     
     // Get weight class display name using fighters' actual divisions
     const getWeightClassName = (weightClass, fighter1, fighter2) => {
@@ -541,7 +525,7 @@ const actualDivision = getDivisionFromRankings(f1) || getDivisionFromRankings(f2
     };
     
     return (
-      <div className={`fight-card ${isBothUsersInterested ? 'both-users-card' : ''} ${isChampionshipFight ? 'championship-fight' : ''}`}>
+      <div className={`fight-card ${isChampionshipFight ? 'championship-fight' : ''}`}>
         <div className="fight-card-header">
           <div className="card-section-badge">{fight.card_section || 'TBA'}</div>
           <div className="weight-class">{actualDivision || getWeightClassName(fight.weight_class, f1, f2)}</div>
@@ -853,19 +837,6 @@ const actualDivision = getDivisionFromRankings(f1) || getDivisionFromRankings(f2
           </div>
           
           <div className="filters-panel">
-            <div className="filter-group">
-            <label>User</label>
-            <select 
-              value={userFilter}
-              onChange={(e) => setUserFilter(e.target.value)}
-            >
-              <option value="All">All Users</option>
-              <option value="Jared">Jared Only</option>
-              <option value="Mars">Mars Only</option>
-              <option value="Both">Both Users</option>
-            </select>
-          </div>
-          
           <div className="filter-group">
             <label>Priority</label>
             <select 
@@ -877,21 +848,6 @@ const actualDivision = getDivisionFromRankings(f1) || getDivisionFromRankings(f2
               <option value="Interested">Interested Only</option>
             </select>
           </div>
-          
-          <div className="legend">
-            <div className="legend-item">
-              <div className="color-dot jared"></div>
-              <span>Jared</span>
-            </div>
-            <div className="legend-item">
-              <div className="color-dot mars"></div>
-              <span>Mars</span>
-            </div>
-            <div className="legend-item">
-              <div className="color-dot both"></div>
-              <span>Both Users</span>
-            </div>
-            </div>
           </div>
         </div>
       </div>
@@ -925,12 +881,11 @@ const actualDivision = getDivisionFromRankings(f1) || getDivisionFromRankings(f2
             const isPPV = eventData.type?.toLowerCase().includes('ppv') || 
                          eventName.toLowerCase().includes('ufc ') && 
                          /ufc \d+/.test(eventName.toLowerCase());
-            const eventHasBothUsers = eventData.fights.some(fight => checkBothUsersInterested(fight));
             
             return (
               <div key={eventName} className="event-section">
                 <div 
-                  className={`event-header ${isPPV ? 'ppv-event' : 'fight-night-event'} ${eventHasBothUsers ? 'both-users-event' : ''}`}
+                  className={`event-header ${isPPV ? 'ppv-event' : 'fight-night-event'}`}
                   onClick={() => toggleEventExpansion(eventName)}
                   style={{ cursor: 'pointer' }}
                 >
@@ -938,7 +893,6 @@ const actualDivision = getDivisionFromRankings(f1) || getDivisionFromRankings(f2
                     <div className="event-title-container">
                       <h2>{eventName}</h2>
                       {isPPV && <span className="ppv-badge">PPV</span>}
-                      {eventHasBothUsers && <span className="both-users-badge">🔥 Hot Card</span>}
                     </div>
                     <div className="event-meta">
                       <Calendar size={16} />
@@ -1320,14 +1274,6 @@ const actualDivision = getDivisionFromRankings(f1) || getDivisionFromRankings(f2
           background: #3b82f6;
         }
 
-        .color-dot.mars {
-          background: #ef4444;
-        }
-
-        .color-dot.both {
-          background: linear-gradient(45deg, #3b82f6 50%, #ef4444 50%);
-        }
-
         /* Results Summary */
         .results-summary {
           padding: 1rem 2rem;
@@ -1418,31 +1364,7 @@ const actualDivision = getDivisionFromRankings(f1) || getDivisionFromRankings(f2
           --fn-bg: rgba(139, 92, 246, 0.05);
         }
 
-        .event-header.both-users-event {
-          border-color: #fbbf24;
-          background: var(--gold-bg);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .dark .event-header.both-users-event {
-          --gold-bg: rgba(251, 191, 36, 0.1);
-        }
-
-        .light .event-header.both-users-event {
-          --gold-bg: rgba(251, 191, 36, 0.05);
-        }
-
-        .event-header.both-users-event::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 3px;
-          background: linear-gradient(90deg, #3b82f6, #fbbf24, #ef4444);
-        }
-
+        
         .event-title-container {
           display: flex;
           align-items: center;
@@ -1465,15 +1387,6 @@ const actualDivision = getDivisionFromRankings(f1) || getDivisionFromRankings(f2
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.5px;
-        }
-
-        .both-users-badge {
-          background: linear-gradient(45deg, #fbbf24, #f59e0b);
-          color: #000;
-          padding: 0.25rem 0.75rem;
-          border-radius: 6px;
-          font-size: 0.75rem;
-          font-weight: 700;
         }
 
         .event-meta {
@@ -1557,28 +1470,6 @@ const actualDivision = getDivisionFromRankings(f1) || getDivisionFromRankings(f2
           --card-shadow: rgba(59, 130, 246, 0.15);
         }
 
-        .fight-card.both-users-card {
-          border-color: #fbbf24;
-          box-shadow: 0 8px 25px var(--both-card-shadow);
-        }
-
-        .dark .fight-card.both-users-card {
-          --both-card-shadow: rgba(251, 191, 36, 0.2);
-        }
-
-        .light .fight-card.both-users-card {
-          --both-card-shadow: rgba(251, 191, 36, 0.15);
-        }
-
-        .fight-card.both-users-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 3px;
-          background: linear-gradient(90deg, #3b82f6, #fbbf24, #ef4444);
-        }
 
         .fight-card.championship-fight {
           border-color: #fbbf24;

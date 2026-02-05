@@ -1,4 +1,8 @@
 NAME_FIXES = {
+    # UFC RAW : Tapology,
+    "ABDUL RAKHMAN YAKHYAEV": "ABDULRAKHMAN YAKHYAEV",
+    "LEVI RODRIGUES JR.": "Levi Rodrigues",
+    "MICHAEL ASWELL JR.": "Michael Aswell",
     "NARIMAN ABBASSOV": "NARIMAN ABBASOV",
     "ALATENGHEILI": "HEILI ALATENG",
     "JOSÉ ALDO": "JOSE ALDO",
@@ -127,54 +131,6 @@ NAME_FIXES = {
     "SANGWOOK KIM": "Sang Wook Kim"
 }
 
-URL_OVERRIDES = {
-    "YAIR RODRIGUEZ": "https://www.sherdog.com/fighter/Yair-Rodriguez-106305",
-    "RAFAEL LIMA DE CERQUEIRA": "https://www.sherdog.com/fighter/Raffael-Cerqueira-344561",
-    "DONGHUN CHOI": "https://www.sherdog.com/fighter/Dong-Hun-Choi-390131",
-    "SEUNGGUK CHOI": "https://www.sherdog.com/fighter/Seung-Guk-Choi-286125",
-    "HENRIQUE DA SILVA LOPES": "https://www.sherdog.com/fighter/Diego-Henrique-da-Silva-76846",
-    "JOSE DANIEL MEDINA RIVERO": "https://www.sherdog.com/fighter/Jose-Medina-251871",
-    "JOSE MIGUEL DELGADO": "https://www.sherdog.com/fighter/Jose-Delgado-307733",
-    "MAIARA AMANDAJAS DOS SANTOS": "https://www.sherdog.com/fighter/Maiara-Amanajas-dos-Santos-77091",
-    "SEONGCHAN HONG": "https://www.sherdog.com/fighter/Seong-Chan-Hong-114337",
-    "KOYA KANDA": "https://www.sherdog.com/fighter/Kouya-Kanda-290771",
-    "SEOKHYEON KO": "https://www.sherdog.com/fighter/Seok-Hyun-Ko-275977",
-    "CHANGHO LEE": "https://www.sherdog.com/fighter/Chang-Ho-Lee-258443",
-    "JEONGYEONG LEE": "https://www.sherdog.com/fighter/Jeong-Yeong-Lee-135897",
-    "EDUARDO MATIAS TORRES": "https://www.sherdog.com/fighter/Eduardo-Torres-190429",
-    "CHRISTIAN OCON": "https://www.sherdog.com/fighter/Chris-Ocon-194123",
-    "HYUNSUNG PARK": "https://www.sherdog.com/fighter/Hyun-Sung-Park-289999",
-    "JUNYONG PARK": "https://www.sherdog.com/fighter/Jun-Yong-Park-159071",
-    "WENDRI PATILIMA": "https://www.sherdog.com/fighter/Windri-Patilima-323519",
-    "CHARLES RADTKE": "https://www.sherdog.com/fighter/Charlie-Radtke-175669",
-    "RONGZHU": "https://www.sherdog.com/fighter/Zhu-Rong-233823",
-    "RAMAZAN TEMIROV": "https://www.sherdog.com/fighter/Ramazonbek-Temirov-215649",
-    "JORDAN VUCENIC": "https://www.sherdog.com/fighter/Jordan-Vucenic-236825",
-    "JOSHUA WANG-KIM": "https://www.sherdog.com/fighter/Josh-Wang-Kim-188773",
-    "JOOSANG YOO": "https://www.sherdog.com/fighter/Joo-Sang-Yoo-387629",
-    "SUYOUNG YOU": "https://www.sherdog.com/fighter/Su-Young-You-179453",
-    "DARIA ZHELEZNIAKOVA": "https://www.sherdog.com/fighter/Darya-Zheleznyakova-334747",
-    "DONAVAN BEARD": "https://www.sherdog.com/fighter/Donovan-Beard-310501",
-    "JESUS AGUILAR": "https://www.sherdog.com/fighter/Jesus-Santos-Aguilar-203965",
-    "JACK DELLA MADDALENA": "https://www.sherdog.com/fighter/Jack-Della-Maddalena-208155",
-    "JON JONES": "https://www.sherdog.com/fighter/Jon-Jones-27944",
-    "BENOÎT SAINT DENIS": "https://www.sherdog.com/fighter/Benoit-St-Denis-317103",
-    "DANIEL SPOHN": "https://www.sherdog.com/fighter/Dan-Spohn-39485",
-    "AJ CUNNINGHAM": "https://www.sherdog.com/fighter/AJ-Cunningham-228033",
-    "BLOOD DIAMOND": "https://www.sherdog.com/fighter/Mike-Mathetha-266635",
-    "MAHESHATE": "https://www.sherdog.com/fighter/Maheshate-Hayisaer-336819",
-    "MIZUKI": "https://www.sherdog.com/fighter/Mizuki-Inoue-71390",
-    "MUHAMMAD NAIMOV": "https://www.sherdog.com/fighter/Muhammadjon-Naimov-228381",
-    "PATRICIO PITBULL": "https://www.sherdog.com/fighter/Patricio-Freire-9960",
-    "YIZHA": "https://www.sherdog.com/fighter/Zha-Yi-228277",
-    "RAFAEL CERQUEIRA": "https://www.sherdog.com/fighter/Raffael-Cerqueira-344561",
-    "SANGWOOK KIM": "https://www.sherdog.com/fighter/Sang-Wook-Kim-361209",
-    "ABDUL AZEEM BADAKHSHI": "https://www.sherdog.com/fighter/Abdul-Azim-Badakhshi-136805",
-    "BENARDO SOPAJ": "https://www.sherdog.com/fighter/Bernardo-Sopai-226661",
-    "LU KAI": "https://www.sherdog.com/fighter/Kai-Lu-217317",
-    "BRUNO SILVA": "https://www.sherdog.com/fighter/Bruno-Silva-118601"
-}
-
 POWER_SLAP = {
     "CAMERON BATES",
     "CODY BELISLE",
@@ -208,6 +164,17 @@ POWER_SLAP = {
 
 TAPOLOGY_FIXES = {
     # TAPOLOGY : UFC RAW
+    "D. Silva de Andrade": "DOUGLAS SILVA DE ANDRADE",
+    "Jakub Wikłacz": "JAKUB WIKLACZ",
+    "Jean-Paul Lebosnoyani": "JEAN PAUL LEBOSNOYANI",
+    "José Medina": "JOSE DANIEL MEDINA",
+    "Kangjie Zhu": "ZHU KANGJIE",
+    "Long Xiao": "XIAO LONG",
+    "N. Tumendemberel": "NYAMJARGAL TUMENDEMBEREL",
+    "Sang Uk Kim": "SANGWOOK KIM",
+    "Seok Hyeon Ko": "SEOKHYEON KO",
+    "Su Young You": "SUYOUNG YOU",
+    "Benoit Saint-Denis": "BENOÎT SAINT DENIS",
     "ARIANE LIPSKI DA SILVA": "Ariane Da Silva",
     "CONG WANG": "WANG CONG",
     "Darya Zheleznyakova": "DARIA ZHELEZNIAKOVA",
@@ -280,5 +247,6 @@ UFC_ROSTER = {
     "Steve Garcia": "https://www.ufc.com/athlete/steve-garcia",
     "Jamey-Lyn Horth": "https://www.ufc.com/athlete/jamey-lyn-horth",
     "Bruno Silva": "https://www.ufc.com/athlete/bruno-silva",
-    "Tofiq Musayev": "https://www.ufc.com/athlete/tofiq-musayev"
+    "Tofiq Musayev": "https://www.ufc.com/athlete/tofiq-musayev",
+    "Sebastian Szalay": "https://www.ufc.com/athlete/sebastian-szalay",
 }

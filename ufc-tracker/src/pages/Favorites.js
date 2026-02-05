@@ -3,39 +3,18 @@ import { getUserFavorites, removeFavorite } from "../api/fighters";
 import countryCodes from '../utils/countryCodes';
 
 
-const USERS = ["Jared", "Mars"];
-
-const getThemeColors = (user) => {
-  if (user === "Mars") {
-    return {
-      primary: '#dc2626', // Red
-      primaryLight: 'rgba(220, 38, 38, 0.1)',
-      primaryBorder: 'rgba(220, 38, 38, 0.3)',
-      gradient: 'linear-gradient(45deg, #dc2626, #ef4444)',
-      secondary: '#b91c1c'
-    };
-  } else if (user === "all") {
-    return {
-      primary: '#eab308', // Yellow
-      primaryLight: 'rgba(234, 179, 8, 0.1)',
-      primaryBorder: 'rgba(234, 179, 8, 0.3)',
-      gradient: 'linear-gradient(45deg, #eab308, #facc15)',
-      secondary: '#ca8a04'
-    };
-  } else {
-    return {
-      primary: '#2563eb', // Blue  
-      primaryLight: 'rgba(37, 99, 235, 0.1)',
-      primaryBorder: 'rgba(37, 99, 235, 0.3)', 
-      gradient: 'linear-gradient(45deg, #2563eb, #3b82f6)',
-      secondary: '#1d4ed8'
-    };
-  }
+const getThemeColors = () => {
+  return {
+    primary: '#2563eb', // Blue  
+    primaryLight: 'rgba(37, 99, 235, 0.1)',
+    primaryBorder: 'rgba(37, 99, 235, 0.3)', 
+    gradient: 'linear-gradient(45deg, #2563eb, #3b82f6)',
+    secondary: '#1d4ed8'
+  };
 };
 
 
 const Favorites = () => {
-  const [user, setUser] = useState("all");
   const [priority, setPriority] = useState("all");
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -43,7 +22,7 @@ const Favorites = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [fighterToRemove, setFighterToRemove] = useState(null);
   const [allFavorites, setAllFavorites] = useState([]);
-  const theme = getThemeColors(user);
+  const theme = getThemeColors();
 
 
 const fetchFavorites = async () => {
@@ -52,44 +31,17 @@ const fetchFavorites = async () => {
   try {
     const jaredFavorites = await getUserFavorites({ group: "Jared", priority: "favorite" });
     const jaredInterested = await getUserFavorites({ group: "Jared", priority: "interested" });
-    const marsFavorites = await getUserFavorites({ group: "Mars", priority: "favorite" });
-    const marsInterested = await getUserFavorites({ group: "Mars", priority: "interested" });
     
-    // Group fighters by fighter ID to handle duplicates
-    const fighterMap = new Map();
-
-    const addFighterData = (fighters, user, priority) => {
-      fighters.forEach(f => {
-        const fighterId = f.fighter_id || f.id;
-        const fighterData = {
-          ...f,
-          ...f.fighterInfo,
-          fighter_id: fighterId
-        };
-        
-        if (fighterMap.has(fighterId)) {
-          // Fighter exists, add this user's preference
-          const existing = fighterMap.get(fighterId);
-          existing.users = existing.users || [];
-          existing.users.push({ user, priority });
-        } else {
-          // New fighter
-          fighterData.users = [{ user, priority }];
-          fighterMap.set(fighterId, fighterData);
-        }
-      });
-    };
-
-    addFighterData(jaredFavorites, "Jared", "favorite");
-    addFighterData(jaredInterested, "Jared", "interested");
-    addFighterData(marsFavorites, "Mars", "favorite");
-    addFighterData(marsInterested, "Mars", "interested");
-
-    const allData = Array.from(fighterMap.values());
+    const allData = [...jaredFavorites, ...jaredInterested].map(f => ({
+      ...f,
+      ...f.fighterInfo,
+      fighter_id: f.fighter_id || f.id,
+      priority: f.priority
+    }));
     
     console.log('Final processed data:', allData);
     setAllFavorites(allData);
-    filterFavorites(allData, user, priority);
+    filterFavorites(allData, priority);
     
   } catch (error) {
     console.error("Error fetching favorites:", error);
@@ -97,16 +49,12 @@ const fetchFavorites = async () => {
   setLoading(false);
 };
 
-  const filterFavorites = (data, selectedUser, selectedPriority) => {
-    let filtered = data.filter(fighter => {
-      if (selectedUser === "all" && selectedPriority === "all") return true;
-      
-      return fighter.users.some(userPref => {
-        const userMatch = selectedUser === "all" || userPref.user === selectedUser;
-        const priorityMatch = selectedPriority === "all" || userPref.priority === selectedPriority;
-        return userMatch && priorityMatch;
-      });
-    });
+  const filterFavorites = (data, selectedPriority) => {
+    let filtered = data;
+    
+    if (selectedPriority !== "all") {
+      filtered = data.filter(fighter => fighter.priority === selectedPriority);
+    }
     
     setFavorites(filtered);
   };
@@ -116,8 +64,8 @@ const fetchFavorites = async () => {
   }, []);
 
   useEffect(() => {
-    filterFavorites(allFavorites, user, priority);
-  }, [user, priority, allFavorites]);
+    filterFavorites(allFavorites, priority);
+  }, [priority, allFavorites]);
 
   const handleRemove = (fighter) => {
     setFighterToRemove(fighter);
@@ -251,15 +199,6 @@ const getSortedFavorites = () => {
         <h1>Your Fighter Collection</h1>
         
         <div className="controls-section">
-          <div className="control-group">
-            <label>User</label>
-            <select value={user} onChange={e => setUser(e.target.value)} className="select-input">
-              <option value="all">All Users</option>
-              <option value="Jared">Jared</option>
-              <option value="Mars">Mars</option>
-            </select>
-          </div>
-
           <div className="control-group">
             <label>Priority Level</label>
             <select value={priority} onChange={e => setPriority(e.target.value)} className="select-input">
@@ -764,33 +703,7 @@ const getSortedFavorites = () => {
           gap: 0.25rem;
         }
 
-        .user-tag {
-          padding: 0.25rem 0.75rem;
-          border-radius: 12px;
-          font-size: 0.75rem;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .user-tag.jared {
-          background: rgba(37, 99, 235, 0.2);
-          color: #60a5fa;
-          border: 1px solid rgba(37, 99, 235, 0.3);
-        }
-
-        .user-tag.mars {
-          background: rgba(220, 38, 38, 0.2);
-          color: #f87171;
-          border: 1px solid rgba(220, 38, 38, 0.3);
-        }
-
-        .user-tag.all {
-          background: rgba(234, 179, 8, 0.2);
-          color: #facc15;
-          border: 1px solid rgba(234, 179, 8, 0.3);
-        }
-
+        
         .priority-tag {
           font-size: 0.75rem;
           color: rgba(255, 255, 255, 0.6);

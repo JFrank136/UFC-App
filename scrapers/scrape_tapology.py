@@ -842,17 +842,50 @@ def scrape_fighter(url, original_fighter=None, debug=True):
         return None
 
 def save_test_results(results):
-    """Save test results to JSON file"""
+    """Append test results to JSON file without overwriting existing data"""
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
-    
+
     try:
+        # Load existing results if file exists
+        try:
+            with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
+                existing_results = json.load(f)
+        except FileNotFoundError:
+            existing_results = []
+
+        # Build lookup to avoid duplicates (prefer id, fallback to name)
+        existing_ids = {r.get("id") for r in existing_results if r.get("id")}
+        existing_names = {
+            r.get("name", "").strip().lower()
+            for r in existing_results
+            if r.get("name")
+        }
+
+        new_results = []
+        for r in results:
+            r_id = r.get("id")
+            r_name = r.get("name", "").strip().lower()
+
+            if r_id and r_id in existing_ids:
+                continue
+            if not r_id and r_name in existing_names:
+                continue
+
+            new_results.append(r)
+
+        if not new_results:
+            print("ℹ️ No new fighters to add (all already exist)")
+            return
+
+        merged = existing_results + new_results
+
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-            json.dump(results, f, indent=2, ensure_ascii=False)
-        
-        print(f"💾 Test results saved to: {OUTPUT_FILE}")
-        
+            json.dump(merged, f, indent=2, ensure_ascii=False)
+
+        print(f"💾 Added {len(new_results)} fighters to: {OUTPUT_FILE}")
+
     except Exception as e:
-        print(f"❌ Error saving results: {e}")
+        print(f"❌ Error saving test results: {e}")
 
 def load_active_fighters():
     """Load active fighters from UFC roster"""

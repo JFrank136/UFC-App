@@ -4,5 +4,6 @@ requests==2.31.0
 beautifulsoup4==4.12.3
 supabase
 python-dotenv
-undetected-chromedriver
+undetected-chromedriver>=3.5.5
 psycopg2
+packaging
