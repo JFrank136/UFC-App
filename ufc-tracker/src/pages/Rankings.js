@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Crown, TrendingUp, TrendingDown, Calendar, MapPin, ArrowUp, ArrowDown, Minus, Sun, Moon, Filter, Search, X, Users, Zap, Shield, BarChart3 } from 'lucide-react';
+import { Crown, TrendingUp, Calendar, ArrowUp, ArrowDown, Minus, Sun, Moon, Filter, Search, X, Zap, Shield, BarChart3 } from 'lucide-react';
 import supabase from '../api/supabaseClient';
 import countryCodes from '../utils/countryCodes';
 
@@ -12,7 +12,6 @@ const Rankings = () => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showChampionsOnly, setShowChampionsOnly] = useState(false);
-  const [sortBy, setSortBy] = useState('rank');
 const [darkMode, setDarkMode] = useState(true);
 const [showFilters, setShowFilters] = useState(false);
 const [selectedFight, setSelectedFight] = useState(null);
@@ -42,8 +41,8 @@ const [touchEnd, setTouchEnd] = useState(null);
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   const fetchData = async () => {
     try {
       setLoading(true);

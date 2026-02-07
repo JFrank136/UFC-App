@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Trophy, Users, Zap, ChevronRight, CheckCircle } from 'lucide-react';
 import supabase from '../api/supabaseClient';
 import countryCodes from '../utils/countryCodes';
@@ -15,6 +15,7 @@ const UFCPicks = () => {
   const [loading, setLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [gameStarted, setGameStarted] = useState(false);
+  const didInitEventRef = useRef(false);
 
   // Theme colors
   const jaredColor = '#3b82f6';
@@ -60,7 +61,8 @@ const UFCPicks = () => {
 
         const events = Object.values(eventGroups).filter(event => event.fights.length === 5);
 
-        if (events.length > 0 && !selectedEvent) {
+        if (events.length > 0 && !didInitEventRef.current) {
+          didInitEventRef.current = true;
           setSelectedEvent(events[0]);
           setMainCardFights(events[0].fights);
         }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {addToFavorites, removeFavorite, getUserFavorites } from "../api/fighters";
-import { searchFightersWithRanking } from "../api/supabaseQueries";
 import supabase from "../api/supabaseClient";
 import countryCodes from '../utils/countryCodes';
 
@@ -126,7 +125,6 @@ const LoadingSpinner = ({ size = "small" }) => (
 );
 
 const SearchFighter = () => {
-  const [searchResults, setSearchResults] = useState([]);
   const [fighters, setFighters] = useState([]);
   const [filteredFighters, setFilteredFighters] = useState([]);
   const [loading, setLoading] = useState(false);
