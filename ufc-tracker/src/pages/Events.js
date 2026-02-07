@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import { Sun, Moon, Calendar, Clock, MapPin, ChevronDown, ChevronUp, Users, ChevronLeft, ChevronRight, Trophy } from 'lucide-react';
 import { useEventData } from '../hooks/useEventData';
 import countryCodes from '../utils/countryCodes';
-import { formatDate, formatTime, formatRecord, getMainEvent, isPPV, isChampionshipFight, isChampionshipEvent, getRecentFights, getFinishRates } from '../utils/eventHelpers';
+import { formatDate, formatTime, formatRecord, getMainEvent, isPPV, isChampionshipFight, isChampionshipEvent, getRecentFights } from '../utils/eventHelpers';
 
 // Maps weight (lbs) to UFC division label
 const getDivisionFromWeight = (w) => {
   const weight = Number(w);
   if (!Number.isFinite(weight)) return 'Unknown';
-
   if (weight <= 115) return 'Strawweight';
   if (weight <= 125) return 'Flyweight';
   if (weight <= 135) return 'Bantamweight';
