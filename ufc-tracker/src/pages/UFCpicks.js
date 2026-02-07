@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Trophy, Users, Zap, Target, Shield, ChevronRight, CheckCircle, Lock } from 'lucide-react';
+import { Trophy, Users, Zap, ChevronRight, CheckCircle } from 'lucide-react';
 import supabase from '../api/supabaseClient';
 import countryCodes from '../utils/countryCodes';
 
@@ -14,72 +14,67 @@ const UFCPicks = () => {
   const [truePicks, setTruePicks] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [upcomingPPVs, setUpcomingPPVs] = useState([]);
   const [gameStarted, setGameStarted] = useState(false);
-  const [picksLocked, setPicksLocked] = useState(false);
 
   // Theme colors
   const jaredColor = '#3b82f6';
   const marsColor = '#ef4444';
-  
-  const getPlayerColor = (player) => player === 'Jared' ? jaredColor : marsColor;
 
   useEffect(() => {
+    const fetchUpcomingPPVs = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('upcoming_fights')
+          .select(`
+            *,
+            fighter1_data:fighter1_id (
+              id, name, image_url, nickname, country, wins_total, losses_total,
+              wins_ko, wins_sub, wins_dec, losses_ko, losses_sub, losses_dec
+            ),
+            fighter2_data:fighter2_id (
+              id, name, image_url, nickname, country, wins_total, losses_total,
+              wins_ko, wins_sub, wins_dec, losses_ko, losses_sub, losses_dec
+            )
+          `)
+          .or('event_type.ilike.%ppv%,event.ilike.%ufc [0-9]%')
+          .eq('card_section', 'Main')
+          .order('event_date')
+          .order('fight_order', { ascending: false });
+
+        if (error) throw error;
+
+        // Group by event
+        const eventGroups = {};
+        data?.forEach(fight => {
+          const key = `${fight.event}_${fight.event_date}`;
+          if (!eventGroups[key]) {
+            eventGroups[key] = {
+              event: fight.event,
+              date: fight.event_date,
+              time: fight.event_time,
+              fights: []
+            };
+          }
+          eventGroups[key].fights.push(fight);
+        });
+
+        const events = Object.values(eventGroups).filter(event => event.fights.length === 5);
+
+        if (events.length > 0 && !selectedEvent) {
+          setSelectedEvent(events[0]);
+          setMainCardFights(events[0].fights);
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching PPV events:', error);
+        setLoading(false);
+      }
+    };
+
     fetchUpcomingPPVs();
     checkForActiveGame();
   }, []);
-
-  const fetchUpcomingPPVs = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('upcoming_fights')
-        .select(`
-          *,
-          fighter1_data:fighter1_id (
-            id, name, image_url, nickname, country, wins_total, losses_total,
-            wins_ko, wins_sub, wins_dec, losses_ko, losses_sub, losses_dec
-          ),
-          fighter2_data:fighter2_id (
-            id, name, image_url, nickname, country, wins_total, losses_total,
-            wins_ko, wins_sub, wins_dec, losses_ko, losses_sub, losses_dec
-          )
-        `)
-        .or('event_type.ilike.%ppv%,event.ilike.%ufc [0-9]%')
-        .eq('card_section', 'Main')
-        .order('event_date')
-        .order('fight_order', { ascending: false });
-
-      if (error) throw error;
-
-      // Group by event
-      const eventGroups = {};
-      data?.forEach(fight => {
-        const key = `${fight.event}_${fight.event_date}`;
-        if (!eventGroups[key]) {
-          eventGroups[key] = {
-            event: fight.event,
-            date: fight.event_date,
-            time: fight.event_time,
-            fights: []
-          };
-        }
-        eventGroups[key].fights.push(fight);
-      });
-
-      const events = Object.values(eventGroups).filter(event => event.fights.length === 5);
-      setUpcomingPPVs(events);
-      
-      if (events.length > 0 && !selectedEvent) {
-        setSelectedEvent(events[0]);
-        setMainCardFights(events[0].fights);
-      }
-      
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching PPV events:', error);
-      setLoading(false);
-    }
-  };
 
   const checkForActiveGame = async () => {
     // TODO: Check for existing game in progress
@@ -161,7 +156,6 @@ const UFCPicks = () => {
 
     // Handle true prediction for the opponent who gets "stuck"
     const nextPlayer = currentPlayer === 'Jared' ? 'Mars' : 'Jared';
-    const opponentFighter = fight.fighter1_data?.id === fighterId ? fight.fighter2_data : fight.fighter1_data;
     
     if (currentPickNumber < 5) {
       setCurrentPickNumber(prev => prev + 1);
