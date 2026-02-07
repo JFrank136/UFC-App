@@ -1,7 +1,6 @@
 import React from 'react';
 import { Calendar, Clock, MapPin, ChevronDown, ChevronUp, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import FightCard from './FightCard';
-import countryCodes from '../../utils/countryCodes';
 import styles from '../../styles/EventCard.module.css';
 
 const EventCard = ({ 
