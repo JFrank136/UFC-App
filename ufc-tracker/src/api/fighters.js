@@ -82,11 +82,30 @@ export async function getUserFavorites({ group, priority }) {
     if (!fighterError && fighter) {
       enrichedFavorites.push({
         ...fav,
-        fighterInfo: fighter
+        fighterInfo: fighter,
+        // Favorites.js expects fav.users.map(...)
+        // Single-user mode: always provide Jared as the only "user preference"
+        users: [
+          {
+            user: group,
+            priority: fav.priority,
+            id: fav.id
+          }
+        ]
       });
     } else {
       // Include favorite even if fighter data missing
-      enrichedFavorites.push(fav);
+      enrichedFavorites.push({
+        ...fav,
+        // Even if fighterInfo is missing, Favorites.js still needs users[]
+        users: [
+          {
+            user: group,
+            priority: fav.priority,
+            id: fav.id
+          }
+        ]
+      });
     }
   }
 
