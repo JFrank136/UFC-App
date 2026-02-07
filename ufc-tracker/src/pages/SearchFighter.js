@@ -207,8 +207,8 @@ const inferGender = (fighter) => {
       return;
     }
     try {
-      const allFavorites = await getUserFavorites({ group: user, priority: "favorite" });
-      const allInterested = await getUserFavorites({ group: user, priority: "interested" });
+      const allFavorites = await getUserFavorites({ group: "Jared", priority: "favorite" });
+      const allInterested = await getUserFavorites({ group: "Jared", priority: "interested" });
       const statusMap = {};
       allFavorites.forEach(row => {
         statusMap[row.fighter] = { status: "favorite", id: row.id };

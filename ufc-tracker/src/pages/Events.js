@@ -5,6 +5,22 @@ import EventCard from '../components/Events/EventCard';
 import countryCodes from '../utils/countryCodes';
 import { formatDate, formatTime, formatRecord, getMainEvent, isPPV, isChampionshipFight, isChampionshipEvent, getRecentFights, getFinishRates } from '../utils/eventHelpers';
 
+// Maps weight (lbs) to UFC division label
+const getDivisionFromWeight = (w) => {
+  const weight = Number(w);
+  if (!Number.isFinite(weight)) return 'Unknown';
+
+  if (weight <= 115) return 'Strawweight';
+  if (weight <= 125) return 'Flyweight';
+  if (weight <= 135) return 'Bantamweight';
+  if (weight <= 145) return 'Featherweight';
+  if (weight <= 155) return 'Lightweight';
+  if (weight <= 170) return 'Welterweight';
+  if (weight <= 185) return 'Middleweight';
+  if (weight <= 205) return 'Light Heavyweight';
+  return 'Heavyweight';
+};
+
 const Events = () => {
   const { sortedEvents, loading, error } = useEventData();
   const [expandedEvents, setExpandedEvents] = useState(new Set());
