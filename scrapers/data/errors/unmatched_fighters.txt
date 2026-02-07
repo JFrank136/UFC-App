@@ -1,5 +1,9 @@
 Unmatched UFC fighters (not found in Tapology)
 Generated: merge_fighters.py
-Total unmatched: 1
+Total unmatched: 5
 
   1. HENRIQUE DA SILVA LOPES
+  2. LUIS DIAS DE ASSIS
+  3. MONTSE RENDON
+  4. NUERAJI TAIYILAKE
+  5. SHI MING

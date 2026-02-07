@@ -1,7 +1,17 @@
 [
   {
-    "name": "Henrique Da Silva Lopes",
-    "ufc_id": "c0a40ccd-bf39-48c1-81b6-ca0b0d872b41",
-    "sherdog_id": "ca8b568c-63de-4fd3-b822-b8cecec2b93d"
+    "name": "Michael Aswell JR.",
+    "ufc_id": "cf840f4a-c0a8-45be-8492-7929c9f4f8d8",
+    "tapology_id": "ed552bb7-4f09-46a2-a2ba-63bf617f5a57"
+  },
+  {
+    "name": "Zach Reese",
+    "ufc_id": "baeb9057-fb2c-4061-a81b-22b5899857c6",
+    "tapology_id": "5b964d73-1cdd-4697-9de6-32f522b3d4b5"
+  },
+  {
+    "name": "Montserrat Conejo Ruiz",
+    "ufc_id": "f148acfb-f522-4529-9c61-58f1d2c226ab",
+    "tapology_id": "9133b595-462a-4983-9bce-7a4d9808710c"
   }
 ]

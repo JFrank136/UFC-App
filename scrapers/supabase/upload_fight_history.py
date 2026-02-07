@@ -1,66 +1,110 @@
 import os
-import json
-import psycopg2
-from uuid import uuid4
-from dotenv import load_dotenv
-from datetime import datetime
 import sys
+import json
+import time
+from uuid import uuid4
+from datetime import datetime
+from pathlib import Path
 
-# Load environment variables
-load_dotenv()
+import requests
+from dotenv import load_dotenv
+
 
 # Path to fight history JSON
 FIGHT_HISTORY_PATH = "../data/fight_history.json"
 
-def print_progress(current, total, prefix='Progress', bar_length=50):
-    """Print a progress bar to show upload status"""
-    percent = float(current) * 100 / total
-    filled_length = int(bar_length * current // total)
-    bar = '█' * filled_length + '-' * (bar_length - filled_length)
-    sys.stdout.write(f'\r{prefix}: |{bar}| {percent:.1f}% ({current}/{total})')
+# REST upload tuning
+BATCH_SIZE = 500
+HTTP_TIMEOUT = 30  # seconds
+
+
+def print_progress(current, total, prefix="Progress", bar_length=50):
+    percent = float(current) * 100 / total if total else 100.0
+    filled_length = int(bar_length * current // total) if total else bar_length
+    bar = "█" * filled_length + "-" * (bar_length - filled_length)
+    sys.stdout.write(f"\r{prefix}: |{bar}| {percent:.1f}% ({current}/{total})")
     sys.stdout.flush()
 
-def batch_insert_fights(cursor, fights_batch):
-    """Insert a batch of fights efficiently"""
-    if not fights_batch:
-        return 0
-    
-    # Prepare batch insert query
-    query = """
-        INSERT INTO fight_history (
-            id, fighter_id, opponent, result, method, round, time, fight_date,
-            method_detail, event, promotion, betting_odds, betting_status, pick_percentage, weight_class
-        ) VALUES %s
-        ON CONFLICT (id) DO NOTHING;
-    """
-    
-    # Convert batch to tuple format for execute_values
-    values = []
-    for fight_data in fights_batch:
-        values.append((
-            str(uuid4()),
-            fight_data["fighter_id"],
-            fight_data["opponent"],
-            fight_data["result"],
-            fight_data["method"],
-            fight_data["round"],
-            fight_data["time"],
-            fight_data["fight_date"],
-            fight_data["method_detail"],
-            fight_data["event"],
-            fight_data["promotion"],
-            fight_data["betting_odds"],
-            fight_data["betting_status"],
-            fight_data["pick_percentage"],
-            fight_data["weight_class"]
-        ))
-    
-    psycopg2.extras.execute_values(cursor, query, values, template=None)
-    return len(values)
+
+def get_supabase_url_from_env():
+    url = os.getenv("SUPABASE_URL")
+    if url:
+        return url.rstrip("/")
+
+    db_host = os.getenv("SUPABASE_DB_HOST")  # e.g. db.<ref>.supabase.co
+    if db_host and db_host.startswith("db.") and db_host.endswith(".supabase.co"):
+        project_ref = db_host[len("db.") : -len(".supabase.co")]
+        return f"https://{project_ref}.supabase.co"
+
+    return None
+
+
+def sb_headers():
+    key = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_ANON_KEY")
+    if not key:
+        return None
+    return {
+        "apikey": key,
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+    }
+
+
+def http_request_with_retry(method, url, headers, params=None, json_body=None, timeout=HTTP_TIMEOUT, max_retries=5):
+    backoff = 1.5
+    for attempt in range(1, max_retries + 1):
+        try:
+            resp = requests.request(
+                method=method,
+                url=url,
+                headers=headers,
+                params=params,
+                json=json_body,
+                timeout=timeout,
+            )
+
+            if resp.status_code == 429:
+                wait = float(resp.headers.get("Retry-After", backoff ** attempt))
+                time.sleep(wait)
+                continue
+
+            if 500 <= resp.status_code <= 599:
+                time.sleep(backoff ** attempt)
+                continue
+
+            return resp
+
+        except requests.exceptions.Timeout:
+            if attempt == max_retries:
+                raise
+            time.sleep(backoff ** attempt)
+
+        except requests.exceptions.RequestException:
+            if attempt == max_retries:
+                raise
+            time.sleep(backoff ** attempt)
+
+    return None
+
 
 def main():
-    print("🥊 Starting fight history upload...")
-    
+    print("🥊 Starting fight history upload (HTTPS)...")
+
+    # Load .env from project root
+    env_path = Path(__file__).resolve().parent.parent.parent / ".env"
+    load_dotenv(dotenv_path=env_path)
+
+    supabase_url = get_supabase_url_from_env()
+    headers = sb_headers()
+
+    if not supabase_url:
+        print("❌ Missing SUPABASE_URL (or could not derive it). Add SUPABASE_URL to your .env.")
+        return
+
+    if not headers:
+        print("❌ Missing SUPABASE_SERVICE_ROLE_KEY (recommended) or SUPABASE_ANON_KEY in your .env.")
+        return
+
     # Load fight history data
     try:
         with open(FIGHT_HISTORY_PATH, "r", encoding="utf-8") as f:
@@ -72,130 +116,134 @@ def main():
     except json.JSONDecodeError as e:
         print(f"❌ Invalid JSON in fight history file: {e}")
         return
-    
-    # Connect to database
-    try:
-        conn = psycopg2.connect(
-            dbname=os.getenv("SUPABASE_DB_NAME"),
-            user=os.getenv("SUPABASE_DB_USER"),
-            password=os.getenv("SUPABASE_DB_PASSWORD"),
-            host=os.getenv("SUPABASE_DB_HOST"),
-            port=os.getenv("SUPABASE_DB_PORT")
-        )
-        print("✅ Connected to database")
-    except psycopg2.Error as e:
-        print(f"❌ Database connection failed: {e}")
-        return
-    
-    cur = conn.cursor()
-    print("⚠️ Clearing existing fight history from the database...")
-    cur.execute("TRUNCATE TABLE fight_history;")
-    conn.commit()
 
-    
-    # Statistics tracking
+    # Clear table (matches prior TRUNCATE intent)
+    print("⚠️ Clearing existing fight history from Supabase (REST delete all)...")
+    delete_url = f"{supabase_url}/rest/v1/fight_history"
+    delete_params = {"id": "not.is.null"}  # delete all rows
+    resp = http_request_with_retry("DELETE", delete_url, headers=headers, params=delete_params)
+
+    if resp is None:
+        print("❌ Delete request failed (no response).")
+        return
+
+    if resp.status_code not in (200, 204):
+        print(f"❌ Delete failed: HTTP {resp.status_code}")
+        print(resp.text[:1000])
+        return
+
+    print("✅ fight_history cleared")
+
+    # Insert endpoint
+    insert_url = f"{supabase_url}/rest/v1/fight_history"
+    insert_headers = dict(headers)
+    insert_headers["Prefer"] = "return=minimal"
+
     total_fights = len(fight_history)
     processed = 0
     successful_inserts = 0
     failed_inserts = 0
     skipped_dates = 0
-    
-    # Process configuration
-    BATCH_SIZE = 1000  # Insert in batches for better performance
+
     batch = []
-    
+
+    def flush_batch(batch_payload):
+        if not batch_payload:
+            return 0
+
+        resp2 = http_request_with_retry(
+            "POST",
+            insert_url,
+            headers=insert_headers,
+            params=None,
+            json_body=batch_payload,
+        )
+
+        if resp2 is None:
+            raise RuntimeError("No response from Supabase on batch insert.")
+
+        if resp2.status_code not in (200, 201, 204):
+            raise RuntimeError(f"Batch insert failed: HTTP {resp2.status_code} :: {resp2.text[:1000]}")
+
+        return len(batch_payload)
+
     print(f"📤 Processing {total_fights:,} fights in batches of {BATCH_SIZE:,}...")
-    
+
     try:
-        for i, fight in enumerate(fight_history):
+        for fight in fight_history:
             processed += 1
-            
+
             # Skip fights without valid dates
             if not fight.get("fight_date"):
                 skipped_dates += 1
-                print_progress(processed, total_fights)
+                if processed % 100 == 0 or processed == total_fights:
+                    print_progress(processed, total_fights)
                 continue
-            
+
             try:
-                # Parse and validate date
-                fight_date = datetime.strptime(fight["fight_date"], "%Y-%m-%d").date()
-                
-                # Add to batch
-                batch.append({
+                # Validate date format (keep as YYYY-MM-DD string for Postgres date column)
+                datetime.strptime(fight["fight_date"], "%Y-%m-%d")
+
+                row = {
+                    "id": str(uuid4()),
                     "fighter_id": fight["fighter_id"],
                     "opponent": fight.get("opponent", "Unknown"),
                     "result": fight.get("result"),
                     "method": fight.get("method"),
                     "round": fight.get("round"),
                     "time": fight.get("time"),
-                    "fight_date": fight_date,
+                    "fight_date": fight["fight_date"],
                     "method_detail": fight.get("method_detail"),
                     "event": fight.get("event"),
                     "promotion": fight.get("promotion"),
                     "betting_odds": fight.get("betting_odds"),
                     "betting_status": fight.get("betting_status"),
                     "pick_percentage": fight.get("pick_percentage"),
-                    "weight_class": fight.get("weight_class")
-                })
-                
-                # Insert batch when it reaches the batch size
+                    "weight_class": fight.get("weight_class"),
+                }
+
+                batch.append(row)
+
                 if len(batch) >= BATCH_SIZE:
-                    try:
-                        inserted_count = batch_insert_fights(cur, batch)
-                        successful_inserts += inserted_count
-                        conn.commit()
-                        batch = []  # Clear batch
-                    except Exception as e:
-                        print(f"\n⚠️ Batch insert failed: {e}")
-                        conn.rollback()
-                        failed_inserts += len(batch)
-                        batch = []
-                
+                    inserted = flush_batch(batch)
+                    successful_inserts += inserted
+                    batch = []
+
             except ValueError as e:
-                print(f"\n⚠️ Invalid date format for fight: {fight.get('fight_date')} - {e}")
+                # invalid date format
                 failed_inserts += 1
-            except Exception as e:
-                print(f"\n⚠️ Error processing fight: {e}")
+            except Exception:
                 failed_inserts += 1
-            
-            # Update progress every 100 items or at the end
+
             if processed % 100 == 0 or processed == total_fights:
                 print_progress(processed, total_fights)
-        
-        # Insert remaining batch
+
         if batch:
-            try:
-                inserted_count = batch_insert_fights(cur, batch)
-                successful_inserts += inserted_count
-                conn.commit()
-            except Exception as e:
-                print(f"\n⚠️ Final batch insert failed: {e}")
-                conn.rollback()
-                failed_inserts += len(batch)
-    
+            inserted = flush_batch(batch)
+            successful_inserts += inserted
+
     except KeyboardInterrupt:
-        print(f"\n⚠️ Upload interrupted by user")
-        conn.rollback()
-    
-    finally:
-        cur.close()
-        conn.close()
-        print("\n" + "="*60)
-        print("📊 UPLOAD SUMMARY")
-        print("="*60)
-        print(f"Total records processed: {processed:,}")
-        print(f"Successfully inserted: {successful_inserts:,}")
-        print(f"Failed insertions: {failed_inserts:,}")
-        print(f"Skipped (no date): {skipped_dates:,}")
-        print(f"Success rate: {(successful_inserts/max(processed-skipped_dates, 1)*100):.1f}%")
-        print("="*60)
-        
-        if successful_inserts > 0:
-            print("✅ Upload completed successfully!")
-        else:
-            print("❌ No records were inserted")
+        print("\n⚠️ Upload interrupted by user")
+        return
+    except Exception as e:
+        print(f"\n❌ Upload failed: {e}")
+        return
+
+    print("\n" + "=" * 60)
+    print("📊 UPLOAD SUMMARY (HTTPS)")
+    print("=" * 60)
+    print(f"Total records processed: {processed:,}")
+    print(f"Successfully inserted: {successful_inserts:,}")
+    print(f"Failed insertions: {failed_inserts:,}")
+    print(f"Skipped (no date): {skipped_dates:,}")
+    print(f"Success rate: {(successful_inserts / max(processed - skipped_dates, 1) * 100):.1f}%")
+    print("=" * 60)
+
+    if successful_inserts > 0:
+        print("✅ Upload completed successfully!")
+    else:
+        print("❌ No records were inserted")
+
 
 if __name__ == "__main__":
-    # Import execute_values for batch inserts
-    import psycopg2.extras
     main()
