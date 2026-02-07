@@ -878,9 +878,11 @@ const actualDivision = getDivisionFromRankings(f1) || getDivisionFromRankings(f2
         {Object.entries(groupedFights)
           .sort(([,a], [,b]) => new Date(a.date) - new Date(b.date))
           .map(([eventName, eventData]) => {
-            const isPPV = eventData.type?.toLowerCase().includes('ppv') || 
-                         eventName.toLowerCase().includes('ufc ') && 
-                         /ufc \d+/.test(eventName.toLowerCase());
+             const isPPV =
+               eventData.type?.toLowerCase().includes('ppv') ||
+               (eventName.toLowerCase().includes('ufc ') &&
+                 /ufc \d+/.test(eventName.toLowerCase()));
+
             
             return (
               <div key={eventName} className="event-section">
