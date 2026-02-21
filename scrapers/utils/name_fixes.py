@@ -161,10 +161,14 @@ POWER_SLAP = {
 
 TAPOLOGY_FIXES = {
     # TAPOLOGY : UFC RAW
+    "A. Al-Selwady": "ABDUL-KAREEM AL-SELWADY",
+    "Jeong Yeong Lee": "JEONGYEONG LEE",
+    "Robert Ruchała": "ROBERT RUCHALA",
+    "Shaqueme Rock": "SHEM ROCK",
     "D. Silva de Andrade": "DOUGLAS SILVA DE ANDRADE",
     "Jakub Wikłacz": "JAKUB WIKLACZ",
     "Jean-Paul Lebosnoyani": "JEAN PAUL LEBOSNOYANI",
-    "José Medina": "JOSE DANIEL MEDINA",
+    "JOSE MEDINA": "JOSE DANIEL MEDINA",
     "Kangjie Zhu": "ZHU KANGJIE",
     "Long Xiao": "XIAO LONG",
     "N. Tumendemberel": "NYAMJARGAL TUMENDEMBEREL",
@@ -190,6 +194,10 @@ TAPOLOGY_FIXES = {
 }
 
 UFC_ROSTER = {
+    "Sulangrangbo": "https://www.ufc.com/athlete/sulang-rangbo",
+    "Keiichiro Nakamura": "https://www.ufc.com/athlete/keiichiro-nakamura",
+    "Dom Mar Fan": "https://www.ufc.com/athlete/dom-mar-fan",
+    "Lawrence Lui": "https://www.ufc.com/athlete/lawrence-lui",
     "Jon Jones": "https://www.ufc.com/athlete/jon-jones",
     "Brandon Royval": "https://www.ufc.com/athlete/brandon-royval",
     "Adam Fugitt": "https://www.ufc.com/athlete/adam-fugitt",

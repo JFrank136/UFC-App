@@ -1,0 +1,730 @@
+/* Rankings Page - Professional Modern Design */
+
+.rankingsContainer {
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.rankingsContainer.dark {
+  background: #0a0a0a;
+  color: #fff;
+}
+
+.rankingsContainer.light {
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+/* ============================================ */
+/* HEADER */
+/* ============================================ */
+
+.pageHeader {
+  padding: 2rem 2rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--header-bg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+}
+
+.dark .pageHeader {
+  --border-color: rgba(255, 255, 255, 0.06);
+  --header-bg: rgba(10, 10, 10, 0.9);
+}
+
+.light .pageHeader {
+  --border-color: rgba(0, 0, 0, 0.06);
+  --header-bg: rgba(248, 250, 252, 0.9);
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titleSection h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  color: #dc2626;
+  letter-spacing: -0.5px;
+}
+
+.titleSection p {
+  font-size: 0.875rem;
+  margin: 0;
+  opacity: 0.5;
+}
+
+.headerControls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.themeToggle {
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: inherit;
+}
+
+.dark .themeToggle {
+  --btn-bg: rgba(255, 255, 255, 0.04);
+  --btn-border: rgba(255, 255, 255, 0.08);
+}
+
+.light .themeToggle {
+  --btn-bg: white;
+  --btn-border: rgba(0, 0, 0, 0.08);
+}
+
+.themeToggle:hover {
+  transform: translateY(-1px);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
+/* ============================================ */
+/* CONTROLS SECTION */
+/* ============================================ */
+
+.controlsSection {
+  padding: 1.5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.searchSection {
+  margin-bottom: 1.25rem;
+}
+
+.searchBar {
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  background: var(--search-bg);
+  border: 1px solid var(--search-border);
+  border-radius: 8px;
+  padding: 0.625rem 1rem;
+  transition: all 0.2s;
+}
+
+.dark .searchBar {
+  --search-bg: rgba(255, 255, 255, 0.04);
+  --search-border: rgba(255, 255, 255, 0.08);
+}
+
+.light .searchBar {
+  --search-bg: white;
+  --search-border: rgba(0, 0, 0, 0.08);
+}
+
+.searchBar:focus-within {
+  border-color: #dc2626;
+}
+
+.searchInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  flex: 1;
+  color: inherit;
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+}
+
+.searchInput::placeholder {
+  opacity: 0.4;
+}
+
+.clearSearch {
+  background: transparent;
+  border: none;
+  color: rgba(220, 38, 38, 0.7);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  transition: color 0.2s;
+}
+
+.clearSearch:hover {
+  color: #dc2626;
+}
+
+/* Filter Controls */
+.filterControls {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.divisionSelector {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.controlGroup label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.5;
+}
+
+.controlGroup select {
+  background: var(--select-bg);
+  border: 1px solid var(--select-border);
+  border-radius: 8px;
+  padding: 0.625rem 2.5rem 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: inherit;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  min-width: 200px;
+}
+
+.dark .controlGroup select {
+  --select-bg: rgba(255, 255, 255, 0.04);
+  --select-border: rgba(255, 255, 255, 0.08);
+}
+
+.light .controlGroup select {
+  --select-bg: white;
+  --select-border: rgba(0, 0, 0, 0.08);
+}
+
+.controlGroup select:hover {
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
+.controlGroup select:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Division Navigation */
+.divisionNav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.navButton {
+  background: var(--nav-bg);
+  border: 1px solid var(--nav-border);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+  color: inherit;
+}
+
+.dark .navButton {
+  --nav-bg: rgba(255, 255, 255, 0.04);
+  --nav-border: rgba(255, 255, 255, 0.08);
+}
+
+.light .navButton {
+  --nav-bg: white;
+  --nav-border: rgba(0, 0, 0, 0.08);
+}
+
+.navButton:hover:not(:disabled) {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: white;
+}
+
+.navButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.currentDivision {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #dc2626;
+}
+
+/* Filter Toggle Buttons */
+.filterToggles {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filterToggleButton {
+  padding: 0.625rem 1rem;
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: inherit;
+}
+
+.dark .filterToggleButton {
+  --btn-bg: rgba(255, 255, 255, 0.04);
+  --btn-border: rgba(255, 255, 255, 0.08);
+}
+
+.light .filterToggleButton {
+  --btn-bg: white;
+  --btn-border: rgba(0, 0, 0, 0.08);
+}
+
+.filterToggleButton:hover {
+  border-color: rgba(220, 38, 38, 0.3);
+  transform: translateY(-1px);
+}
+
+.filterToggleButton.active {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: white;
+}
+
+/* ============================================ */
+/* MAIN CONTENT */
+/* ============================================ */
+
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem 3rem;
+}
+
+.fighterList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ============================================ */
+/* FIGHTER CARDS */
+/* ============================================ */
+
+.fighterCard {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  display: grid;
+  grid-template-columns: 48px 80px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.dark .fighterCard {
+  --card-bg: rgba(255, 255, 255, 0.02);
+  --card-border: rgba(255, 255, 255, 0.06);
+}
+
+.light .fighterCard {
+  --card-bg: white;
+  --card-border: rgba(0, 0, 0, 0.06);
+}
+
+.fighterCard:hover {
+  transform: translateY(-1px);
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+.dark .fighterCard:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.light .fighterCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* Champion Card */
+.fighterCard.champion {
+  border-color: #fbbf24;
+  background: var(--champion-bg);
+}
+
+.dark .fighterCard.champion {
+  --champion-bg: rgba(251, 191, 36, 0.06);
+}
+
+.light .fighterCard.champion {
+  --champion-bg: rgba(251, 191, 36, 0.02);
+}
+
+.championBadge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #000;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Rank Number */
+.rankNumber {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #dc2626;
+  text-align: center;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+/* Fighter Image - Larger and Better */
+.fighterImage {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  object-position: top center;
+  border: 2px solid rgba(220, 38, 38, 0.15);
+  flex-shrink: 0;
+}
+
+/* Fighter Info */
+.fighterInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.fighterDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.fighterName {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.fighterNickname {
+  font-size: 0.8125rem;
+  opacity: 0.5;
+  font-style: italic;
+  margin: 0.125rem 0 0.375rem 0;
+  line-height: 1.2;
+}
+
+.fighterStats {
+  font-size: 0.8125rem;
+  opacity: 0.6;
+  display: flex;
+  gap: 0.625rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Rank Change */
+.rankChange {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: var(--change-bg);
+  border-radius: 6px;
+  justify-self: end;
+}
+
+.dark .rankChange {
+  --change-bg: rgba(255, 255, 255, 0.04);
+}
+
+.light .rankChange {
+  --change-bg: rgba(0, 0, 0, 0.02);
+}
+
+/* Upcoming Fight Badge */
+.upcomingFightBadge {
+  padding: 0.5rem 0.875rem;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  justify-self: end;
+}
+
+.upcomingFightBadge:hover {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* ============================================ */
+/* EMPTY/ERROR/LOADING STATES */
+/* ============================================ */
+
+.loadingState,
+.errorState,
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 1rem;
+  text-align: center;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(220, 38, 38, 0.1);
+  border-top-color: #dc2626;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorMessage {
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  color: #dc2626;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  max-width: 400px;
+}
+
+.retryBtn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.retryBtn:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  opacity: 0.3;
+}
+
+.emptyState h3 {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+  opacity: 0.7;
+}
+
+.emptyState p {
+  opacity: 0.5;
+  margin: 0;
+}
+
+/* ============================================ */
+/* RESPONSIVE */
+/* ============================================ */
+
+@media (max-width: 768px) {
+  .pageHeader {
+    padding: 1.5rem 1rem 1rem;
+  }
+
+  .titleSection h1 {
+    font-size: 1.5rem;
+  }
+
+  .titleSection p {
+    font-size: 0.8125rem;
+  }
+
+  .controlsSection {
+    padding: 1rem;
+  }
+
+  .mainContent {
+    padding: 1rem 1rem 2rem;
+  }
+
+  .searchBar {
+    max-width: 100%;
+  }
+
+  .controlGroup select {
+    min-width: 100%;
+  }
+
+  .filterControls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .divisionSelector {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .divisionNav {
+    justify-content: center;
+  }
+
+  .fighterCard {
+    grid-template-columns: 40px 70px 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.875rem;
+    padding: 1rem;
+  }
+
+  .rankNumber {
+    font-size: 1.25rem;
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  .fighterImage {
+    width: 70px;
+    height: 70px;
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
+
+  .fighterInfo {
+    grid-row: 1 / span 2;
+    grid-column: 3;
+  }
+
+  .rankChange {
+    grid-row: 2;
+    grid-column: 1;
+    padding: 0.375rem 0.5rem;
+    justify-self: center;
+  }
+
+  .upcomingFightBadge {
+    grid-row: 3;
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    justify-content: center;
+  }
+
+  .championBadge {
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.5625rem;
+  }
+}
+
+.mobileOnly {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobileOnly {
+    display: flex;
+  }
+
+  .desktopOnly {
+    display: none;
+  }
+}
+
+.filterToggle {
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  border-radius: 8px;
+  padding: 0.5rem 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.dark .filterToggle {
+  --btn-bg: rgba(255, 255, 255, 0.04);
+  --btn-border: rgba(255, 255, 255, 0.08);
+}
+
+.light .filterToggle {
+  --btn-bg: white;
+  --btn-border: rgba(0, 0, 0, 0.08);
+}
+
+.filterToggle:hover {
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
+.searchIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 8px;
+  color: #3b82f6;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  display: inline-flex;
+}

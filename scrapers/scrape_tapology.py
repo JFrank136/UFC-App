@@ -25,7 +25,7 @@ sys.path.append(utils_path)
 try:
     from name_fixes import TAPOLOGY_FIXES, NAME_FIXES
 except ImportError:
-    print("⚠️ Could not import name fixes. Continuing without name fixes.")
+    print("WARNING: Could not import name fixes. Continuing without name fixes.")
     TAPOLOGY_FIXES = {}
     NAME_FIXES = {}
 
@@ -54,20 +54,44 @@ class SessionManager:
         self.session.mount('https://', adapter)
         self.lock = threading.Lock()
         self.request_count = 0
+        self.consecutive_errors = 0
     
+    def record_success(self):
+        with self.lock:
+            self.consecutive_errors = 0
+
+    def record_error(self):
+        with self.lock:
+            self.consecutive_errors += 1
+            count = self.consecutive_errors
+        # Backoff outside the lock so we don't block other threads
+        if count >= 5:
+            wait = random.uniform(120, 180)
+            print(f"\nWARNING: {count} consecutive errors -- pausing {wait:.0f}s to avoid getting blocked...")
+            time.sleep(wait)
+        elif count >= 3:
+            wait = random.uniform(30, 60)
+            print(f"\nWARNING: {count} consecutive errors -- pausing {wait:.0f}s...")
+            time.sleep(wait)
+
     def get(self, url, **kwargs):
         with self.lock:
             self.request_count += 1
         
         # Respectful delay with some randomization
-        time.sleep(random.uniform(1.2, 2.5))  # Slightly faster while still respectful
+        time.sleep(random.uniform(1.5, 3.0))
         
         kwargs.setdefault('timeout', 30)
         try:
             response = self.session.get(url, **kwargs)
+            if response and response.status_code == 200:
+                self.record_success()
+            elif response and response.status_code in (429, 503):
+                self.record_error()
             return response
         except Exception as e:
-            print(f"    ❌ Request failed for {url}: {e}")
+            print(f"    ERROR: Request failed for {url}: {e}")
+            self.record_error()
             return None
 
 # Global session manager
@@ -77,7 +101,7 @@ def print_progress_bar(current, total, prefix='Progress', bar_length=50):
     """Print a progress bar"""
     percent = float(current) * 100 / total
     filled_length = int(bar_length * current // total)
-    bar = '█' * filled_length + '-' * (bar_length - filled_length)
+    bar = '' * filled_length + '-' * (bar_length - filled_length)
     print(f'\r{prefix}: |{bar}| {percent:.1f}% ({current}/{total})', end='', flush=True)
 
 def normalize_name_for_search(name):
@@ -90,7 +114,7 @@ def clean_fighter_name(raw_name):
         return None
     
     # Remove suffixes and extract name before nickname
-    patterns = [r'\s*\|\s*MMA Fighter Page.*$', r'\s*\|\s*Tapology.*$']
+    patterns = [r'\s*\|\s*MMA Fighter Page.*$', r'\s*\|\s*Fighter Page.*$', r'\s*\|\s*Tapology.*$']
     cleaned = raw_name.strip()
     for pattern in patterns:
         cleaned = re.sub(pattern, '', cleaned, flags=re.IGNORECASE)
@@ -113,11 +137,11 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
         data['fighter_id'] = fighter_id
     
     if debug:
-        print(f"🔍 Starting data extraction...")
+        print(f" Starting data extraction...")
     
     # Age extraction - from span with data-controller="age-calc"
     if debug:
-        print(f"  📅 Extracting age...")
+        print(f"   Extracting age...")
     age_elem = soup.find('span', attrs={'data-controller': 'age-calc'})
     if age_elem:
         age_text = age_elem.get_text().strip()
@@ -131,23 +155,23 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
             calculated_age = current_year - birth_year
             data['age'] = str(calculated_age)
             if debug:
-                print(f"    ✅ Calculated age: {calculated_age} (born {birth_year})")
+                print(f"     Calculated age: {calculated_age} (born {birth_year})")
         else:
             if debug:
-                print(f"    ❌ Could not extract birth year from: '{age_text}'")
+                print(f"     Could not extract birth year from: '{age_text}'")
     else:
         if debug:
-            print(f"    ❌ No age element found")
+            print(f"     No age element found")
     
     # Basic info extraction using regex patterns
     field_patterns = {
-        'country': r'Born:\s*([^,\n\r\|]+(?:,\s*[^,\n\r\|]+)?)',
+        'country': r'Born:\s*([^\n\r\|]+)',
         'weight_class': r'Weight Class:\s*([^\n\r\|]+)',
         'nickname': r'Nickname:\s*([^\n\r\|]+)',
     }
     
     if debug:
-        print(f"  🌍 Extracting basic info...")
+        print(f"   Extracting basic info...")
     
     for field, pattern in field_patterns.items():
         match = re.search(pattern, page_text, re.IGNORECASE)
@@ -161,14 +185,14 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
             else:
                 data[field] = value
             if debug:
-                print(f"    ✅ {field}: '{data[field]}'")
+                print(f"     {field}: '{data[field]}'")
         else:
             if debug:
-                print(f"    ❌ {field}: not found")
+                print(f"     {field}: not found")
     
     # Height and Reach extraction - targeting specific HTML structure
     if debug:
-        print(f"  📏 Extracting height and reach...")
+        print(f"   Extracting height and reach...")
     
     # Look for the specific structure: strong tag with "Height:" followed by span, then "Reach:" in next div
     height_found = False
@@ -192,7 +216,7 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
                     data['height'] = f"{feet}'{inches}\""
                     height_found = True
                     if debug:
-                        print(f"    ✅ Found height: {data['height']} (from: '{height_text}')")
+                        print(f"     Found height: {data['height']} (from: '{height_text}')")
                     break
     
     # Find reach - look for strong with "Reach:" then find the next div with span containing reach
@@ -220,7 +244,7 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
                         data['reach'] = f"{inches_value}\""
                         reach_found = True
                         if debug:
-                            print(f"    ✅ Found reach: {data['reach']} (from: '{reach_text}')")
+                            print(f"     Found reach: {data['reach']} (from: '{reach_text}')")
                         break
     
     # Fallback to regex approach if BeautifulSoup didn't work
@@ -234,9 +258,9 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
                 inches = feet_inches_match.group(2)
                 data['height'] = f"{feet}'{inches}\""
                 if debug:
-                    print(f"    ✅ Found height (regex): {data['height']}")
+                    print(f"     Found height (regex): {data['height']}")
         elif not height_found and debug:
-            print(f"    ❌ Height not found")
+            print(f"     Height not found")
     
     if not reach_found:
         reach_match = re.search(r'Reach:\s*([^)]+\([^)]+\))', page_text)
@@ -252,13 +276,13 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
                     pass
                 data['reach'] = f"{inches_value}\""
                 if debug:
-                    print(f"    ✅ Found reach (regex): {data['reach']}")
+                    print(f"     Found reach (regex): {data['reach']}")
         elif not reach_found and debug:
-            print(f"    ❌ Reach not found")
+            print(f"     Reach not found")
     
     # Overall record extraction - Fixed to use actual Tapology structure
     if debug:
-        print(f"  🥊 Extracting overall record...")
+        print(f"   Extracting overall record...")
     
     wins = losses = draws = "0"
     
@@ -269,10 +293,10 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
         losses = record_match.group(2) 
         draws = record_match.group(3)
         if debug:
-            print(f"    ✅ Found record pattern: {wins}-{losses}-{draws}")
+            print(f"     Found record pattern: {wins}-{losses}-{draws}")
     else:
         if debug:
-            print(f"    ❌ No record pattern found, trying alternative methods...")
+            print(f"     No record pattern found, trying alternative methods...")
         
         # Method 2: Look for elements near "Pro MMA Record" text
         record_sections = soup.find_all(string=re.compile(r'Pro MMA.*Record', re.IGNORECASE))
@@ -287,7 +311,7 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
                     losses = nearby_match.group(2)
                     draws = nearby_match.group(3)
                     if debug:
-                        print(f"    ✅ Found record near 'Pro MMA Record': {wins}-{losses}-{draws}")
+                        print(f"     Found record near 'Pro MMA Record': {wins}-{losses}-{draws}")
                     break
         
         # Method 3: Look for large numbers that could be the record
@@ -298,7 +322,7 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
                 wins = large_numbers[0].strip()
                 losses = large_numbers[1].strip() if len(large_numbers) > 1 else "0"
                 if debug:
-                    print(f"    🔄 Using large numbers as fallback: {wins}-{losses}-{draws}")
+                    print(f"     Using large numbers as fallback: {wins}-{losses}-{draws}")
     
     data.update({
         'wins_total': wins,
@@ -307,11 +331,11 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
     })
     
     if debug:
-        print(f"    ✅ Final record: {wins}-{losses}-{draws}")
+        print(f"     Final record: {wins}-{losses}-{draws}")
     
     # UFC-specific record extraction from promotion sections
     if debug:
-        print(f"  📊 Extracting UFC record and method breakdown...")
+        print(f"   Extracting UFC record and method breakdown...")
     
     ufc_wins_total = ufc_losses_total = ufc_draws_total = "0"
     ufc_wins_ko = ufc_wins_sub = ufc_wins_dec = "0"
@@ -345,7 +369,7 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
                     ufc_draws_total = draws_elem.get_text().strip()
                 
                 if debug:
-                    print(f"    ✅ UFC Record: {ufc_wins_total}-{ufc_losses_total}-{ufc_draws_total}")
+                    print(f"     UFC Record: {ufc_wins_total}-{ufc_losses_total}-{ufc_draws_total}")
             
             # Extract method breakdown
             method_record = ufc_container.select_one('.methodRecord')
@@ -392,8 +416,8 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
                         ufc_losses_dec = actual_loss_numbers[2] if len(actual_loss_numbers) > 2 and actual_loss_numbers[2] != "-" else "0"
                 
                 if debug:
-                    print(f"    ✅ UFC Wins: KO={ufc_wins_ko}, SUB={ufc_wins_sub}, DEC={ufc_wins_dec}")
-                    print(f"    ✅ UFC Losses: KO={ufc_losses_ko}, SUB={ufc_losses_sub}, DEC={ufc_losses_dec}")
+                    print(f"     UFC Wins: KO={ufc_wins_ko}, SUB={ufc_wins_sub}, DEC={ufc_wins_dec}")
+                    print(f"     UFC Losses: KO={ufc_losses_ko}, SUB={ufc_losses_sub}, DEC={ufc_losses_dec}")
             
             break  # Found UFC section, stop looking
     
@@ -403,7 +427,7 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
         ufc_losses_total = losses
         ufc_draws_total = draws
         if debug:
-            print(f"    🔄 No UFC section found, using overall record as fallback")
+            print(f"     No UFC section found, using overall record as fallback")
     
     data.update({
         'ufc_wins_total': ufc_wins_total,
@@ -419,7 +443,7 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
     
     # Fight history (enhanced with betting odds and detailed info)
     if debug:
-        print(f"  🥊 Extracting fight history...")
+        print(f"   Extracting fight history...")
     
     fight_history = []
     fighter_id = None
@@ -506,7 +530,7 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
             if method_detail_elem:
                 method_detail = method_detail_elem.get_text().strip()
                 # Clean up the method detail (remove round/time info)
-                method_detail = re.sub(r'·.*$', '', method_detail).strip()
+                method_detail = re.sub(r'[^\w\s].*$', '', method_detail).strip()
                 if method_detail:
                     fight_data['method_detail'] = method_detail
             
@@ -582,7 +606,7 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
             
             # Extract betting odds
             odds_text = detail_text
-            odds_match = re.search(r'(-?\+?\d{3,4})\s*·\s*(.*?Favorite|.*?Underdog)', odds_text)
+            odds_match = re.search(r'(-?\+?\d{3,4})\s+-\s+(.*?Favorite|.*?Underdog)', odds_text)
             if odds_match:
                 fight_data['betting_odds'] = odds_match.group(1)
                 fight_data['betting_status'] = odds_match.group(2)
@@ -628,7 +652,7 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
             
         except Exception as e:
             if debug:
-                print(f"    ⚠️ Error parsing fight: {str(e)}")
+                print(f"     Error parsing fight: {str(e)}")
     
     # Deduplicate fights using multiple fields before combining
     def create_fight_key(fight):
@@ -681,7 +705,7 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
     data['fight_history'] = fight_history
     
     if debug:
-        print(f"    ✅ Extracted {len(fight_history)} fights with detailed data")
+        print(f"     Extracted {len(fight_history)} fights with detailed data")
     
         
     return data
@@ -721,7 +745,7 @@ def search_tapology(fighter_name, debug=False):
     
         
     if debug:
-        print(f"🔍 Will try {len(unique_attempts)} name variations for: {fighter_name}")
+        print(f"Searching {len(unique_attempts)} name variations for: {fighter_name}")
         for i, attempt in enumerate(unique_attempts, 1):
             if attempt != fighter_name:
                 print(f"  Variation {i}: {attempt}")
@@ -729,7 +753,7 @@ def search_tapology(fighter_name, debug=False):
     # Try each name variation
     for attempt_num, search_name in enumerate(unique_attempts, 1):
         if debug and len(unique_attempts) > 1:
-            print(f"🔍 Attempt {attempt_num}: Searching for '{search_name}'")
+            print(f"Attempt {attempt_num}: Searching for '{search_name}'")
         
         normalized = normalize_name_for_search(search_name)
         query = normalized.replace(" ", "%20")
@@ -739,14 +763,14 @@ def search_tapology(fighter_name, debug=False):
             res = session_manager.get(url)
             if not res or res.status_code != 200:
                 if debug:
-                    print(f"  ❌ Search failed with status: {res.status_code if res else 'No response'}")
+                    print(f"  Search failed with status: {res.status_code if res else 'No response'}")
                 continue
                 
             soup = BeautifulSoup(res.text, "html.parser")
             links = soup.select("a[href*='/fightcenter/fighters/']")
             
             if debug:
-                print(f"  📋 Found {len(links)} fighter links")
+                print(f"  Found {len(links)} fighter links")
             
             if not links:
                 continue  # Try next variation
@@ -754,49 +778,92 @@ def search_tapology(fighter_name, debug=False):
             if len(links) == 1:
                 result_url = f"{BASE_URL}{links[0]['href']}"
                 if debug:
-                    print(f"  ✅ Single result found: {result_url}")
+                    print(f"  Single result found: {result_url}")
                 return result_url
             
-            # Find best match
+            # Strip quoted nicknames from result names before matching
+            # e.g. 'Max "Blessed" Holloway' -> 'Max Holloway'
+            # e.g. 'Alex "Poatan" Pereira' -> 'Alex Pereira'
+            def strip_nickname(text):
+                return re.sub(r'\s*"[^"]*"\s*', ' ', text).strip()
+
             name_lower = normalized.lower()
-            for i, link in enumerate(links):
-                result_name = link.get_text().strip()
-                if debug and i < 3:  # Show first 3 results
-                    print(f"    {i+1}. {result_name}")
-                
-                if result_name and name_lower in result_name.lower():
-                    result_url = f"{BASE_URL}{link['href']}"
-                    if debug:
-                        print(f"  ✅ Best match: {result_name} -> {result_url}")
-                    return result_url
-            
-            # If we found results but no good match, keep trying variations
-            # Only fall back to first result if this is our last attempt
-            if attempt_num == len(unique_attempts) and links:
-                result_url = f"{BASE_URL}{links[0]['href']}"
+
+            if debug:
+                for i, link in enumerate(links[:5]):
+                    raw = link.get_text().strip()
+                    stripped = strip_nickname(raw).lower()
+                    print(f"    {i+1}. {raw!r} -> stripped: {stripped!r}")
+
+            # Match after stripping nicknames
+            matching_links = [
+                l for l in links
+                if l.get_text().strip() and name_lower in strip_nickname(l.get_text().strip()).lower()
+            ]
+
+            if debug:
+                print(f"  {len(matching_links)} name matches after nickname stripping")
+
+            if len(matching_links) == 1:
+                result_url = f"{BASE_URL}{matching_links[0]['href']}"
                 if debug:
-                    print(f"  🔄 Using first result as final fallback: {result_url}")
+                    print(f"  Single name match: {result_url}")
+                return result_url
+
+            # Multiple name matches - pick highest fight count from search results page
+            # Record is shown in the search results table (e.g. "27-8-0")
+            candidates = matching_links if matching_links else links
+            if len(candidates) > 1:
+                if debug:
+                    print(f"  {len(candidates)} candidates - picking by fight record on search page...")
+                best_url = None
+                best_count = -1
+                for candidate in candidates:
+                    candidate_url = f"{BASE_URL}{candidate['href']}"
+                    # Find the record in the same table row as this link
+                    row = candidate.find_parent('tr')
+                    fight_total = 0
+                    if row:
+                        row_text = row.get_text()
+                        record_match = re.search(r'(\d+)-(\d+)-(\d+)', row_text)
+                        if record_match:
+                            fight_total = int(record_match.group(1)) + int(record_match.group(2)) + int(record_match.group(3))
+                    if debug:
+                        print(f"    {candidate.get_text().strip()!r}: {fight_total} total fights -> {candidate_url}")
+                    if fight_total > best_count:
+                        best_count = fight_total
+                        best_url = candidate_url
+                if best_url:
+                    if debug:
+                        print(f"  Best candidate ({best_count} total fights): {best_url}")
+                    return best_url
+
+            # Single candidate or fallback on last attempt
+            if attempt_num == len(unique_attempts) and candidates:
+                result_url = f"{BASE_URL}{candidates[0]['href']}"
+                if debug:
+                    print(f"  Using first result as final fallback: {result_url}")
                 return result_url
             
         except Exception as e:
             if debug:
-                print(f"  ❌ Search error: {e}")
+                print(f"  Search error: {e}")
             continue
     
     if debug:
-        print(f"  ❌ No results found after trying all name variations")
+        print(f"  No results found after trying all name variations")
     return None
 
 def scrape_fighter(url, original_fighter=None, debug=True):
     """Main scraper function"""
     if debug:
-        print(f"\n🥊 Scraping fighter profile: {url}")
+        print(f"\nScraping fighter profile: {url}")
     
     try:
         res = session_manager.get(url)
         if not res or res.status_code != 200:
             if debug:
-                print(f"  ❌ Failed to load profile page")
+                print(f"  ERROR: Failed to load profile page")
             return None
 
         soup = BeautifulSoup(res.text, "html.parser")
@@ -810,13 +877,13 @@ def scrape_fighter(url, original_fighter=None, debug=True):
                 if cleaned_name:
                     name = cleaned_name
                     if debug:
-                        print(f"  ✅ Extracted name: '{name}' (from {selector})")
+                        print(f"  OK: Extracted name: '{name}' (from {selector})")
                     break
         
         if not name:
             name = url.split("/")[-1].replace("-", " ").title()
             if debug:
-                print(f"  🔄 Fallback name from URL: '{name}'")
+                print(f"  NOTE: Fallback name from URL: '{name}'")
 
         # Extract all data
         fighter_id = original_fighter.get("id") if original_fighter else str(uuid4())
@@ -832,60 +899,52 @@ def scrape_fighter(url, original_fighter=None, debug=True):
         }
 
         if debug:
-            print(f"  ✅ Successfully scraped fighter data")
+            print(f"  OK: Successfully scraped fighter data")
         
         return result
 
     except Exception as e:
         if debug:
-            print(f"  ❌ Error scraping fighter: {e}")
+            print(f"  ERROR: Error scraping fighter: {e}")
         return None
 
-def save_test_results(results):
-    """Append test results to JSON file without overwriting existing data"""
-    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
+def merge_fighters_into_file(results, filepath=OUTPUT_FILE):
+    """Merge scraped fighters into JSON file, overwriting by fighter_id, adding if new."""
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
     try:
-        # Load existing results if file exists
         try:
-            with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
-                existing_results = json.load(f)
+            with open(filepath, "r", encoding="utf-8") as f:
+                existing = json.load(f)
         except FileNotFoundError:
-            existing_results = []
+            existing = []
 
-        # Build lookup to avoid duplicates (prefer id, fallback to name)
-        existing_ids = {r.get("id") for r in existing_results if r.get("id")}
-        existing_names = {
-            r.get("name", "").strip().lower()
-            for r in existing_results
-            if r.get("name")
-        }
+        # Index existing fighters by id for fast lookup
+        existing_by_id = {r.get("id"): i for i, r in enumerate(existing) if r.get("id")}
 
-        new_results = []
+        added = 0
+        updated = 0
         for r in results:
             r_id = r.get("id")
-            r_name = r.get("name", "").strip().lower()
+            if r_id and r_id in existing_by_id:
+                existing[existing_by_id[r_id]] = r  # Overwrite
+                updated += 1
+            else:
+                existing.append(r)  # Add new
+                if r_id:
+                    existing_by_id[r_id] = len(existing) - 1
+                added += 1
 
-            if r_id and r_id in existing_ids:
-                continue
-            if not r_id and r_name in existing_names:
-                continue
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(existing, f, indent=2, ensure_ascii=False)
 
-            new_results.append(r)
-
-        if not new_results:
-            print("ℹ️ No new fighters to add (all already exist)")
-            return
-
-        merged = existing_results + new_results
-
-        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-            json.dump(merged, f, indent=2, ensure_ascii=False)
-
-        print(f"💾 Added {len(new_results)} fighters to: {OUTPUT_FILE}")
+        if updated:
+            print(f" Updated {updated}, added {added} fighters in: {filepath}")
+        else:
+            print(f" Added {added} fighters to: {filepath}")
 
     except Exception as e:
-        print(f"❌ Error saving test results: {e}")
+        print(f" Error saving fighters: {e}")
 
 def load_active_fighters():
     """Load active fighters from UFC roster"""
@@ -894,14 +953,14 @@ def load_active_fighters():
             roster = json.load(f)
         
         active_fighters = [f for f in roster if f.get("status", "").lower() == "active"]
-        print(f"📊 Loaded {len(active_fighters)} active fighters from roster")
+        print(f" Loaded {len(active_fighters)} active fighters from roster")
         return active_fighters
         
     except FileNotFoundError:
-        print(f"❌ UFC fighters file not found: {FIGHTERS_RAW_PATH}")
+        print(f" UFC fighters file not found: {FIGHTERS_RAW_PATH}")
         return []
     except json.JSONDecodeError as e:
-        print(f"❌ Invalid JSON in fighters file: {e}")
+        print(f" Invalid JSON in fighters file: {e}")
         return []
 
 def process_fighter(fighter_info):
@@ -916,14 +975,17 @@ def process_fighter(fighter_info):
     profile_url = search_tapology(name, debug=False)
     
     if not profile_url:
+        session_manager.record_error()
         return None, {"name": name, "reason": "not found in search"}
 
     # Scrape fighter data (silent mode for production)
     fighter_data = scrape_fighter(profile_url, original_fighter=fighter, debug=False)
     
     if fighter_data:
+        session_manager.record_success()
         return fighter_data, None
     else:
+        session_manager.record_error()
         return None, {"name": name, "reason": "scrape failed"}
         
 def save_progress(data, filepath=OUTPUT_FILE, use_lock=True):
@@ -935,7 +997,7 @@ def save_progress(data, filepath=OUTPUT_FILE, use_lock=True):
             with open(filepath, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
         except Exception as e:
-            print(f"❌ Error saving data: {e}")
+            print(f" Error saving data: {e}")
     
     if use_lock:
         with session_manager.lock:
@@ -945,7 +1007,7 @@ def save_progress(data, filepath=OUTPUT_FILE, use_lock=True):
 
 def retry_failed_fighters():
     """Retry fighters from error file with enhanced name fixing"""
-    print("🔄 RETRY FAILED FIGHTERS")
+    print(" RETRY FAILED FIGHTERS")
     print("=" * 60)
     
     error_file = "data/errors/tapology_failures.json"
@@ -954,22 +1016,22 @@ def retry_failed_fighters():
     try:
         with open(error_file, "r", encoding="utf-8") as f:
             failures = json.load(f)
-        print(f"📊 Loaded {len(failures)} failed fighters from error file")
+        print(f" Loaded {len(failures)} failed fighters from error file")
     except FileNotFoundError:
-        print("❌ No error file found")
+        print(" No error file found")
         return
     except json.JSONDecodeError as e:
-        print(f"❌ Invalid JSON in error file: {e}")
+        print(f" Invalid JSON in error file: {e}")
         return
     
     if not failures:
-        print("✅ No failed fighters to retry")
+        print(" No failed fighters to retry")
         return
     
     # Load active fighters to get complete data
     active_fighters = load_active_fighters()
     if not active_fighters:
-        print("❌ No active fighters to process")
+        print(" No active fighters to process")
         return
     
     # Build lookup by name (case-insensitive)
@@ -982,13 +1044,13 @@ def retry_failed_fighters():
         if name in fighter_lookup:
             fighters_to_retry.append(fighter_lookup[name])
         else:
-            print(f"⚠️ Fighter '{failure.get('name')}' not found in active roster")
+            print(f" Fighter '{failure.get('name')}' not found in active roster")
     
     if not fighters_to_retry:
-        print("❌ No matching fighters found for retry")
+        print(" No matching fighters found for retry")
         return
     
-    print(f"🚀 Retrying {len(fighters_to_retry)} fighters with enhanced name fixing...")
+    print(f" Retrying {len(fighters_to_retry)} fighters with enhanced name fixing...")
     
     # Process fighters
     results = []
@@ -1003,11 +1065,11 @@ def retry_failed_fighters():
             if fighter_data:
                 results.append(fighter_data)
                 successful_fighter_names.add(fighter.get("name", "").strip().lower())
-                print(f"✅ Retry successful: {fighter.get('name')}")
+                print(f" Retry successful: {fighter.get('name')}")
             
             if failure:
                 new_failures.append(failure)
-                print(f"❌ Retry failed: {fighter.get('name')} - {failure.get('reason')}")
+                print(f" Retry failed: {fighter.get('name')} - {failure.get('reason')}")
             
             # Update progress
             print_progress_bar(idx, len(fighters_to_retry), "Retrying")
@@ -1055,35 +1117,35 @@ def retry_failed_fighters():
     if remaining_failures:
         with open(error_file, "w", encoding="utf-8") as f:
             json.dump(remaining_failures, f, indent=2, ensure_ascii=False)
-        print(f"📄 Updated error file with {len(remaining_failures)} remaining failures")
+        print(f" Updated error file with {len(remaining_failures)} remaining failures")
     else:
         # Remove error file if no failures
         if os.path.exists(error_file):
             os.remove(error_file)
-        print("🎉 All retry attempts successful! Error file removed.")
+        print(" All retry attempts successful! Error file removed.")
     
     # Summary
     retry_success_count = len(results)
     retry_failure_count = len(new_failures)
     resolved_count = len(successful_fighter_names)
     
-    print(f"\n📊 RETRY SUMMARY")
+    print(f"\n RETRY SUMMARY")
     print(f"Attempted: {len(fighters_to_retry)}")
     print(f"Newly successful: {retry_success_count}")
     print(f"Still failed: {retry_failure_count}")
     print(f"Resolved from error file: {resolved_count}")
     print(f"Success rate: {(retry_success_count/len(fighters_to_retry)*100):.1f}%")
-    print(f"📁 Results merged into: {OUTPUT_FILE}")
+    print(f" Results merged into: {OUTPUT_FILE}")
 
 def main():
     """Main production scraper"""
-    print("🥊 TAPOLOGY PRODUCTION SCRAPER")
+    print(" TAPOLOGY PRODUCTION SCRAPER")
     print("=" * 60)
     
     # Load active fighters
     active_fighters = load_active_fighters()
     if not active_fighters:
-        print("❌ No active fighters to process")
+        print(" No active fighters to process")
         return
     
     # Prepare processing list
@@ -1105,7 +1167,7 @@ def main():
     if mode == "2":
         # Concurrent processing
         max_workers = 4
-        print(f"🚀 Starting concurrent processing with {max_workers} workers...")
+        print(f" Starting concurrent processing with {max_workers} workers...")
         
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             # Submit all tasks
@@ -1143,7 +1205,7 @@ def main():
     
     else:
         # Sequential processing
-        print("🐌 Starting sequential processing...")
+        print(" Starting sequential processing...")
         
         for idx, fighter_info in enumerate(fighters_to_process, 1):
             try:
@@ -1180,7 +1242,7 @@ def main():
         os.makedirs(os.path.dirname(failures_file), exist_ok=True)
         with open(failures_file, "w", encoding="utf-8") as f:
             json.dump(failures, f, indent=2, ensure_ascii=False)
-        print(f"⚠️ Saved {len(failures)} failures to {failures_file}")
+        print(f" Saved {len(failures)} failures to {failures_file}")
     
     # Summary
     success_count = len(results)
@@ -1189,106 +1251,214 @@ def main():
     success_rate = (success_count / total_fighters) * 100 if total_fighters > 0 else 0
     
     print(f"\n" + "=" * 60)
-    print(f"📊 SCRAPING SUMMARY")
+    print(f" SCRAPING SUMMARY")
     print(f"=" * 60)
     print(f"Total fighters: {total_fighters}")
     print(f"Successfully scraped: {success_count}")
     print(f"Failed: {failure_count}")
     print(f"Success rate: {success_rate:.1f}%")
-    print(f"📁 Results saved to: {OUTPUT_FILE}")
+    print(f" Results saved to: {OUTPUT_FILE}")
     
     if success_count > 0:
-        print(f"✅ Production scraping completed!")
+        print(f" Production scraping completed!")
     else:
-        print(f"❌ No fighters were successfully scraped")
+        print(f" No fighters were successfully scraped")
     
     print("=" * 60)
 
-def test_specific_fighters():
-    """Test scraper on specific fighters"""
-    print("🧪 TAPOLOGY TEST & DEBUG SCRAPER")
-    print("=" * 50)
-    
-    # Get test fighters from user
-    test_fighters = []
-    print("Enter fighter names to test (one per line, empty line to finish):")
-    
-    while len(test_fighters) < 10:  # Max 10 for testing
-        name = input(f"Fighter {len(test_fighters) + 1}: ").strip()
+def scrape_manual_list():
+    """Scrape a manually entered list of fighters and merge into tapology_fighters.json"""
+    print(" MANUAL FIGHTER LIST MODE")
+    print("=" * 60)
+
+    # Load existing tapology data for id lookup
+    try:
+        with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
+            existing = json.load(f)
+    except FileNotFoundError:
+        existing = []
+
+    # Build name -> fighter lookup from existing data
+    existing_by_name = {r.get("name", "").strip().lower(): r for r in existing if r.get("name")}
+
+    # Also load active roster for id reference
+    try:
+        with open(FIGHTERS_RAW_PATH, "r", encoding="utf-8") as f:
+            roster = json.load(f)
+        roster_by_name = {r.get("name", "").strip().lower(): r for r in roster if r.get("name")}
+    except FileNotFoundError:
+        roster_by_name = {}
+
+    print("Enter fighter names (one per line, empty line to finish):")
+    fighter_names = []
+    while True:
+        name = input(f"Fighter {len(fighter_names) + 1}: ").strip()
         if not name:
             break
-        test_fighters.append(name)
-    
-    if not test_fighters:
-        # Default test fighters if none provided
-        test_fighters = [
-            "Israel Adesanya",
-            "Jon Jones",
-            "Conor McGregor"
-        ]
-        print(f"No fighters entered. Using defaults: {', '.join(test_fighters)}")
-    
-    print(f"\n🎯 Testing {len(test_fighters)} fighters...")
-    
+        fighter_names.append(name)
+
+    if not fighter_names:
+        print(" No fighters entered.")
+        return
+
+    print(f"\n Scraping {len(fighter_names)} fighters...")
     results = []
-    
-    for i, fighter_name in enumerate(test_fighters, 1):
-        print(f"\n[{i}/{len(test_fighters)}] Testing: {fighter_name}")
-        print("-" * 40)
-        
-        # Search for fighter
-        profile_url = search_tapology(fighter_name, debug=True)
-        
+    failures = []
+
+    for i, fighter_name in enumerate(fighter_names, 1):
+        # Build a fighter dict with id if we can find one
+        name_lower = fighter_name.strip().lower()
+        fighter_ref = (
+            existing_by_name.get(name_lower)
+            or roster_by_name.get(name_lower)
+            or {"name": fighter_name}
+        )
+
+        profile_url = search_tapology(fighter_name, debug=False)
         if not profile_url:
-            print(f"❌ Could not find {fighter_name} on Tapology")
+            print(f"  [{i}/{len(fighter_names)}]  Not found on Tapology: {fighter_name}")
+            failures.append({"name": fighter_name, "reason": "not found in search"})
             continue
-        
-        # Scrape fighter data
-        fighter_data = scrape_fighter(profile_url, debug=True)
-        
+
+        fighter_data = scrape_fighter(profile_url, original_fighter=fighter_ref, debug=False)
         if fighter_data:
             results.append(fighter_data)
-            print(f"✅ Successfully scraped {fighter_name}")
+            print(f"  [{i}/{len(fighter_names)}]  Successfully scraped {fighter_name}")
         else:
-            print(f"❌ Failed to scrape data for {fighter_name}")
-        
-        # Delay between fighters
-        if i < len(test_fighters):
-            print(f"⏳ Waiting before next fighter...")
-            time.sleep(random.uniform(3, 5))
-    
-    # Save results
-    save_test_results(results)
-    
-    # Summary
-    successful = len([r for r in results if r and r.get("name")])
-    
-    print(f"\n" + "=" * 50)
-    print(f"📊 TEST SUMMARY")
-    print(f"=" * 50)
-    print(f"Total fighters tested: {len(test_fighters)}")
-    print(f"Successfully scraped: {successful}")
-    print(f"Failed: {len(test_fighters) - successful}")
-    print(f"Success rate: {(successful / len(test_fighters) * 100):.1f}%")
-    
-    if successful > 0:
-        print(f"\n✅ Test completed! Check {OUTPUT_FILE} for detailed results.")
-    else:
-        print(f"\n❌ No fighters were successfully scraped. Check the debug output above.")
+            print(f"  [{i}/{len(fighter_names)}]  Failed to scrape {fighter_name}")
+            failures.append({"name": fighter_name, "reason": "scrape failed"})
+
+        if i < len(fighter_names):
+            time.sleep(random.uniform(2, 4))
+
+    if results:
+        merge_fighters_into_file(results)
+
+    print(f"\n" + "=" * 60)
+    print(f"Total: {len(fighter_names)} | Scraped: {len(results)} | Failed: {len(failures)}")
+
+
+def scrape_recently_fought():
+    """Re-scrape fighters who appeared in recent events based on upcoming_fights.json"""
+    print(" RECENTLY FOUGHT MODE")
+    print("=" * 60)
+
+    UPCOMING_FIGHTS_PATH = "data/upcoming_fights.json"
+
+    # Get cutoff date from user
+    print("Enter cutoff date (fighters from events on or after this date will be re-scraped)")
+    cutoff_str = input("Cutoff date (YYYY-MM-DD): ").strip()
+    try:
+        cutoff = datetime.strptime(cutoff_str, "%Y-%m-%d")
+    except ValueError:
+        print(" Invalid date format. Use YYYY-MM-DD.")
+        return
+
+    # Load upcoming_fights.json
+    try:
+        with open(UPCOMING_FIGHTS_PATH, "r", encoding="utf-8") as f:
+            all_fights = json.load(f)
+    except FileNotFoundError:
+        print(f" File not found: {UPCOMING_FIGHTS_PATH}")
+        return
+
+    # Filter to past events within cutoff
+    recent_fights = [
+        f for f in all_fights
+        if f.get("event_status") == "past"
+        and f.get("event_date", "") >= cutoff_str
+    ]
+
+    if not recent_fights:
+        print(f" No past events found on or after {cutoff_str}.")
+        print("  (Make sure event_status is set to 'past' for completed events)")
+        return
+
+    print(f" Found {len(recent_fights)} fights in past events since {cutoff_str}")
+
+    # Load existing tapology data for id -> fighter lookup
+    try:
+        with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
+            existing = json.load(f)
+    except FileNotFoundError:
+        existing = []
+
+    existing_by_id = {r.get("id"): r for r in existing if r.get("id")}
+    existing_by_name = {r.get("name", "").strip().lower(): r for r in existing if r.get("name")}
+
+    # Collect unique fighters from recent fights (by id, fall back to name)
+    seen_ids = set()
+    fighters_to_scrape = []  # list of (name, fighter_ref)
+
+    for fight in recent_fights:
+        for side in [("fighter1", "fighter1_id"), ("fighter2", "fighter2_id")]:
+            fname, fid_key = side
+            name = fight.get(fname, "").strip()
+            fid = fight.get(fid_key, "").strip()
+            if not name:
+                continue
+            # Use id as dedup key if available, else name
+            dedup_key = fid if fid else name.lower()
+            if dedup_key in seen_ids:
+                continue
+            seen_ids.add(dedup_key)
+            # Find fighter ref for id preservation
+            fighter_ref = (
+                existing_by_id.get(fid)
+                or existing_by_name.get(name.lower())
+                or {"name": name, "id": fid} if fid else {"name": name}
+            )
+            fighters_to_scrape.append((name, fighter_ref))
+
+    if not fighters_to_scrape:
+        print(" No fighters found to re-scrape.")
+        return
+
+    print(f" Re-scraping {len(fighters_to_scrape)} unique fighters...")
+    results = []
+    failures = []
+
+    for i, (fighter_name, fighter_ref) in enumerate(fighters_to_scrape, 1):
+        profile_url = search_tapology(fighter_name, debug=False)
+        if not profile_url:
+            print(f"  [{i}/{len(fighters_to_scrape)}]  Not found: {fighter_name}")
+            failures.append({"name": fighter_name, "reason": "not found in search"})
+            continue
+
+        fighter_data = scrape_fighter(profile_url, original_fighter=fighter_ref, debug=False)
+        if fighter_data:
+            results.append(fighter_data)
+            print(f"  [{i}/{len(fighters_to_scrape)}]  {fighter_name}")
+        else:
+            print(f"  [{i}/{len(fighters_to_scrape)}]  Failed: {fighter_name}")
+            failures.append({"name": fighter_name, "reason": "scrape failed"})
+
+        if i < len(fighters_to_scrape):
+            time.sleep(random.uniform(2, 4))
+
+    if results:
+        merge_fighters_into_file(results)
+
+    print(f"\n" + "=" * 60)
+    print(f"Total: {len(fighters_to_scrape)} | Updated: {len(results)} | Failed: {len(failures)}")
+
 
 if __name__ == "__main__":
-    print("🥊 Tapology Scraper")
+    print(" Tapology Scraper")
     print("[1] Production mode - scrape all active fighters")
     print("[2] Retry failed fighters from error file")
-    print("[3] Test mode - test specific fighters")
+    print("[3] Manual list - scrape specific fighters by name")
+    print("[4] Recently fought - re-scrape fighters from recent events")
     
-    choice = input("Choose mode (1-3): ").strip()
+    choice = input("Choose mode (1-4): ").strip()
     
     if choice == "1":
         main()
     elif choice == "2":
         retry_failed_fighters()
     elif choice == "3":
-        test_specific_fighters()
+        scrape_manual_list()
+    elif choice == "4":
+        scrape_recently_fought()
     else:
-        print("❌ Invalid choice")
+        print(" Invalid choice")

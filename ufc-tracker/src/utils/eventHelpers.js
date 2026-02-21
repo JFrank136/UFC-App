@@ -109,20 +109,29 @@ export const getDivisionFromWeight = (weightClass, fighter1, fighter2) => {
  * Fight organization utilities
  */
 export const groupFightsBySection = (fights) => {
-  return fights.reduce((acc, fight) => {
+  const grouped = fights.reduce((acc, fight) => {
+    const raw = fight.card_section || '';
     let section;
-    if (fight.card_section === 'Main') {
+    // Match both short ('Main') and full ('Main Card') values from Supabase
+    if (raw === 'Main Card' || raw === 'Main') {
       section = 'Main Card';
-    } else if (fight.card_section === 'Prelim') {
+    } else if (raw === 'Preliminary Card' || raw === 'Prelim' || raw === 'Prelims') {
       section = 'Preliminary Card';
     } else {
       section = 'Early Prelims';
     }
-    
+
     if (!acc[section]) acc[section] = [];
     acc[section].push(fight);
     return acc;
   }, {});
+
+  // Sort fights within each section by fight_order descending (main event first)
+  Object.keys(grouped).forEach(section => {
+    grouped[section].sort((a, b) => (b.fight_order || 0) - (a.fight_order || 0));
+  });
+
+  return grouped;
 };
 
 /**

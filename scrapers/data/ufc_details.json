@@ -31845,5 +31845,140 @@
       "leg": "13 (9%)"
     },
     "last_updated": 1770091344.1762779
+  },
+  {
+    "name": "Sulangrangbo",
+    "profile_url_ufc": "https://www.ufc.com/athlete/sulang-rangbo",
+    "status": "Active",
+    "id": "8c26d7bf-3828-4b59-b483-f25e1aa0c179",
+    "gender": "Male",
+    "image_local_path": "/images/sulang-rangbo.jpg",
+    "image_url": "https://ufc.com/images/styles/athlete_bio_full_body/s3/2026-01/SULANGRANGBO_L_01-31.png?itok=FERGdx13",
+    "image_verified": true,
+    "height": null,
+    "weight": "135.00",
+    "reach": null,
+    "sig_strikes_landed_per_min": "3.96",
+    "sig_strikes_absorbed_per_min": "3.20",
+    "takedown_avg_per_15min": "0.00",
+    "submission_avg_per_15min": "0.00",
+    "avg_fight_time": "11:16",
+    "sig_str_defense": "63%",
+    "takedown_defense": "72%",
+    "knockdown_avg": "0.89",
+    "striking_accuracy": "48% 134/277",
+    "sig_strikes_by_position": {
+      "standing": "125 (93%)",
+      "clinch": "5 (4%)",
+      "ground": "4 (3%)"
+    },
+    "sig_strikes_by_target": {
+      "head": "117 (87%)",
+      "body": "10 (7%)",
+      "leg": "7 (5%)"
+    },
+    "last_updated": 1771645052.5796182
+  },
+  {
+    "name": "Keiichiro Nakamura",
+    "profile_url_ufc": "https://www.ufc.com/athlete/keiichiro-nakamura",
+    "status": "Active",
+    "id": "c005ea57-ac09-40c8-85e2-e3fe1f134fb8",
+    "gender": "Male",
+    "image_local_path": "/images/keiichiro-nakamura.jpg",
+    "image_url": "https://ufc.com/images/styles/athlete_bio_full_body/s3/2026-01/NAKAMURA_KEIICHIRO_L_01-31.png?itok=WJC9Fzsx",
+    "image_verified": true,
+    "height": "68.00",
+    "weight": "145.00",
+    "reach": "70.50",
+    "sig_strikes_landed_per_min": "4.48",
+    "sig_strikes_absorbed_per_min": "4.28",
+    "takedown_avg_per_15min": "0.00",
+    "submission_avg_per_15min": "0.00",
+    "avg_fight_time": "12:04",
+    "sig_str_defense": "64%",
+    "takedown_defense": "79%",
+    "knockdown_avg": "0.83",
+    "striking_accuracy": "42% 162/389",
+    "takedown_accuracy": "0% 0/1",
+    "sig_strikes_by_position": {
+      "standing": "150 (93%)",
+      "clinch": "7 (4%)",
+      "ground": "5 (3%)"
+    },
+    "sig_strikes_by_target": {
+      "head": "93 (57%)",
+      "body": "37 (23%)",
+      "leg": "32 (20%)"
+    },
+    "last_updated": 1771645054.851716
+  },
+  {
+    "name": "Dom Mar Fan",
+    "profile_url_ufc": "https://www.ufc.com/athlete/dom-mar-fan",
+    "status": "Active",
+    "id": "e75d26ad-ddec-41f1-b695-b05d8c16fb9c",
+    "gender": "Male",
+    "image_local_path": "/images/dom-mar-fan.jpg",
+    "image_url": "https://ufc.com/images/styles/athlete_bio_full_body/s3/2026-01/MAR_FAN_DOM_R_01-31.png?itok=QOndLhSJ",
+    "image_verified": true,
+    "height": "71.00",
+    "weight": "155.00",
+    "reach": "75.00",
+    "sig_strikes_landed_per_min": "3.71",
+    "sig_strikes_absorbed_per_min": "2.49",
+    "takedown_avg_per_15min": "2.00",
+    "submission_avg_per_15min": "0.33",
+    "avg_fight_time": "15:00",
+    "sig_str_defense": "44%",
+    "takedown_defense": "67%",
+    "knockdown_avg": "0.00",
+    "striking_accuracy": "56% 167/298",
+    "takedown_accuracy": "50% 6/12",
+    "sig_strikes_by_position": {
+      "standing": "80 (48%)",
+      "clinch": "48 (29%)",
+      "ground": "39 (23%)"
+    },
+    "sig_strikes_by_target": {
+      "head": "133 (80%)",
+      "body": "31 (19%)",
+      "leg": "3 (2%)"
+    },
+    "last_updated": 1771645057.0881279
+  },
+  {
+    "name": "Lawrence Lui",
+    "profile_url_ufc": "https://www.ufc.com/athlete/lawrence-lui",
+    "status": "Active",
+    "id": "8ade19bb-bd9f-432a-af73-9f8f35d71708",
+    "gender": "Male",
+    "image_local_path": "/images/lawrence-lui.jpg",
+    "image_url": "https://ufc.com/images/styles/athlete_bio_full_body/s3/2026-01/LUI_LAWRENCE_R_01-31_0.png?itok=GVnBSO0S",
+    "image_verified": true,
+    "height": "67.00",
+    "weight": "135.00",
+    "reach": "72.50",
+    "sig_strikes_landed_per_min": "3.72",
+    "sig_strikes_absorbed_per_min": "3.32",
+    "takedown_avg_per_15min": "5.30",
+    "submission_avg_per_15min": "0.00",
+    "avg_fight_time": "12:16",
+    "sig_str_defense": "60%",
+    "takedown_defense": "100%",
+    "knockdown_avg": "0.82",
+    "striking_accuracy": "40% 137/345",
+    "takedown_accuracy": "41% 13/32",
+    "sig_strikes_by_position": {
+      "standing": "100 (73%)",
+      "clinch": "25 (18%)",
+      "ground": "12 (9%)"
+    },
+    "sig_strikes_by_target": {
+      "head": "113 (82%)",
+      "body": "17 (12%)",
+      "leg": "7 (5%)"
+    },
+    "last_updated": 1771645059.6069112
   }
 ]

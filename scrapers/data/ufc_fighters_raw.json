@@ -21611,5 +21611,29 @@
     "profile_url_ufc": "https://www.ufc.com/athlete/sebastian-szalay",
     "status": "Active",
     "id": "2d408922-2f36-44f4-b04d-b1877fe21e86"
+  },
+  {
+    "name": "Sulangrangbo",
+    "profile_url_ufc": "https://www.ufc.com/athlete/sulang-rangbo",
+    "status": "Active",
+    "id": "8c26d7bf-3828-4b59-b483-f25e1aa0c179"
+  },
+  {
+    "name": "Keiichiro Nakamura",
+    "profile_url_ufc": "https://www.ufc.com/athlete/keiichiro-nakamura",
+    "status": "Active",
+    "id": "c005ea57-ac09-40c8-85e2-e3fe1f134fb8"
+  },
+  {
+    "name": "Dom Mar Fan",
+    "profile_url_ufc": "https://www.ufc.com/athlete/dom-mar-fan",
+    "status": "Active",
+    "id": "e75d26ad-ddec-41f1-b695-b05d8c16fb9c"
+  },
+  {
+    "name": "Lawrence Lui",
+    "profile_url_ufc": "https://www.ufc.com/athlete/lawrence-lui",
+    "status": "Active",
+    "id": "8ade19bb-bd9f-432a-af73-9f8f35d71708"
   }
 ]

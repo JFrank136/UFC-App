@@ -1,3 +1,6 @@
+/* =====================
+   Betting Card
+   ===================== */
 .bettingCard {
   background: var(--betting-bg);
   border: 1px solid var(--betting-border);
@@ -6,12 +9,12 @@
   transition: all 0.3s ease;
 }
 
-:global(.dark) .bettingCard {
+[data-theme="dark"] .bettingCard {
   --betting-bg: rgba(255, 215, 0, 0.05);
   --betting-border: rgba(255, 215, 0, 0.2);
 }
 
-:global(.light) .bettingCard {
+[data-theme="light"] .bettingCard {
   --betting-bg: rgba(255, 255, 255, 0.8);
   --betting-border: rgba(0, 0, 0, 0.1);
 }
@@ -25,11 +28,11 @@
   border-bottom: 1px solid var(--betting-border);
 }
 
-:global(.dark) .bettingCardHeader {
+[data-theme="dark"] .bettingCardHeader {
   --betting-header-bg: rgba(255, 215, 0, 0.1);
 }
 
-:global(.light) .bettingCardHeader {
+[data-theme="light"] .bettingCardHeader {
   --betting-header-bg: rgba(0, 0, 0, 0.03);
 }
 
@@ -40,11 +43,11 @@
   font-weight: 600;
 }
 
-:global(.dark) .bettingCardHeader h5 {
+[data-theme="dark"] .bettingCardHeader h5 {
   --betting-title-color: #FFD700;
 }
 
-:global(.light) .bettingCardHeader h5 {
+[data-theme="light"] .bettingCardHeader h5 {
   --betting-title-color: #1a1a1a;
 }
 
@@ -67,13 +70,13 @@
   justify-content: center;
 }
 
-:global(.dark) .navBtn {
+[data-theme="dark"] .navBtn {
   --nav-btn-bg: rgba(255, 215, 0, 0.1);
   --nav-btn-border: rgba(255, 215, 0, 0.3);
   --nav-btn-color: #FFD700;
 }
 
-:global(.light) .navBtn {
+[data-theme="light"] .navBtn {
   --nav-btn-bg: rgba(0, 0, 0, 0.05);
   --nav-btn-border: rgba(0, 0, 0, 0.1);
   --nav-btn-color: #1a1a1a;
@@ -84,11 +87,11 @@
   transform: scale(1.1);
 }
 
-:global(.dark) .navBtn:hover {
+[data-theme="dark"] .navBtn:hover {
   --nav-btn-hover: rgba(255, 215, 0, 0.2);
 }
 
-:global(.light) .navBtn:hover {
+[data-theme="light"] .navBtn:hover {
   --nav-btn-hover: rgba(0, 0, 0, 0.1);
 }
 
@@ -103,7 +106,9 @@
   padding: 1.5rem;
 }
 
-/* Details Page */
+/* =====================
+   Details Page
+   ===================== */
 .detailsPage {
   display: flex;
   flex-direction: column;
@@ -120,12 +125,12 @@
   border: 1px solid var(--header-card-border);
 }
 
-:global(.dark) .fighterHeaderCard {
+[data-theme="dark"] .fighterHeaderCard {
   --header-card-bg: rgba(255, 215, 0, 0.05);
   --header-card-border: rgba(255, 215, 0, 0.2);
 }
 
-:global(.light) .fighterHeaderCard {
+[data-theme="light"] .fighterHeaderCard {
   --header-card-bg: rgba(0, 0, 0, 0.02);
   --header-card-border: rgba(0, 0, 0, 0.05);
 }
@@ -139,11 +144,11 @@
   border: 2px solid var(--image-border);
 }
 
-:global(.dark) .fighterHeaderCard img {
+[data-theme="dark"] .fighterHeaderCard img {
   --image-border: rgba(255, 215, 0, 0.3);
 }
 
-:global(.light) .fighterHeaderCard img {
+[data-theme="light"] .fighterHeaderCard img {
   --image-border: rgba(0, 0, 0, 0.1);
 }
 
@@ -180,11 +185,11 @@
   font-weight: 600;
 }
 
-:global(.dark) .fighterRank {
+[data-theme="dark"] .fighterRank {
   --rank-color: #FFD700;
 }
 
-:global(.light) .fighterRank {
+[data-theme="light"] .fighterRank {
   --rank-color: #1a1a1a;
 }
 
@@ -204,12 +209,12 @@
   border: 1px solid var(--detail-row-border);
 }
 
-:global(.dark) .detailRow {
+[data-theme="dark"] .detailRow {
   --detail-row-bg: rgba(255, 215, 0, 0.03);
   --detail-row-border: rgba(255, 215, 0, 0.1);
 }
 
-:global(.light) .detailRow {
+[data-theme="light"] .detailRow {
   --detail-row-bg: rgba(0, 0, 0, 0.02);
   --detail-row-border: rgba(0, 0, 0, 0.05);
 }
@@ -226,15 +231,17 @@
   text-align: right;
 }
 
-:global(.dark) .detailRow .value {
+[data-theme="dark"] .detailRow .value {
   --detail-value-color: #FFD700;
 }
 
-:global(.light) .detailRow .value {
+[data-theme="light"] .detailRow .value {
   --detail-value-color: #1a1a1a;
 }
 
-/* Finish Rates Page */
+/* =====================
+   Finish Rates Page
+   ===================== */
 .finishRatesPage {
   display: flex;
   flex-direction: column;
@@ -251,12 +258,12 @@
   border: 1px solid var(--toggle-border);
 }
 
-:global(.dark) .finishViewToggle {
+[data-theme="dark"] .finishViewToggle {
   --toggle-bg: rgba(255, 215, 0, 0.05);
   --toggle-border: rgba(255, 215, 0, 0.2);
 }
 
-:global(.light) .finishViewToggle {
+[data-theme="light"] .finishViewToggle {
   --toggle-bg: rgba(0, 0, 0, 0.03);
   --toggle-border: rgba(0, 0, 0, 0.05);
 }
@@ -273,11 +280,11 @@
   min-width: 50px;
 }
 
-:global(.dark) .toggleBtn {
+[data-theme="dark"] .toggleBtn {
   --toggle-btn-color: rgba(255, 255, 255, 0.7);
 }
 
-:global(.light) .toggleBtn {
+[data-theme="light"] .toggleBtn {
   --toggle-btn-color: rgba(0, 0, 0, 0.7);
 }
 
@@ -285,11 +292,11 @@
   background: var(--toggle-btn-hover);
 }
 
-:global(.dark) .toggleBtn:hover:not(.active) {
+[data-theme="dark"] .toggleBtn:hover:not(.active) {
   --toggle-btn-hover: rgba(255, 215, 0, 0.1);
 }
 
-:global(.light) .toggleBtn:hover:not(.active) {
+[data-theme="light"] .toggleBtn:hover:not(.active) {
   --toggle-btn-hover: rgba(0, 0, 0, 0.05);
 }
 
@@ -299,12 +306,12 @@
   font-weight: 600;
 }
 
-:global(.dark) .toggleBtn.active {
+[data-theme="dark"] .toggleBtn.active {
   --toggle-btn-active: #FFD700;
   --toggle-btn-active-color: #000;
 }
 
-:global(.light) .toggleBtn.active {
+[data-theme="light"] .toggleBtn.active {
   --toggle-btn-active: #1a1a1a;
   --toggle-btn-active-color: #fff;
 }
@@ -325,12 +332,12 @@
   border: 1px solid var(--finish-stat-border);
 }
 
-:global(.dark) .finishStatItem {
+[data-theme="dark"] .finishStatItem {
   --finish-stat-bg: rgba(255, 215, 0, 0.05);
   --finish-stat-border: rgba(255, 215, 0, 0.2);
 }
 
-:global(.light) .finishStatItem {
+[data-theme="light"] .finishStatItem {
   --finish-stat-bg: rgba(0, 0, 0, 0.02);
   --finish-stat-border: rgba(0, 0, 0, 0.05);
 }
@@ -346,15 +353,17 @@
   color: var(--finish-percentage-color);
 }
 
-:global(.dark) .finishPercentage {
+[data-theme="dark"] .finishPercentage {
   --finish-percentage-color: #FFD700;
 }
 
-:global(.light) .finishPercentage {
+[data-theme="light"] .finishPercentage {
   --finish-percentage-color: #1a1a1a;
 }
 
-/* Stats Page */
+/* =====================
+   Stats Page
+   ===================== */
 .statsPage {
   display: flex;
   flex-direction: column;
@@ -394,12 +403,12 @@
   border: 1px solid var(--stat-item-border);
 }
 
-:global(.dark) .statItem {
+[data-theme="dark"] .statItem {
   --stat-item-bg: rgba(255, 215, 0, 0.03);
   --stat-item-border: rgba(255, 215, 0, 0.1);
 }
 
-:global(.light) .statItem {
+[data-theme="light"] .statItem {
   --stat-item-bg: rgba(0, 0, 0, 0.02);
   --stat-item-border: rgba(0, 0, 0, 0.05);
 }
@@ -412,17 +421,20 @@
 .statValue {
   font-weight: 600;
   color: var(--stat-value-color);
+  font-size: 0.9rem;
 }
 
-:global(.dark) .statValue {
+[data-theme="dark"] .statValue {
   --stat-value-color: #FFD700;
 }
 
-:global(.light) .statValue {
+[data-theme="light"] .statValue {
   --stat-value-color: #1a1a1a;
 }
 
-/* Fight History Page */
+/* =====================
+   Fight History Page
+   ===================== */
 .fightHistoryPage {
   display: flex;
   flex-direction: column;
@@ -439,11 +451,11 @@
   transition: all 0.3s ease;
 }
 
-:global(.dark) .historyFightResult {
+[data-theme="dark"] .historyFightResult {
   --history-bg: rgba(255, 255, 255, 0.02);
 }
 
-:global(.light) .historyFightResult {
+[data-theme="light"] .historyFightResult {
   --history-bg: rgba(0, 0, 0, 0.02);
 }
 
@@ -523,7 +535,9 @@
   padding: 2rem;
 }
 
-/* Mobile Responsive */
+/* =====================
+   Responsive
+   ===================== */
 @media (max-width: 768px) {
   .fighterHeaderCard {
     flex-direction: row;
@@ -604,9 +618,7 @@
     flex-direction: column;
     gap: 0.1rem;
   }
-}
 
-@media (max-width: 480px) {
   .bettingCardHeader {
     padding: 0.75rem 1rem;
   }

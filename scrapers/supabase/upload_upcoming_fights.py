@@ -2,7 +2,6 @@ import os
 import sys
 import json
 import time
-from uuid import uuid4
 from pathlib import Path
 
 import requests
@@ -82,7 +81,31 @@ def http_request_with_retry(method, url, headers, params=None, json_body=None, t
     return None
 
 
-def flush_batch(supabase_url, headers, batch):
+def flush_upsert_batch(supabase_url, headers, batch):
+    """Upsert fights where both fighter IDs are present - updates existing rows via stable unique index."""
+    if not batch:
+        return 0
+
+    url = f"{supabase_url}/rest/v1/upcoming_fights"
+    h = dict(headers)
+    h["Prefer"] = "resolution=merge-duplicates,return=minimal"
+
+    resp = http_request_with_retry(
+        "POST", url, headers=h, json_body=batch,
+        params={"on_conflict": "fighter_pair,event_date"}
+    )
+
+    if resp is None:
+        raise RuntimeError("No response from Supabase on batch upsert.")
+
+    if resp.status_code not in (200, 201, 204):
+        raise RuntimeError(f"Batch upsert failed: HTTP {resp.status_code} :: {resp.text[:1000]}")
+
+    return len(batch)
+
+
+def flush_insert_batch(supabase_url, headers, batch):
+    """Plain insert for fights missing one or both fighter IDs - can't upsert without a reliable match key."""
     if not batch:
         return 0
 
@@ -101,8 +124,42 @@ def flush_batch(supabase_url, headers, batch):
     return len(batch)
 
 
+def mark_past_fights(supabase_url, headers):
+    """Update any DB rows where event_date is before today but status is still 'upcoming' or 'tbd'."""
+    from datetime import date
+    today = date.today().isoformat()
+
+    print(f"Marking fights before {today} as 'past'...")
+
+    url = f"{supabase_url}/rest/v1/upcoming_fights"
+    h = dict(headers)
+    h["Prefer"] = "return=minimal"
+
+    # Target rows where event_date < today AND status is not already 'past'
+    params = {
+        "event_date": f"lt.{today}",
+        "event_status": "neq.past",
+    }
+
+    resp = http_request_with_retry(
+        "PATCH", url, headers=h,
+        params=params,
+        json_body={"event_status": "past"}
+    )
+
+    if resp is None:
+        print("  Warning: No response when marking past fights - skipping")
+        return
+
+    if resp.status_code not in (200, 201, 204):
+        print(f"  Warning: Failed to mark past fights (HTTP {resp.status_code}) - skipping")
+        return
+
+    print("  Done marking past fights")
+
+
 def main():
-    print("🥊 Uploading upcoming fights (HTTPS)...")
+    print("Uploading upcoming fights (HTTPS)...")
 
     # Load .env from project root
     env_path = Path(__file__).resolve().parent.parent.parent / ".env"
@@ -112,52 +169,43 @@ def main():
     headers = sb_headers()
 
     if not supabase_url:
-        print("❌ Missing SUPABASE_URL (or could not derive it). Add SUPABASE_URL to your .env.")
+        print("Missing SUPABASE_URL (or could not derive it). Add SUPABASE_URL to your .env.")
         sys.exit(1)
 
     if not headers:
-        print("❌ Missing SUPABASE_SERVICE_ROLE_KEY (recommended) or SUPABASE_ANON_KEY in your .env.")
+        print("Missing SUPABASE_SERVICE_ROLE_KEY (recommended) or SUPABASE_ANON_KEY in your .env.")
         sys.exit(1)
 
+    # Mark any fights with a past event_date as "past" before uploading
+    mark_past_fights(supabase_url, headers)
+
     if not os.path.exists(UPCOMING_FIGHTS_PATH):
-        print(f"❌ Upcoming fights file not found: {UPCOMING_FIGHTS_PATH}")
+        print(f"Upcoming fights file not found: {UPCOMING_FIGHTS_PATH}")
         sys.exit(1)
 
     try:
         with open(UPCOMING_FIGHTS_PATH, "r", encoding="utf-8") as f:
             fights = json.load(f)
-        print(f"📊 Loaded {len(fights):,} upcoming fights")
+        print(f"Loaded {len(fights):,} fights")
     except Exception as e:
-        print(f"❌ Failed to load upcoming fights file: {e}")
+        print(f"Failed to load upcoming fights file: {e}")
         sys.exit(1)
-
-    # Clear table (matches old TRUNCATE intent)
-    print("⚠️ Clearing upcoming_fights from Supabase (REST delete all)...")
-    delete_url = f"{supabase_url}/rest/v1/upcoming_fights"
-    delete_params = {"id": "not.is.null"}
-    resp = http_request_with_retry("DELETE", delete_url, headers=headers, params=delete_params)
-    if resp is None:
-        print("❌ Delete request failed (no response).")
-        sys.exit(1)
-    if resp.status_code not in (200, 204):
-        print(f"❌ Delete failed: HTTP {resp.status_code}")
-        print(resp.text[:1000])
-        sys.exit(1)
-    print("✅ upcoming_fights cleared")
 
     total = len(fights)
     processed = 0
+    upserted = 0
     inserted = 0
     skipped = 0
-    batch = []
+    upsert_batch = []  # fights with both IDs - safe to upsert against unique index
+    insert_batch = []  # fights missing an ID - plain insert only
 
-    print(f"📤 Processing {total:,} fights in batches of {BATCH_SIZE:,}...")
+    print(f"Processing {total:,} fights in batches of {BATCH_SIZE:,}...")
 
     try:
         for fight in fights:
             processed += 1
 
-            # Allow partial UUIDs — only skip if both are missing
+            # Allow partial UUIDs - only skip if both are missing
             fighter1_id = fight.get("fighter1_id") or fight.get("uuid1")
             fighter2_id = fight.get("fighter2_id") or fight.get("uuid2")
 
@@ -168,11 +216,11 @@ def main():
                 continue
 
             row = {
-                "id": str(uuid4()),
                 "event": fight.get("event"),
                 "event_type": fight.get("event_type"),
                 "event_date": fight.get("event_date"),
                 "event_time": fight.get("event_time"),
+                "event_status": fight.get("event_status", "upcoming"),
                 "venue": fight.get("venue"),
                 "location": fight.get("location"),
                 "fight_card_image_url": fight.get("fight_card_image_url"),
@@ -187,33 +235,42 @@ def main():
                 "scraped_at": fight.get("scraped_at"),
             }
 
-            batch.append(row)
-
-            if len(batch) >= BATCH_SIZE:
-                inserted += flush_batch(supabase_url, headers, batch)
-                batch = []
+            if fighter1_id and fighter2_id:
+                upsert_batch.append(row)
+                if len(upsert_batch) >= BATCH_SIZE:
+                    upserted += flush_upsert_batch(supabase_url, headers, upsert_batch)
+                    upsert_batch = []
+            else:
+                insert_batch.append(row)
+                if len(insert_batch) >= BATCH_SIZE:
+                    inserted += flush_insert_batch(supabase_url, headers, insert_batch)
+                    insert_batch = []
 
             if processed % 100 == 0 or processed == total:
                 print_progress(processed, total)
 
-        if batch:
-            inserted += flush_batch(supabase_url, headers, batch)
+        # Flush remaining batches
+        if upsert_batch:
+            upserted += flush_upsert_batch(supabase_url, headers, upsert_batch)
+        if insert_batch:
+            inserted += flush_insert_batch(supabase_url, headers, insert_batch)
 
     except KeyboardInterrupt:
-        print("\n⚠️ Upload interrupted by user")
+        print("\nUpload interrupted by user")
         sys.exit(1)
     except Exception as e:
-        print(f"\n❌ Upcoming fights upload failed: {e}")
+        print(f"\nUpcoming fights upload failed: {e}")
         sys.exit(1)
 
     print("\n" + "=" * 60)
-    print("📊 UPCOMING FIGHTS UPLOAD SUMMARY (HTTPS)")
+    print("UPCOMING FIGHTS UPLOAD SUMMARY (HTTPS)")
     print("=" * 60)
     print(f"Total fights processed:   {processed:,}")
-    print(f"Successfully inserted:    {inserted:,}")
+    print(f"Upserted (stable IDs):    {upserted:,}")
+    print(f"Inserted (partial IDs):   {inserted:,}")
     print(f"Skipped (no UUIDs):       {skipped:,}")
     print("=" * 60)
-    print("✅ Upload completed!")
+    print("Upload completed!")
 
 
 if __name__ == "__main__":

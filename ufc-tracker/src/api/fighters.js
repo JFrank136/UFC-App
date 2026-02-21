@@ -125,6 +125,23 @@ export async function removeFavorite(id) {
   }
 }
 
+// Update priority on an existing favorite row
+export async function updateFavoritePriority({ id, priority }) {
+  const { data, error } = await supabase
+    .from("user_favorites")
+    .update({ priority })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error updating favorite priority:", error);
+    throw error;
+  }
+
+  return data;
+}
+
 // Get all favorites for a user (for upcoming fights)
 export async function getAllFavoritesForUser(user) {
   const { data, error } = await supabase

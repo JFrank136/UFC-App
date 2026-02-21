@@ -118,20 +118,27 @@ const EventCard = ({
   };
 
   const groupFightsBySection = (fights) => {
-    return fights.reduce((acc, fight) => {
+    const grouped = fights.reduce((acc, fight) => {
+      const raw = fight.card_section || '';
       let section;
-      if (fight.card_section === 'Main') {
+      if (raw === 'Main Card' || raw === 'Main' || raw === 'Main Event' || raw === 'Co-Main') {
         section = 'Main Card';
-      } else if (fight.card_section === 'Prelim') {
+      } else if (raw === 'Preliminary Card' || raw === 'Prelim' || raw === 'Prelims') {
         section = 'Preliminary Card';
       } else {
         section = 'Early Prelims';
       }
-      
       if (!acc[section]) acc[section] = [];
       acc[section].push(fight);
       return acc;
     }, {});
+
+    // Sort fights within each section by fight_order descending (main event first)
+    Object.keys(grouped).forEach(section => {
+      grouped[section].sort((a, b) => (b.fight_order || 0) - (a.fight_order || 0));
+    });
+
+    return grouped;
   };
 
   const mainEvent = getMainEvent(eventData.fights);
@@ -151,7 +158,7 @@ const EventCard = ({
             <div className={styles.eventTitleContainer}>
               <h2 className={styles.eventTitle}>{eventData.info.name}</h2>
               {eventIsPPV && <span className={styles.ppvBadge}>PPV</span>}
-              {isChampionship && <span className={styles.championshipBadge}>👑 TITLE</span>}
+              {isChampionship && <span className={styles.championshipBadge}>ðŸ‘‘ TITLE</span>}
             </div>
             
             <div className={styles.eventMeta}>

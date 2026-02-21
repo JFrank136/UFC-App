@@ -365,19 +365,7 @@ def inject_new_ufc_roster_entries(output_file="data/ufc_fighters_raw.json"):
             json.dump(details_entries, df, indent=2, ensure_ascii=False)
         print(f"   • {details_retry_file}")
 
-        # Also prepare retry file for Sherdog (deduplicated)
-        sherdog_retry_file = "data/errors/sherdog_failures.json"
-        sherdog_entries = [
-            {
-                "name": entry["name"],
-                "reason": "not found in search"
-            }
-            for entry in filtered_errors  # Use filtered errors to avoid duplicates
-        ]
-        
-        with open(sherdog_retry_file, "w", encoding="utf-8") as sf:
-            json.dump(sherdog_entries, sf, indent=2, ensure_ascii=False)
-        print(f"   • {sherdog_retry_file}")
+
         
         print(f"🎯 Final error file contains {len(filtered_errors)} unresolved fighters")
 

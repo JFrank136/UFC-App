@@ -6,12 +6,12 @@
   background: var(--fight-card-bg);
 }
 
-:global(.dark) .fightCard {
+[data-theme="dark"] .fightCard {
   --fight-card-bg: rgba(255, 255, 255, 0.02);
   --border-color: rgba(255, 255, 255, 0.05);
 }
 
-:global(.light) .fightCard {
+[data-theme="light"] .fightCard {
   --fight-card-bg: rgba(255, 255, 255, 0.5);
   --border-color: rgba(0, 0, 0, 0.05);
 }
@@ -25,11 +25,11 @@
   background: var(--fight-hover);
 }
 
-:global(.dark) .fightCard:hover {
+[data-theme="dark"] .fightCard:hover {
   --fight-hover: rgba(255, 215, 0, 0.03);
 }
 
-:global(.light) .fightCard:hover {
+[data-theme="light"] .fightCard:hover {
   --fight-hover: rgba(0, 0, 0, 0.02);
 }
 
@@ -46,11 +46,11 @@
   padding: 2rem;
 }
 
-:global(.dark) .fightCard.errorCard {
+[data-theme="dark"] .fightCard.errorCard {
   --error-bg: rgba(239, 68, 68, 0.1);
 }
 
-:global(.light) .fightCard.errorCard {
+[data-theme="light"] .fightCard.errorCard {
   --error-bg: rgba(239, 68, 68, 0.05);
 }
 
@@ -107,11 +107,11 @@
   border: 2px solid var(--image-border);
 }
 
-:global(.dark) .fighterSummary img {
+[data-theme="dark"] .fighterSummary img {
   --image-border: rgba(255, 215, 0, 0.3);
 }
 
-:global(.light) .fighterSummary img {
+[data-theme="light"] .fighterSummary img {
   --image-border: rgba(255, 215, 0, 0.4);
 }
 
@@ -146,11 +146,11 @@
   color: var(--vs-color);
 }
 
-:global(.dark) .fightVs .vs {
+[data-theme="dark"] .fightVs .vs {
   --vs-color: #FFD700;
 }
 
-:global(.light) .fightVs .vs {
+[data-theme="light"] .fightVs .vs {
   --vs-color: #1a1a1a;
 }
 
@@ -174,13 +174,13 @@
   opacity: 0.7;
 }
 
-:global(.dark) .fightExpandBtn {
+[data-theme="dark"] .fightExpandBtn {
   --expand-bg: rgba(255, 215, 0, 0.1);
   --expand-border: rgba(255, 215, 0, 0.3);
   --expand-color: #FFD700;
 }
 
-:global(.light) .fightExpandBtn {
+[data-theme="light"] .fightExpandBtn {
   --expand-bg: rgba(0, 0, 0, 0.05);
   --expand-border: rgba(0, 0, 0, 0.1);
   --expand-color: #1a1a1a;
@@ -191,11 +191,11 @@
   background: var(--expand-hover);
 }
 
-:global(.dark) .fightExpandBtn:hover {
+[data-theme="dark"] .fightExpandBtn:hover {
   --expand-hover: rgba(255, 215, 0, 0.2);
 }
 
-:global(.light) .fightExpandBtn:hover {
+[data-theme="light"] .fightExpandBtn:hover {
   --expand-hover: rgba(0, 0, 0, 0.1);
 }
 
@@ -206,11 +206,11 @@
   background: var(--details-bg);
 }
 
-:global(.dark) .fightDetails {
+[data-theme="dark"] .fightDetails {
   --details-bg: rgba(0, 0, 0, 0.1);
 }
 
-:global(.light) .fightDetails {
+[data-theme="light"] .fightDetails {
   --details-bg: rgba(0, 0, 0, 0.02);
 }
 
@@ -233,11 +233,11 @@
   opacity: 0.6;
 }
 
-:global(.dark) .vsDivider svg {
+[data-theme="dark"] .vsDivider svg {
   --divider-icon-color: #FFD700;
 }
 
-:global(.light) .vsDivider svg {
+[data-theme="light"] .vsDivider svg {
   --divider-icon-color: #1a1a1a;
 }
 
