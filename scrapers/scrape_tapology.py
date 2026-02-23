@@ -1005,6 +1005,43 @@ def save_progress(data, filepath=OUTPUT_FILE, use_lock=True):
     else:
         _save()
 
+def save_progress_merge(new_results, filepath=OUTPUT_FILE, use_lock=True):
+    """Thread-safe save that merges new_results into existing file by fighter id.
+    Fighters that failed to scrape this session retain their previous data.
+    """
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+    def _merge_save():
+        try:
+            try:
+                with open(filepath, "r", encoding="utf-8") as f:
+                    existing = json.load(f)
+            except FileNotFoundError:
+                existing = []
+
+            existing_by_id = {r.get("id"): i for i, r in enumerate(existing) if r.get("id")}
+
+            for r in new_results:
+                r_id = r.get("id")
+                if r_id and r_id in existing_by_id:
+                    existing[existing_by_id[r_id]] = r
+                else:
+                    existing.append(r)
+                    if r_id:
+                        existing_by_id[r_id] = len(existing) - 1
+
+            with open(filepath, "w", encoding="utf-8") as f:
+                json.dump(existing, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f" Error saving merged data: {e}")
+
+    if use_lock:
+        with session_manager.lock:
+            _merge_save()
+    else:
+        _merge_save()
+
+
 def retry_failed_fighters():
     """Retry fighters from error file with enhanced name fixing"""
     print(" RETRY FAILED FIGHTERS")
@@ -1185,7 +1222,7 @@ def main():
                         results.append(fighter_data)
                         # Save progress every 25 successful scrapes
                         if len(results) % 25 == 0:
-                            save_progress(results)
+                            save_progress_merge(results)
                     
                     if failure:
                         failures.append(failure)
@@ -1215,7 +1252,7 @@ def main():
                     results.append(fighter_data)
                     # Save progress every 5 fighters in sequential mode
                     if len(results) % 5 == 0:
-                        save_progress(results)
+                        save_progress_merge(results)
                 
                 if failure:
                     failures.append(failure)
@@ -1234,7 +1271,7 @@ def main():
                 print_progress_bar(idx, len(fighters_to_process), "Processing")
     
     # Final save
-    save_progress(results)
+    save_progress_merge(results)
     
     # Save failures
     if failures:

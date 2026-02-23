@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Crown, TrendingUp, Calendar, Sun, Moon, Filter, Search, X, Zap, Shield, BarChart3 } from 'lucide-react';
+import { Crown, TrendingUp, Calendar, Sun, Moon, Filter, Search, X } from 'lucide-react';
 import supabase from '../api/supabaseClient';
 import countryCodes from '../utils/countryCodes';
-import { parseRankChange, formatStat, DIVISIONS, P4P_DIVISIONS } from '../utils/rankingsHelpers';
+import { parseRankChange, DIVISIONS, P4P_DIVISIONS } from '../utils/rankingsHelpers';
 import { RankChangeIcon, FightModal } from '../components/RankingsComponents';
 import { formatDate } from '../utils/eventHelpers';
 import styles from '../styles/Rankings.module.css';

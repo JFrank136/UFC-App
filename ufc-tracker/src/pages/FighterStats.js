@@ -3,7 +3,6 @@ import { Sun, Moon } from 'lucide-react';
 import supabase from '../api/supabaseClient';
 import styles from '../styles/FighterStats.module.css';
 import countryCodes from '../utils/countryCodes';
-import { DIVISIONS } from '../utils/rankingsHelpers';
 
 // Weight class order for display (lightest to heaviest, women's after men's)
 const WEIGHT_CLASS_ORDER = [
