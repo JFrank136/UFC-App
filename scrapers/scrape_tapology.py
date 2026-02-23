@@ -127,6 +127,19 @@ def clean_fighter_name(raw_name):
     cleaned = re.sub(r'\s+', ' ', cleaned).strip()
     return cleaned if 2 <= len(cleaned) <= 50 else None
 
+US_STATES = {
+    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
+    "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
+    "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
+    "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+    "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada",
+    "New Hampshire", "New Jersey", "New Mexico", "New York",
+    "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
+    "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
+    "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
+    "West Virginia", "Wisconsin", "Wyoming", "District of Columbia",
+}
+
 def extract_fighter_data(soup, debug=False, fighter_id=None):
     """Extract specific fighter data fields from Tapology's HTML structure"""
     page_text = soup.get_text()
@@ -177,11 +190,19 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
         match = re.search(pattern, page_text, re.IGNORECASE)
         if match:
             value = match.group(1).strip()
-            if field == 'country' and ',' in value:
-                # Take the last part (usually country)
-                data[field] = value.split(',')[-1].strip()
-            elif field == 'country' and value.lower() == 'lagos':
-                data[field] = 'Nigeria'  # Special case
+            if field == 'country':
+                if ',' in value:
+                    last_part = value.split(',')[-1].strip()
+                    if last_part in US_STATES:
+                        data[field] = 'United States'
+                    else:
+                        data[field] = last_part
+                elif value in US_STATES:
+                    data[field] = 'United States'
+                elif value.lower() == 'lagos':
+                    data[field] = 'Nigeria'
+                else:
+                    data[field] = value
             else:
                 data[field] = value
             if debug:
@@ -1375,12 +1396,50 @@ def scrape_manual_list():
     print(f"Total: {len(fighter_names)} | Scraped: {len(results)} | Failed: {len(failures)}")
 
 
+def update_past_event_statuses(fights_path):
+    """Flip any upcoming fights whose date has passed to 'past'. Returns count of changes."""
+    if not os.path.exists(fights_path):
+        return 0
+    try:
+        with open(fights_path, "r", encoding="utf-8") as f:
+            fights = json.load(f)
+    except Exception as e:
+        print(f"  WARNING: Could not load {fights_path}: {e}")
+        return 0
+
+    today = datetime.now().date()
+    changed = 0
+    for fight in fights:
+        if fight.get("event_status") == "upcoming":
+            event_date_str = fight.get("event_date", "")
+            try:
+                fight_date = datetime.strptime(event_date_str, "%Y-%m-%d").date()
+                if fight_date < today:
+                    fight["event_status"] = "past"
+                    changed += 1
+            except ValueError:
+                pass
+
+    if changed > 0:
+        with open(fights_path, "w", encoding="utf-8") as f:
+            json.dump(fights, f, indent=2, ensure_ascii=False)
+        print(f"  Updated {changed} fight(s) to 'past' status.")
+
+    return changed
+
+
 def scrape_recently_fought():
     """Re-scrape fighters who appeared in recent events based on upcoming_fights.json"""
     print(" RECENTLY FOUGHT MODE")
     print("=" * 60)
 
     UPCOMING_FIGHTS_PATH = "data/upcoming_fights.json"
+
+    # Update any past events before filtering
+    print("Checking for events that need status update...")
+    updated = update_past_event_statuses(UPCOMING_FIGHTS_PATH)
+    if updated == 0:
+        print("  No status changes needed.")
 
     # Get cutoff date from user
     print("Enter cutoff date (fighters from events on or after this date will be re-scraped)")

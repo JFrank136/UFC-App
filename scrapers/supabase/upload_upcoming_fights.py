@@ -105,7 +105,8 @@ def flush_upsert_batch(supabase_url, headers, batch):
 
 
 def flush_insert_batch(supabase_url, headers, batch):
-    """Plain insert for fights missing one or both fighter IDs - can't upsert without a reliable match key."""
+    """Plain insert for fights missing one or both fighter IDs - can't upsert without a reliable match key.
+    Falls back to row-by-row insertion on conflict to skip duplicates gracefully."""
     if not batch:
         return 0
 
@@ -118,10 +119,26 @@ def flush_insert_batch(supabase_url, headers, batch):
     if resp is None:
         raise RuntimeError("No response from Supabase on batch insert.")
 
-    if resp.status_code not in (200, 201, 204):
-        raise RuntimeError(f"Batch insert failed: HTTP {resp.status_code} :: {resp.text[:1000]}")
+    # If no conflict, done
+    if resp.status_code in (200, 201, 204):
+        return len(batch)
 
-    return len(batch)
+    # On 409 conflict, fall back to inserting one row at a time and skip duplicates
+    if resp.status_code == 409:
+        inserted = 0
+        for row in batch:
+            r = http_request_with_retry("POST", url, headers=h, json_body=[row])
+            if r is None:
+                continue
+            if r.status_code in (200, 201, 204):
+                inserted += 1
+            elif r.status_code == 409:
+                pass  # Already exists - skip silently
+            else:
+                raise RuntimeError(f"Batch insert failed: HTTP {r.status_code} :: {r.text[:1000]}")
+        return inserted
+
+    raise RuntimeError(f"Batch insert failed: HTTP {resp.status_code} :: {resp.text[:1000]}")
 
 
 def mark_past_fights(supabase_url, headers):
