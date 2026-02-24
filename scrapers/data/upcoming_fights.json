@@ -1,14 +1,14 @@
 [
   {
-    "event": "UFC Fight Night",
+    "event": "UFC Fight Night: Moicano vs. Duncan",
     "event_type": "Fight Night",
     "event_date": "2026-04-04",
     "event_time": "18:00",
     "event_status": "upcoming",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/138212/profile/HBu1PeBbgAIYso3.jpg?1771731310",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Moicano_vs._Duncan.jpg",
     "fighter1": "Thomas Petersen",
     "fighter2": "Guilherme Pat",
     "fighter1_id": "a264789e-ab21-4643-a22a-8bbfefee1d66",
@@ -16,18 +16,18 @@
     "fight_order": 3,
     "card_section": "Prelim",
     "weight_class": "265",
-    "scraped_at": "2026-02-21T03:13:23.689406+00:00"
+    "scraped_at": "2026-02-23T03:11:25.165175+00:00"
   },
   {
-    "event": "UFC Fight Night",
+    "event": "UFC Fight Night: Moicano vs. Duncan",
     "event_type": "Fight Night",
     "event_date": "2026-04-04",
     "event_time": "18:00",
     "event_status": "upcoming",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/138212/profile/HBu1PeBbgAIYso3.jpg?1771731310",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Moicano_vs._Duncan.jpg",
     "fighter1": "Tommy McMillen",
     "fighter2": "Manolo Zecchini",
     "fighter1_id": "d8795d2b-e2c2-4ba4-86e3-13a8edd0df35",
@@ -35,18 +35,18 @@
     "fight_order": 4,
     "card_section": "Prelim",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:13:23.693048+00:00"
+    "scraped_at": "2026-02-23T03:11:25.220681+00:00"
   },
   {
-    "event": "UFC Fight Night",
+    "event": "UFC Fight Night: Moicano vs. Duncan",
     "event_type": "Fight Night",
     "event_date": "2026-04-04",
     "event_time": "18:00",
     "event_status": "upcoming",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/138212/profile/HBu1PeBbgAIYso3.jpg?1771731310",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Moicano_vs._Duncan.jpg",
     "fighter1": "Azamat Bekoev",
     "fighter2": "Tresean Gore",
     "fighter1_id": "338f45e5-6e26-4efd-a3e0-c3c50a8811c2",
@@ -54,18 +54,18 @@
     "fight_order": 5,
     "card_section": "Prelim",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:13:23.698614+00:00"
+    "scraped_at": "2026-02-23T03:11:25.254535+00:00"
   },
   {
-    "event": "UFC Fight Night",
+    "event": "UFC Fight Night: Moicano vs. Duncan",
     "event_type": "Fight Night",
     "event_date": "2026-04-04",
     "event_time": "18:00",
     "event_status": "upcoming",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/138212/profile/HBu1PeBbgAIYso3.jpg?1771731310",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Moicano_vs._Duncan.jpg",
     "fighter1": "Dione Barbosa",
     "fighter2": "Melissa Gatto",
     "fighter1_id": "b1254f98-14f9-4e41-b9f2-ea54b23df018",
@@ -73,18 +73,18 @@
     "fight_order": 6,
     "card_section": "Prelim",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:13:23.702520+00:00"
+    "scraped_at": "2026-02-23T03:11:25.269510+00:00"
   },
   {
-    "event": "UFC Fight Night",
+    "event": "UFC Fight Night: Moicano vs. Duncan",
     "event_type": "Fight Night",
     "event_date": "2026-04-04",
     "event_time": "18:00",
     "event_status": "upcoming",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/138212/profile/HBu1PeBbgAIYso3.jpg?1771731310",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Moicano_vs._Duncan.jpg",
     "fighter1": "Alessandro Costa",
     "fighter2": "Stewart Nicoll",
     "fighter1_id": "d07479fd-47a4-47c9-bb89-2e8b2d3b19c6",
@@ -92,18 +92,18 @@
     "fight_order": 7,
     "card_section": "Prelim",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:13:23.712539+00:00"
+    "scraped_at": "2026-02-23T03:11:25.281132+00:00"
   },
   {
-    "event": "UFC Fight Night",
+    "event": "UFC Fight Night: Moicano vs. Duncan",
     "event_type": "Fight Night",
     "event_date": "2026-04-04",
     "event_time": "18:00",
     "event_status": "upcoming",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/138212/profile/HBu1PeBbgAIYso3.jpg?1771731310",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Moicano_vs._Duncan.jpg",
     "fighter1": "Hailey Cowan",
     "fighter2": "Alice Pereira",
     "fighter1_id": "ea04de37-4ffd-45f2-90e1-1352dd4104a3",
@@ -111,18 +111,18 @@
     "fight_order": 8,
     "card_section": "Prelim",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:13:23.716257+00:00"
+    "scraped_at": "2026-02-23T03:11:25.286160+00:00"
   },
   {
-    "event": "UFC Fight Night",
+    "event": "UFC Fight Night: Moicano vs. Duncan",
     "event_type": "Fight Night",
     "event_date": "2026-04-04",
     "event_time": "18:00",
     "event_status": "upcoming",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/138212/profile/HBu1PeBbgAIYso3.jpg?1771731310",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Moicano_vs._Duncan.jpg",
     "fighter1": "Virna Jandiroba",
     "fighter2": "Tabatha Ricci",
     "fighter1_id": "cbcd7f67-f4e7-4122-912f-4719099309a8",
@@ -130,7 +130,7 @@
     "fight_order": 10,
     "card_section": "Main Card",
     "weight_class": "115",
-    "scraped_at": "2026-02-21T03:13:23.732726+00:00"
+    "scraped_at": "2026-02-23T03:11:25.313288+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -168,7 +168,7 @@
     "fight_order": 4,
     "card_section": "Prelim",
     "weight_class": "205",
-    "scraped_at": "2026-02-21T03:12:22.038989+00:00"
+    "scraped_at": "2026-02-23T03:10:50.713733+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -206,7 +206,7 @@
     "fight_order": 5,
     "card_section": "Prelim",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:12:22.042411+00:00"
+    "scraped_at": "2026-02-23T03:10:50.718256+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -225,7 +225,7 @@
     "fight_order": 6,
     "card_section": "Prelim",
     "weight_class": "205",
-    "scraped_at": "2026-02-21T03:12:22.043877+00:00"
+    "scraped_at": "2026-02-23T03:10:50.722217+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -244,7 +244,7 @@
     "fight_order": 7,
     "card_section": "Prelim",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:12:22.045492+00:00"
+    "scraped_at": "2026-02-23T03:10:50.724373+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -263,7 +263,7 @@
     "fight_order": 8,
     "card_section": "Prelim",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:12:22.046952+00:00"
+    "scraped_at": "2026-02-23T03:10:50.726183+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -282,7 +282,7 @@
     "fight_order": 10,
     "card_section": "Main Card",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:12:22.049858+00:00"
+    "scraped_at": "2026-02-23T03:10:50.735950+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -301,7 +301,7 @@
     "fight_order": 11,
     "card_section": "Main Card",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:12:22.051823+00:00"
+    "scraped_at": "2026-02-23T03:10:50.744700+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -339,7 +339,7 @@
     "fight_order": 12,
     "card_section": "Co-Main",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:12:22.053514+00:00"
+    "scraped_at": "2026-02-23T03:10:50.761111+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -358,14 +358,14 @@
     "fight_order": 13,
     "card_section": "Main Event",
     "weight_class": "155",
-    "scraped_at": "2026-02-21T03:12:22.055369+00:00"
+    "scraped_at": "2026-02-23T03:10:50.765422+00:00"
   },
   {
     "event": "UFC Fight Night: Strickland vs. Hernandez",
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -384,7 +384,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -403,7 +403,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -422,7 +422,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -441,7 +441,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -460,7 +460,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136701/profile/20251202_051508.jpg?1764652618",
@@ -479,7 +479,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -498,7 +498,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -517,7 +517,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -536,7 +536,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -555,7 +555,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -574,7 +574,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -593,7 +593,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -612,7 +612,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -643,7 +643,7 @@
     "fight_order": 10,
     "card_section": "Main Card",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:15:13.980524+00:00"
+    "scraped_at": "2026-02-23T03:10:34.646923+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -662,7 +662,7 @@
     "fight_order": 11,
     "card_section": "Main Card",
     "weight_class": "205",
-    "scraped_at": "2026-02-21T03:15:13.991230+00:00"
+    "scraped_at": "2026-02-23T03:10:34.649113+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -681,7 +681,7 @@
     "fight_order": 8,
     "card_section": "Prelim",
     "weight_class": "155",
-    "scraped_at": "2026-02-21T03:15:13.971652+00:00"
+    "scraped_at": "2026-02-23T03:10:34.636675+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -700,14 +700,14 @@
     "fight_order": 12,
     "card_section": "Main Card",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:15:14.104620+00:00"
+    "scraped_at": "2026-02-23T03:10:34.650707+00:00"
   },
   {
     "event": "UFC Fight Night: Bautista vs. Oliveira",
     "event_type": "Fight Night",
     "event_date": "2026-02-07",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136782/profile/G_q_3-5WIAAP4Pr.jpg?1769526552",
@@ -726,7 +726,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-07",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136782/profile/G_q_3-5WIAAP4Pr.jpg?1769526552",
@@ -745,7 +745,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-07",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136782/profile/G_q_3-5WIAAP4Pr.jpg?1769526552",
@@ -764,7 +764,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-07",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136782/profile/G_q_3-5WIAAP4Pr.jpg?1769526552",
@@ -783,7 +783,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-07",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136782/profile/G_q_3-5WIAAP4Pr.jpg?1769526552",
@@ -802,7 +802,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-07",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136782/profile/G_q_3-5WIAAP4Pr.jpg?1769526552",
@@ -821,7 +821,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-07",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136782/profile/G_q_3-5WIAAP4Pr.jpg?1769526552",
@@ -840,7 +840,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-07",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136782/profile/G_q_3-5WIAAP4Pr.jpg?1769526552",
@@ -859,7 +859,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-07",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136782/profile/G_q_3-5WIAAP4Pr.jpg?1769526552",
@@ -878,7 +878,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-07",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136782/profile/G_q_3-5WIAAP4Pr.jpg?1769526552",
@@ -897,7 +897,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-07",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136782/profile/G_q_3-5WIAAP4Pr.jpg?1769526552",
@@ -916,7 +916,7 @@
     "event_type": "Fight Night",
     "event_date": "2026-02-07",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136782/profile/G_q_3-5WIAAP4Pr.jpg?1769526552",
@@ -966,7 +966,7 @@
     "fight_order": 3,
     "card_section": "Prelim",
     "weight_class": "205",
-    "scraped_at": "2026-02-21T03:11:56.226638+00:00"
+    "scraped_at": "2026-02-23T03:11:44.157519+00:00"
   },
   {
     "event": "UFC Fight Night: Adesanya vs. Pyfer",
@@ -985,7 +985,7 @@
     "fight_order": 4,
     "card_section": "Prelim",
     "weight_class": "155",
-    "scraped_at": "2026-02-21T03:11:56.227431+00:00"
+    "scraped_at": "2026-02-23T03:11:44.160934+00:00"
   },
   {
     "event": "UFC Fight Night: Adesanya vs. Pyfer",
@@ -1004,7 +1004,7 @@
     "fight_order": 5,
     "card_section": "Prelim",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:11:56.228273+00:00"
+    "scraped_at": "2026-02-23T03:11:44.165062+00:00"
   },
   {
     "event": "UFC Fight Night: Adesanya vs. Pyfer",
@@ -1023,7 +1023,7 @@
     "fight_order": 6,
     "card_section": "Prelim",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:11:56.229636+00:00"
+    "scraped_at": "2026-02-23T03:11:44.167825+00:00"
   },
   {
     "event": "UFC Fight Night: Adesanya vs. Pyfer",
@@ -1042,7 +1042,7 @@
     "fight_order": 7,
     "card_section": "Prelim",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:11:56.231051+00:00"
+    "scraped_at": "2026-02-23T03:11:44.171816+00:00"
   },
   {
     "event": "UFC Fight Night: Adesanya vs. Pyfer",
@@ -1061,7 +1061,7 @@
     "fight_order": 9,
     "card_section": "Main Card",
     "weight_class": "170",
-    "scraped_at": "2026-02-21T03:11:56.232613+00:00"
+    "scraped_at": "2026-02-23T03:11:44.178741+00:00"
   },
   {
     "event": "UFC Fight Night: Adesanya vs. Pyfer",
@@ -1080,7 +1080,7 @@
     "fight_order": 10,
     "card_section": "Main Card",
     "weight_class": "265",
-    "scraped_at": "2026-02-21T03:11:56.233345+00:00"
+    "scraped_at": "2026-02-23T03:11:44.181273+00:00"
   },
   {
     "event": "UFC Fight Night: Adesanya vs. Pyfer",
@@ -1099,7 +1099,7 @@
     "fight_order": 11,
     "card_section": "Main Card",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:11:56.234338+00:00"
+    "scraped_at": "2026-02-23T03:11:44.186648+00:00"
   },
   {
     "event": "UFC Fight Night: Adesanya vs. Pyfer",
@@ -1118,7 +1118,7 @@
     "fight_order": 12,
     "card_section": "Co-Main",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:11:56.235419+00:00"
+    "scraped_at": "2026-02-23T03:11:44.191053+00:00"
   },
   {
     "event": "UFC Fight Night: Adesanya vs. Pyfer",
@@ -1137,7 +1137,7 @@
     "fight_order": 13,
     "card_section": "Main Event",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:11:56.236802+00:00"
+    "scraped_at": "2026-02-23T03:11:44.193609+00:00"
   },
   {
     "event": "UFC 327",
@@ -1147,8 +1147,8 @@
     "event_status": "upcoming",
     "venue": "Kaseya Center",
     "location": "Miami, Florida, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/137847/profile/HBu1w15bgAIrtvd.jpg?1771731346",
+    "fight_card_image_local_path": "/fight_cards/UFC_327.jpg",
     "fighter1": "Kyle Daukaus",
     "fighter2": "Vicente Luque",
     "fighter1_id": "a1666267-9daf-4eb6-afa6-d22252c59174",
@@ -1156,7 +1156,7 @@
     "fight_order": 2,
     "card_section": "Prelim",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:12:37.236943+00:00"
+    "scraped_at": "2026-02-23T03:11:06.714627+00:00"
   },
   {
     "event": "UFC 327",
@@ -1166,8 +1166,8 @@
     "event_status": "upcoming",
     "venue": "Kaseya Center",
     "location": "Miami, Florida, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/137847/profile/HBu1w15bgAIrtvd.jpg?1771731346",
+    "fight_card_image_local_path": "/fight_cards/UFC_327.jpg",
     "fighter1": "Cub Swanson",
     "fighter2": "Nate Landwehr",
     "fighter1_id": "2d0667d7-539f-4bfc-9911-2a008afa3882",
@@ -1175,7 +1175,7 @@
     "fight_order": 3,
     "card_section": "Prelim",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:12:37.237816+00:00"
+    "scraped_at": "2026-02-23T03:11:06.722102+00:00"
   },
   {
     "event": "UFC 327",
@@ -1204,8 +1204,8 @@
     "event_status": "upcoming",
     "venue": "Kaseya Center",
     "location": "Miami, Florida, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/137847/profile/HBu1w15bgAIrtvd.jpg?1771731346",
+    "fight_card_image_local_path": "/fight_cards/UFC_327.jpg",
     "fighter1": "Azamat Murzakanov",
     "fighter2": "Paulo Costa",
     "fighter1_id": "38f069cb-f60b-4183-ae29-09739d41e376",
@@ -1213,7 +1213,7 @@
     "fight_order": 4,
     "card_section": "Main Card",
     "weight_class": "205",
-    "scraped_at": "2026-02-21T03:12:37.238612+00:00"
+    "scraped_at": "2026-02-23T03:11:06.731837+00:00"
   },
   {
     "event": "UFC 327",
@@ -1223,8 +1223,8 @@
     "event_status": "upcoming",
     "venue": "Kaseya Center",
     "location": "Miami, Florida, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/137847/profile/HBu1w15bgAIrtvd.jpg?1771731346",
+    "fight_card_image_local_path": "/fight_cards/UFC_327.jpg",
     "fighter1": "Tatiana Suarez",
     "fighter2": "Lupita Godinez",
     "fighter1_id": "a433c6e4-35d7-4d6c-b758-2f61be9489f1",
@@ -1232,7 +1232,7 @@
     "fight_order": 5,
     "card_section": "Main Card",
     "weight_class": "115",
-    "scraped_at": "2026-02-21T03:12:37.239412+00:00"
+    "scraped_at": "2026-02-23T03:11:06.738156+00:00"
   },
   {
     "event": "UFC 327",
@@ -1242,8 +1242,8 @@
     "event_status": "upcoming",
     "venue": "Kaseya Center",
     "location": "Miami, Florida, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/137847/profile/HBu1w15bgAIrtvd.jpg?1771731346",
+    "fight_card_image_local_path": "/fight_cards/UFC_327.jpg",
     "fighter1": "Dominick Reyes",
     "fighter2": "Johnny Walker",
     "fighter1_id": "038a5c9d-13b6-41f1-89ca-868e3e860c11",
@@ -1251,7 +1251,7 @@
     "fight_order": 6,
     "card_section": "Main Card",
     "weight_class": "205",
-    "scraped_at": "2026-02-21T03:12:37.240636+00:00"
+    "scraped_at": "2026-02-23T03:11:06.745239+00:00"
   },
   {
     "event": "UFC 325: Volkanovski vs. Lopes 2",
@@ -1517,7 +1517,7 @@
     "fight_order": 2,
     "card_section": "Prelim",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:13:37.804586+00:00"
+    "scraped_at": "2026-02-23T03:12:01.889954+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Kavanagh",
@@ -1536,7 +1536,7 @@
     "fight_order": 4,
     "card_section": "Prelim",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:13:37.809635+00:00"
+    "scraped_at": "2026-02-23T03:12:01.897263+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Kavanagh",
@@ -1555,7 +1555,7 @@
     "fight_order": 3,
     "card_section": "Prelim",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:13:37.807155+00:00"
+    "scraped_at": "2026-02-23T03:12:01.894445+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Kavanagh",
@@ -1574,7 +1574,7 @@
     "fight_order": 5,
     "card_section": "Prelim",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:13:37.811833+00:00"
+    "scraped_at": "2026-02-23T03:12:01.900668+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Kavanagh",
@@ -1593,7 +1593,7 @@
     "fight_order": 8,
     "card_section": "Main Card",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:13:37.818908+00:00"
+    "scraped_at": "2026-02-23T03:12:01.911149+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Kavanagh",
@@ -1612,7 +1612,7 @@
     "fight_order": 1,
     "card_section": "Prelim",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:13:37.802242+00:00"
+    "scraped_at": "2026-02-23T03:12:01.885388+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Kavanagh",
@@ -1631,7 +1631,7 @@
     "fight_order": 7,
     "card_section": "Prelim",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:13:37.816464+00:00"
+    "scraped_at": "2026-02-23T03:12:01.907602+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Kavanagh",
@@ -1650,7 +1650,7 @@
     "fight_order": 9,
     "card_section": "Main Card",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:13:37.821125+00:00"
+    "scraped_at": "2026-02-23T03:12:01.915609+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Kavanagh",
@@ -1669,7 +1669,7 @@
     "fight_order": 10,
     "card_section": "Main Card",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:13:37.823489+00:00"
+    "scraped_at": "2026-02-23T03:12:01.921788+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Kavanagh",
@@ -1688,7 +1688,7 @@
     "fight_order": 12,
     "card_section": "Co-Main",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:13:37.828649+00:00"
+    "scraped_at": "2026-02-23T03:12:01.933694+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Kavanagh",
@@ -1707,7 +1707,7 @@
     "fight_order": 11,
     "card_section": "Main Card",
     "weight_class": "155",
-    "scraped_at": "2026-02-21T03:13:37.826030+00:00"
+    "scraped_at": "2026-02-23T03:12:01.926003+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Kavanagh",
@@ -1726,7 +1726,7 @@
     "fight_order": 6,
     "card_section": "Prelim",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:13:37.814131+00:00"
+    "scraped_at": "2026-02-23T03:12:01.903970+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Almabayev",
@@ -1764,7 +1764,7 @@
     "fight_order": 4,
     "card_section": "Prelim",
     "weight_class": "115",
-    "scraped_at": "2026-02-21T03:11:13.805624+00:00"
+    "scraped_at": "2026-02-23T03:13:20.203891+00:00"
   },
   {
     "event": "UFC Fight Night: Emmett vs. Vallejos",
@@ -1783,7 +1783,7 @@
     "fight_order": 5,
     "card_section": "Prelim",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:11:13.809221+00:00"
+    "scraped_at": "2026-02-23T03:13:20.207582+00:00"
   },
   {
     "event": "UFC Fight Night: Emmett vs. Vallejos",
@@ -1821,7 +1821,7 @@
     "fight_order": 6,
     "card_section": "Prelim",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:11:13.811518+00:00"
+    "scraped_at": "2026-02-23T03:13:20.211947+00:00"
   },
   {
     "event": "UFC Fight Night: Emmett vs. Vallejos",
@@ -1837,10 +1837,10 @@
     "fighter2": "Montserrat Rendon",
     "fighter1_id": "7f022e13-6ca9-4171-8fb7-26c2849b544c",
     "fighter2_id": "38ddd69b-dada-4bc9-9697-727489f6f19d",
-    "fight_order": 7,
+    "fight_order": 8,
     "card_section": "Prelim",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:11:13.814241+00:00"
+    "scraped_at": "2026-02-23T03:13:20.219168+00:00"
   },
   {
     "event": "UFC Fight Night: Emmett vs. Vallejos",
@@ -1856,10 +1856,10 @@
     "fighter2": "Steven Asplund",
     "fighter1_id": "ef29f164-aa1d-4dd3-ab39-25a241382c40",
     "fighter2_id": "915e9fc2-560a-4092-a83d-5d9780c58eeb",
-    "fight_order": 9,
+    "fight_order": 10,
     "card_section": "Main Card",
     "weight_class": "265",
-    "scraped_at": "2026-02-21T03:11:13.820059+00:00"
+    "scraped_at": "2026-02-23T03:13:20.225054+00:00"
   },
   {
     "event": "UFC Fight Night: Emmett vs. Vallejos",
@@ -1875,10 +1875,10 @@
     "fighter2": "Myktybek Orolbai",
     "fighter1_id": "25a624e1-2ac6-4de6-8e5e-649c4c655259",
     "fighter2_id": "60631c99-ce2c-4163-ae90-bb3d0706f2ef",
-    "fight_order": 10,
+    "fight_order": 11,
     "card_section": "Main Card",
     "weight_class": "170",
-    "scraped_at": "2026-02-21T03:11:13.822274+00:00"
+    "scraped_at": "2026-02-23T03:13:20.228315+00:00"
   },
   {
     "event": "UFC Fight Night: Emmett vs. Vallejos",
@@ -1894,10 +1894,10 @@
     "fighter2": "Ion Cutelaba",
     "fighter1_id": "945ba467-2963-4bb2-a7d9-88b828279889",
     "fighter2_id": "556c2553-e624-43dc-9245-aec36248b0f3",
-    "fight_order": 11,
+    "fight_order": 12,
     "card_section": "Main Card",
     "weight_class": "205",
-    "scraped_at": "2026-02-21T03:11:13.825121+00:00"
+    "scraped_at": "2026-02-23T03:13:20.230667+00:00"
   },
   {
     "event": "UFC Fight Night: Emmett vs. Vallejos",
@@ -1913,10 +1913,10 @@
     "fighter2": "Eryk Anders",
     "fighter1_id": "1ccd4a2f-f4e5-4626-b1fe-bd64490e1fbb",
     "fighter2_id": "bfc79a9f-00ea-43b4-a173-cbfc40937088",
-    "fight_order": 12,
-    "card_section": "Main Card",
+    "fight_order": 7,
+    "card_section": "Prelim",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:11:13.827554+00:00"
+    "scraped_at": "2026-02-23T03:13:20.215859+00:00"
   },
   {
     "event": "UFC Fight Night: Emmett vs. Vallejos",
@@ -1954,7 +1954,7 @@
     "fight_order": 13,
     "card_section": "Main Card",
     "weight_class": "115",
-    "scraped_at": "2026-02-21T03:11:13.829587+00:00"
+    "scraped_at": "2026-02-23T03:13:20.235580+00:00"
   },
   {
     "event": "UFC Fight Night: Emmett vs. Vallejos",
@@ -1973,7 +1973,7 @@
     "fight_order": 14,
     "card_section": "Main Event",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:11:13.832027+00:00"
+    "scraped_at": "2026-02-23T03:13:20.238647+00:00"
   },
   {
     "event": "UFC Fight Night: Lopes vs. Silva",
@@ -2258,7 +2258,7 @@
     "fight_order": 1,
     "card_section": "Prelim",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:11:13.796896+00:00"
+    "scraped_at": "2026-02-23T03:13:20.193817+00:00"
   },
   {
     "event": "UFC Fight Night: Emmett vs. Vallejos",
@@ -2277,7 +2277,7 @@
     "fight_order": 2,
     "card_section": "Prelim",
     "weight_class": "155",
-    "scraped_at": "2026-02-21T03:11:13.799671+00:00"
+    "scraped_at": "2026-02-23T03:13:20.196884+00:00"
   },
   {
     "event": "UFC Fight Night: Emmett vs. Vallejos",
@@ -2296,7 +2296,7 @@
     "fight_order": 3,
     "card_section": "Prelim",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:11:13.802511+00:00"
+    "scraped_at": "2026-02-23T03:13:20.199847+00:00"
   },
   {
     "event": "UFC Fight Night: Emmett vs. Vallejos",
@@ -2312,10 +2312,10 @@
     "fighter2": "Charles Johnson",
     "fighter1_id": "baf44b15-1a19-4bdb-b833-136f314c7be7",
     "fighter2_id": "badca88a-0dbd-4d49-98c7-5dd18f87704c",
-    "fight_order": 8,
+    "fight_order": 9,
     "card_section": "Main Card",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:11:13.817256+00:00"
+    "scraped_at": "2026-02-23T03:13:20.222347+00:00"
   },
   {
     "event": "UFC Fight Night: Adesanya vs. Pyfer",
@@ -2334,7 +2334,7 @@
     "fight_order": 1,
     "card_section": "Prelim",
     "weight_class": "155",
-    "scraped_at": "2026-02-21T03:11:56.224402+00:00"
+    "scraped_at": "2026-02-23T03:11:44.150255+00:00"
   },
   {
     "event": "UFC Fight Night: Adesanya vs. Pyfer",
@@ -2353,7 +2353,7 @@
     "fight_order": 2,
     "card_section": "Prelim",
     "weight_class": "115",
-    "scraped_at": "2026-02-21T03:11:56.225608+00:00"
+    "scraped_at": "2026-02-23T03:11:44.154172+00:00"
   },
   {
     "event": "UFC Fight Night: Adesanya vs. Pyfer",
@@ -2372,7 +2372,7 @@
     "fight_order": 8,
     "card_section": "Main Card",
     "weight_class": "155",
-    "scraped_at": "2026-02-21T03:11:56.231711+00:00"
+    "scraped_at": "2026-02-23T03:11:44.175528+00:00"
   },
   {
     "event": "UFC Fight Night: Burns vs. Malott",
@@ -2391,7 +2391,7 @@
     "fight_order": 1,
     "card_section": "Prelim",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:12:06.030255+00:00"
+    "scraped_at": "2026-02-23T03:12:46.359043+00:00"
   },
   {
     "event": "UFC Fight Night: Burns vs. Malott",
@@ -2410,7 +2410,7 @@
     "fight_order": 2,
     "card_section": "Prelim",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:12:06.031635+00:00"
+    "scraped_at": "2026-02-23T03:12:46.365054+00:00"
   },
   {
     "event": "UFC Fight Night: Burns vs. Malott",
@@ -2429,7 +2429,7 @@
     "fight_order": 3,
     "card_section": "Prelim",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:12:06.033978+00:00"
+    "scraped_at": "2026-02-23T03:12:46.369496+00:00"
   },
   {
     "event": "UFC Fight Night: Burns vs. Malott",
@@ -2448,7 +2448,7 @@
     "fight_order": 4,
     "card_section": "Main Card",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:12:06.036378+00:00"
+    "scraped_at": "2026-02-23T03:12:46.374162+00:00"
   },
   {
     "event": "UFC Fight Night: Burns vs. Malott",
@@ -2467,7 +2467,7 @@
     "fight_order": 5,
     "card_section": "Main Event",
     "weight_class": "170",
-    "scraped_at": "2026-02-21T03:12:06.037687+00:00"
+    "scraped_at": "2026-02-23T03:12:46.379465+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -2486,7 +2486,7 @@
     "fight_order": 1,
     "card_section": "Prelim",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:12:22.033839+00:00"
+    "scraped_at": "2026-02-23T03:10:50.691927+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -2505,7 +2505,7 @@
     "fight_order": 2,
     "card_section": "Prelim",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:12:22.035687+00:00"
+    "scraped_at": "2026-02-23T03:10:50.706356+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -2524,7 +2524,7 @@
     "fight_order": 3,
     "card_section": "Prelim",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:12:22.037172+00:00"
+    "scraped_at": "2026-02-23T03:10:50.711644+00:00"
   },
   {
     "event": "UFC 326: Holloway vs. Oliveira 2",
@@ -2543,7 +2543,7 @@
     "fight_order": 9,
     "card_section": "Main Card",
     "weight_class": "155",
-    "scraped_at": "2026-02-21T03:12:22.048443+00:00"
+    "scraped_at": "2026-02-23T03:10:50.729085+00:00"
   },
   {
     "event": "UFC 327",
@@ -2553,8 +2553,8 @@
     "event_status": "upcoming",
     "venue": "Kaseya Center",
     "location": "Miami, Florida, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/137847/profile/HBu1w15bgAIrtvd.jpg?1771731346",
+    "fight_card_image_local_path": "/fight_cards/UFC_327.jpg",
     "fighter1": "Kevin Holland",
     "fighter2": "Randy Brown",
     "fighter1_id": "5b40088d-37d4-45f2-beab-6fe94acb2cba",
@@ -2562,7 +2562,7 @@
     "fight_order": 1,
     "card_section": "Prelim",
     "weight_class": "170",
-    "scraped_at": "2026-02-21T03:12:37.236034+00:00"
+    "scraped_at": "2026-02-23T03:11:06.702624+00:00"
   },
   {
     "event": "UFC 327",
@@ -2572,8 +2572,8 @@
     "event_status": "upcoming",
     "venue": "Kaseya Center",
     "location": "Miami, Florida, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/137847/profile/HBu1w15bgAIrtvd.jpg?1771731346",
+    "fight_card_image_local_path": "/fight_cards/UFC_327.jpg",
     "fighter1": "Joshua Van",
     "fighter2": "Tatsuro Taira",
     "fighter1_id": "b7383c43-a51f-43b1-a8f8-194e21d4286f",
@@ -2581,14 +2581,14 @@
     "fight_order": 7,
     "card_section": "Main Event",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:12:37.241678+00:00"
+    "scraped_at": "2026-02-23T03:11:06.751092+00:00"
   },
   {
     "event": "UFC Fight Night: Strickland vs. Hernandez",
     "event_type": "Fight Night",
     "event_date": "2026-02-21",
     "event_time": "17:00",
-    "event_status": "upcoming",
+    "event_status": "past",
     "venue": "Toyota Center",
     "location": "Houston, Texas, United States",
     "fight_card_image_url": "https://images.tapology.com/poster_images/136872/profile/HAGAkQmXEAENJJB.jpg?1769973958",
@@ -2603,15 +2603,15 @@
     "scraped_at": "2026-02-21T03:12:49.181901+00:00"
   },
   {
-    "event": "UFC Fight Night",
+    "event": "UFC Fight Night: Moicano vs. Duncan",
     "event_type": "Fight Night",
     "event_date": "2026-04-04",
     "event_time": "18:00",
     "event_status": "upcoming",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/138212/profile/HBu1PeBbgAIYso3.jpg?1771731310",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Moicano_vs._Duncan.jpg",
     "fighter1": "Rafael Estevam",
     "fighter2": "Ethyn Ewing",
     "fighter1_id": "cd078ca3-0eb7-4c5d-bd3b-0b5b66718fd2",
@@ -2619,18 +2619,18 @@
     "fight_order": 1,
     "card_section": "Prelim",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:13:23.666114+00:00"
+    "scraped_at": "2026-02-23T03:11:24.979149+00:00"
   },
   {
-    "event": "UFC Fight Night",
+    "event": "UFC Fight Night: Moicano vs. Duncan",
     "event_type": "Fight Night",
     "event_date": "2026-04-04",
     "event_time": "18:00",
     "event_status": "upcoming",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/138212/profile/HBu1PeBbgAIYso3.jpg?1771731310",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Moicano_vs._Duncan.jpg",
     "fighter1": "Robert Ruchała",
     "fighter2": "José Delano",
     "fighter1_id": "7441f890-9ba7-4a2c-9d7a-dce5ae33f858",
@@ -2638,18 +2638,18 @@
     "fight_order": 2,
     "card_section": "Prelim",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:13:23.676082+00:00"
+    "scraped_at": "2026-02-23T03:11:25.113045+00:00"
   },
   {
-    "event": "UFC Fight Night",
+    "event": "UFC Fight Night: Moicano vs. Duncan",
     "event_type": "Fight Night",
     "event_date": "2026-04-04",
     "event_time": "18:00",
     "event_status": "upcoming",
     "venue": "Meta APEX",
     "location": "Las Vegas, Nevada, United States",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "fight_card_image_url": "https://images.tapology.com/poster_images/138212/profile/HBu1PeBbgAIYso3.jpg?1771731310",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Moicano_vs._Duncan.jpg",
     "fighter1": "Edmen Shahbazyan",
     "fighter2": "Jun Yong Park",
     "fighter1_id": "73d6fd5c-cc80-474d-b3c1-57f26ac230b5",
@@ -2657,7 +2657,7 @@
     "fight_order": 9,
     "card_section": "Main Card",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:13:23.727219+00:00"
+    "scraped_at": "2026-02-23T03:11:25.302199+00:00"
   },
   {
     "event": "UFC Fight Night: Moreno vs. Kavanagh",
@@ -2676,7 +2676,7 @@
     "fight_order": 13,
     "card_section": "Main Event",
     "weight_class": "125",
-    "scraped_at": "2026-02-21T03:13:37.833162+00:00"
+    "scraped_at": "2026-02-23T03:12:01.938908+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -2695,7 +2695,7 @@
     "fight_order": 1,
     "card_section": "Prelim",
     "weight_class": "265",
-    "scraped_at": "2026-02-21T03:15:13.876021+00:00"
+    "scraped_at": "2026-02-23T03:10:34.608018+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -2714,7 +2714,7 @@
     "fight_order": 2,
     "card_section": "Prelim",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:15:13.895946+00:00"
+    "scraped_at": "2026-02-23T03:10:34.613565+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -2733,7 +2733,7 @@
     "fight_order": 3,
     "card_section": "Prelim",
     "weight_class": "155",
-    "scraped_at": "2026-02-21T03:15:13.905571+00:00"
+    "scraped_at": "2026-02-23T03:10:34.617226+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -2752,7 +2752,7 @@
     "fight_order": 4,
     "card_section": "Prelim",
     "weight_class": "185",
-    "scraped_at": "2026-02-21T03:15:13.928494+00:00"
+    "scraped_at": "2026-02-23T03:10:34.620957+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -2771,7 +2771,7 @@
     "fight_order": 5,
     "card_section": "Prelim",
     "weight_class": "265",
-    "scraped_at": "2026-02-21T03:15:13.937825+00:00"
+    "scraped_at": "2026-02-23T03:10:34.624503+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -2790,7 +2790,7 @@
     "fight_order": 6,
     "card_section": "Prelim",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:15:13.944631+00:00"
+    "scraped_at": "2026-02-23T03:10:34.629229+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -2809,7 +2809,7 @@
     "fight_order": 7,
     "card_section": "Prelim",
     "weight_class": "115",
-    "scraped_at": "2026-02-21T03:15:13.961820+00:00"
+    "scraped_at": "2026-02-23T03:10:34.632949+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -2828,7 +2828,7 @@
     "fight_order": 9,
     "card_section": "Main Card",
     "weight_class": "170",
-    "scraped_at": "2026-02-21T03:15:13.976411+00:00"
+    "scraped_at": "2026-02-23T03:10:34.641800+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -2847,7 +2847,7 @@
     "fight_order": 13,
     "card_section": "Co-Main",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:15:14.129745+00:00"
+    "scraped_at": "2026-02-23T03:10:34.652780+00:00"
   },
   {
     "event": "UFC Fight Night: Evloev vs. Murphy",
@@ -2866,18 +2866,18 @@
     "fight_order": 14,
     "card_section": "Main Event",
     "weight_class": "145",
-    "scraped_at": "2026-02-21T03:15:14.176130+00:00"
+    "scraped_at": "2026-02-23T03:10:34.665645+00:00"
   },
   {
-    "event": "UFC Fight Night",
+    "event": "UFC Fight Night: Brady vs. Buckley",
     "event_type": "Fight Night",
     "event_date": "2026-04-25",
     "event_time": "18:00",
     "event_status": "upcoming",
-    "venue": "N/A",
-    "location": "Enclosure:",
-    "fight_card_image_url": "https://images.tapology.com/logo_squares/1/icon_bw/UFC-Ultimate-Fighting-Championship-logo-square.jpg?1721405585",
-    "fight_card_image_local_path": null,
+    "venue": "Meta APEX",
+    "location": "Las Vegas, Nevada, United States",
+    "fight_card_image_url": "https://images.tapology.com/poster_images/140114/profile/SnapInsta.to_640328460_1480846760076303_7191114627960583728_n.jpg?1771733116",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Brady_vs._Buckley.jpg",
     "fighter1": "Norma Dumont",
     "fighter2": "Yana Santos",
     "fighter1_id": "1575d913-5c85-4a91-abf2-67d20e4127fc",
@@ -2885,6 +2885,44 @@
     "fight_order": 1,
     "card_section": "Main Card",
     "weight_class": "135",
-    "scraped_at": "2026-02-21T03:15:59.522267+00:00"
+    "scraped_at": "2026-02-23T03:13:35.863015+00:00"
+  },
+  {
+    "event": "UFC Fight Night: Moicano vs. Duncan",
+    "event_type": "Fight Night",
+    "event_date": "2026-04-04",
+    "event_time": "18:00",
+    "event_status": "upcoming",
+    "venue": "Meta APEX",
+    "location": "Las Vegas, Nevada, United States",
+    "fight_card_image_url": "https://images.tapology.com/poster_images/138212/profile/HBu1PeBbgAIYso3.jpg?1771731310",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Moicano_vs._Duncan.jpg",
+    "fighter1": "Renato Moicano",
+    "fighter2": "Chris Duncan",
+    "fighter1_id": "af927c40-765c-4cd2-8b06-5817181497c8",
+    "fighter2_id": "c1095568-15d9-4ca5-a3b7-3b494843ba2e",
+    "fight_order": 11,
+    "card_section": "Main Event",
+    "weight_class": "155",
+    "scraped_at": "2026-02-23T03:11:25.316805+00:00"
+  },
+  {
+    "event": "UFC Fight Night: Brady vs. Buckley",
+    "event_type": "Fight Night",
+    "event_date": "2026-04-25",
+    "event_time": "18:00",
+    "event_status": "upcoming",
+    "venue": "Meta APEX",
+    "location": "Las Vegas, Nevada, United States",
+    "fight_card_image_url": "https://images.tapology.com/poster_images/140114/profile/SnapInsta.to_640328460_1480846760076303_7191114627960583728_n.jpg?1771733116",
+    "fight_card_image_local_path": "/fight_cards/UFC_Fight_Night_Brady_vs._Buckley.jpg",
+    "fighter1": "Sean Brady",
+    "fighter2": "Joaquin Buckley",
+    "fighter1_id": "e30ea6d3-d4da-434a-83a5-82008266942e",
+    "fighter2_id": "19af6ef3-a2a5-47cd-954d-25820e3a4689",
+    "fight_order": 2,
+    "card_section": "Main Event",
+    "weight_class": "170",
+    "scraped_at": "2026-02-23T03:13:35.866169+00:00"
   }
 ]

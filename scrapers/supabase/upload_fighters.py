@@ -30,18 +30,66 @@ def print_progress(current, total, prefix="Progress", bar_length=50):
 
 
 def clean_numeric(value):
+    """
+    Convert numeric-like strings to numbers.
+
+    Special handling for:
+      - Height like 5'11" -> 71 (inches)
+      - Reach like 69"    -> 69 (inches)
+    """
     if value is None:
         return None
+
+    if isinstance(value, (int, float)):
+        return value
+
     if isinstance(value, str):
         v = value.strip()
         if v.lower() in {"unknown", "n/a", "-", ""}:
             return None
+
+        # Normalize common quote variants / encodings
+        v = (
+            v.replace('\\"', '"')
+             .replace("&quot;", '"')
+             .replace("’", "'")
+             .replace("′", "'")
+             .replace("″", '"')
+        )
+
+        # Height format: 5'11" (feet'inches")
+        if "'" in v:
+            try:
+                # remove inches quote if present
+                v_no_quote = v.replace('"', "")
+                feet_part, inches_part = v_no_quote.split("'", 1)
+
+                feet_part = feet_part.strip()
+                inches_part = inches_part.strip()
+
+                # keep only digits / decimal / minus in inches part
+                inches_clean = "".join(ch for ch in inches_part if ch.isdigit() or ch in {".", "-"})
+
+                feet = int(float(feet_part))
+                inches = int(float(inches_clean)) if inches_clean else 0
+                return feet * 12 + inches
+            except Exception:
+                return None
+
+        # Reach format: 69"
+        if '"' in v:
+            try:
+                v2 = v.replace('"', "").strip()
+                return float(v2) if "." in v2 else int(v2)
+            except ValueError:
+                return None
+
+        # Regular numeric strings (e.g., "155.00")
         try:
             return float(v) if "." in v else int(v)
         except ValueError:
             return None
-    if isinstance(value, (int, float)):
-        return value
+
     return None
 
 
