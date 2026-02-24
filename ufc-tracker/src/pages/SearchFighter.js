@@ -1,11 +1,33 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Sun, Moon } from 'lucide-react';
 import { addToFavorites, removeFavorite, getUserFavorites } from "../api/fighters";
 import supabase from "../api/supabaseClient";
 import countryCodes from '../utils/countryCodes';
 import { capitalize, getRankingDisplayForSearch } from '../utils/fighterHelpers';
-import { inferGender, extractFilterOptions, hasActiveFilters as checkActiveFilters } from '../utils/filterHelpers';
+import { inferGender, extractFilterOptions } from '../utils/filterHelpers';
 import { MultiSelectDropdown, Toast, LoadingSpinner } from '../components/SearchFighterComponents';
 import styles from '../styles/SearchFighter.module.css';
+
+// Division color dot map
+const DIVISION_COLORS = {
+  'Strawweight': '#ec4899',
+  'Flyweight': '#a855f7',
+  'Bantamweight': '#3b82f6',
+  'Featherweight': '#06b6d4',
+  'Lightweight': '#10b981',
+  'Welterweight': '#84cc16',
+  'Middleweight': '#f59e0b',
+  'Light Heavyweight': '#f97316',
+  'Heavyweight': '#ef4444',
+};
+
+const getDivisionColor = (weightClass) => {
+  if (!weightClass) return '#6b7280';
+  for (const [key, color] of Object.entries(DIVISION_COLORS)) {
+    if (weightClass.includes(key)) return color;
+  }
+  return '#6b7280';
+};
 
 const SearchFighter = () => {
   const [fighters, setFighters] = useState([]);
@@ -17,6 +39,7 @@ const SearchFighter = () => {
   const [toast, setToast] = useState(null);
   const [query, setQuery] = useState("");
   const [debounceTimer, setDebounceTimer] = useState(null);
+  const [darkMode, setDarkMode] = useState(true);
 
   // Filter states
   const [selectedCountries, setSelectedCountries] = useState([]);
@@ -26,13 +49,15 @@ const SearchFighter = () => {
   const [showP4POnly, setShowP4POnly] = useState(false);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [showInterestedOnly, setShowInterestedOnly] = useState(false);
-  const [sortBy, setSortBy] = useState('name');
+  const [sortBy, setSortBy] = useState('recent_fights');
   const [genderDropdownOpen, setGenderDropdownOpen] = useState(false);
-  const [filtersCollapsed, setFiltersCollapsed] = useState(false);
+  const [filtersCollapsed, setFiltersCollapsed] = useState(true); // collapsed by default on mobile
 
   // Available options for filters
   const [availableCountries, setAvailableCountries] = useState([]);
   const [availableDivisions, setAvailableDivisions] = useState([]);
+
+  const theme = darkMode ? 'dark' : 'light';
 
   // Sort options
   const sortOptions = [
@@ -54,24 +79,37 @@ const SearchFighter = () => {
     setShowP4POnly(false);
     setShowFavoritesOnly(false);
     setShowInterestedOnly(false);
-    setSortBy('name');
+    setSortBy('recent_fights');
     setQuery('');
     showToast('Filters cleared', 'info');
   };
 
   const hasActiveFiltersLocal = () => {
-    return checkActiveFilters({
-      selectedGender,
-      selectedCountries,
-      selectedDivisions,
-      showRankedOnly,
-      showP4POnly,
-      showFavoritesOnly,
-      showInterestedOnly,
-      sortBy,
-      query
-    });
+    return (
+      selectedGender !== 'All' ||
+      (selectedCountries.length > 0 && selectedCountries.length < availableCountries.length) ||
+      (selectedDivisions.length > 0 && selectedDivisions.length < availableDivisions.length) ||
+      showRankedOnly ||
+      showP4POnly ||
+      showFavoritesOnly ||
+      showInterestedOnly ||
+      sortBy !== 'recent_fights' ||
+      query.trim().length > 0
+    );
   };
+
+  // Count active filters for badge
+  const activeFilterCount = [
+    selectedGender !== 'All',
+    selectedCountries.length > 0 && selectedCountries.length < availableCountries.length,
+    selectedDivisions.length > 0 && selectedDivisions.length < availableDivisions.length,
+    showRankedOnly,
+    showP4POnly,
+    showFavoritesOnly,
+    showInterestedOnly,
+    sortBy !== 'recent_fights',
+    query.trim().length > 0,
+  ].filter(Boolean).length;
 
   const closeToast = () => {
     setToast(null);
@@ -176,26 +214,37 @@ const SearchFighter = () => {
     // Sorting
     filtered = filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'recent_fights':
-          const aRecentFight = a.fight_history?.length > 0 ? 
-            new Date(Math.max(...a.fight_history.map(f => new Date(f.fight_date)))) : new Date(0);
-          const bRecentFight = b.fight_history?.length > 0 ? 
-            new Date(Math.max(...b.fight_history.map(f => new Date(f.fight_date)))) : new Date(0);
-          return bRecentFight - aRecentFight;
+        case 'recent_fights': {
+          const getLatestFight = (fh) => {
+            if (!fh || fh.length === 0) return new Date(0);
+            return fh.reduce((latest, f) => {
+              const d = new Date(f.fight_date);
+              return d > latest ? d : latest;
+            }, new Date(0));
+          };
+          return getLatestFight(b.fight_history) - getLatestFight(a.fight_history);
+        }
           
-        case 'upcoming_fights':
+        case 'upcoming_fights': {
           const today = new Date();
-          const aUpcoming = a.upcoming_fights?.filter(f => new Date(f.event_date) > today);
-          const bUpcoming = b.upcoming_fights?.filter(f => new Date(f.event_date) > today);
+          const aUpcoming = a.upcoming_fights?.filter(f => new Date(f.event_date) > today) || [];
+          const bUpcoming = b.upcoming_fights?.filter(f => new Date(f.event_date) > today) || [];
           
-          if (aUpcoming?.length > 0 && bUpcoming?.length === 0) return -1;
-          if (aUpcoming?.length === 0 && bUpcoming?.length > 0) return 1;
-          if (aUpcoming?.length > 0 && bUpcoming?.length > 0) {
-            const aNextFight = new Date(Math.min(...aUpcoming.map(f => new Date(f.event_date))));
-            const bNextFight = new Date(Math.min(...bUpcoming.map(f => new Date(f.event_date))));
-            return aNextFight - bNextFight;
+          if (aUpcoming.length > 0 && bUpcoming.length === 0) return -1;
+          if (aUpcoming.length === 0 && bUpcoming.length > 0) return 1;
+          if (aUpcoming.length > 0 && bUpcoming.length > 0) {
+            const aNext = aUpcoming.reduce((earliest, f) => {
+              const d = new Date(f.event_date);
+              return d < earliest ? d : earliest;
+            }, new Date(aUpcoming[0].event_date));
+            const bNext = bUpcoming.reduce((earliest, f) => {
+              const d = new Date(f.event_date);
+              return d < earliest ? d : earliest;
+            }, new Date(bUpcoming[0].event_date));
+            return aNext - bNext;
           }
           return a.name.localeCompare(b.name);
+        }
           
         case 'ranking':
           const aRankings = getRankingDisplayForSearch(a.rankings);
@@ -250,14 +299,12 @@ const SearchFighter = () => {
     const fetchFighters = async () => {
       setLoading(true);
       try {
-        // First get all fighters for filtering options
         const { data: allFighters, error: fightersError } = await supabase
           .from("fighters")
           .select("*");
           
         if (fightersError) throw fightersError;
         
-        // Get rankings, fight history, and upcoming fights data
         const [
           { data: allRankings, error: rankingsError },
           { data: allFightHistory, error: fightHistoryError },
@@ -272,7 +319,6 @@ const SearchFighter = () => {
         if (fightHistoryError) throw fightHistoryError;
         if (upcomingFightsError) throw upcomingFightsError;
         
-        // Combine fighters with their data
         const fightersWithRankings = allFighters.map(fighter => ({
           ...fighter,
           rankings: allRankings?.filter(r => r.uuid === fighter.id) || [],
@@ -337,18 +383,29 @@ const SearchFighter = () => {
   };
 
   return (
-    <div className={styles.searchContainer}>
+    <div className={styles.searchContainer} data-theme={theme}>
+      {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerBackground}></div>
         <div className={styles.headerContent}>
           <h1>🥊 Fighter Search</h1>
           <p>Discover and track your favorite UFC fighters</p>
         </div>
+        <button
+          className={styles.themeToggle}
+          onClick={() => setDarkMode(!darkMode)}
+          title={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
+        >
+          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
       </div>
 
+      {/* Controls */}
       <div className={styles.controls}>
         <div className={styles.searchSection}>
-          <div className={styles.searchInputContainer}>
+
+          {/* Search Input */}
+          <div className={styles.searchInputWrapper}>
             <input
               type="text"
               className={styles.searchInput}
@@ -356,16 +413,34 @@ const SearchFighter = () => {
               value={query}
               onChange={(e) => handleQueryChange(e.target.value)}
             />
+            {query && (
+              <button
+                className={styles.searchClear}
+                onClick={() => handleQueryChange('')}
+                title="Clear search"
+              >
+                ✕
+              </button>
+            )}
           </div>
-          
+
+          {/* Filter Header Row */}
           <div className={styles.filterHeader}>
             <button 
-              className={styles.mobileFilterToggle}
+              className={`${styles.mobileFilterToggle} ${activeFilterCount > 0 ? styles.hasFilters : ''}`}
               onClick={() => setFiltersCollapsed(!filtersCollapsed)}
             >
-              <span>Filters</span>
+              <span>⚙ Filters</span>
+              {activeFilterCount > 0 && (
+                <span className={styles.filterBadge}>{activeFilterCount}</span>
+              )}
               <span className={`${styles.toggleIcon} ${filtersCollapsed ? styles.collapsed : ''}`}>▼</span>
             </button>
+
+            {/* Results count - always visible */}
+            <span className={styles.resultsCount}>
+              {filteredFighters.length} fighter{filteredFighters.length !== 1 ? 's' : ''}
+            </span>
             
             {hasActiveFiltersLocal() && (
               <button className={styles.clearFiltersBtn} onClick={clearAllFilters}>
@@ -374,7 +449,9 @@ const SearchFighter = () => {
             )}
           </div>
 
+          {/* Filter Controls */}
           <div className={`${styles.filterControls} ${filtersCollapsed ? styles.collapsed : ''}`}>
+            {/* Sort */}
             <div className={styles.controlGroup}>
               <label>Sort By</label>
               <select 
@@ -390,6 +467,7 @@ const SearchFighter = () => {
               </select>
             </div>
 
+            {/* Gender */}
             <div className={styles.genderSelector}>
               <div 
                 className={styles.genderDropdownTrigger} 
@@ -397,8 +475,8 @@ const SearchFighter = () => {
               >
                 <span>
                   {selectedGender === 'All' ? '👥 All Fighters' : 
-                   selectedGender === 'Men' ? 'Men\'s Divisions' : 
-                   'Women\'s Divisions'}
+                   selectedGender === 'Men' ? "Men's Divisions" : 
+                   "Women's Divisions"}
                 </span>
                 <span className={styles.dropdownArrow}>{genderDropdownOpen ? '▲' : '▼'}</span>
               </div>
@@ -407,8 +485,8 @@ const SearchFighter = () => {
                 <div className={styles.genderDropdown}>
                   {[
                     { value: 'All', label: '👥 All Fighters' },
-                    { value: 'Men', label: 'Men\'s Divisions' },
-                    { value: 'Women', label: 'Women\'s Divisions' }
+                    { value: 'Men', label: "Men's Divisions" },
+                    { value: 'Women', label: "Women's Divisions" }
                   ].map(option => (
                     <div
                       key={option.value}
@@ -425,6 +503,7 @@ const SearchFighter = () => {
               )}
             </div>
             
+            {/* Country */}
             <MultiSelectDropdown
               options={availableCountries}
               selectedValues={selectedCountries}
@@ -434,6 +513,7 @@ const SearchFighter = () => {
               styles={styles}
             />
             
+            {/* Division */}
             <MultiSelectDropdown
               options={availableDivisions}
               selectedValues={selectedDivisions}
@@ -442,57 +522,42 @@ const SearchFighter = () => {
               styles={styles}
             />
             
-            <label 
-              className={`${styles.checkboxFilter} ${showRankedOnly ? styles.active : ''}`}
-            >
-              <input
-                type="checkbox"
-                checked={showRankedOnly}
-                onChange={(e) => setShowRankedOnly(e.target.checked)}
-              />
-              Ranked Only
-            </label>
-            
-            <label 
-              className={`${styles.checkboxFilter} ${showP4POnly ? styles.active : ''}`}
-            >
-              <input
-                type="checkbox"
-                checked={showP4POnly}
-                onChange={(e) => setShowP4POnly(e.target.checked)}
-              />
-              P4P Only
-            </label>
+            {/* Toggle pills for checkbox filters */}
+            <div className={styles.togglePills}>
+              <button
+                className={`${styles.togglePill} ${showRankedOnly ? styles.pillActive : ''}`}
+                onClick={() => setShowRankedOnly(!showRankedOnly)}
+              >
+                🏅 Ranked
+              </button>
+              <button
+                className={`${styles.togglePill} ${showP4POnly ? styles.pillActive : ''}`}
+                onClick={() => setShowP4POnly(!showP4POnly)}
+              >
+                🌍 P4P
+              </button>
+              <button
+                className={`${styles.togglePill} ${showFavoritesOnly ? styles.pillActive : ''}`}
+                onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+              >
+                ⭐ Favorites
+              </button>
+              <button
+                className={`${styles.togglePill} ${showInterestedOnly ? styles.pillActive : ''}`}
+                onClick={() => setShowInterestedOnly(!showInterestedOnly)}
+              >
+                👀 Interested
+              </button>
+            </div>
 
-            <label 
-              className={`${styles.checkboxFilter} ${showFavoritesOnly ? styles.active : ''}`}
-            >
-              <input
-                type="checkbox"
-                checked={showFavoritesOnly}
-                onChange={(e) => setShowFavoritesOnly(e.target.checked)}
-              />
-              ⭐ Favorites
-            </label>
-
-            <label 
-              className={`${styles.checkboxFilter} ${showInterestedOnly ? styles.active : ''}`}
-            >
-              <input
-                type="checkbox"
-                checked={showInterestedOnly}
-                onChange={(e) => setShowInterestedOnly(e.target.checked)}
-              />
-              👀 Interested
-            </label>
           </div>
 
           {/* Filter Summary */}
           {hasActiveFiltersLocal() && (
             <div className={styles.filterSummary}>
               Showing {filteredFighters.length} fighters
-              {sortBy !== 'name' && ` • Sorted by ${sortOptions.find(opt => opt.value === sortBy)?.label}`}
-              {selectedGender !== 'All' && ` • ${selectedGender === 'Men' ? 'Men\'s' : 'Women\'s'} divisions`}
+              {sortBy !== 'recent_fights' && ` • Sorted by ${sortOptions.find(opt => opt.value === sortBy)?.label}`}
+              {selectedGender !== 'All' && ` • ${selectedGender === 'Men' ? "Men's" : "Women's"} divisions`}
               {selectedCountries.length > 0 && selectedCountries.length < availableCountries.length && 
                 ` • Countries: ${selectedCountries.slice(0, 3).join(', ')}${selectedCountries.length > 3 ? ` +${selectedCountries.length - 3} more` : ''}`
               }
@@ -527,6 +592,7 @@ const SearchFighter = () => {
         </div>
       )}
 
+      {/* Fighter Cards Grid */}
       <div className={styles.resultsGrid}>
         {filteredFighters.map((fighter) => {
           const fighterName = fighter.name;
@@ -534,30 +600,33 @@ const SearchFighter = () => {
           const favoriteLoading = loadingStates[`${fighterName}-favorite`];
           const interestedLoading = loadingStates[`${fighterName}-interested`];
           const rankings = getRankingDisplayForSearch(fighter.rankings);
-          const statusLabel =
-            status === "favorite" ? "⭐ Favorited" :
-            status === "interested" ? "👀 Interested" :
-            "—";
           const isP4PChampion = rankings?.p4p && rankings.p4p.rank !== 'NR';
-          
+          const divisionColor = getDivisionColor(fighter.weight_class);
+
+          // Only show nickname if it exists and isn't "N/A"
+          const showNickname = fighter.nickname && fighter.nickname !== 'N/A' && fighter.nickname.trim() !== '';
+
           return (
             <div 
               key={fighter.id} 
-              className={`${styles.fighterCard}${isP4PChampion ? ` ${styles.p4pChampion}` : ''}${
-                status === 'favorite' ? ` ${styles.favoritedCard}` : 
-                status === 'interested' ? ` ${styles.interestedCard}` : ''
-              }`}
+              className={`${styles.fighterCard}${isP4PChampion ? ` ${styles.p4pChampion}` : ''}`}
+              style={{ '--division-color': divisionColor }}
             >
+              {/* P4P corner badge */}
               {rankings?.p4p && (
                 <div className={styles.p4pBadge}>
                   P4P #{rankings.p4p.rank}
                 </div>
               )}
 
-              <div className={styles.statusBadge}>
-                {statusLabel}
-              </div>
+              {/* Status pill - only shown when favorited or interested */}
+              {status && (
+                <div className={`${styles.statusPill} ${status === 'favorite' ? styles.statusFavorite : styles.statusInterested}`}>
+                  {status === 'favorite' ? '⭐ Favorited' : '👀 Interested'}
+                </div>
+              )}
               
+              {/* Fighter Header */}
               <div className={styles.fighterHeader}>
                 {(fighter.image_url || fighter.image_local_path) && (
                   <img
@@ -580,53 +649,56 @@ const SearchFighter = () => {
                       capitalize(fighterName)
                     )}
                   </h2>
-                  {fighter.nickname && (
+
+                  {showNickname && (
                     <div className={styles.fighterNickname}>
                       "{fighter.nickname}"
                     </div>
-                  )}                 
-                  <div className={styles.fighterDetails}>
+                  )}
+
+                  <div className={styles.fighterMeta}>
                     {fighter.country && (
-                      <div className={styles.detailItem}>
-                        <span style={{ fontSize: "1.5rem" }}>
-                          {countryCodes[fighter.country?.trim()]}
-                        </span>
-                      </div>
+                      <span style={{ fontSize: "1.3rem" }}>
+                        {countryCodes[fighter.country?.trim()]}
+                      </span>
                     )}
-                    
-                    <div className={styles.detailItem}>
-                      <span>{fighter.age ? `Age: ${fighter.age}` : ''}</span>
-                    </div>
-                    
+                    {fighter.age && (
+                      <span className={styles.metaText}>Age: {fighter.age}</span>
+                    )}
+                  </div>
+
+                  <div className={styles.fighterStats}>
                     {fighter.weight_class && (
-                      <div className={styles.detailItem}>
-                        <span>{fighter.weight_class}</span>
-                      </div>
+                      <span className={styles.weightClass}>
+                        <span 
+                          className={styles.divisionDot}
+                          style={{ background: divisionColor }}
+                        />
+                        {fighter.weight_class}
+                      </span>
                     )}
-                    
-                    <div className={`${styles.detailItem} ${styles.record}`}>
+                    <span className={styles.record}>
                       {fighter.wins_total}-{fighter.losses_total}
-                      {fighter.draws_total && parseInt(fighter.draws_total) > 0 && `-${fighter.draws_total}`}
-                    </div>
+                      {fighter.draws_total && parseInt(fighter.draws_total) > 0 ? `-${fighter.draws_total}` : ''}
+                    </span>
                   </div>
                 </div>
               </div>
               
-              {rankings && (rankings.divisionRank || rankings.p4p) && (
+              {/* Rankings */}
+              {rankings && rankings.divisionRank && (
                 <div className={styles.rankingInfo}>
-                  {rankings.divisionRank && (
-                    <span className={`${styles.rankBadge} ${styles.rankDivision}`}>
-                      {rankings.divisionRank.rank === 'C' ? 'Champion' : `#${rankings.divisionRank.rank}`} {rankings.divisionRank.division}
-                    </span>
-                  )}
-                  {rankings.p4p && (
-                    <span className={`${styles.rankBadge} ${styles.rankP4p}`}>
-                      P4P #{rankings.p4p.rank}
-                    </span>
-                  )}
+                  <span className={styles.rankBadge}>
+                    <span 
+                      className={styles.divisionDot}
+                      style={{ background: divisionColor }}
+                    />
+                    {rankings.divisionRank.rank === 'C' ? 'Champion' : `#${rankings.divisionRank.rank}`} {rankings.divisionRank.division}
+                  </span>
                 </div>
               )}
               
+              {/* Action Buttons */}
               <div className={styles.actionButtons}>
                 <button
                   className={`${styles.actionBtn} ${styles.favoriteBtn}${status === "favorite" ? " " + styles.selected : ""}`}

@@ -135,7 +135,10 @@ const Rankings = () => {
 
   // ── Data fetching ─────────────────────────────────────────────────────────────
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchData = async () => {
     try {
