@@ -1,0 +1,79 @@
+UFC Supabase Tables
+---------------------------------------
+
+fighters
+--------
+- id (UUID): Primary key
+- name, nickname, age, country
+- height, weight, reach (numbers)
+- weight_class: e.g. "Welterweight"
+- status: "Active", "Retired", "Power Slap"
+- profile_url_ufc, profile_url_sherdog
+- sig_strikes_landed_per_min, sig_strikes_absorbed_per_min
+- takedown_avg_per_15min, submission_avg_per_15min
+- sig_str_defense, takedown_defense
+- knockdown_avg, average_fight_time (minutes)
+- striking_accuracy, takedown_accuracy (combined format with landed/attempted)
+- sig_strikes_by_position: JSON object {"standing": "X (Y%)", "clinch": "X (Y%)", "ground": "X (Y%)"}
+- sig_strikes_by_target: JSON object {"head": "X (Y%)", "body": "X (Y%)", "leg": "X (Y%)"}
+- wins_total, losses_total
+- wins_ko, wins_sub, wins_dec
+- losses_ko, losses_sub, losses_dec
+- image_url: Link to fighter image
+- image_local_path: Local path to downloaded image
+- ufc_rankings: JSON array of ranking objects [{"division": "Lightweight", "rank": "4"}]
+- created_at: Timestamp
+
+fight_history
+-------------
+- id (UUID): Unique per fighter entry
+- fighter_id (UUID): FK to fighters.id
+- opponent (text): Opponent name
+- result: "win", "loss", "draw", "nc"
+- method: "KO/TKO", "Submission", "Decision", etc.
+- round (text), time (text): e.g. "3", "4:35"
+- fight_date: "YYYY-MM-DD"
+
+Note: Each fight appears once per fighter (typically 2 rows per fight)
+
+upcoming_fights
+---------------
+- id (UUID): Unique per fight
+- event, event_type: e.g. "UFC 300", "PPV" or "Fight Night"
+- event_date: "YYYY-MM-DD", event_time: "HH:MM"
+- venue: Arena/venue name
+- location: City, state/country
+- fight_card_image_url: URL to event poster
+- fight_card_image_local_path: Local path to downloaded poster
+- fighter1, fighter2: Names (display only)
+- fighter1_id, fighter2_id (UUID): FK to fighters.id
+- fight_order (int): Position on card (1 = main event)
+- card_section: "Main", "Prelim", etc.
+- weight_class: Weight class or catchweight
+- scraped_at: Timestamp of data retrieval
+
+rankings
+--------
+- id (UUID): Primary key
+- division (text): e.g. "Heavyweight", "Women's Strawweight"
+- rank (text): e.g. "1", "C" (champion), "NR"
+- name (text): Fighter name
+- uuid (UUID): FK to fighters.id
+- change (text): e.g. "Rank increased by 1", or null
+
+user_favorites
+--------------
+- id (UUID): Primary key
+- user (text): Username
+- fighter_id (UUID): FK to fighters.id
+- fighter (text): Fighter name (display only)
+- priority (text): "favorite" or other priority levels
+- added_at: Timestamp
+
+relationships
+-------------
+- fighters.id links to:
+    - fight_history.fighter_id
+    - upcoming_fights.fighter1_id / fighter2_id
+    - rankings.uuid
+    - user_favorites.fighter_id
