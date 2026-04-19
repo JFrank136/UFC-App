@@ -551,15 +551,7 @@ const UpcomingFights = () => {
 
       <div className={styles.eventsContainer}>
         {Object.entries(groupedFights)
-          .sort(([, a], [, b]) => {
-            // Sort events: most favorites first, then by date
-            const aPriority = getEventPriority(a.fights);
-            const bPriority = getEventPriority(b.fights);
-            const aScore = aPriority.favorites * 2 + aPriority.interested;
-            const bScore = bPriority.favorites * 2 + bPriority.interested;
-            if (bScore !== aScore) return bScore - aScore;
-            return new Date(a.date) - new Date(b.date);
-          })
+          .sort(([, a], [, b]) => new Date(a.date) - new Date(b.date))
           .map(([eventName, eventData]) => {
             const isPPV = eventData.type?.toLowerCase().includes('ppv') ||
               (eventName.toLowerCase().includes('ufc ') && /ufc \d+/.test(eventName.toLowerCase()));
