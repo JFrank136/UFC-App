@@ -3,9 +3,16 @@ import supabase from './supabaseClient';
 
 // Events.js - Everything but user_favorites
 export const getEventData = async () => {
+  // Only fetch events from 3 days ago onward to keep fighter count manageable
+  // (fetching all upcoming fights leads to 400+ fighters, hitting Supabase's 1000-row limit on fight_history)
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 3);
+  const cutoffStr = cutoff.toISOString().split('T')[0];
+
   const { data: fights, error } = await supabase
     .from('upcoming_fights')
     .select('*')
+    .gte('event_date', cutoffStr)
     .order('event_date');
 
   if (error) throw error;
@@ -25,18 +32,28 @@ export const getEventData = async () => {
 
   if (fightersError) throw fightersError;
 
-  // Get fight history and rankings for these fighters
-  const { data: fightHistory, error: historyError } = await supabase
-    .from('fight_history')
-    .select('*')
-    .in('fighter_id', fighterIds);
+  // Paginate fight_history to bypass Supabase's 1000-row default limit
+  let fightHistory = [];
+  let rangeStart = 0;
+  const PAGE_SIZE = 1000;
+  while (true) {
+    const { data: batch, error: batchError } = await supabase
+      .from('fight_history')
+      .select('*')
+      .in('fighter_id', fighterIds)
+      .range(rangeStart, rangeStart + PAGE_SIZE - 1);
+    if (batchError) throw batchError;
+    if (!batch || batch.length === 0) break;
+    fightHistory = fightHistory.concat(batch);
+    if (batch.length < PAGE_SIZE) break;
+    rangeStart += PAGE_SIZE;
+  }
 
   const { data: rankings, error: rankingsError } = await supabase
     .from('rankings')
     .select('*')
     .in('uuid', fighterIds);
 
-  if (historyError) throw historyError;
   if (rankingsError) throw rankingsError;
 
   // Combine data
@@ -49,7 +66,6 @@ export const getEventData = async () => {
     };
   });
 
-  // Add fighter data to fights
   return fights.map(fight => ({
     ...fight,
     fighter1_data: fightersMap[fight.fighter1_id] || null,

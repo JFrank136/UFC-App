@@ -43,7 +43,7 @@ const BettingCard = ({ fighter, fightId, side }) => {
   const getRecentFights = (fighter, limit = 3) => {
     if (!fighter?.fight_history) return [];
     return fighter.fight_history
-      .filter(fight => fight.opponent && fight.result)
+      .filter(fight => fight.opponent)
       .sort((a, b) => new Date(b.fight_date || '1900-01-01') - new Date(a.fight_date || '1900-01-01'))
       .slice(0, limit);
   };

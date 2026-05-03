@@ -23,11 +23,11 @@ import random
 # Add utils path for name fixes
 sys.path.append("utils")
 try:
-    from name_fixes import TAPOLOGY_FIXES
-    TAPOLOGY_FIXES = {name.upper(): fixed for name, fixed in TAPOLOGY_FIXES.items()}
+    from name_fixes import NAME_FIXES
+    NAME_FIXES_REVERSE = {v.upper(): k for k, v in NAME_FIXES.items()}
 except ImportError:
-    print("⚠️ Could not import TAPOLOGY_FIXES. Continuing without name fixes.")
-    TAPOLOGY_FIXES = {}
+    print("⚠️ Could not import NAME_FIXES. Continuing without name fixes.")
+    NAME_FIXES_REVERSE = {}
 
 OUTPUT_FILE = "data/bestfightodds_data.json"
 UPCOMING_FIGHTS_FILE = "data/upcoming_fights.json"
@@ -42,9 +42,8 @@ def normalize_name(name: str) -> str:
     return name.strip().upper()
 
 def apply_name_fixes(name: str) -> str:
-    """Apply name fixes from TAPOLOGY_FIXES"""
     norm = normalize_name(name)
-    return TAPOLOGY_FIXES.get(norm, name)
+    return NAME_FIXES_REVERSE.get(norm, name)
 
 def setup_browser():
     """Setup Chrome browser with anti-detection measures"""

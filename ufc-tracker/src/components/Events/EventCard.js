@@ -158,7 +158,7 @@ const EventCard = ({
             <div className={styles.eventTitleContainer}>
               <h2 className={styles.eventTitle}>{eventData.info.name}</h2>
               {eventIsPPV && <span className={styles.ppvBadge}>PPV</span>}
-              {isChampionship && <span className={styles.championshipBadge}>ðŸ‘‘ TITLE</span>}
+              {isChampionship && <span className={styles.championshipBadge}>🏆 TITLE</span>}
             </div>
             
             <div className={styles.eventMeta}>
@@ -260,6 +260,10 @@ const EventCard = ({
               <div className={styles.sectionTabs}>
                 {Object.entries(sectionedFights)
                   .filter(([sectionName, sectionFights]) => sectionFights.length > 0)
+                  .sort(([a], [b]) => {
+                    const order = ['Main Card', 'Preliminary Card', 'Early Prelims'];
+                    return order.indexOf(a) - order.indexOf(b);
+                  })
                   .map(([sectionName, sectionFights]) => (
                     <button
                       key={sectionName}

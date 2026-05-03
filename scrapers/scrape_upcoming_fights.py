@@ -30,8 +30,7 @@ def normalize_name(name: str) -> str:
 
 def apply_name_fixes(name: str) -> str:
     norm = normalize_name(name)
-    fixed = TAPOLOGY_FIXES.get(norm, name)
-    return fixed
+    return NAME_FIXES_REVERSE.get(norm, name)
 
 
 def download_fight_card_image(url, save_path):
@@ -68,11 +67,11 @@ def sanitize_filename(name):
 
 sys.path.append("utils")  # or adjust as needed
 try:
-    from name_fixes import TAPOLOGY_FIXES as RAW_FIXES
-    TAPOLOGY_FIXES = {name.upper(): fixed for name, fixed in RAW_FIXES.items()}
+    from name_fixes import NAME_FIXES
+    NAME_FIXES_REVERSE = {v.upper(): k for k, v in NAME_FIXES.items()}
 except ImportError:
-    print("Could not import TAPOLOGY_FIXES. Continuing without it.")
-    TAPOLOGY_FIXES = {}
+    print("Could not import NAME_FIXES. Continuing without it.")
+    NAME_FIXES_REVERSE = {}
 
 
 BASE_URL = "https://www.tapology.com/fightcenter?group=ufc"

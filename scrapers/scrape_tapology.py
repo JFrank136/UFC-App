@@ -23,10 +23,9 @@ utils_path = os.path.join(os.path.dirname(__file__), "utils")
 sys.path.append(utils_path)
 
 try:
-    from name_fixes import TAPOLOGY_FIXES, NAME_FIXES
+    from name_fixes import NAME_FIXES
 except ImportError:
     print("WARNING: Could not import name fixes. Continuing without name fixes.")
-    TAPOLOGY_FIXES = {}
     NAME_FIXES = {}
 
 # Configuration
@@ -749,30 +748,15 @@ def extract_fighter_data(soup, debug=False, fighter_id=None):
     return data
 
 def apply_name_fixes(name: str) -> str:
-    """Apply name fixes from both TAPOLOGY_FIXES and NAME_FIXES"""
     norm = name.upper()
-    # Try TAPOLOGY_FIXES first, then NAME_FIXES as fallback
-    fixed = TAPOLOGY_FIXES.get(norm)
-    if fixed:
-        return fixed
     return NAME_FIXES.get(norm, name)
 
 def search_tapology(fighter_name, debug=False):
     """Search for fighter on Tapology with multiple fallback strategies"""
-    # For TAPOLOGY_FIXES, we need to reverse lookup since format is TAPOLOGY_NAME : UFC_NAME
-    # Find the Tapology name that maps to this UFC fighter name
-    tapology_name_from_reverse_lookup = None
-    ufc_name_upper = fighter_name.upper()
-    for tapology_name, ufc_name in TAPOLOGY_FIXES.items():
-        if ufc_name.upper() == ufc_name_upper:
-            tapology_name_from_reverse_lookup = tapology_name
-            break
-    
     # Create list of name variations to try
     search_attempts = [
         fighter_name,  # Original name
-        tapology_name_from_reverse_lookup,  # Tapology-specific fixes (reverse lookup)
-        NAME_FIXES.get(fighter_name.upper(), fighter_name),  # General name fixes (accents, etc.)
+        NAME_FIXES.get(fighter_name.upper()),  # Tapology canonical name
     ]
     
     # Remove None values and duplicates while preserving order
