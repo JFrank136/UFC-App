@@ -1,0 +1,6 @@
+logs/
+data/staging/
+data/errors/
+__pycache__/
+*.pyc
+.pytest_cache/
