@@ -148,3 +148,46 @@ def test_check_supabase_count_allows_first_upload(monkeypatch):
         from validator import check_supabase_count
         passed, _ = check_supabase_count("fighters", 400)
     assert passed is True
+
+
+def test_check_unmatched_splits_new_vs_persistent(tmp_path):
+    unmatched = tmp_path / "unmatched_fighters.txt"
+    baseline = tmp_path / "baseline.json"
+    unmatched.write_text(
+        "Unmatched UFC fighters\nGenerated: merge_fighters.py\nTotal unmatched: 3\n\n"
+        "  1. Fighter A\n  2. Fighter B\n  3. Fighter C\n",
+        encoding="utf-8",
+    )
+    baseline.write_text(json.dumps(["Fighter A", "Fighter B"]), encoding="utf-8")
+    from validator import check_unmatched_fighters
+    new, persistent, block = check_unmatched_fighters(unmatched, baseline)
+    assert new == ["Fighter C"]
+    assert sorted(persistent) == ["Fighter A", "Fighter B"]
+    assert block is False
+
+
+def test_check_unmatched_blocks_above_25(tmp_path):
+    unmatched = tmp_path / "unmatched_fighters.txt"
+    baseline = tmp_path / "baseline.json"
+    lines = "\n".join(f"  {i + 1}. Fighter {i}" for i in range(26))
+    unmatched.write_text(f"Header\nGenerated\nTotal\n\n{lines}\n", encoding="utf-8")
+    baseline.write_text("[]", encoding="utf-8")
+    from validator import check_unmatched_fighters
+    new, _, block = check_unmatched_fighters(unmatched, baseline)
+    assert block is True
+    assert len(new) == 26
+
+
+def test_check_unmatched_no_file_returns_empty(tmp_path):
+    from validator import check_unmatched_fighters
+    new, persistent, block = check_unmatched_fighters(
+        tmp_path / "missing.txt", tmp_path / "baseline.json"
+    )
+    assert new == [] and persistent == [] and block is False
+
+
+def test_save_unmatched_baseline_writes_sorted_json(tmp_path):
+    baseline = tmp_path / "baseline.json"
+    from validator import save_unmatched_baseline
+    save_unmatched_baseline(["Fighter B", "Fighter A"], baseline)
+    assert json.loads(baseline.read_text()) == ["Fighter A", "Fighter B"]

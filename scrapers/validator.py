@@ -203,3 +203,49 @@ def check_supabase_count(table: str, local_count: int) -> tuple[bool, str]:
             f"({ratio * 100:.1f}%). Threshold is 70%. Upload aborted to protect live data."
         )
     return True, f"{table}: local={local_count}, remote={remote} ({ratio * 100:.1f}%)"
+
+
+def _read_unmatched_file(path: Path) -> list[str]:
+    """Parse the numbered list in unmatched_fighters.txt, skipping header lines."""
+    names = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line and line[0].isdigit() and ". " in line:
+                _, name = line.split(". ", 1)
+                name = name.strip()
+                if name:
+                    names.append(name)
+    return names
+
+
+def check_unmatched_fighters(
+    unmatched_path: Path,
+    baseline_path: Path,
+) -> tuple[list[str], list[str], bool]:
+    """
+    Compare unmatched_fighters.txt against the saved baseline.
+    Returns (new_names, persistent_names, should_block).
+    should_block is True when total unmatched > 25.
+    """
+    if not unmatched_path.exists():
+        return [], [], False
+
+    current = set(_read_unmatched_file(unmatched_path))
+
+    previous: set[str] = set()
+    if baseline_path.exists():
+        try:
+            previous = set(json.loads(baseline_path.read_text(encoding="utf-8")))
+        except (json.JSONDecodeError, OSError):
+            pass
+
+    new_names = sorted(current - previous)
+    persistent_names = sorted(current & previous)
+    return new_names, persistent_names, len(current) > 25
+
+
+def save_unmatched_baseline(names: list[str], baseline_path: Path) -> None:
+    """Persist the current unmatched names as the baseline for the next run."""
+    baseline_path.parent.mkdir(parents=True, exist_ok=True)
+    baseline_path.write_text(json.dumps(sorted(names)), encoding="utf-8")
