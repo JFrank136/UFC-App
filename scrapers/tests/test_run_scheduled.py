@@ -159,3 +159,51 @@ def test_run_upcoming_proceeds_with_warn_only_validation(tmp_path, monkeypatch):
 
     assert result is True  # warn-only does not block
     assert any("⚠️" in s for s in ctx.summary)
+
+
+def test_run_weekly_fighters_blocks_upload_when_merge_output_too_small(tmp_path, monkeypatch):
+    import run_scheduled
+    _setup_dirs(tmp_path, monkeypatch)
+
+    for name, script_name in [
+        ("ufc_details.json", "scrape_details.py"),
+        ("tapology_fighters.json", "scrape_tapology.py"),
+    ]:
+        data = [{"id": f"u{i}", "name": f"F {i}"} for i in range(200)]
+        (tmp_path / "data" / name).write_text(json.dumps(data), encoding="utf-8")
+        s = tmp_path / script_name
+        s.write_text('print("ok")', encoding="utf-8")
+
+    fighters_path = tmp_path / "data" / "fighters.json"
+    history_path = tmp_path / "data" / "fight_history.json"
+    merge = tmp_path / "supabase" / "merge_fighters.py"
+    tiny = [{"id": f"u{i}", "name": f"F {i}"} for i in range(5)]
+    merge.write_text(
+        f"import json, pathlib\n"
+        f"pathlib.Path(r'{fighters_path}').write_text(json.dumps({tiny!r}))\n"
+        f"pathlib.Path(r'{history_path}').write_text('[]')\n",
+        encoding="utf-8",
+    )
+
+    ctx = _make_ctx(tmp_path)
+    with patch("notifier.send_email", return_value=True):
+        result = run_scheduled.run_weekly_fighters(ctx)
+
+    assert result is False
+    assert ctx.errors
+
+
+def test_main_exits_1_and_emails_on_task_failure(tmp_path, monkeypatch):
+    import run_scheduled
+    monkeypatch.setattr(run_scheduled, "LOGS_DIR", tmp_path / "logs")
+
+    failing_task = MagicMock(return_value=False)
+    with patch.dict(run_scheduled.TASK_MAP, {"upcoming": failing_task}), \
+         patch("notifier.send_email", return_value=True) as mock_send, \
+         patch("sys.argv", ["run_scheduled.py", "--task", "upcoming"]):
+        with pytest.raises(SystemExit) as exc:
+            run_scheduled.main()
+
+    assert exc.value.code == 1
+    mock_send.assert_called_once()
+    assert "FAILED" in mock_send.call_args[0][0]

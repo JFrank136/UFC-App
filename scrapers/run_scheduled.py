@@ -99,6 +99,7 @@ def tail_log(log_file: Path, lines: int = 50) -> str:
         return ""
 
 
+import notifier
 import validator as validator
 from validator import (
     validate_file,
@@ -186,3 +187,119 @@ def run_upcoming(ctx: RunContext) -> bool:
     return _upload_with_guard(
         SUPABASE_DIR / "upload_upcoming_fights.py", "upcoming_fights", result.record_count, ctx
     )
+
+
+def run_weekly_fighters(ctx: RunContext) -> bool:
+    # Step 1: scrape_details — continue with stale data on failure
+    details_file = DATA_DIR / "ufc_details.json"
+    details_backup = backup_file(details_file)
+    if not run_script(BASE_DIR / "scrape_details.py", choice="1", logger=ctx.logger):
+        ctx.logger.warning("scrape_details.py failed — keeping existing data")
+        restore_file(details_backup, details_file)
+    else:
+        _validate_and_report(details_file, details_backup, ctx)
+
+    # Step 2: scrape_tapology — continue with stale data on failure
+    tapology_file = DATA_DIR / "tapology_fighters.json"
+    tapology_backup = backup_file(tapology_file)
+    if not run_script(BASE_DIR / "scrape_tapology.py", choice="1", logger=ctx.logger):
+        ctx.logger.warning("scrape_tapology.py failed — keeping existing data")
+        restore_file(tapology_backup, tapology_file)
+    else:
+        _validate_and_report(tapology_file, tapology_backup, ctx)
+
+    # Step 3: merge — backup current outputs before overwriting
+    fighters_file = DATA_DIR / "fighters.json"
+    history_file = DATA_DIR / "fight_history.json"
+    fighters_backup = backup_file(fighters_file)
+    history_backup = backup_file(history_file)
+
+    if not run_script(SUPABASE_DIR / "merge_fighters.py", choice=None, logger=ctx.logger):
+        ctx.errors.append("merge_fighters.py failed")
+        restore_file(fighters_backup, fighters_file)
+        restore_file(history_backup, history_file)
+        return False
+
+    # Step 4: validate merge outputs (restore on failure to protect against accidental manual upload)
+    fighters_result = validate_file(fighters_file, fighters_backup)
+    if not fighters_result.passed:
+        ctx.logger.error(f"❌ fighters.json: {fighters_result.reason}")
+        ctx.errors.append(f"fighters.json: {fighters_result.reason}")
+        restore_file(fighters_backup, fighters_file)
+        restore_file(history_backup, history_file)
+        return False
+    ctx.summary.append(f"✅ fighters.json: {fighters_result.record_count} records")
+
+    history_result = validate_file(history_file, history_backup)
+    if not history_result.passed:
+        ctx.logger.error(f"❌ fight_history.json: {history_result.reason}")
+        ctx.errors.append(f"fight_history.json: {history_result.reason}")
+        restore_file(history_backup, history_file)
+        return False
+    ctx.summary.append(f"✅ fight_history.json: {history_result.record_count} records")
+
+    # Step 5: unmatched fighter check
+    unmatched_path = ERRORS_DIR / "unmatched_fighters.txt"
+    baseline_path = STAGING_DIR / "unmatched_baseline.json"
+    new_mm, persistent_mm, blocked = check_unmatched_fighters(unmatched_path, baseline_path)
+    total_mm = len(new_mm) + len(persistent_mm)
+    if total_mm > 0:
+        subject, body = format_mismatch_email(ctx.task_name, new_mm, persistent_mm, blocked)
+        send_email(subject, body)
+        ctx.logger.warning(f"⚠️ {total_mm} unmatched fighters ({len(new_mm)} new)")
+        if blocked:
+            ctx.errors.append(f"Upload blocked: {total_mm} unmatched fighters (threshold 25)")
+            return False
+    save_unmatched_baseline(new_mm + persistent_mm, baseline_path)
+
+    # Step 6: upload with pre-check
+    fighters_ok = _upload_with_guard(
+        SUPABASE_DIR / "upload_fighters.py", "fighters", fighters_result.record_count, ctx
+    )
+    history_ok = _upload_with_guard(
+        SUPABASE_DIR / "upload_fight_history.py", "fight_history", history_result.record_count, ctx
+    )
+    return fighters_ok and history_ok
+
+
+TASK_MAP = {
+    "roster": run_roster,
+    "rankings": run_rankings,
+    "upcoming": run_upcoming,
+    "weekly_fighters": run_weekly_fighters,
+}
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="UFC pipeline scheduled runner")
+    parser.add_argument("--task", required=True, choices=list(TASK_MAP.keys()))
+    args = parser.parse_args()
+
+    logger, log_file = setup_logging(args.task)
+    ctx = RunContext(task_name=args.task, logger=logger, log_file=log_file)
+    logger.info(f"=== Starting task: {args.task} ===")
+
+    try:
+        success = TASK_MAP[args.task](ctx)
+    except Exception:
+        tb = traceback.format_exc()
+        logger.error(f"Unhandled exception:\n{tb}")
+        subject, body = format_crash_email(args.task, tb)
+        notifier.send_email(subject, body)
+        sys.exit(1)
+
+    log_tail = tail_log(log_file)
+    if success:
+        subject, body = format_success_email(args.task, "\n".join(ctx.summary))
+        notifier.send_email(subject, body)
+        logger.info(f"=== Task {args.task} completed successfully ===")
+    else:
+        reason = "\n".join(ctx.errors) or "Unknown failure"
+        subject, body = format_failure_email(args.task, reason, log_tail)
+        notifier.send_email(subject, body)
+        logger.error(f"=== Task {args.task} FAILED ===")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
