@@ -58,14 +58,20 @@ python scrape_details.py
 **Options**:
 ```bash
 python scrape_tapology.py
-# [1] Full scrape - search Tapology for all active fighters
-# [2] Retry failed only
+# [1] Production mode - all active fighters (then choose sequential or concurrent)
+# [2] Retry failed fighters from data/errors/tapology_failures.json
+# [3] Manual list - paste specific fighter names, one per line
+# [4] Recently fought - re-scrape fighters from recent events by cutoff date
 ```
+`run_scheduled.py --task weekly_fighters` always answers `1` then `1` (production mode,
+sequential) — sequential specifically for unattended reliability.
 
 **When to Run**: After UFC events
 **Dependencies**: `data/ufc_fighters_raw.json`
 **Output**: `data/tapology_fighters.json`, `data/errors/tapology_failures.json`
 **Follow-up**: `supabase/merge_fighters.py` → `supabase/upload_fighters.py`
+**Selectors/matching logic**: see `docs/DATA.md` — the name-search/disambiguation
+cascade in particular is worth reading before touching fighter matching.
 
 ---
 
@@ -273,10 +279,13 @@ python scrape_tapology.py    # [2] Retry errors
 ### utils/name_fixes.py
 ```python
 NAME_FIXES = {"UFC_NAME": "TAPOLOGY_NAME"}     # Name variations
-URL_OVERRIDES = {"FIGHTER": "direct_tapology_url"}
+POWER_SLAP = {"FIGHTER NAME", ...}             # Set, not dict - forces status="Power Slap"
 UFC_ROSTER = {"Fighter Name": "ufc_profile_url"}   # Manual additions
-TAPOLOGY_FIXES = {"tapology_name": "fixed_name"}
 ```
+Three dicts today, not four — `URL_OVERRIDES` and a separate `TAPOLOGY_FIXES` dict don't
+exist in the current file; both were folded into `NAME_FIXES` during the Sherdog→Tapology
+migration (see the comment at `name_fixes.py:132`). See `docs/DATA.md` for what each dict
+is actually consumed by and the "flipped direction" gotcha in `NAME_FIXES`'s tail entries.
 
 ### .env
 ```bash
