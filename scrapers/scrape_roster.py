@@ -59,6 +59,8 @@ def scrape_ufc_fighters():
     prev_count = 0
     stall_count = 0
     max_stalls = 3
+    load_more_misses = 0
+    max_load_more_misses = 3
 
     while True:
         try:
@@ -70,6 +72,7 @@ def scrape_ufc_fighters():
             load_more = WebDriverWait(driver, 5).until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, "a.button[rel='next'], .button--load-more"))
             )
+            load_more_misses = 0
             driver.execute_script("arguments[0].scrollIntoView({block:'center'});", load_more)
             time.sleep(0.5)
             driver.execute_script("arguments[0].click();", load_more)
@@ -88,7 +91,13 @@ def scrape_ufc_fighters():
                 prev_count = new_count
 
         except Exception as e:
-            break
+            # The Load More button may just not have rendered yet (page still
+            # hydrating) — give it a few short retries before concluding
+            # pagination is actually done, instead of bailing on the first miss.
+            load_more_misses += 1
+            if load_more_misses >= max_load_more_misses:
+                break
+            time.sleep(2)
 
     # --- Wait for all back-side flipcards inside the list items ---
     WebDriverWait(driver, 15).until(
@@ -125,10 +134,20 @@ def scrape_ufc_fighters():
         try:
             # Force the flip (if any styling still hides the back)
             driver.execute_script("arguments[0].classList.add('is-flipped')", card)
-            time.sleep(0.2)
 
-            name = card.find_element(By.CLASS_NAME, "c-listing-athlete__name").text.strip()
+            # .text can come back empty if read mid-flip-transition, before the
+            # element is considered "visible" — wait briefly for real text
+            # instead of trusting a flat sleep.
+            name_el = card.find_element(By.CLASS_NAME, "c-listing-athlete__name")
+            try:
+                WebDriverWait(driver, 2).until(lambda d: name_el.text.strip() != "")
+            except Exception:
+                pass
+            name = name_el.text.strip()
             profile_url = card.find_element(By.CLASS_NAME, "e-button--black").get_attribute("href")
+
+            if not name or not profile_url:
+                raise ValueError(f"Blank name or profile_url after flip (card {idx})")
 
             # Fetch profile page and grab status with retry
             status = "unknown"

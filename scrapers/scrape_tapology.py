@@ -28,6 +28,8 @@ except ImportError:
     print("WARNING: Could not import name fixes. Continuing without name fixes.")
     NAME_FIXES = {}
 
+from chrome_utils import launch_undetected_chrome
+
 # Configuration
 OUTPUT_FILE = "data/tapology_fighters.json"
 FIGHTERS_RAW_PATH = "data/ufc_fighters_raw.json"
@@ -59,7 +61,7 @@ class SessionManager:
             "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
         )
-        driver = uc.Chrome(options=options, use_subprocess=True, version_main=146)
+        driver = launch_undetected_chrome(options)
         driver.execute_script(
             "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
         )

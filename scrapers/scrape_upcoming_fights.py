@@ -1,7 +1,7 @@
 import os
 import time
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from dateutil import parser
 from bs4 import BeautifulSoup
 import undetected_chromedriver as uc
@@ -73,6 +73,8 @@ except ImportError:
     print("Could not import NAME_FIXES. Continuing without it.")
     NAME_FIXES_REVERSE = {}
 
+from chrome_utils import launch_undetected_chrome
+
 
 BASE_URL = "https://www.tapology.com/fightcenter?group=ufc"
 
@@ -110,7 +112,7 @@ def setup_browser():
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36")
 
     # Enable stealth mode
-    driver = uc.Chrome(options=options, use_subprocess=True, version_main=146)
+    driver = launch_undetected_chrome(options)
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     return driver
 
@@ -309,7 +311,6 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
         return []
 
     fights = []
-    from datetime import datetime, timezone
     now = datetime.now(timezone.utc).date()
 
     # Extract venue and location info
