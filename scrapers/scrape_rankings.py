@@ -76,191 +76,202 @@ def scrape_rankings():
     options.add_argument("--window-size=1920,1080")
 
     driver = webdriver.Chrome(options=options)
-    driver.get(url)
-
-    print("📄 Loading rankings page...")
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "div.view-grouping table tbody tr"))
-    )
-
-    WebDriverWait(driver, 15).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "div.view-grouping"))
-    )
-
-    # Close any popups
-    try:
-        close_btn = driver.find_element(By.CSS_SELECTOR, ".onetrust-close-btn-handler, .cc-btn.cc-dismiss")
-        close_btn.click()
-        time.sleep(1)
-    except Exception:
-        pass
-
-    headers = driver.find_elements(By.CSS_SELECTOR, "div.view-grouping-header")
-    divisions = driver.find_elements(By.CSS_SELECTOR, "div.view-grouping")
-
-    print(f"📊 Processing {len(headers)} divisions...")
-
-    if len(headers) != len(divisions):
-        print("⚠️ Header and division block count mismatch.")
-
     all_rankings = []
     missing_fighters = []
     warnings = []
+    try:
+        driver.get(url)
 
-    for idx, (header, div) in enumerate(zip(headers, divisions), 1):
-        division_name = header.get_attribute("textContent").replace("Top Rank", "").strip()
+        print("📄 Loading rankings page...")
+        WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "div.view-grouping table tbody tr"))
+        )
 
-        if not division_name:
-            warnings.append("Blank division header found")
-            continue
-        
-        # Show progress every few divisions
-        if idx % 3 == 0 or idx == len(headers):
-            print(f"[{idx}/{len(headers)}] Processing divisions...")
+        WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "div.view-grouping"))
+        )
 
+        # Close any popups
         try:
-            table = div.find_element(By.CSS_SELECTOR, "table")
-            caption = table.find_element(By.TAG_NAME, "caption")
-        except Exception as e:
-            warnings.append(f"Could not find table for division {division_name}")
-            continue
+            close_btn = driver.find_element(By.CSS_SELECTOR, ".onetrust-close-btn-handler, .cc-btn.cc-dismiss")
+            close_btn.click()
+            time.sleep(1)
+        except Exception:
+            pass
 
-        fighters = []
+        headers = driver.find_elements(By.CSS_SELECTOR, "div.view-grouping-header")
+        divisions = driver.find_elements(By.CSS_SELECTOR, "div.view-grouping")
 
-        # -------- Champion Parsing --------
-        try:
-            champ_name = None
-            champ_url = None
-            champ_blocks = caption.find_elements(By.CSS_SELECTOR, ".rankings--athlete--champion")
+        print(f"📊 Processing {len(headers)} divisions...")
 
-            blocks_to_try = champ_blocks if champ_blocks else [caption]
-            champ_parsed = False
+        if len(headers) != len(divisions):
+            print("⚠️ Header and division block count mismatch.")
 
-            for block in blocks_to_try:
-                if "pound-for-pound" in division_name.lower():
-                    break  # No champion in P4P divisions
+        seen_divisions = set()
 
-                try:
-                    champ_a = block.find_element(By.CSS_SELECTOR, "h5 a")
-                    champ_name = champ_a.get_attribute("textContent").strip()
-                    champ_url = champ_a.get_attribute("href")
-                except:
+        for idx, (header, div) in enumerate(zip(headers, divisions), 1):
+            division_name = header.get_attribute("textContent").replace("Top Rank", "").strip()
+
+            if not division_name:
+                warnings.append("Blank division header found")
+                continue
+
+            if division_name in seen_divisions:
+                # UFC.com renders the rankings twice (an active tab pane plus a
+                # hidden duplicate/alternate pane) - only process each division once.
+                continue
+            seen_divisions.add(division_name)
+
+            # Show progress every few divisions
+            if idx % 3 == 0 or idx == len(headers):
+                print(f"[{idx}/{len(headers)}] Processing divisions...")
+
+            try:
+                table = div.find_element(By.CSS_SELECTOR, "table")
+                caption = table.find_element(By.TAG_NAME, "caption")
+            except Exception as e:
+                warnings.append(f"Could not find table for division {division_name}")
+                continue
+
+            fighters = []
+
+            # -------- Champion Parsing --------
+            try:
+                champ_name = None
+                champ_url = None
+                champ_blocks = caption.find_elements(By.CSS_SELECTOR, ".rankings--athlete--champion")
+
+                blocks_to_try = champ_blocks if champ_blocks else [caption]
+                champ_parsed = False
+
+                for block in blocks_to_try:
+                    if "pound-for-pound" in division_name.lower():
+                        break  # No champion in P4P divisions
+
                     try:
-                        h5 = block.find_element(By.CSS_SELECTOR, "h5")
-                        champ_name = h5.text.strip()
-                        champ_url = block.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
+                        champ_a = block.find_element(By.CSS_SELECTOR, "h5 a")
+                        champ_name = champ_a.get_attribute("textContent").strip()
+                        champ_url = champ_a.get_attribute("href")
                     except:
-                        continue
+                        try:
+                            h5 = block.find_element(By.CSS_SELECTOR, "h5")
+                            champ_name = h5.text.strip()
+                            champ_url = block.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
+                        except:
+                            continue
 
-                if champ_name and champ_url:
-                    norm = normalize(champ_name)
-                    uuid = name_to_uuid.get(norm)
-                    missing = uuid is None
-                    
-                    if missing:
-                        missing_fighters.append({
-                            "name": champ_name,
-                            "normalized": norm,
-                            "division": division_name,
+                    if champ_name and champ_url:
+                        norm = normalize(champ_name)
+                        uuid = name_to_uuid.get(norm)
+                        missing = uuid is None
+
+                        if missing:
+                            missing_fighters.append({
+                                "name": champ_name,
+                                "normalized": norm,
+                                "division": division_name,
+                                "rank": "C",
+                                "profile_url": champ_url
+                            })
+
+                        # For champions, check if UFC website shows any change indicator
+                        change = None
+                        try:
+                            change_el = block.find_element(By.CSS_SELECTOR, ".views-field-weight-class-rank-change")
+                            change_text = change_el.get_attribute("textContent").strip()
+                            if change_text:
+                                change = parse_change_indicator(change_text)
+                        except:
+                            pass  # No change indicator, leave as None
+
+                        fighters.append({
                             "rank": "C",
-                            "profile_url": champ_url
+                            "name": champ_name,
+                            "profile_url": champ_url,
+                            "uuid": uuid,
+                            "missing": missing,
+                            "change": change  # Only use website-provided changes
                         })
-                    
-                    # For champions, check if UFC website shows any change indicator
-                    change = None
+                        champ_parsed = True
+                        break
+
+            except Exception as e:
+                warnings.append(f"Error parsing champion for division {division_name}")
+
+            # -------- Contenders Parsing --------
+            try:
+                rows = table.find_elements(By.CSS_SELECTOR, "tbody tr")
+                for idx, row in enumerate(rows, 1):
+                    # Skip champion row if marked "C"
                     try:
-                        change_el = block.find_element(By.CSS_SELECTOR, ".views-field-weight-class-rank-change")
-                        change_text = change_el.text.strip()
-                        if change_text:
-                            change = parse_change_indicator(change_text)
-                    except:
-                        pass  # No change indicator, leave as None
-                    
-                    fighters.append({
-                        "rank": "C",
-                        "name": champ_name,
-                        "profile_url": champ_url,
-                        "uuid": uuid,
-                        "missing": missing,
-                        "change": change  # Only use website-provided changes
-                    })
-                    champ_parsed = True
-                    break
+                        rank_col = row.find_element(By.CSS_SELECTOR, ".views-field-weight-class-rank").get_attribute("textContent").strip()
+                        if rank_col.upper() == "C":
+                            if "pound-for-pound" in division_name.lower():
+                                warnings.append(f"Skipping P4P fake champ row")
+                            continue
+                    except Exception:
+                        pass
 
-        except Exception as e:
-            warnings.append(f"Error parsing champion for division {division_name}")
+                    try:
+                        name_el = row.find_element(By.CSS_SELECTOR, ".views-field-title a")
+                        name = name_el.get_attribute("textContent").strip()
+                        href = name_el.get_attribute("href")
+                        norm = normalize(name)
+                        uuid = name_to_uuid.get(norm)
+                        missing = uuid is None
 
-        # -------- Contenders Parsing --------
-        try:
-            rows = table.find_elements(By.CSS_SELECTOR, "tbody tr")
-            for idx, row in enumerate(rows, 1):
-                # Skip champion row if marked "C"
-                try:
-                    rank_col = row.find_element(By.CSS_SELECTOR, ".views-field-weight-class-rank").text.strip()
-                    if rank_col.upper() == "C":
-                        if "pound-for-pound" in division_name.lower():
-                            warnings.append(f"Skipping P4P fake champ row")
-                        continue
-                except Exception:
-                    pass
+                        if missing:
+                            missing_fighters.append({
+                                "name": name,
+                                "normalized": norm,
+                                "division": division_name,
+                                "rank": idx,
+                                "profile_url": href
+                            })
 
-                try:
-                    name_el = row.find_element(By.CSS_SELECTOR, ".views-field-title a")
-                    name = name_el.text.strip()
-                    href = name_el.get_attribute("href")
-                    norm = normalize(name)
-                    uuid = name_to_uuid.get(norm)
-                    missing = uuid is None
-                    
-                    if missing:
-                        missing_fighters.append({
-                            "name": name,
-                            "normalized": norm,
-                            "division": division_name,
+                        # Parse change indicator from UFC website (trust this)
+                        parsed_change = None
+                        try:
+                            change_el = row.find_element(By.CSS_SELECTOR, ".views-field-weight-class-rank-change")
+                            change_text = change_el.get_attribute("textContent").strip()
+                            if change_text:  # Only use if not empty
+                                parsed_change = parse_change_indicator(change_text)
+                        except:
+                            pass  # No change indicator on website, leave as None
+
+                        # Don't compute changes - trust UFC website only
+                        # If UFC shows no change, assume no change (None)
+
+                        fighter_data = {
                             "rank": idx,
-                            "profile_url": href
-                        })
-                    
-                    # Parse change indicator from UFC website (trust this)
-                    parsed_change = None
-                    try:
-                        change_el = row.find_element(By.CSS_SELECTOR, ".views-field-weight-class-rank-change")
-                        change_text = change_el.text.strip()
-                        if change_text:  # Only use if not empty
-                            parsed_change = parse_change_indicator(change_text)
-                    except:
-                        pass  # No change indicator on website, leave as None
-                    
-                    # Don't compute changes - trust UFC website only
-                    # If UFC shows no change, assume no change (None)
-                    
-                    fighter_data = {
-                        "rank": idx,
-                        "name": name,
-                        "profile_url": href,
-                        "uuid": uuid,
-                        "missing": missing,
-                        "change": parsed_change  # Only use website-provided changes
-                    }
-                    fighters.append(fighter_data)
-                    
-                except Exception as e:
-                    warnings.append(f"Error parsing fighter row in {division_name}")
-                    continue
+                            "name": name,
+                            "profile_url": href,
+                            "uuid": uuid,
+                            "missing": missing,
+                            "change": parsed_change  # Only use website-provided changes
+                        }
+                        fighters.append(fighter_data)
+
+                    except Exception as e:
+                        warnings.append(f"Error parsing fighter row in {division_name}")
+                        continue
+            except Exception as e:
+                warnings.append(f"Error parsing contenders for {division_name}")
+
+            # Validate division structure
+            validation_issues = validate_division_structure(division_name, fighters)
+            if validation_issues:
+                warnings.extend(validation_issues)
+
+            all_rankings.append({
+                "division": division_name,
+                "fighters": fighters
+            })
+    finally:
+        try:
+            driver.quit()
         except Exception as e:
-            warnings.append(f"Error parsing contenders for {division_name}")
-
-        # Validate division structure
-        validation_issues = validate_division_structure(division_name, fighters)
-        if validation_issues:
-            warnings.extend(validation_issues)
-
-        all_rankings.append({
-            "division": division_name,
-            "fighters": fighters
-        })
-
-    driver.quit()
+            print(f"Chrome quit() failed: {e}")
 
     print("💾 Saving rankings data...")
 
