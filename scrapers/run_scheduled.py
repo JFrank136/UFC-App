@@ -1,4 +1,5 @@
 import argparse
+import json
 import logging
 import os
 import shutil
@@ -176,9 +177,14 @@ def run_rankings(ctx: RunContext) -> bool:
         return False
     if not _validate_and_report(data_file, backup, ctx):
         return False
-    result = validate_file(data_file)
+    # ufc_rankings.json is a list of divisions, each with a nested fighters
+    # list - the Supabase `rankings` table has one row per fighter, so the
+    # pre-upload guard needs the flattened fighter count, not the division
+    # count validate_file() returns.
+    divisions = json.loads(data_file.read_text(encoding="utf-8"))
+    fighter_count = sum(len(d.get("fighters", [])) for d in divisions)
     return _upload_with_guard(
-        SUPABASE_DIR / "upload_rankings.py", "rankings", result.record_count, ctx
+        SUPABASE_DIR / "upload_rankings.py", "rankings", fighter_count, ctx
     )
 
 
