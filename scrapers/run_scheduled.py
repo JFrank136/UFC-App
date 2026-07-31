@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import shutil
 import subprocess
 import sys
@@ -68,16 +69,23 @@ def restore_file(backup: Path, destination: Path) -> bool:
     return True
 
 
-def run_script(script: Path, choice: Optional[str], logger: logging.Logger) -> bool:
+def run_script(
+    script: Path, choice: Optional[str], logger: logging.Logger, timeout: int = 1800
+) -> bool:
     """Run a Python script, capturing stdout/stderr to logger. Returns True on success."""
     logger.info(f"▶ Running {script.name}")
+    env = os.environ.copy()
+    env["PYTHONIOENCODING"] = "utf-8"
     result = subprocess.run(
         [sys.executable, str(script)],
         input=(choice + "\n") if choice else None,
         cwd=str(script.parent),
         text=True,
+        encoding="utf-8",
+        errors="replace",
         capture_output=True,
-        timeout=1800,
+        timeout=timeout,
+        env=env,
     )
     if result.stdout:
         logger.debug(result.stdout.rstrip())
@@ -193,7 +201,9 @@ def run_weekly_fighters(ctx: RunContext) -> bool:
     # Step 1: scrape_details — continue with stale data on failure
     details_file = DATA_DIR / "ufc_details.json"
     details_backup = backup_file(details_file)
-    if not run_script(BASE_DIR / "scrape_details.py", choice="1", logger=ctx.logger):
+    if not run_script(
+        BASE_DIR / "scrape_details.py", choice="1", logger=ctx.logger, timeout=7200
+    ):
         ctx.logger.warning("scrape_details.py failed — keeping existing data")
         restore_file(details_backup, details_file)
     else:
@@ -202,7 +212,9 @@ def run_weekly_fighters(ctx: RunContext) -> bool:
     # Step 2: scrape_tapology — continue with stale data on failure
     tapology_file = DATA_DIR / "tapology_fighters.json"
     tapology_backup = backup_file(tapology_file)
-    if not run_script(BASE_DIR / "scrape_tapology.py", choice="1", logger=ctx.logger):
+    # scrape_tapology.py prompts twice: top-level mode, then sequential/concurrent —
+    # "1\n1" answers both (production mode, then sequential for unattended reliability)
+    if not run_script(BASE_DIR / "scrape_tapology.py", choice="1\n1", logger=ctx.logger):
         ctx.logger.warning("scrape_tapology.py failed — keeping existing data")
         restore_file(tapology_backup, tapology_file)
     else:
