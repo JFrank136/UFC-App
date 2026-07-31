@@ -13,6 +13,13 @@ from typing import Optional
 
 from dotenv import load_dotenv
 
+# Console output (log messages, notifier prints) uses emoji throughout, but
+# Windows Task Scheduler runs this with a cp1252 console that can't encode
+# them - reconfigure to UTF-8 so those prints/log lines don't crash the run.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
 BASE_DIR = Path(__file__).parent
 load_dotenv(BASE_DIR.parent / ".env")
 
