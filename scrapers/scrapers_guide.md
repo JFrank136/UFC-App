@@ -189,6 +189,22 @@ pattern succeeded the day before), but it's worth checking first (`Get-Scheduled
 whenever a browser-based task only fails when scheduled and not when run manually — it
 rules a real class of environment-specific bugs in or out quickly.
 
+**A page-load timeout can orphan the Chrome process, and orphans cascade** —
+`scrape_rankings.py` and `scrape_upcoming_fights.py` used to create the Selenium driver
+and only call `driver.quit()` after the scrape logic ran, with no `try/finally`. If a
+`driver.get()`/`execute_script()` call raised (e.g. `urllib3.exceptions.ReadTimeoutError`
+on a slow page load), the exception skipped cleanup entirely and left the Chrome +
+chromedriver process running with nothing left to close it. This dev machine only has
+~7.8GB RAM, so each orphaned Chrome process eats into a small budget shared with normal
+browser/app usage — and once memory gets tight, Selenium's own commands slow down enough
+to time out too, so one failed run made the next one more likely to fail the same way.
+Both scripts (including `scrape_upcoming_fights.py`'s mode-3 retry path) now create the
+driver inside a `try`/`finally` so `driver.quit()` always runs. If a browser-based task
+times out again, check for orphaned `chrome.exe`/`chromedriver.exe`/
+`undetected_chromedriver.exe` processes (`Get-CimInstance Win32_Process -Filter
+"Name='chrome.exe'"` and look for entries whose `ParentProcessId` no longer exists) and
+free system memory before assuming the site or selectors changed.
+
 ---
 
 ## Adding a New Fighter
