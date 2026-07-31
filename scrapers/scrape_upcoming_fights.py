@@ -460,13 +460,14 @@ def merge_fights(existing_fights, new_fights):
 
 def main():
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    driver = setup_browser()
 
     global uuid_lookup
     uuid_lookup = load_uuid_lookup()
 
+    driver = None
     all_fights = []
     try:
+        driver = setup_browser()
         links = get_event_links(driver)
         total_links = len(links)
         for idx, link in enumerate(links, 1):
@@ -492,10 +493,11 @@ def main():
                 except Exception as err:
                     print(f"Could not write to event error log: {err}")
     finally:
-        try:
-            driver.quit()
-        except Exception as e:
-            print(f" Chrome quit() failed: {e}")
+        if driver:
+            try:
+                driver.quit()
+            except Exception as e:
+                print(f" Chrome quit() failed: {e}")
 
     # Load existing fights and merge with freshly scraped ones
     existing_fights = []
@@ -613,24 +615,28 @@ if __name__ == "__main__":
         if not failed_events:
             print("No failed events to retry.")
             sys.exit(0)
-        driver = setup_browser()
         uuid_lookup = load_uuid_lookup()
         all_fights = []
         retried_urls = set()
-        for entry in failed_events:
-            url = entry.get("url")
-            if not url:
-                continue
-            print(f"🔁 Retrying failed event: {url}")
-            fights = scrape_event(driver, url)
-            if fights:
-                all_fights.extend(fights)
-                retried_urls.add(url)
-            time.sleep(random.uniform(1.5, 3.5))
+        driver = None
         try:
-            driver.quit()
-        except Exception as e:
-            print(f"Chrome quit() failed: {e}")
+            driver = setup_browser()
+            for entry in failed_events:
+                url = entry.get("url")
+                if not url:
+                    continue
+                print(f"🔁 Retrying failed event: {url}")
+                fights = scrape_event(driver, url)
+                if fights:
+                    all_fights.extend(fights)
+                    retried_urls.add(url)
+                time.sleep(random.uniform(1.5, 3.5))
+        finally:
+            if driver:
+                try:
+                    driver.quit()
+                except Exception as e:
+                    print(f"Chrome quit() failed: {e}")
 
         # --- Merge retried fights into main output file ---
         existing_fights = []
