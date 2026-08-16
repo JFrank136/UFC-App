@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Clock, Calendar, Search, X, Target, Shield, Zap, AlertCircle, ChevronDown, ChevronUp, BarChart2, Sun, Moon } from 'lucide-react';
+import { Search, X, AlertCircle, ChevronDown, ChevronUp, Sun, Moon } from 'lucide-react';
 import supabase from '../api/supabaseClient';
 import { getFullUpcomingFights } from '../api/supabaseQueries';
-import countryCodes from '../utils/countryCodes';
+import { getFightPriorityScore, selectHeadlineFight, getDateParts } from '../utils/upcomingFightsHelpers';
+import { DateChip, HeadlineFightCard, CompactFightRow } from '../components/UpcomingFightsComponents';
 import styles from '../styles/UpcomingFights.module.css';
 
 const UpcomingFights = () => {
@@ -11,8 +12,6 @@ const UpcomingFights = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [expandedFights, setExpandedFights] = useState(new Set());
-  const [expandedCards, setExpandedCards] = useState(new Set());
   const [expandedEvents, setExpandedEvents] = useState(new Set());
   const [comparingFighters, setComparingFighters] = useState(null);
   const [darkMode, setDarkMode] = useState(true);
@@ -51,24 +50,18 @@ const UpcomingFights = () => {
     fetchFightsWithFavorites();
   }, []);
 
-  const nextEventCountdown = useMemo(() => {
+  const nextEvent = useMemo(() => {
     if (fights.length === 0) return null;
     const now = new Date();
-    const nextEvent = fights
-      .map(f => new Date(f.event_date + 'T' + (f.event_time || '00:00')))
-      .filter(date => date > now)
-      .sort((a, b) => a - b)[0];
-    if (!nextEvent) return null;
-    const diff = nextEvent - now;
-    return {
-      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-      minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-      eventDate: nextEvent
-    };
+    const upcoming = fights
+      .map(f => ({ date: new Date(f.event_date + 'T' + (f.event_time || '00:00')), event: f.event }))
+      .filter(f => f.date > now)
+      .sort((a, b) => a.date - b.date)[0];
+    if (!upcoming) return null;
+    const days = Math.max(1, Math.ceil((upcoming.date - now) / (1000 * 60 * 60 * 24)));
+    return { days, event: upcoming.event };
   }, [fights]);
 
-  // Date filter: show events within 3 days before today through future
   const cutoff = useMemo(() => {
     const d = new Date();
     d.setDate(d.getDate() - 3);
@@ -107,20 +100,13 @@ const UpcomingFights = () => {
     filteredFights.forEach(fight => {
       const key = fight.event;
       if (!groups[key]) {
-        groups[key] = { date: fight.event_date, time: fight.event_time, type: fight.event_type, fights: [] };
+        groups[key] = { date: fight.event_date, time: fight.event_time, fights: [] };
       }
       groups[key].fights.push(fight);
     });
     Object.values(groups).forEach(group => {
       group.fights.sort((a, b) => {
-        // Priority score: fights with a 'favorite' fighter rank highest
-        const getPriorityScore = (fight) => {
-          const allFavs = [...(fight.fighter1_favorites || []), ...(fight.fighter2_favorites || [])];
-          if (allFavs.some(f => f.priority === 'favorite')) return 2;
-          if (allFavs.some(f => f.priority === 'interested')) return 1;
-          return 0;
-        };
-        const pDiff = getPriorityScore(b) - getPriorityScore(a);
+        const pDiff = getFightPriorityScore(b) - getFightPriorityScore(a);
         if (pDiff !== 0) return pDiff;
         return (b.fight_order || 0) - (a.fight_order || 0);
       });
@@ -134,22 +120,6 @@ const UpcomingFights = () => {
     }
   }, [groupedFights]);
 
-  const toggleFightExpansion = (fightId) => {
-    setExpandedFights(prev => {
-      const s = new Set(prev);
-      s.has(fightId) ? s.delete(fightId) : s.add(fightId);
-      return s;
-    });
-  };
-
-  const toggleCardExpansion = (fightId) => {
-    setExpandedCards(prev => {
-      const s = new Set(prev);
-      s.has(fightId) ? s.delete(fightId) : s.add(fightId);
-      return s;
-    });
-  };
-
   const toggleEventExpansion = (eventName) => {
     setExpandedEvents(prev => {
       const s = new Set(prev);
@@ -157,10 +127,6 @@ const UpcomingFights = () => {
       return s;
     });
   };
-
-  const formatDate = (dateString) => new Date(dateString).toLocaleDateString('en-US', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  });
 
   const formatTime = (timeString) => {
     if (!timeString) return 'Time TBA';
@@ -200,33 +166,12 @@ const UpcomingFights = () => {
     return { divisional: divRank, p4p };
   };
 
-  const getUserLabels = (favorites) => {
-    if (!favorites || favorites.length === 0) return [];
-    return favorites.map(fav => ({ priority: fav.priority, color: '#FFD700' }));
-  };
-
-  // Returns breakdown of favorites/interested for an event's fights
-  const getEventPriority = (fights) => {
-    let favorites = 0;
-    let interested = 0;
-    fights.forEach(fight => {
-      [...(fight.fighter1_favorites || []), ...(fight.fighter2_favorites || [])].forEach(fav => {
-        if (fav.priority === 'favorite') favorites++;
-        else if (fav.priority === 'interested') interested++;
-      });
-    });
-    return { favorites, interested };
-  };
-
-  // Returns display label and whether it's a main card fight
-  const getCardSectionInfo = (cardSection) => {
-    const raw = cardSection || '';
-    if (raw === 'Main Event') return { label: 'Main Event', isMainCard: true };
-    if (raw === 'Co-Main') return { label: 'Co-Main', isMainCard: true };
-    if (raw === 'Main Card' || raw === 'Main') return { label: 'Main Card', isMainCard: true };
-    if (raw === 'Preliminary Card' || raw === 'Prelim' || raw === 'Prelims') return { label: 'Prelims', isMainCard: false };
-    if (raw === 'Early Prelims') return { label: 'Early Prelims', isMainCard: false };
-    return { label: raw || 'TBA', isMainCard: false };
+  const getFighterRankInfo = (fighter) => {
+    const { divisional, p4p } = getRankDisplay(fighter);
+    if (divisional?.rank === 'C') return { isChampion: true, label: 'Champion' };
+    if (divisional) return { isChampion: false, label: `Rank ${divisional.rank}` };
+    if (p4p) return { isChampion: false, label: `P4P #${p4p.rank}` };
+    return { isChampion: false, label: null };
   };
 
   const getFightOutcomeStats = (fighter, type = 'all') => {
@@ -247,30 +192,26 @@ const UpcomingFights = () => {
     };
   };
 
-  const getDivisionFromRankings = (fighter) => {
-    if (!fighter?.rankings || fighter.rankings.length === 0) return null;
-    return fighter.rankings.find(r => !r.division?.toLowerCase().includes('pound-for-pound'))?.division || null;
+  const getCardSectionInfo = (cardSection) => {
+    const raw = cardSection || '';
+    if (raw === 'Main Event') return 'Main event';
+    if (raw === 'Co-Main') return 'Co-main';
+    if (raw === 'Main Card' || raw === 'Main') return 'Main card';
+    if (raw === 'Preliminary Card' || raw === 'Prelim' || raw === 'Prelims') return 'Prelim';
+    if (raw === 'Early Prelims') return 'Early prelims';
+    return raw || 'TBA';
   };
 
-  const getWeightClassName = (weightClass, f1, f2) => {
-    if (!weightClass || weightClass === 'TBA') return 'TBA';
-    const f1Div = getDivisionFromRankings(f1);
-    const f2Div = getDivisionFromRankings(f2);
-    if (f1Div && f2Div && f1Div === f2Div) return f1Div;
-    if (f1Div && !f2Div) return f1Div;
-    if (f2Div && !f1Div) return f2Div;
-    const weightMap = {
-      '125': 'Flyweight', '135': 'Bantamweight', '145': 'Featherweight',
-      '155': 'Lightweight', '170': 'Welterweight', '185': 'Middleweight',
-      '205': 'Light Heavyweight', '265': 'Heavyweight', '115': "Women's Strawweight"
-    };
-    let division = weightMap[weightClass] || weightClass;
-    const hasWomens = (f1Div?.toLowerCase().includes("women's")) || (f2Div?.toLowerCase().includes("women's"));
-    if (hasWomens && !division.toLowerCase().includes("women's")) {
-      const womensMap = { 'Flyweight': "Women's Flyweight", 'Bantamweight': "Women's Bantamweight", 'Featherweight': "Women's Featherweight" };
-      division = womensMap[division] || `Women's ${division}`;
-    }
-    return division;
+  const getEventPriority = (eventFights) => {
+    let favorites = 0;
+    let interested = 0;
+    eventFights.forEach(fight => {
+      [...(fight.fighter1_favorites || []), ...(fight.fighter2_favorites || [])].forEach(fav => {
+        if (fav.priority === 'favorite') favorites++;
+        else if (fav.priority === 'interested') interested++;
+      });
+    });
+    return { favorites, interested };
   };
 
   const ComparisonModal = ({ fight, onClose }) => {
@@ -298,13 +239,13 @@ const UpcomingFights = () => {
       <div className={styles.modalOverlay} onClick={onClose}>
         <div className={styles.comparisonModal} onClick={e => e.stopPropagation()}>
           <button className={styles.closeBtn} onClick={onClose}><X size={24} /></button>
-          <h2 className={styles.comparisonTitle}>Fighter Comparison</h2>
+          <h2 className={styles.comparisonTitle}>Fighter comparison</h2>
           <div className={styles.comparisonHeader}>
             {[f1, f2].map((fighter, idx) => (
               <div key={idx} className={styles.fighterSummaryModal}>
                 <div className={styles.comparisonImageContainer}>
                   <img src={fighter.image_url || '/static/images/placeholder.jpg'} alt={fighter.name}
-                    onError={e => { e.target.src = `https://via.placeholder.com/100x100/333/gold?text=${fighter.name?.charAt(0) || '?'}`; }} />
+                    onError={e => { e.target.src = `https://via.placeholder.com/100x100/1a2338/f5f7fa?text=${fighter.name?.charAt(0) || '?'}`; }} />
                 </div>
                 <h3>{fighter.name}</h3>
                 <p>{fighter.nickname || ''}</p>
@@ -330,7 +271,7 @@ const UpcomingFights = () => {
           <div className={styles.recentFightsComparison}>
             {[f1, f2].map((fighter, idx) => (
               <div key={idx} className={styles.recentFightsCol}>
-                <h4>{fighter.name} Recent Fights</h4>
+                <h4>{fighter.name} recent fights</h4>
                 {getRecentFights(fighter).map((fight, i) => (
                   <div key={i} className={`${styles.fightResult} ${styles[fight.result?.toLowerCase() || '']}`}>
                     <span className={styles.resultIndicator}>{fight.result?.charAt(0)?.toUpperCase() || '?'}</span>
@@ -343,122 +284,6 @@ const UpcomingFights = () => {
             ))}
           </div>
         </div>
-      </div>
-    );
-  };
-
-  const FighterCard = ({ fight, isExpanded }) => {
-    const f1 = fight.fighter1_data;
-    const f2 = fight.fighter2_data;
-    const isCardExpanded = expandedCards.has(fight.id);
-
-    if (!f1 || !f2) return (
-      <div className={`${styles.fightCard} ${styles.errorCard}`}>
-        <p>Fighter data unavailable for this fight</p>
-      </div>
-    );
-
-    const isChampionshipFight =
-      (f1.rankings?.some(r => r.rank === 'C')) ||
-      (f2.rankings?.some(r => r.rank === 'C')) ||
-      fight.event?.toLowerCase().includes('title');
-
-    const actualDivision = getDivisionFromRankings(f1) || getDivisionFromRankings(f2);
-    const f1Rankings = getRankDisplay(f1);
-    const f2Rankings = getRankDisplay(f2);
-    const f1Labels = getUserLabels(fight.fighter1_favorites);
-    const f2Labels = getUserLabels(fight.fighter2_favorites);
-
-    const { label: sectionLabel, isMainCard } = getCardSectionInfo(fight.card_section);
-
-    return (
-      <div className={`${styles.fightCard} ${isChampionshipFight ? styles.championshipFight : ''} ${isMainCard ? styles.mainCardFight : ''}`}>
-        <div className={styles.fightCardHeader}>
-          <div className={`${styles.cardSectionBadge} ${isMainCard ? styles.mainCardBadge : styles.prelimBadge}`}>
-            {sectionLabel}
-          </div>
-          <div className={styles.weightClass}>{actualDivision || getWeightClassName(fight.weight_class, f1, f2)}</div>
-          <div className={styles.fightTime}>{fight.event_time ? formatTime(fight.event_time) : 'Time TBA'}</div>
-          <button className={styles.cardExpandBtn} onClick={() => toggleCardExpansion(fight.id)}>
-            {isCardExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-          </button>
-        </div>
-
-        <div className={styles.fightMatchup}>
-          {[{ fighter: f1, labels: f1Labels, rankings: f1Rankings }, { fighter: f2, labels: f2Labels, rankings: f2Rankings }].map(({ fighter, labels, rankings }, idx) => (
-            <React.Fragment key={idx}>
-              {idx === 1 && (
-                <div className={styles.vsSection}>
-                  {isChampionshipFight && <div className={styles.championshipCrown}>👑</div>}
-                  <div className={styles.vs}>VS</div>
-                  <button className={styles.compareBtn} onClick={() => setComparingFighters(fight)} title="Compare Fighters">
-                    <BarChart2 size={20} />
-                  </button>
-                </div>
-              )}
-              <div className={styles.fighterPreview}>
-                <div className={styles.fighterImageContainer}>
-                  <img src={fighter.image_url || '/static/images/placeholder.jpg'} alt={fighter.name || 'Fighter'}
-                    onError={e => { e.target.src = `https://via.placeholder.com/120x120/333/gold?text=${fighter.name?.charAt(0) || '?'}`; }} />
-                  {rankings.p4p && <div className={styles.p4pMedalBadge}>🥇</div>}
-                </div>
-                <div className={styles.fighterInfo}>
-                  <h3>{fighter.name || 'Unknown Fighter'}</h3>
-                  {fighter.nickname && <p className={styles.nickname}>"{fighter.nickname}"</p>}
-                  <div className={styles.country}>{countryCodes[fighter.country] || '🏴'} {fighter.country || 'Unknown'}</div>
-                  <div className={styles.record}>{formatRecord(fighter)}</div>
-                  <div className={styles.rankingsContainer}>
-                    {rankings.divisional && <div className={styles.rankBadgeDivisional}>#{rankings.divisional.rank} {rankings.divisional.division}</div>}
-                    {rankings.p4p && <div className={styles.rankBadgeP4p}>P4P #{rankings.p4p.rank}</div>}
-                  </div>
-                  {labels.length > 0 && (
-                    <div className={styles.userLabels}>
-                      {labels.map((label, i) => (
-                        <span key={i} className={styles.userLabel}>{label.priority}</span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </React.Fragment>
-          ))}
-        </div>
-
-        <button className={styles.expandBtn} onClick={() => toggleFightExpansion(fight.id)}>
-          <span>{isExpanded ? 'Hide Details' : 'View Details'}</span>
-          {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-        </button>
-
-        {isExpanded && (
-          <div className={styles.fightDetails}>
-            <div className={styles.detailedStats}>
-              {[f1, f2].map((fighter, idx) => (
-                <div key={idx} className={styles.fighterDetails}>
-                  <h4>{fighter.name} Stats</h4>
-                  <div className={styles.statsGrid}>
-                    <div className={styles.stat}><Zap size={16} /><span>Strikes/min: {formatStat(fighter.strikes_landed_per_min)}</span></div>
-                    <div className={styles.stat}><Shield size={16} /><span>Defense: {formatStat(fighter.striking_defense)}</span></div>
-                    <div className={styles.stat}><Target size={16} /><span>Takedowns: {formatStat(fighter.takedown_avg, 1)}/15min</span></div>
-                  </div>
-                  <h5>Recent Performance</h5>
-                  <div className={styles.recentFights}>
-                    {getRecentFights(fighter).map((result, i) => (
-                      <div key={i} className={`${styles.fightResult} ${styles[result.result?.toLowerCase() || '']}`}>
-                        <span className={styles.resultIndicator}>{result.result?.charAt(0)?.toUpperCase() || '?'}</span>
-                        <span>{result.opponent || 'Unknown'}</span>
-                        <span className={styles.method}>{result.method?.replace(/\([^)]*\)/g, '').trim() || 'N/A'}</span>
-                      </div>
-                    ))}
-                    {getRecentFights(fighter).length === 0 && <div className={styles.noFights}>No recent fights available</div>}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button className={`${styles.expandBtn} ${styles.collapse}`} onClick={() => toggleFightExpansion(fight.id)}>
-              <span>Hide Details</span><ChevronUp size={20} />
-            </button>
-          </div>
-        )}
       </div>
     );
   };
@@ -478,123 +303,114 @@ const UpcomingFights = () => {
     <div className={styles.pageContainer} data-theme={theme}>
       <div className={styles.errorContainer}>
         <AlertCircle size={48} />
-        <h3>Error Loading Fights</h3>
+        <h3>Error loading fights</h3>
         <p>{error}</p>
-        <button onClick={() => window.location.reload()}>Try Again</button>
+        <button onClick={() => window.location.reload()}>Try again</button>
       </div>
     </div>
   );
 
   return (
     <div className={styles.pageContainer} data-theme={theme}>
-      <header className={styles.pageHeader}>
-        <div className={styles.headerContent}>
-          <h1>⚔️ Upcoming UFC Fights</h1>
-          <p>Track your favorite fighters and never miss a match</p>
-        </div>
-        <div className={styles.headerControls}>
+      <div className={styles.content}>
+        <header className={styles.pageHeader}>
+          <div>
+            <h1 className={styles.pageTitle}>Upcoming fights</h1>
+            <p className={styles.pageSub}>
+              {filteredFights.length} fights across {Object.keys(groupedFights).length} events you follow
+            </p>
+          </div>
           <button className={styles.themeToggle} onClick={() => setDarkMode(!darkMode)}
             title={`Switch to ${darkMode ? 'light' : 'dark'} mode`}>
             {darkMode ? <Sun size={20} /> : <Moon size={20} />}
           </button>
-          {nextEventCountdown && (
-            <div className={styles.countdownTimer}>
-              <Clock size={24} />
-              <div className={styles.countdownContent}>
-                <p>Next Event In</p>
-                <div className={styles.timeUnits}>
-                  {[['Days', nextEventCountdown.days], ['Hours', nextEventCountdown.hours], ['Min', nextEventCountdown.minutes]].map(([label, val]) => (
-                    <div key={label} className={styles.timeUnit}>
-                      <span className={styles.timeValue}>{val}</span>
-                      <span className={styles.timeLabel}>{label}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+        </header>
+
+        {nextEvent && (
+          <div className={styles.countdown}>
+            <span className={styles.countdownNumber}>{nextEvent.days} day{nextEvent.days !== 1 ? 's' : ''}</span>
+            <span className={styles.countdownCaption}>until {nextEvent.event}</span>
+          </div>
+        )}
+
+        <div className={styles.searchBar}>
+          <Search size={16} aria-hidden="true" />
+          <input type="text" placeholder="Search fighters or events"
+            value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+          {searchQuery && (
+            <button className={styles.clearSearch} onClick={() => setSearchQuery('')} aria-label="Clear search"><X size={14} /></button>
           )}
         </div>
-      </header>
 
-      <div className={styles.controlsSection}>
-        <div className={styles.searchAndFilters}>
-          <div className={styles.searchBar}>
-            <Search size={18} />
-            <input type="text" placeholder="Search fighters or events..."
-              value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
-            {searchQuery && (
-              <button className={styles.clearSearch} onClick={() => setSearchQuery('')}><X size={16} /></button>
-            )}
-          </div>
-          <div className={styles.filtersPanel}>
-            <div className={styles.filterGroup}>
-              <label>Priority</label>
-              <select value={priorityFilter} onChange={e => setPriorityFilter(e.target.value)}>
-                <option value="All">All Priorities</option>
-                <option value="Favorite">Favorites Only</option>
-                <option value="Interested">Interested Only</option>
-              </select>
-            </div>
-          </div>
+        <div className={styles.filterChips}>
+          {['All', 'Favorite', 'Interested'].map(option => (
+            <button
+              key={option}
+              className={`${styles.chip} ${priorityFilter === option ? styles.chipOn : ''}`}
+              onClick={() => setPriorityFilter(option)}
+            >
+              {option === 'Favorite' ? 'Favorites' : option}
+            </button>
+          ))}
         </div>
-      </div>
 
-      <div className={styles.resultsSummary}>
         {Object.keys(groupedFights).length === 0 ? (
-          <p>No upcoming fights found for your selected criteria</p>
+          <p className={styles.pageSub}>No upcoming fights found for your selected criteria</p>
         ) : (
-          <p><strong>{filteredFights.length}</strong> fights across <strong>{Object.keys(groupedFights).length}</strong> events featuring your favorite fighters
-            {searchQuery && <span> · Showing results for "{searchQuery}"</span>}
-          </p>
-        )}
-      </div>
+          <div className={styles.eventsContainer}>
+            {Object.entries(groupedFights)
+              .sort(([, a], [, b]) => new Date(a.date) - new Date(b.date))
+              .map(([eventName, eventData]) => {
+                const { day, month, weekday } = getDateParts(eventData.date);
+                const { favorites, interested } = getEventPriority(eventData.fights);
+                const breakdownParts = [];
+                if (favorites > 0) breakdownParts.push(`${favorites} favorite${favorites > 1 ? 's' : ''}`);
+                if (interested > 0) breakdownParts.push(`${interested} interested`);
+                const isExpanded = expandedEvents.has(eventName);
+                const headline = selectHeadlineFight(eventData.fights);
+                const otherFights = eventData.fights.filter(f => f !== headline);
 
-      <div className={styles.eventsContainer}>
-        {Object.entries(groupedFights)
-          .sort(([, a], [, b]) => new Date(a.date) - new Date(b.date))
-          .map(([eventName, eventData]) => {
-            const isPPV = eventData.type?.toLowerCase().includes('ppv') ||
-              (eventName.toLowerCase().includes('ufc ') && /ufc \d+/.test(eventName.toLowerCase()));
-            const { favorites, interested } = getEventPriority(eventData.fights);
-            const breakdownParts = [];
-            if (favorites > 0) breakdownParts.push(`${favorites} favorite${favorites > 1 ? 's' : ''}`);
-            if (interested > 0) breakdownParts.push(`${interested} interested`);
-            const breakdown = breakdownParts.join(' · ');
-            return (
-              <div key={eventName} className={styles.eventSection}>
-                <div className={`${styles.eventHeader} ${isPPV ? styles.ppvEvent : styles.fightNightEvent}`}
-                  onClick={() => toggleEventExpansion(eventName)}>
-                  <div className={styles.eventInfo}>
-                    <div className={styles.eventTitleContainer}>
-                      <h2>{eventName}</h2>
-                      {isPPV && <span className={styles.ppvBadge}>PPV</span>}
-                    </div>
-                    <div className={styles.eventMeta}>
-                      <Calendar size={16} />
-                      <span>{formatDate(eventData.date)}</span>
-                      <span className={styles.separator}>·</span>
-                      <Clock size={16} />
-                      <span>{formatTime(eventData.time)}</span>
-                    </div>
-                    {breakdown && (
-                      <div className={styles.eventBreakdown}>{breakdown}</div>
+                return (
+                  <div key={eventName} className={styles.eventCard}>
+                    <button className={styles.eventHeader} onClick={() => toggleEventExpansion(eventName)}>
+                      <DateChip day={day} month={month} />
+                      <div className={styles.eventInfo}>
+                        <div className={styles.eventName}>{eventName}</div>
+                        <div className={styles.eventWhen}>{weekday} &middot; {formatTime(eventData.time)}</div>
+                        {breakdownParts.length > 0 && (
+                          <div className={styles.eventBreakdown}>{breakdownParts.join(' · ')}</div>
+                        )}
+                      </div>
+                      <span className={styles.eventExpandIcon}>
+                        {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                      </span>
+                    </button>
+                    {isExpanded && (
+                      <div className={styles.eventBody}>
+                        {headline && (
+                          <HeadlineFightCard
+                            fight={headline}
+                            f1Rank={getFighterRankInfo(headline.fighter1_data)}
+                            f2Rank={getFighterRankInfo(headline.fighter2_data)}
+                            formatRecord={formatRecord}
+                            onCompare={setComparingFighters}
+                          />
+                        )}
+                        {otherFights.map(fight => (
+                          <CompactFightRow
+                            key={fight.id}
+                            fight={fight}
+                            sectionLabel={getCardSectionInfo(fight.card_section)}
+                            onCompare={setComparingFighters}
+                          />
+                        ))}
+                      </div>
                     )}
                   </div>
-                  <div className={styles.eventStats}>
-                    <span className={styles.fightCount}>{eventData.fights.length} fights</span>
-                    <span className={styles.expandIcon}>{expandedEvents.has(eventName) ? <ChevronUp size={20} /> : <ChevronDown size={20} />}</span>
-                  </div>
-                </div>
-                {expandedEvents.has(eventName) && (
-                  <div className={styles.fightsGrid}>
-                    {eventData.fights.map(fight => (
-                      <FighterCard key={fight.id} fight={fight} isExpanded={expandedFights.has(fight.id)} />
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                );
+              })}
+          </div>
+        )}
       </div>
 
       {comparingFighters && <ComparisonModal fight={comparingFighters} onClose={() => setComparingFighters(null)} />}
