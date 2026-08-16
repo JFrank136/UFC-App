@@ -205,6 +205,18 @@ times out again, check for orphaned `chrome.exe`/`chromedriver.exe`/
 "Name='chrome.exe'"` and look for entries whose `ParentProcessId` no longer exists) and
 free system memory before assuming the site or selectors changed.
 
+**`scrape_rankings.py` was missing the launch-retry hardening that already exists for this
+codebase's other Selenium scripts** — `chrome_utils.py`'s `launch_undetected_chrome` retries
+once on `SessionNotCreatedException` ("chrome not reachable") to survive the flaky window
+right after a Chrome auto-update or under transient memory pressure, and
+`scrape_upcoming_fights.py`/`scrape_tapology.py` already used it. `scrape_rankings.py` (and
+`scrape_roster.py`, not yet touched) still called `webdriver.Chrome(options=options)`
+directly with no retry, so the same class of failure that was fixed elsewhere could still
+take it down on a bad launch. Added `chrome_utils.launch_chrome` — the same retry pattern
+but for plain `selenium.webdriver.Chrome` (no `undetected_chromedriver`, since ufc.com
+doesn't need stealth) — and switched `scrape_rankings.py` to use it. If `scrape_roster.py`
+hits the same "chrome not reachable" error, apply the identical swap there.
+
 ---
 
 ## Adding a New Fighter

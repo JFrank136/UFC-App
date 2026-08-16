@@ -13,6 +13,7 @@ import time
 import winreg
 
 import undetected_chromedriver as uc
+from selenium import webdriver
 
 
 def get_chrome_major_version():
@@ -60,6 +61,24 @@ def launch_undetected_chrome(options, attempts=2, delay=5):
                 use_subprocess=True,
                 version_main=get_chrome_major_version(),
             )
+        except Exception as e:
+            last_error = e
+            if attempt < attempts:
+                time.sleep(delay)
+    raise last_error
+
+
+def launch_chrome(options, attempts=2, delay=5):
+    """Launch a plain selenium Chrome driver, retrying once on SessionNotCreatedException.
+
+    Same "chrome not reachable" flaky window launch_undetected_chrome retries around
+    (see its docstring), but for scripts scraping sites that don't need
+    undetected_chromedriver's stealth features (e.g. scrape_rankings.py on ufc.com).
+    """
+    last_error = None
+    for attempt in range(1, attempts + 1):
+        try:
+            return webdriver.Chrome(options=options)
         except Exception as e:
             last_error = e
             if attempt < attempts:

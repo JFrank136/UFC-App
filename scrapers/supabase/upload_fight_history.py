@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 
 # Path to fight history JSON
-FIGHT_HISTORY_PATH = "../data/fight_history.json"
+FIGHT_HISTORY_PATH = Path(__file__).resolve().parent.parent / "data" / "fight_history.json"
 
 # REST upload tuning
 BATCH_SIZE = 500

@@ -1,13 +1,16 @@
 # scrape_rankings.py
 import os
+import sys
 import time
 import json
 import unicodedata
-from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "utils"))
+from chrome_utils import launch_chrome
 
 def normalize(name):
     return unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().lower().strip()
@@ -75,7 +78,7 @@ def scrape_rankings():
     options.add_argument("--headless")
     options.add_argument("--window-size=1920,1080")
 
-    driver = webdriver.Chrome(options=options)
+    driver = launch_chrome(options)
     all_rankings = []
     missing_fighters = []
     warnings = []

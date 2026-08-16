@@ -6,6 +6,9 @@ import re
 import unicodedata
 from datetime import datetime
 
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+UTILS_DIR = Path(__file__).resolve().parent.parent / "utils"
+
 
 def create_normalized_name(name: str) -> str:
     """Standardize name for display or indexing without stripping accents or identity."""
@@ -67,15 +70,15 @@ def build_tapology_lookup(tapology_data: List[Dict]) -> tuple[Dict[str, Dict], D
     return id_lookup, name_lookup
 
 def create_name_fixes_lookup(name_fixes: Dict[str, str]) -> Dict[str, str]:
-    """Create normalized name fixes lookup (UFC → Sherdog)."""
+    """Create normalized name fixes lookup (UFC → Tapology)."""
     lookup = {}
-    for ufc_name, sherdog_name in name_fixes.items():
+    for ufc_name, tapology_name in name_fixes.items():
         # Normalize the UFC name (key)
         normalized_ufc = normalize_name(ufc_name)
-        # Normalize the Sherdog name (value) 
-        normalized_sherdog = normalize_name(sherdog_name)
-        lookup[normalized_ufc] = normalized_sherdog
-        
+        # Normalize the Tapology name (value)
+        normalized_tapology = normalize_name(tapology_name)
+        lookup[normalized_ufc] = normalized_tapology
+
         # Also add variations of the UFC name
         ufc_variations = [
             ufc_name.strip().upper(),  # Original case handling
@@ -84,8 +87,8 @@ def create_name_fixes_lookup(name_fixes: Dict[str, str]) -> Dict[str, str]:
         ]
         for variation in ufc_variations:
             if variation and variation != normalized_ufc:
-                lookup[normalize_name(variation)] = normalized_sherdog
-    
+                lookup[normalize_name(variation)] = normalized_tapology
+
     return lookup
 
 def clean_measurement_field(value: str) -> str:
@@ -362,12 +365,12 @@ def main():
     
     # Load data files
     print("📂 Loading data files...")
-    ufc_data = load_json_file("../data/ufc_details.json")
-    tapology_data = load_json_file("../data/tapology_fighters.json")
+    ufc_data = load_json_file(DATA_DIR / "ufc_details.json")
+    tapology_data = load_json_file(DATA_DIR / "tapology_fighters.json")
 
-    
+
     # Load name fixes
-    sys.path.append("../utils")
+    sys.path.append(str(UTILS_DIR))
     try:
         from name_fixes import NAME_FIXES
     except ImportError:
@@ -438,12 +441,12 @@ def main():
     # Save results
     # Save UUID mismatches
     if mismatched_uuids:
-        mismatch_path = "../data/errors/uuid_mismatches.json"
+        mismatch_path = DATA_DIR / "errors" / "uuid_mismatches.json"
         save_merged_data(mismatched_uuids, mismatch_path)
         print(f"📄 UUID mismatches report: {mismatch_path}")
 
     print("💾 Saving results...")
-    save_merged_data(list(existing_lookup.values()), "../data/fighters.json")
+    save_merged_data(list(existing_lookup.values()), DATA_DIR / "fighters.json")
 
     
     # Generate reports
@@ -452,7 +455,7 @@ def main():
     print(f"❌ Unmatched: {len(unmatched)} fighters")
     
     if unmatched:
-        errors_path = "../data/errors/unmatched_fighters.txt"
+        errors_path = DATA_DIR / "errors" / "unmatched_fighters.txt"
         write_unmatched_report(unmatched, errors_path)
         print(f"📄 Unmatched fighters report: {errors_path}")
         
@@ -469,7 +472,7 @@ def main():
     
     # Automatically extract fight history
     print("\n" + "="*50)
-    extract_fight_history(list(existing_lookup.values()), "../data/fight_history.json")
+    extract_fight_history(list(existing_lookup.values()), DATA_DIR / "fight_history.json")
 
 
 if __name__ == "__main__":

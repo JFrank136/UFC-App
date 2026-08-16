@@ -8,7 +8,7 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
-RANKINGS_PATH = "../data/ufc_rankings.json"
+RANKINGS_PATH = Path(__file__).resolve().parent.parent / "data" / "ufc_rankings.json"
 BATCH_SIZE = 500
 HTTP_TIMEOUT = 30  # seconds
 

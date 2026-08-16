@@ -1,0 +1,86 @@
+ # upcoming — Mon/Wed/Fri at 6am
+  Register-ScheduledTask -TaskName "UFC-upcoming" -Force `
+    -Action  (New-ScheduledTaskAction -Execute $python -Argument "run_scheduled.py --task upcoming"
+  -WorkingDirectory $dir) `
+    -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday,Wednesday,Friday -At "6:00AM") `
+    -Settings $settings -RunLevel Highest
+
+  # rankings — Tuesday at 8am
+  Register-ScheduledTask -TaskName "UFC-rankings" -Force `
+    -Action  (New-ScheduledTaskAction -Execute $python -Argument "run_scheduled.py --task rankings"
+  -WorkingDirectory $dir) `
+    -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Tuesday -At "8:00AM") `
+    -Settings $settings -RunLevel Highest
+
+  # weekly_fighters — Tuesday at 10am
+  Register-ScheduledTask -TaskName "UFC-weekly-fighters" -Force `
+    -Action  (New-ScheduledTaskAction -Execute $python -Argument "run_scheduled.py --task weekly_fighters"
+  -WorkingDirectory $dir) `
+    -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Tuesday -At "10:00AM") `
+    -Settings $settings -RunLevel Highest
+
+  # roster — every 4 weeks on Monday at 9am
+  Register-ScheduledTask -TaskName "UFC-roster" -Force `
+    -Action  (New-ScheduledTaskAction -Execute $python -Argument "run_scheduled.py --task roster"
+  -WorkingDirectory $dir) `
+    -Trigger (New-ScheduledTaskTrigger -Weekly -WeeksInterval 4 -DaysOfWeek Monday -At "9:00AM") `
+    -Settings $settings -RunLevel Highest
+
+  # Verify
+  Get-ScheduledTask | Where-Object { $_.TaskName -like "UFC-*" } | Select-Object TaskName, State
+
+  ---
+  What was built (all 39 tests passing):
+
+  ┌──────────────────┬──────────────────────────────────────────────────────────────────────────────────────┐
+  │       File       │                                       Purpose                                        │
+  ├──────────────────┼──────────────────────────────────────────────────────────────────────────────────────┤
+  │ notifier.py      │ Gmail SMTP email via App Password                                                    │
+  ├──────────────────┼──────────────────────────────────────────────────────────────────────────────────────┤
+  │ validator.py     │ Count/drop/schema checks, Supabase 70% pre-upload guard, unmatched fighter tracking  │
+  ├──────────────────┼──────────────────────────────────────────────────────────────────────────────────────┤
+  │ run_scheduled.py │ Backup→scrape→validate→upload wrapper with 4 task groups and full email              │
+  -WorkingDirectory $dir) `
+    -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Tuesday -At "8:00AM") `
+    -Settings $settings -RunLevel Highest
+
+  # weekly_fighters — Tuesday at 10am
+  Register-ScheduledTask -TaskName "UFC-weekly-fighters" -Force `
+    -Action  (New-ScheduledTaskAction -Execute $python -Argument "run_scheduled.py --task weekly_fighters"
+  -WorkingDirectory $dir) `
+    -Trigger (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Tuesday -At "10:00AM") `
+    -Settings $settings -RunLevel Highest
+
+  # roster — every 4 weeks on Monday at 9am
+  Register-ScheduledTask -TaskName "UFC-roster" -Force `
+    -Action  (New-ScheduledTaskAction -Execute $python -Argument "run_scheduled.py --task roster"
+  -WorkingDirectory $dir) `
+    -Trigger (New-ScheduledTaskTrigger -Weekly -WeeksInterval 4 -DaysOfWeek Monday -At "9:00AM") `
+    -Settings $settings -RunLevel Highest
+
+  # Verify
+  Get-ScheduledTask | Where-Object { $_.TaskName -like "UFC-*" } | Select-Object TaskName, State
+
+  ---
+  What was built (all 39 tests passing):
+
+  ┌──────────────────┬──────────────────────────────────────────────────────────────────────────────────────┐
+  │       File       │                                       Purpose                                        │
+  ├──────────────────┼──────────────────────────────────────────────────────────────────────────────────────┤
+  │ notifier.py      │ Gmail SMTP email via App Password                                                    │
+  ├──────────────────┼──────────────────────────────────────────────────────────────────────────────────────┤
+  │ validator.py     │ Count/drop/schema checks, Supabase 70% pre-upload guard, unmatched fighter tracking  │
+  ├──────────────────┼──────────────────────────────────────────────────────────────────────────────────────┤
+  │ run_scheduled.py │ Backup→scrape→validate→upload wrapper with 4 task groups and full email              │
+  │                  │ notifications                                                                        │
+  ├──────────────────┼──────────────────────────────────────────────────────────────────────────────────────┤
+  │ tests/           │ 39 pytest tests covering all three modules                                           │
+  └──────────────────┴──────────────────────────────────────────────────────────────────────────────────────┘
+
+  Manual runs still work exactly as before — the wrapper only activates via --task argument.
+
+✻ Brewed for 20m 49s
+
+※ recap: All 9 implementation tasks are done and all 39 tests pass. You just need to generate a Gmail App      
+  Password, add it to your .env, then run the Task Scheduler PowerShell commands as Administrator. (disable 
+  recaps in /config)                                                         

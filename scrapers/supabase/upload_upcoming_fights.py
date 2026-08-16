@@ -7,7 +7,7 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
-UPCOMING_FIGHTS_PATH = "../data/upcoming_fights.json"
+UPCOMING_FIGHTS_PATH = Path(__file__).resolve().parent.parent / "data" / "upcoming_fights.json"
 BATCH_SIZE = 500
 HTTP_TIMEOUT = 30  # seconds
 

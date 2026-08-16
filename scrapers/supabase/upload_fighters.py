@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 # ----------------------------
 # Config / Paths
 # ----------------------------
-FIGHTERS_PATH = "../data/fighters.json"
+FIGHTERS_PATH = Path(__file__).resolve().parent.parent / "data" / "fighters.json"
 BATCH_SIZE = 500
 HTTP_TIMEOUT = 30  # seconds
 
