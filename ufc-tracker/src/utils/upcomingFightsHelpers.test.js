@@ -21,6 +21,14 @@ describe('getFightPriorityScore', () => {
   test('returns 0 when neither fighter is followed', () => {
     expect(getFightPriorityScore(makeFight())).toBe(0);
   });
+
+  test('returns 2 when both fighters have favorites and at least one is a favorite', () => {
+    const fight = makeFight({
+      fighter1_favorites: [{ priority: 'favorite' }],
+      fighter2_favorites: [{ priority: 'interested' }],
+    });
+    expect(getFightPriorityScore(fight)).toBe(2);
+  });
 });
 
 describe('selectHeadlineFight', () => {

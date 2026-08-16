@@ -11,18 +11,20 @@ export const getFightPriorityScore = (fight) => {
 };
 
 /**
- * Picks which fight in an event (already sorted by getFightPriorityScore
- * descending) gets the large "headline" card treatment, versus a compact
- * row. A single fight always gets the headline treatment. With multiple
- * fights, the top one gets it only if it strictly outranks the next —
- * otherwise nothing stands out enough and every fight renders compact.
+ * Picks which fight in an event gets the large "headline" card treatment,
+ * versus a compact row. A single fight always gets the headline treatment.
+ * With multiple fights, the top one gets it only if it strictly outranks
+ * the next — otherwise nothing stands out enough and every fight renders
+ * compact. Internally sorts by priority descending, so input order does not
+ * matter.
  */
 export const selectHeadlineFight = (fights) => {
   if (!fights || fights.length === 0) return null;
   if (fights.length === 1) return fights[0];
-  const topScore = getFightPriorityScore(fights[0]);
-  const secondScore = getFightPriorityScore(fights[1]);
-  return topScore > secondScore ? fights[0] : null;
+  const sorted = [...fights].sort((a, b) => getFightPriorityScore(b) - getFightPriorityScore(a));
+  const topScore = getFightPriorityScore(sorted[0]);
+  const secondScore = getFightPriorityScore(sorted[1]);
+  return topScore > secondScore ? sorted[0] : null;
 };
 
 /**
