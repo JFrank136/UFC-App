@@ -80,4 +80,16 @@ const countryCodes = {
   'Zimbabwe': '🇿🇼'
 };
 
+const FLAG_BASE_CODEPOINT = 0x1f1e6; // regional indicator symbol 'A'
+
+export const getCountryCode = (country) => {
+  const flag = countryCodes[country];
+  if (!flag) return null;
+  const letters = Array.from(flag).map((char) => {
+    const offset = char.codePointAt(0) - FLAG_BASE_CODEPOINT;
+    return String.fromCharCode(65 + offset);
+  });
+  return letters.join('');
+};
+
 export default countryCodes;
