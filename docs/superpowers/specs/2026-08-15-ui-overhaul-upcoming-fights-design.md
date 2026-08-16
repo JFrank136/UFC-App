@@ -62,7 +62,7 @@ Structure, top to bottom:
 --line: #262f47       hairline dividers (rows, internal cta divider)
 ```
 
-Light-mode equivalents (`--bg: #dde3ed`, `--card: #ffffff`, `--text: #1e293b`, `--mute: #64748b`, `--accent: #2563eb`, `--gold: #eab308`, `--portrait: #e2e8f0`, `--line: #e7eaef`) — same structure, same page/card contrast relationship must hold (card must read as clearly elevated above the page background in both modes).
+Light-mode equivalents (`--bg: #dde3ed`, `--card: #ffffff`, `--text: #1e293b`, `--mute: #64748b`, `--accent: #2563eb`, `--gold: #a16207`, `--portrait: #e2e8f0`, `--line: #e7eaef`) — same structure, same page/card contrast relationship must hold (card must read as clearly elevated above the page background in both modes). `--gold` is darker than the dark-mode value specifically for contrast: `#eab308` on a white card fails WCAG AA text contrast (~1.9:1); `#a16207` reads clearly (~4.6:1) while staying in the same amber family.
 
 ## Typography
 
