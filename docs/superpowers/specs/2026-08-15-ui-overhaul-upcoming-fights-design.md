@@ -41,8 +41,8 @@ Structure, top to bottom:
 - **Event list**: each event is its own card (`background: var(--card)`, rounded, `overflow: hidden`) with two visually distinct regions:
   - **Header band**: `background: var(--bg)` (page-level tone, deliberately recessed against the card), containing the date chip (day number in Bebas Neue + month abbreviation) and event name/time/favorite-breakdown in plain sans.
   - **Body**: the fight(s) for that event, on the lighter card surface.
-    - If the event has a clear headline fight (Main Event tier among the followed fights), it renders large: full portrait blocks, first/last name, champion/rank badge, "View full comparison" link.
-    - Any other followed fights in that event render as compact single-line rows (small circular initial avatar, condensed names, section tag, chevron to expand).
+    - Headline treatment applies only to the single highest-priority followed fight in the event when it's `favorite` tier (same priority ranking the app already computes: favorite > interested > order). It renders large: full portrait blocks, first/last name, champion/rank badge, "View full comparison" link. `card_section` (Main Event, Co-Main, etc.) is shown as a small label but does not by itself trigger headline treatment — an `interested`-tier fight never gets the big card, even if it happens to be the Main Event (see the Sept 12 event in the mockup, where two `interested`-tier Main Card fights both render as compact rows).
+    - Any other followed fights in that event render as compact single-line rows (small circular initial avatar, condensed names, `card_section` tag, chevron to expand).
     - No PPV badge — decided not worth the visual noise.
     - Favorited/interested status is a small star icon directly after the specific fighter's name — not a separate banner sentence.
 
