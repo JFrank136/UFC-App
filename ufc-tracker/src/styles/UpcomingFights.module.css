@@ -493,17 +493,19 @@
    is the "deeper analysis" use case. Still a stopgap, not the
    dedicated desktop design pass. */
 @media (min-width: 860px) {
-  .content { max-width: 640px; padding: 2.5rem 2rem 3rem; }
+  .content { max-width: 900px; padding: 2.5rem 2rem 3rem; }
   .eventsContainer { gap: 1.5rem; }
-  .pageTitle { font-size: 2.4rem; }
-  .countdownNumber { font-size: 1.7rem; }
-  .dateChip { width: 52px; padding: 0.5rem 0; }
-  .dateChipDay { font-size: 1.5rem; }
-  .dateChipMonth { font-size: 0.65rem; }
-  .eventName { font-size: 1rem; }
-  .eventHeader { padding: 1.1rem 1.25rem; }
-  .eventBody { padding: 0.75rem 1.25rem 0.25rem; }
-  .portrait { height: 140px; }
-  .fighterName { font-size: 1.5rem; }
-  .fighterMeta { font-size: 0.78rem; }
+  .pageTitle { font-size: 2.6rem; }
+  .countdownNumber { font-size: 1.8rem; }
+  .dateChip { width: 60px; padding: 0.6rem 0; }
+  .dateChipDay { font-size: 1.7rem; }
+  .dateChipMonth { font-size: 0.7rem; }
+  .eventName { font-size: 1.1rem; }
+  .eventHeader { padding: 1.25rem 1.5rem; }
+  .eventBody { padding: 0.85rem 1.5rem 0.3rem; }
+  .portrait { height: 200px; }
+  .fighterName { font-size: 1.7rem; }
+  .fighterMeta { font-size: 0.82rem; }
+  .compactRowName { font-size: 1rem; }
+  .compactRowAvatar { width: 34px; height: 34px; border-radius: 17px; }
 }
