@@ -1,4 +1,4 @@
-import { getFightPriorityScore, selectHeadlineFight, getDateParts } from './upcomingFightsHelpers';
+import { getFightPriorityScore, selectHeadlineFight, getDateParts, computeCountdownParts, formatFightDate } from './upcomingFightsHelpers';
 
 const makeFight = (overrides = {}) => ({
   id: 'fight-1',
@@ -61,5 +61,32 @@ describe('getDateParts', () => {
 
   test('handles a different month correctly', () => {
     expect(getDateParts('2026-09-12')).toEqual({ day: 12, month: 'SEP', weekday: 'Saturday' });
+  });
+});
+
+describe('computeCountdownParts', () => {
+  test('splits a future diff into days/hours/minutes/seconds', () => {
+    const now = 0;
+    const target = 7 * 86400000 + 4 * 3600000 + 12 * 60000 + 33 * 1000;
+    expect(computeCountdownParts(target, now)).toEqual({ days: 7, hours: 4, minutes: 12, seconds: 33, isPast: false });
+  });
+
+  test('marks the target as past once time has elapsed', () => {
+    expect(computeCountdownParts(0, 5000)).toEqual({ days: 0, hours: 0, minutes: 0, seconds: 0, isPast: true });
+  });
+
+  test('treats the exact target moment as past, not a negative countdown', () => {
+    expect(computeCountdownParts(1000, 1000)).toEqual({ days: 0, hours: 0, minutes: 0, seconds: 0, isPast: true });
+  });
+});
+
+describe('formatFightDate', () => {
+  test('formats a YYYY-MM-DD date as abbreviated month + 2-digit year', () => {
+    expect(formatFightDate('2025-06-14')).toBe("Jun '25");
+  });
+
+  test('returns null for a missing date', () => {
+    expect(formatFightDate(null)).toBeNull();
+    expect(formatFightDate(undefined)).toBeNull();
   });
 });
