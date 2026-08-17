@@ -483,29 +483,189 @@
   .statComparison { grid-template-columns: 1fr; text-align: center; }
 }
 
-/* Wider viewports: stop the page from collapsing into a narrow column
-   surrounded by dead space, without sacrificing the thing this page is
-   for -- scanning top-to-bottom to see what's next in chronological
-   order. Stays single-column (a two-column masonry layout was tried
-   and broke that ordering: later events ended up level with sooner
-   ones). Instead it widens the reading column and gives everything
-   more room -- bigger date chips, bigger portraits -- since desktop
-   is the "deeper analysis" use case. Still a stopgap, not the
-   dedicated desktop design pass. */
-@media (min-width: 860px) {
-  .content { max-width: 900px; padding: 2.5rem 2rem 3rem; }
-  .eventsContainer { gap: 1.5rem; }
-  .pageTitle { font-size: 2.6rem; }
-  .countdownNumber { font-size: 1.8rem; }
-  .dateChip { width: 60px; padding: 0.6rem 0; }
-  .dateChipDay { font-size: 1.7rem; }
-  .dateChipMonth { font-size: 0.7rem; }
-  .eventName { font-size: 1.1rem; }
-  .eventHeader { padding: 1.25rem 1.5rem; }
-  .eventBody { padding: 0.85rem 1.5rem 0.3rem; }
-  .portrait { height: 200px; }
-  .fighterName { font-size: 1.7rem; }
-  .fighterMeta { font-size: 0.82rem; }
-  .compactRowName { font-size: 1rem; }
-  .compactRowAvatar { width: 34px; height: 34px; border-radius: 17px; }
+/* Desktop layout (>= 860px): a real list+detail split, rendered as a
+   separate component tree by the page (see useMediaQuery), not a CSS
+   reflow of the mobile markup. Reuses several mobile classes directly
+   (.matchup, .vsColumn, .vsMark, .fightResult, .compareLink,
+   .searchBar, .filterChips) so the two layouts share one visual
+   language; only genuinely desktop-only pieces get new classes. */
+
+.desktopWrap {
+  display: flex;
+  align-items: flex-start;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.desktopSidebar {
+  width: 410px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 2rem;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+}
+
+.desktopSidebarTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.4rem;
+}
+
+.desktopSidebarTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.4px;
+  line-height: 1;
+}
+
+.desktopCount {
+  font-size: 0.78rem;
+  color: var(--mute);
+  margin-bottom: 0.9rem;
+}
+
+.desktopCountdown { margin-bottom: 1.1rem; }
+
+.desktopCountdownRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.desktopCountdownDays {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.2rem;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.desktopCountdownHms {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  color: var(--mute);
+}
+
+.desktopCountdownCaption {
+  font-size: 0.76rem;
+  color: var(--mute);
+  margin-top: 0.3rem;
+}
+
+.desktopFilterChips { margin-bottom: 0.5rem; }
+
+.desktopEventGroup { border-top: 1px solid var(--line); }
+.desktopEventGroup:first-child { border-top: none; }
+
+.desktopEventHead { padding: 0.9rem 0 0.5rem; }
+
+.desktopEventName {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.desktopEventMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.3rem;
+}
+
+.desktopEventWhen { font-size: 0.7rem; color: var(--mute); }
+
+.desktopEventCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--mute);
+}
+
+.desktopEventCountBusy { color: var(--gold); }
+
+.desktopFightRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.5rem;
+  border-radius: 8px;
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+}
+
+.desktopFightRowSelected { background: var(--card); }
+
+.desktopFightRowAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  background: var(--portrait);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.desktopFightRowName {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+  color: var(--text);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desktopFightRowName .vsWord { color: var(--mute); font-family: inherit; }
+
+.desktopDetail { flex: 1; min-width: 0; }
+
+.desktopDetailContext { font-size: 0.8rem; color: var(--mute); margin-bottom: 1.5rem; }
+
+.desktopMatchup .portrait { height: 190px; }
+.desktopMatchup .fighterName { font-size: 1.7rem; }
+.desktopMatchup .fighterMeta { font-size: 0.8rem; }
+.desktopMatchup .matchup { gap: 3rem; margin-bottom: 1.5rem; }
+
+.desktopStatStrip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--line);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.desktopStatItem { text-align: center; }
+.desktopStatLabel { font-size: 0.66rem; color: var(--mute); }
+.desktopStatValue { font-size: 0.88rem; margin-top: 0.25rem; }
+.desktopStatSep { color: var(--mute); margin: 0 0.3rem; }
+
+.desktopHistoryGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 1.25rem 0 0.5rem;
+  border-top: 1px solid var(--line);
+  max-width: 600px;
+  margin: 0.25rem auto 0;
+}
+
+.desktopHistoryLabel { font-size: 0.7rem; color: var(--mute); margin-bottom: 0.5rem; }
+
+.fightDate { font-size: 0.72rem; color: var(--mute); margin-left: 0.4rem; }
+
+@media (max-width: 859px) {
+  .desktopWrap, .desktopSidebar, .desktopDetail { display: none; }
 }
