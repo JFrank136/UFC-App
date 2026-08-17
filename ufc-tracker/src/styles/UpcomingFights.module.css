@@ -666,6 +666,10 @@
 
 .fightDate { font-size: 0.72rem; color: var(--mute); margin-left: 0.4rem; }
 
+/* Safety net only -- the page's useMediaQuery('(min-width: 860px)')
+   call is what actually decides which tree renders. This just keeps
+   the desktop tree hidden if that JS breakpoint and this one ever
+   drift apart. Keep both at 860px/859px in sync. */
 @media (max-width: 859px) {
   .desktopWrap, .desktopSidebar, .desktopDetail { display: none; }
 }
