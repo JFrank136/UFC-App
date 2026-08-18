@@ -383,7 +383,7 @@ const UpcomingFights = () => {
               </button>
             </div>
             <div className={styles.desktopCount}>
-              {filteredFights.length} fights &middot; {sortedEventEntries.length} events
+              {filteredFights.length} fights &middot; {sortedEventEntries.length} events you follow
             </div>
             {nextEvent && <CountdownDisplay targetDate={nextEvent.date} eventName={nextEvent.event} />}
             {searchBarRow}
