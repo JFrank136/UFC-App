@@ -4,6 +4,8 @@ import supabase from '../api/supabaseClient';
 import { getFullUpcomingFights } from '../api/supabaseQueries';
 import { getFightPriorityScore, selectHeadlineFight, getDateParts } from '../utils/upcomingFightsHelpers';
 import { DateChip, HeadlineFightCard, CompactFightRow } from '../components/UpcomingFightsComponents';
+import { CountdownDisplay, EventListGroup, FightDetailPane } from '../components/UpcomingFightsDesktopComponents';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import styles from '../styles/UpcomingFights.module.css';
 
 const UpcomingFights = () => {
@@ -15,6 +17,8 @@ const UpcomingFights = () => {
   const [expandedEvents, setExpandedEvents] = useState(new Set());
   const [comparingFighters, setComparingFighters] = useState(null);
   const [darkMode, setDarkMode] = useState(true);
+  const [selectedFightId, setSelectedFightId] = useState(null);
+  const isDesktop = useMediaQuery('(min-width: 860px)');
 
   useEffect(() => {
     const fetchFightsWithFavorites = async () => {
@@ -54,12 +58,12 @@ const UpcomingFights = () => {
     if (fights.length === 0) return null;
     const now = new Date();
     const upcoming = fights
-      .map(f => ({ date: new Date(f.event_date + 'T' + (f.event_time || '00:00')), event: f.event }))
-      .filter(f => f.date > now)
+      .map((f) => ({ date: new Date(f.event_date + 'T' + (f.event_time || '00:00')), event: f.event }))
+      .filter((f) => f.date > now)
       .sort((a, b) => a.date - b.date)[0];
     if (!upcoming) return null;
     const days = Math.max(1, Math.ceil((upcoming.date - now) / (1000 * 60 * 60 * 24)));
-    return { days, event: upcoming.event };
+    return { days, event: upcoming.event, date: upcoming.date };
   }, [fights]);
 
   const cutoff = useMemo(() => {
@@ -113,6 +117,29 @@ const UpcomingFights = () => {
     });
     return groups;
   }, [filteredFights]);
+
+  const sortedEventEntries = useMemo(
+    () => Object.entries(groupedFights).sort(([, a], [, b]) => new Date(a.date) - new Date(b.date)),
+    [groupedFights]
+  );
+
+  const defaultDesktopFight = useMemo(() => {
+    if (sortedEventEntries.length === 0) return null;
+    const [, firstEventData] = sortedEventEntries[0];
+    return selectHeadlineFight(firstEventData.fights) || firstEventData.fights[0] || null;
+  }, [sortedEventEntries]);
+
+  useEffect(() => {
+    const stillPresent = filteredFights.some((f) => f.id === selectedFightId);
+    if (!stillPresent) {
+      setSelectedFightId(defaultDesktopFight ? defaultDesktopFight.id : null);
+    }
+  }, [filteredFights, defaultDesktopFight, selectedFightId]);
+
+  const selectedFight = useMemo(
+    () => filteredFights.find((f) => f.id === selectedFightId) || null,
+    [filteredFights, selectedFightId]
+  );
 
   useEffect(() => {
     if (Object.keys(groupedFights).length > 0) {
@@ -202,6 +229,8 @@ const UpcomingFights = () => {
     return raw || 'TBA';
   };
 
+  const toMixedCaseMonth = (month) => month.charAt(0) + month.slice(1).toLowerCase();
+
   const getEventPriority = (eventFights) => {
     let favorites = 0;
     let interested = 0;
@@ -213,6 +242,12 @@ const UpcomingFights = () => {
     });
     return { favorites, interested };
   };
+
+  const selectedFightWhen = useMemo(() => {
+    if (!selectedFight) return null;
+    const { weekday, month, day } = getDateParts(selectedFight.event_date);
+    return `${weekday}, ${toMixedCaseMonth(month)} ${day} · ${formatTime(selectedFight.event_time)}`;
+  }, [selectedFight]);
 
   const ComparisonModal = ({ fight, onClose }) => {
     if (!fight) return null;
@@ -310,6 +345,90 @@ const UpcomingFights = () => {
     </div>
   );
 
+  const filterChipsRow = (
+    <div className={styles.filterChips}>
+      {['All', 'Favorite', 'Interested'].map((option) => (
+        <button
+          key={option}
+          className={`${styles.chip} ${priorityFilter === option ? styles.chipOn : ''}`}
+          onClick={() => setPriorityFilter(option)}
+        >
+          {option === 'Favorite' ? 'Favorites' : option}
+        </button>
+      ))}
+    </div>
+  );
+
+  const searchBarRow = (
+    <div className={styles.searchBar}>
+      <Search size={16} aria-hidden="true" />
+      <input type="text" placeholder="Search fighters or events"
+        value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+      {searchQuery && (
+        <button className={styles.clearSearch} onClick={() => setSearchQuery('')} aria-label="Clear search"><X size={14} /></button>
+      )}
+    </div>
+  );
+
+  if (isDesktop) {
+    return (
+      <div className={styles.pageContainer} data-theme={theme}>
+        <div className={styles.desktopWrap}>
+          <div className={styles.desktopSidebar}>
+            <div className={styles.desktopSidebarTop}>
+              <div className={styles.desktopSidebarTitle}>Upcoming</div>
+              <button className={styles.themeToggle} onClick={() => setDarkMode(!darkMode)}
+                title={`Switch to ${darkMode ? 'light' : 'dark'} mode`}>
+                {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+              </button>
+            </div>
+            <div className={styles.desktopCount}>
+              {filteredFights.length} fights &middot; {sortedEventEntries.length} events you follow
+            </div>
+            {nextEvent && <CountdownDisplay targetDate={nextEvent.date} eventName={nextEvent.event} />}
+            {searchBarRow}
+            <div className={styles.desktopFilterChips}>{filterChipsRow}</div>
+
+            {sortedEventEntries.length === 0 ? (
+              <p className={styles.pageSub}>No upcoming fights found for your selected criteria</p>
+            ) : (
+              sortedEventEntries.map(([eventName, eventData]) => {
+                const { month, day } = getDateParts(eventData.date);
+                const dayLabel = `${toMixedCaseMonth(month)} ${day} · ${formatTime(eventData.time)}`;
+                return (
+                  <EventListGroup
+                    key={eventName}
+                    eventName={eventName}
+                    eventData={eventData}
+                    dayLabel={dayLabel}
+                    selectedFightId={selectedFightId}
+                    onSelectFight={setSelectedFightId}
+                  />
+                );
+              })
+            )}
+          </div>
+
+          {selectedFight && (
+            <FightDetailPane
+              fight={selectedFight}
+              eventName={selectedFight.event}
+              eventWhen={selectedFightWhen}
+              f1Rank={getFighterRankInfo(selectedFight.fighter1_data)}
+              f2Rank={getFighterRankInfo(selectedFight.fighter2_data)}
+              formatRecord={formatRecord}
+              formatStat={formatStat}
+              getRecentFights={getRecentFights}
+              onOpenFullComparison={setComparingFighters}
+            />
+          )}
+        </div>
+
+        {comparingFighters && <ComparisonModal fight={comparingFighters} onClose={() => setComparingFighters(null)} />}
+      </div>
+    );
+  }
+
   return (
     <div className={styles.pageContainer} data-theme={theme}>
       <div className={styles.content}>
@@ -317,7 +436,7 @@ const UpcomingFights = () => {
           <div>
             <h1 className={styles.pageTitle}>Upcoming fights</h1>
             <p className={styles.pageSub}>
-              {filteredFights.length} fights across {Object.keys(groupedFights).length} events you follow
+              {filteredFights.length} fights across {sortedEventEntries.length} events you follow
             </p>
           </div>
           <button className={styles.themeToggle} onClick={() => setDarkMode(!darkMode)}
@@ -333,82 +452,62 @@ const UpcomingFights = () => {
           </div>
         )}
 
-        <div className={styles.searchBar}>
-          <Search size={16} aria-hidden="true" />
-          <input type="text" placeholder="Search fighters or events"
-            value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
-          {searchQuery && (
-            <button className={styles.clearSearch} onClick={() => setSearchQuery('')} aria-label="Clear search"><X size={14} /></button>
-          )}
-        </div>
+        {searchBarRow}
+        {filterChipsRow}
 
-        <div className={styles.filterChips}>
-          {['All', 'Favorite', 'Interested'].map(option => (
-            <button
-              key={option}
-              className={`${styles.chip} ${priorityFilter === option ? styles.chipOn : ''}`}
-              onClick={() => setPriorityFilter(option)}
-            >
-              {option === 'Favorite' ? 'Favorites' : option}
-            </button>
-          ))}
-        </div>
-
-        {Object.keys(groupedFights).length === 0 ? (
+        {sortedEventEntries.length === 0 ? (
           <p className={styles.pageSub}>No upcoming fights found for your selected criteria</p>
         ) : (
           <div className={styles.eventsContainer}>
-            {Object.entries(groupedFights)
-              .sort(([, a], [, b]) => new Date(a.date) - new Date(b.date))
-              .map(([eventName, eventData]) => {
-                const { day, month, weekday } = getDateParts(eventData.date);
-                const { favorites, interested } = getEventPriority(eventData.fights);
-                const breakdownParts = [];
-                if (favorites > 0) breakdownParts.push(`${favorites} favorite${favorites > 1 ? 's' : ''}`);
-                if (interested > 0) breakdownParts.push(`${interested} interested`);
-                const isExpanded = expandedEvents.has(eventName);
-                const headline = selectHeadlineFight(eventData.fights);
-                const otherFights = eventData.fights.filter(f => f !== headline);
+            {sortedEventEntries.map(([eventName, eventData]) => {
+              const { day, month, weekday } = getDateParts(eventData.date);
+              const { favorites, interested } = getEventPriority(eventData.fights);
+              const breakdownParts = [];
+              if (favorites > 0) breakdownParts.push(`${favorites} favorite${favorites > 1 ? 's' : ''}`);
+              if (interested > 0) breakdownParts.push(`${interested} interested`);
+              const isExpanded = expandedEvents.has(eventName);
+              const headline = selectHeadlineFight(eventData.fights);
+              const otherFights = eventData.fights.filter((f) => f !== headline);
 
-                return (
-                  <div key={eventName} className={styles.eventCard}>
-                    <button className={styles.eventHeader} onClick={() => toggleEventExpansion(eventName)}>
-                      <DateChip day={day} month={month} />
-                      <div className={styles.eventInfo}>
-                        <div className={styles.eventName}>{eventName}</div>
-                        <div className={styles.eventWhen}>{weekday} &middot; {formatTime(eventData.time)}</div>
-                        {breakdownParts.length > 0 && (
-                          <div className={styles.eventBreakdown}>{breakdownParts.join(' · ')}</div>
-                        )}
-                      </div>
-                      <span className={styles.eventExpandIcon}>
-                        {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                      </span>
-                    </button>
-                    {isExpanded && (
-                      <div className={styles.eventBody}>
-                        {headline && (
-                          <HeadlineFightCard
-                            fight={headline}
-                            f1Rank={getFighterRankInfo(headline.fighter1_data)}
-                            f2Rank={getFighterRankInfo(headline.fighter2_data)}
-                            formatRecord={formatRecord}
-                            onCompare={setComparingFighters}
-                          />
-                        )}
-                        {otherFights.map(fight => (
-                          <CompactFightRow
-                            key={fight.id}
-                            fight={fight}
-                            sectionLabel={getCardSectionInfo(fight.card_section)}
-                            onCompare={setComparingFighters}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              return (
+                <div key={eventName} className={styles.eventCard}>
+                  <button className={styles.eventHeader} onClick={() => toggleEventExpansion(eventName)}>
+                    <DateChip day={day} month={month} />
+                    <div className={styles.eventInfo}>
+                      <div className={styles.eventName}>{eventName}</div>
+                      <div className={styles.eventWhen}>{weekday} &middot; {formatTime(eventData.time)}</div>
+                      {breakdownParts.length > 0 && (
+                        <div className={styles.eventBreakdown}>{breakdownParts.join(' · ')}</div>
+                      )}
+                    </div>
+                    <span className={styles.eventExpandIcon}>
+                      {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                    </span>
+                  </button>
+                  {isExpanded && (
+                    <div className={styles.eventBody}>
+                      {headline && (
+                        <HeadlineFightCard
+                          fight={headline}
+                          f1Rank={getFighterRankInfo(headline.fighter1_data)}
+                          f2Rank={getFighterRankInfo(headline.fighter2_data)}
+                          formatRecord={formatRecord}
+                          onCompare={setComparingFighters}
+                        />
+                      )}
+                      {otherFights.map((fight) => (
+                        <CompactFightRow
+                          key={fight.id}
+                          fight={fight}
+                          sectionLabel={getCardSectionInfo(fight.card_section)}
+                          onCompare={setComparingFighters}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

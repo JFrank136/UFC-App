@@ -40,3 +40,33 @@ export const getDateParts = (dateString) => {
     weekday: date.toLocaleDateString('en-US', { weekday: 'long' }),
   };
 };
+
+/**
+ * Splits a millisecond countdown into days/hours/minutes/seconds. Pure
+ * function (no Date.now() inside) so it's trivially testable — the
+ * useCountdown hook supplies "now" from the caller.
+ */
+export const computeCountdownParts = (targetMs, nowMs) => {
+  const diff = targetMs - nowMs;
+  if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, isPast: true };
+  return {
+    days: Math.floor(diff / 86400000),
+    hours: Math.floor((diff % 86400000) / 3600000),
+    minutes: Math.floor((diff % 3600000) / 60000),
+    seconds: Math.floor((diff % 60000) / 1000),
+    isPast: false,
+  };
+};
+
+/**
+ * Formats a fight_history entry's "YYYY-MM-DD" date as "Mon 'YY" for the
+ * recent-fights list. Appends T00:00:00 so it parses in local time
+ * instead of UTC (same off-by-one-day guard as getDateParts).
+ */
+export const formatFightDate = (dateString) => {
+  if (!dateString) return null;
+  const date = new Date(`${dateString}T00:00:00`);
+  const month = date.toLocaleDateString('en-US', { month: 'short' });
+  const year = date.getFullYear().toString().slice(-2);
+  return `${month} '${year}`;
+};

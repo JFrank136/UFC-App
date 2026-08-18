@@ -10,7 +10,7 @@ export const DateChip = ({ day, month }) => (
   </div>
 );
 
-const FighterColumn = ({ fighter, favorites, rankInfo, formatRecord }) => {
+export const FighterColumn = ({ fighter, favorites, rankInfo, formatRecord }) => {
   const countryLabel = fighter.country ? getCountryCode(fighter.country) || fighter.country : null;
   const metaParts = [];
   if (rankInfo.label) metaParts.push(rankInfo.label);
