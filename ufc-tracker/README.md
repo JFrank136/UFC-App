@@ -1,3 +1,19 @@
+# UFC Tracker
+
+A single-user React app for tracking UFC fighters, events, and fights (Jared's app). Built with Create React App, Supabase, and CSS Modules. See the `anthropic-skills:ufc-app` skill for full architecture/conventions before making changes here.
+
+Pages: Search (`/`), Upcoming Fights (`/upcoming`), Events (`/events`), Rankings (`/rankings`), Fighter Stats (`/stats`), Favorites (`/favorites`), Picks (`/picks`, in progress).
+
+## Current state (as of 2026-08)
+
+A UI overhaul is in progress, page by page, aimed at replacing the original generic-feeling design (emoji headers, translucent glowing borders, gradient text) with a deliberate design system — see `docs/superpowers/specs/2026-08-*-ui-overhaul*.md` for the full spec/plan trail, and the `ufc-app-mockups` project skill for how mockups get built for future pages.
+
+- **Upcoming Fights** (`/upcoming`) — fully redesigned, both mobile (single-column, chronological card list) and desktop (list+detail split with a live countdown). This is the flagship/reference implementation for the new design system.
+- All other pages (Search, Events, Rankings, Fighter Stats, Favorites) still use the pre-overhaul visual style and haven't been touched yet.
+- Known pre-existing gaps, not yet fixed: `App.test.js` still asserts on the original CRA boilerplate text (fails, unrelated to real app behavior); `/static/images/placeholder.jpg` 404s (the `onError` fallback to a generated placeholder still works); the main-card start time shown on Upcoming Fights sometimes reflects the early-prelims time instead.
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
