@@ -43,7 +43,7 @@ def get_chrome_major_version():
     return None
 
 
-def launch_undetected_chrome(options, attempts=2, delay=5):
+def launch_undetected_chrome(options_factory, attempts=2, delay=5):
     """Launch undetected_chromedriver, retrying once on SessionNotCreatedException.
 
     Right after Chrome auto-updates, undetected_chromedriver has to download and
@@ -52,12 +52,17 @@ def launch_undetected_chrome(options, attempts=2, delay=5):
     written a moment earlier is a known flaky window (AV/SmartScreen scanning
     the new exe) that fails with "chrome not reachable" — a short retry after
     the binary has settled on disk succeeds.
+
+    `options_factory` is a zero-arg callable that builds a fresh ChromeOptions
+    each call — a ChromeOptions instance is consumed the moment it's handed to
+    a driver constructor (even a failing one), so reusing one across attempts
+    raises "you cannot reuse the ChromeOptions object" instead of retrying.
     """
     last_error = None
     for attempt in range(1, attempts + 1):
         try:
             return uc.Chrome(
-                options=options,
+                options=options_factory(),
                 use_subprocess=True,
                 version_main=get_chrome_major_version(),
             )
@@ -68,17 +73,18 @@ def launch_undetected_chrome(options, attempts=2, delay=5):
     raise last_error
 
 
-def launch_chrome(options, attempts=2, delay=5):
+def launch_chrome(options_factory, attempts=2, delay=5):
     """Launch a plain selenium Chrome driver, retrying once on SessionNotCreatedException.
 
     Same "chrome not reachable" flaky window launch_undetected_chrome retries around
-    (see its docstring), but for scripts scraping sites that don't need
-    undetected_chromedriver's stealth features (e.g. scrape_rankings.py on ufc.com).
+    (see its docstring, including why options must be a factory), but for scripts
+    scraping sites that don't need undetected_chromedriver's stealth features
+    (e.g. scrape_rankings.py on ufc.com).
     """
     last_error = None
     for attempt in range(1, attempts + 1):
         try:
-            return webdriver.Chrome(options=options)
+            return webdriver.Chrome(options=options_factory())
         except Exception as e:
             last_error = e
             if attempt < attempts:

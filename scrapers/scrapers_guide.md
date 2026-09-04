@@ -164,7 +164,7 @@ the installed Chrome's major version via `utils/chrome_utils.get_chrome_major_ve
 When Chrome has just auto-updated, UC has to download and patch a fresh driver binary
 on the spot, and launching against a binary that was written a moment earlier can fail
 with `SessionNotCreatedException: ... chrome not reachable`. `chrome_utils.py` also
-exposes `launch_undetected_chrome(options)`, which retries once after a short delay —
+exposes `launch_undetected_chrome(options_factory)`, which retries once after a short delay —
 `scrape_upcoming_fights.py` and `scrape_tapology.py` both launch through it for this
 reason. If a browser-based task fails with "chrome not reachable" and a rerun succeeds
 immediately, this is almost certainly why — no further action needed beyond the retry
@@ -216,6 +216,18 @@ take it down on a bad launch. Added `chrome_utils.launch_chrome` — the same re
 but for plain `selenium.webdriver.Chrome` (no `undetected_chromedriver`, since ufc.com
 doesn't need stealth) — and switched `scrape_rankings.py` to use it. If `scrape_roster.py`
 hits the same "chrome not reachable" error, apply the identical swap there.
+
+**The launch retry itself was silently a no-op** — `launch_undetected_chrome`/`launch_chrome`
+took a pre-built `ChromeOptions` object and reused it across both attempts. Selenium
+consumes a `ChromeOptions` instance the moment it's handed to a driver constructor, even
+a failing one, so attempt 2 always died immediately with `RuntimeError: you cannot reuse
+the ChromeOptions object` instead of actually retrying — this is what turned the Sep 2 2026
+scheduled `upcoming` run into a hard failure. Both functions now take `options_factory`, a
+zero-arg callable that builds a fresh `ChromeOptions` per attempt, and all three call sites
+(`scrape_upcoming_fights.py`, `scrape_rankings.py`, `scrape_tapology.py`) pass a small
+`build_options()`/`_build_chrome_options()` closure instead of a pre-built instance. If you
+add a new Selenium-based scraper, launch through `launch_chrome`/`launch_undetected_chrome`
+with a factory function, not a bare `options` object, or the retry will have the same bug.
 
 ---
 

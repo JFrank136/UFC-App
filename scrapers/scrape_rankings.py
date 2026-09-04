@@ -74,11 +74,14 @@ def scrape_rankings():
     name_to_uuid = load_fighter_index()
 
     url = "https://www.ufc.com/rankings"
-    options = Options()
-    options.add_argument("--headless")
-    options.add_argument("--window-size=1920,1080")
 
-    driver = launch_chrome(options)
+    def build_options():
+        options = Options()
+        options.add_argument("--headless")
+        options.add_argument("--window-size=1920,1080")
+        return options
+
+    driver = launch_chrome(build_options)
     all_rankings = []
     missing_fighters = []
     warnings = []

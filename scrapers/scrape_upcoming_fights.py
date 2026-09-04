@@ -94,7 +94,7 @@ def load_uuid_lookup():
     
 OUTPUT_PATH = "data/upcoming_fights.json"
 
-def setup_browser():
+def _build_chrome_options():
     options = uc.ChromeOptions()
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--incognito")
@@ -110,9 +110,12 @@ def setup_browser():
     options.add_argument("--start-maximized")
 
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36")
+    return options
 
+
+def setup_browser():
     # Enable stealth mode
-    driver = launch_undetected_chrome(options)
+    driver = launch_undetected_chrome(_build_chrome_options)
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     return driver
 
