@@ -225,6 +225,37 @@ def save_merged_data(data: List[Dict], filepath: str) -> None:
         print(f"❌ Error saving to {filepath}: {e}")
         sys.exit(1)
 
+def dedupe_fight_entries(entries: List[Dict]) -> List[Dict]:
+    """Collapse repeated rows for the same bout (same fighter, date and opponent).
+
+    The Tapology scraper matches overlapping page elements, so one bout can be
+    parsed several times. The copies differ only in round/time, and for
+    decisions the extra copies carry junk values picked up from neighbouring
+    text. Keep the copy that makes sense for the method: no round/time for a
+    decision, a round for anything else. Entries without a date are never
+    merged, since they can't be told apart safely.
+    """
+    def score(entry: Dict) -> tuple:
+        is_decision = "dec" in (entry.get("method") or "").lower()
+        has_round = entry.get("round") is not None
+        filled = sum(1 for v in entry.values() if v)
+        return (has_round != is_decision, filled)
+
+    best: Dict[tuple, Dict] = {}
+    order: List = []
+    for entry in entries:
+        if not entry.get("fight_date"):
+            order.append(entry)
+            continue
+        key = (entry.get("fighter_id"), entry["fight_date"], (entry.get("opponent") or "").lower())
+        if key not in best:
+            best[key] = entry
+            order.append(key)
+        elif score(entry) > score(best[key]):
+            best[key] = entry
+    return [best[item] if isinstance(item, tuple) else item for item in order]
+
+
 def extract_fight_history(fighters: List[Dict], output_path: str) -> None:
     """Extract flat fight history from merged fighters data."""
     print("🥊 Extracting fight history...")
@@ -348,6 +379,11 @@ def extract_fight_history(fighters: List[Dict], output_path: str) -> None:
             except Exception as e:
                 print(f"⚠️ Error processing fight for {fighter.get('name', 'UNKNOWN')}: {e}")
                 continue
+
+    before = len(flat_fight_history)
+    flat_fight_history = dedupe_fight_entries(flat_fight_history)
+    if len(flat_fight_history) < before:
+        print(f"🧹 Removed {before - len(flat_fight_history)} duplicate fight rows")
 
     # Save clean flat fight history
     save_merged_data(flat_fight_history, output_path)
