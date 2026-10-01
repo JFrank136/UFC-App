@@ -222,7 +222,7 @@
 .dateChipDay {
   display: block;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   line-height: 1;
   color: var(--text);
 }
@@ -237,7 +237,7 @@
 
 .eventInfo { flex: 1; padding-top: 0.15rem; min-width: 0; }
 .eventName { font-size: 0.9rem; font-weight: 500; color: var(--text); }
-.eventWhen { font-size: 0.75rem; color: var(--mute); margin-top: 0.2rem; }
+.eventWhen { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-top: 0.2rem; }
 .eventBreakdown { font-size: 0.75rem; color: var(--mute); margin-top: 0.15rem; }
 .eventExpandIcon { color: var(--mute); flex-shrink: 0; margin-top: 0.2rem; display: flex; }
 
@@ -245,7 +245,7 @@
 
 /* Headline fight */
 .headline { padding: 0.6rem 0 0.75rem; }
-.matchup { display: flex; align-items: flex-end; justify-content: center; }
+.matchup { display: flex; align-items: flex-start; justify-content: center; }
 .fighterColumn { text-align: center; flex: 1; min-width: 0; }
 
 .portrait {
@@ -266,23 +266,34 @@
   line-height: 1.05;
   color: var(--text);
   margin-top: 0.5rem;
+  min-height: 2.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  text-align: center;
 }
+
+.nameIcon { color: var(--gold); flex-shrink: 0; }
+
+.flag { width: 18px; height: 13px; object-fit: cover; border-radius: 2px; vertical-align: -2px; }
 
 .fighterName.champion { color: var(--gold); }
 
-.followedStar { font-size: 0.75rem; color: var(--gold); margin-left: 0.25rem; vertical-align: 1px; }
+.followedStar { display: inline-block; font-size: 0.75rem; color: var(--gold); margin-right: 0.25rem; vertical-align: -1px; }
 
-.fighterMeta { font-size: 0.7rem; color: var(--mute); margin-top: 0.3rem; }
+.fighterMeta { font-size: 0.7rem; color: var(--mute); margin-top: 0.3rem; min-height: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
 
-.vsColumn { width: 30px; text-align: center; flex-shrink: 0; padding-bottom: 1.75rem; }
+.vsColumn { width: 46px; text-align: center; flex-shrink: 0; padding-top: 34px; }
 
 .vsMark {
   display: inline-block;
   transform: rotate(-8deg);
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1rem;
+  font-size: 1.7rem;
+  line-height: 1;
   color: var(--mute);
-  opacity: 0.7;
+  opacity: 0.85;
 }
 
 .compareLink {
@@ -479,6 +490,7 @@
   .pageTitle { font-size: 1.7rem; }
   .portrait { height: 92px; }
   .fighterName { font-size: 1.05rem; }
+  .vsColumn { padding-top: 26px; }
   .recentFightsComparison { grid-template-columns: 1fr; }
   .statComparison { grid-template-columns: 1fr; text-align: center; }
 }
@@ -561,7 +573,8 @@
 .desktopEventGroup { border-top: 1px solid var(--line); }
 .desktopEventGroup:first-child { border-top: none; }
 
-.desktopEventHead { padding: 0.9rem 0 0.5rem; }
+.desktopEventHead { display: flex; gap: 0.75rem; align-items: center; padding: 0.9rem 0 0.5rem; }
+.desktopEventHeadText { flex: 1; min-width: 0; }
 
 .desktopEventName {
   font-size: 0.95rem;
@@ -577,7 +590,7 @@
   margin-top: 0.3rem;
 }
 
-.desktopEventWhen { font-size: 0.7rem; color: var(--mute); }
+.desktopEventWhen { font-size: 0.8rem; font-weight: 500; color: var(--text); }
 
 .desktopEventCount {
   display: inline-flex;
@@ -630,10 +643,14 @@
 
 .desktopDetail { flex: 1; min-width: 0; }
 
-.desktopDetailContext { font-size: 0.8rem; color: var(--mute); margin-bottom: 1.5rem; }
+.desktopDetailContext { margin-bottom: 1.5rem; }
+.desktopDetailWhen { font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; letter-spacing: 0.4px; color: var(--text); line-height: 1.1; }
+.desktopDetailEvent { font-size: 0.85rem; color: var(--mute); margin-top: 0.2rem; }
 
 .desktopMatchup .portrait { height: 190px; }
-.desktopMatchup .fighterName { font-size: 1.7rem; }
+.desktopMatchup .fighterName { font-size: 1.7rem; min-height: 1.1em; }
+.desktopMatchup .vsColumn { padding-top: 70px; }
+.desktopMatchup .vsMark { font-size: 2.4rem; }
 .desktopMatchup .fighterMeta { font-size: 0.8rem; }
 .desktopMatchup .matchup { gap: 3rem; margin-bottom: 1.5rem; }
 

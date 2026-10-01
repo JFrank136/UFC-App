@@ -10,12 +10,25 @@ export const DateChip = ({ day, month }) => (
   </div>
 );
 
+// Windows browsers don't render flag emoji (they show letters), so use images.
+const CountryFlag = ({ country }) => {
+  const code = country ? getCountryCode(country) : null;
+  if (!code) return null;
+  return (
+    <img
+      className={styles.flag}
+      src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
+      alt={country}
+      title={country}
+      onError={(e) => { e.target.style.display = 'none'; }}
+    />
+  );
+};
+
 export const FighterColumn = ({ fighter, favorites, rankInfo, formatRecord }) => {
-  const countryLabel = fighter.country ? getCountryCode(fighter.country) || fighter.country : null;
   const metaParts = [];
   if (rankInfo.label) metaParts.push(rankInfo.label);
   metaParts.push(formatRecord(fighter));
-  if (countryLabel) metaParts.push(countryLabel);
 
   return (
     <div className={styles.fighterColumn}>
@@ -26,12 +39,13 @@ export const FighterColumn = ({ fighter, favorites, rankInfo, formatRecord }) =>
         onError={(e) => { e.target.src = `https://via.placeholder.com/160x200/1a2338/f5f7fa?text=${fighter.name?.charAt(0) || '?'}`; }}
       />
       <div className={`${styles.fighterName} ${rankInfo.isChampion ? styles.champion : ''}`}>
-        {fighter.name || 'Unknown fighter'}
-        {favorites?.length > 0 && <Star className={styles.followedStar} size={11} aria-label="On your list" />}
+        {rankInfo.isChampion && <Crown className={styles.nameIcon} size={16} aria-label="Champion" />}
+        {favorites?.length > 0 && <Star className={styles.nameIcon} size={14} aria-label="On your list" />}
+        <span>{fighter.name || 'Unknown fighter'}</span>
       </div>
       <div className={styles.fighterMeta}>
-        {rankInfo.isChampion && <Crown size={11} style={{ verticalAlign: '-1px', marginRight: '3px' }} aria-hidden="true" />}
-        {metaParts.join(' · ')}
+        <span>{metaParts.join(' · ')}</span>
+        <CountryFlag country={fighter.country} />
       </div>
     </div>
   );
@@ -73,11 +87,11 @@ export const CompactFightRow = ({ fight, sectionLabel, onCompare }) => {
         onError={(e) => { e.target.src = `https://via.placeholder.com/60x60/1a2338/f5f7fa?text=${f1.name?.charAt(0) || '?'}`; }}
       />
       <span className={styles.compactRowName}>
-        {f1.name}
         {f1Followed && <Star className={styles.followedStar} size={10} aria-label="On your list" />}
+        {f1.name}
         {' '}<span className={styles.vsWord}>vs</span>{' '}
-        {f2.name}
         {f2Followed && <Star className={styles.followedStar} size={10} aria-label="On your list" />}
+        {f2.name}
       </span>
       <ChevronRight className={styles.compactRowChevron} size={14} aria-hidden="true" />
     </button>

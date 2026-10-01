@@ -218,6 +218,24 @@ export const searchFightersWithRanking = async (name) => {
 };
 
 // UpcomingFights.js - Every table
+// Supabase caps a single response at 1000 rows; fight_history is far bigger,
+// so page through it or fighters whose rows fall past the cap look empty.
+const fetchAllFightHistory = async (fighterIds) => {
+  const pageSize = 1000;
+  const rows = [];
+  for (let from = 0; ; from += pageSize) {
+    const { data, error } = await supabase
+      .from('fight_history')
+      .select('*')
+      .in('fighter_id', fighterIds)
+      .order('id')
+      .range(from, from + pageSize - 1);
+    if (error) return { data: null, error };
+    rows.push(...data);
+    if (data.length < pageSize) return { data: rows, error: null };
+  }
+};
+
 export const getFullUpcomingFights = async () => {
   const { data: fights, error } = await supabase
     .from('upcoming_fights')
@@ -241,7 +259,7 @@ export const getFullUpcomingFights = async () => {
     { data: userFavorites, error: favoritesError }
   ] = await Promise.all([
     supabase.from('fighters').select('*').in('id', fighterIds),
-    supabase.from('fight_history').select('*').in('fighter_id', fighterIds),
+    fetchAllFightHistory(fighterIds),
     supabase.from('rankings').select('*').in('uuid', fighterIds),
     supabase.from('user_favorites').select('*').in('fighter_id', fighterIds)
   ]);

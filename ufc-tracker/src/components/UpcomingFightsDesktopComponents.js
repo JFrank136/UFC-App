@@ -3,7 +3,7 @@ import { Star, Flame, ChevronRight } from 'lucide-react';
 import styles from '../styles/UpcomingFights.module.css';
 import { formatFightDate } from '../utils/upcomingFightsHelpers';
 import { useCountdown } from '../hooks/useCountdown';
-import { FighterColumn } from './UpcomingFightsComponents';
+import { FighterColumn, DateChip } from './UpcomingFightsComponents';
 
 export const CountdownDisplay = ({ targetDate, eventName }) => {
   const parts = useCountdown(targetDate);
@@ -13,7 +13,7 @@ export const CountdownDisplay = ({ targetDate, eventName }) => {
     <div className={styles.desktopCountdown}>
       <div className={styles.desktopCountdownRow}>
         <span className={styles.desktopCountdownDays}>
-          {parts.isPast ? 'Fight time' : `${parts.days}d`}
+          {parts.isPast ? 'Fight time' : `${parts.days} ${parts.days === 1 ? 'day' : 'days'}`}
         </span>
         {!parts.isPast && (
           <span className={styles.desktopCountdownHms}>
@@ -52,31 +52,34 @@ const DesktopFightRow = ({ fight, isSelected, onSelect }) => {
         onError={(e) => { e.target.src = `https://via.placeholder.com/60x60/1a2338/f5f7fa?text=${f1.name?.charAt(0) || '?'}`; }}
       />
       <span className={styles.desktopFightRowName}>
-        {f1.name}
         {f1Color && <Star className={styles.followedStar} style={{ color: f1Color }} size={11} aria-label="On your list" />}
+        {f1.name}
         {' '}<span className={styles.vsWord}>vs</span>{' '}
-        {f2.name}
         {f2Color && <Star className={styles.followedStar} style={{ color: f2Color }} size={11} aria-label="On your list" />}
+        {f2.name}
       </span>
       <ChevronRight className={styles.compactRowChevron} size={14} aria-hidden="true" />
     </button>
   );
 };
 
-export const EventListGroup = ({ eventName, eventData, dayLabel, selectedFightId, onSelectFight }) => {
+export const EventListGroup = ({ eventName, eventData, dayLabel, dateParts, selectedFightId, onSelectFight }) => {
   const count = eventData.fights.length;
   const isBusy = count >= 3;
 
   return (
     <div className={styles.desktopEventGroup}>
       <div className={styles.desktopEventHead}>
-        <div className={styles.desktopEventName}>{eventName}</div>
-        <div className={styles.desktopEventMeta}>
-          <span className={styles.desktopEventWhen}>{dayLabel}</span>
-          <span className={`${styles.desktopEventCount} ${isBusy ? styles.desktopEventCountBusy : ''}`}>
-            {isBusy && <Flame size={13} aria-hidden="true" />}
-            {count} fight{count !== 1 ? 's' : ''}
-          </span>
+        <DateChip day={dateParts.day} month={dateParts.month} />
+        <div className={styles.desktopEventHeadText}>
+          <div className={styles.desktopEventName}>{eventName}</div>
+          <div className={styles.desktopEventMeta}>
+            <span className={styles.desktopEventWhen}>{dayLabel}</span>
+            <span className={`${styles.desktopEventCount} ${isBusy ? styles.desktopEventCountBusy : ''}`}>
+              {isBusy && <Flame size={13} aria-hidden="true" />}
+              {count} fight{count !== 1 ? 's' : ''}
+            </span>
+          </div>
         </div>
       </div>
       {eventData.fights.map((fight) => (
@@ -104,9 +107,9 @@ export const FightDetailPane = ({ fight, eventName, eventWhen, f1Rank, f2Rank, f
 
   const stats = [
     { label: 'Reach', f1: f1.reach ? `${f1.reach}"` : 'N/A', f2: f2.reach ? `${f2.reach}"` : 'N/A' },
-    { label: 'Strikes/min', f1: formatStat(f1.strikes_landed_per_min), f2: formatStat(f2.strikes_landed_per_min) },
-    { label: 'TD/15min', f1: formatStat(f1.takedown_avg, 1), f2: formatStat(f2.takedown_avg, 1) },
-    { label: 'Str. defense', f1: formatStat(f1.striking_defense), f2: formatStat(f2.striking_defense) },
+    { label: 'Strikes/min', f1: formatStat(f1.sig_strikes_landed_per_min), f2: formatStat(f2.sig_strikes_landed_per_min) },
+    { label: 'TD/15min', f1: formatStat(f1.takedown_avg_per_15min, 1), f2: formatStat(f2.takedown_avg_per_15min, 1) },
+    { label: 'Str. defense', f1: formatStat(f1.sig_str_defense), f2: formatStat(f2.sig_str_defense) },
   ];
 
   const recentF1 = getRecentFights(f1);
@@ -114,7 +117,10 @@ export const FightDetailPane = ({ fight, eventName, eventWhen, f1Rank, f2Rank, f
 
   return (
     <div className={styles.desktopDetail}>
-      <div className={styles.desktopDetailContext}>{eventName} &middot; {eventWhen}</div>
+      <div className={styles.desktopDetailContext}>
+        <div className={styles.desktopDetailWhen}>{eventWhen}</div>
+        <div className={styles.desktopDetailEvent}>{eventName}</div>
+      </div>
 
       <div className={styles.desktopMatchup}>
         <div className={styles.matchup}>

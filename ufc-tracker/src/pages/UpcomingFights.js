@@ -62,7 +62,7 @@ const UpcomingFights = () => {
       .filter((f) => f.date > now)
       .sort((a, b) => a.date - b.date)[0];
     if (!upcoming) return null;
-    const days = Math.max(1, Math.ceil((upcoming.date - now) / (1000 * 60 * 60 * 24)));
+    const days = Math.floor((upcoming.date - now) / (1000 * 60 * 60 * 24));
     return { days, event: upcoming.event, date: upcoming.date };
   }, [fights]);
 
@@ -174,14 +174,14 @@ const UpcomingFights = () => {
 
   const formatStat = (value, decimals = 2, suffix = '') => {
     if (!value) return 'N/A';
-    if (typeof value === 'string' && value.includes('(')) return value;
+    if (typeof value === 'string' && (value.includes('(') || value.includes('%'))) return value;
     const num = parseFloat(value);
     return !isNaN(num) ? num.toFixed(decimals) + suffix : value.toString();
   };
 
   const getRecentFights = (fighter, limit = 3) => {
     if (!fighter?.fight_history) return [];
-    return fighter.fight_history
+    return [...fighter.fight_history]
       .sort((a, b) => new Date(b.fight_date) - new Date(a.fight_date))
       .slice(0, limit);
   };
@@ -232,13 +232,14 @@ const UpcomingFights = () => {
   const toMixedCaseMonth = (month) => month.charAt(0) + month.slice(1).toLowerCase();
 
   const getEventPriority = (eventFights) => {
+    // Counted per fight (not per fighter) so a bout between two followed
+    // fighters is one fight, not two.
     let favorites = 0;
     let interested = 0;
     eventFights.forEach(fight => {
-      [...(fight.fighter1_favorites || []), ...(fight.fighter2_favorites || [])].forEach(fav => {
-        if (fav.priority === 'favorite') favorites++;
-        else if (fav.priority === 'interested') interested++;
-      });
+      const score = getFightPriorityScore(fight);
+      if (score === 2) favorites++;
+      else if (score === 1) interested++;
     });
     return { favorites, interested };
   };
@@ -263,11 +264,11 @@ const UpcomingFights = () => {
         f1: (() => { const s = getFightOutcomeStats(f1); return s.total > 0 ? `${s.ko}% KO, ${s.dec}% Dec, ${s.sub}% Sub` : 'N/A'; })(),
         f2: (() => { const s = getFightOutcomeStats(f2); return s.total > 0 ? `${s.ko}% KO, ${s.dec}% Dec, ${s.sub}% Sub` : 'N/A'; })()
       },
-      { label: 'Strikes/Min', f1: formatStat(f1.strikes_landed_per_min), f2: formatStat(f2.strikes_landed_per_min) },
-      { label: 'Strike Defense', f1: formatStat(f1.striking_defense), f2: formatStat(f2.striking_defense) },
-      { label: 'Takedowns/15min', f1: formatStat(f1.takedown_avg, 1), f2: formatStat(f2.takedown_avg, 1) },
-      { label: 'KO/TKO Wins', f1: f1.wins_ko || 0, f2: f2.wins_ko || 0 },
-      { label: 'Submission Wins', f1: f1.wins_sub || 0, f2: f2.wins_sub || 0 }
+      { label: 'Strikes/Min', f1: formatStat(f1.sig_strikes_landed_per_min), f2: formatStat(f2.sig_strikes_landed_per_min) },
+      { label: 'Strike Defense', f1: formatStat(f1.sig_str_defense), f2: formatStat(f2.sig_str_defense) },
+      { label: 'Takedowns/15min', f1: formatStat(f1.takedown_avg_per_15min, 1), f2: formatStat(f2.takedown_avg_per_15min, 1) },
+      { label: 'KO/TKO Wins', f1: f1.ufc_wins_ko || 0, f2: f2.ufc_wins_ko || 0 },
+      { label: 'Submission Wins', f1: f1.ufc_wins_sub || 0, f2: f2.ufc_wins_sub || 0 }
     ];
 
     return (
@@ -393,14 +394,15 @@ const UpcomingFights = () => {
               <p className={styles.pageSub}>No upcoming fights found for your selected criteria</p>
             ) : (
               sortedEventEntries.map(([eventName, eventData]) => {
-                const { month, day } = getDateParts(eventData.date);
-                const dayLabel = `${toMixedCaseMonth(month)} ${day} · ${formatTime(eventData.time)}`;
+                const dateParts = getDateParts(eventData.date);
+                const dayLabel = `${dateParts.weekday}, ${toMixedCaseMonth(dateParts.month)} ${dateParts.day} · ${formatTime(eventData.time)}`;
                 return (
                   <EventListGroup
                     key={eventName}
                     eventName={eventName}
                     eventData={eventData}
                     dayLabel={dayLabel}
+                    dateParts={dateParts}
                     selectedFightId={selectedFightId}
                     onSelectFight={setSelectedFightId}
                   />
@@ -447,7 +449,9 @@ const UpcomingFights = () => {
 
         {nextEvent && (
           <div className={styles.countdown}>
-            <span className={styles.countdownNumber}>{nextEvent.days} day{nextEvent.days !== 1 ? 's' : ''}</span>
+            <span className={styles.countdownNumber}>
+              {nextEvent.days === 0 ? 'Today' : `${nextEvent.days} day${nextEvent.days !== 1 ? 's' : ''}`}
+            </span>
             <span className={styles.countdownCaption}>until {nextEvent.event}</span>
           </div>
         )}
@@ -463,8 +467,8 @@ const UpcomingFights = () => {
               const { day, month, weekday } = getDateParts(eventData.date);
               const { favorites, interested } = getEventPriority(eventData.fights);
               const breakdownParts = [];
-              if (favorites > 0) breakdownParts.push(`${favorites} favorite${favorites > 1 ? 's' : ''}`);
-              if (interested > 0) breakdownParts.push(`${interested} interested`);
+              if (favorites > 0) breakdownParts.push(`${favorites} favorite fight${favorites > 1 ? 's' : ''}`);
+              if (interested > 0) breakdownParts.push(`${interested} interested fight${interested > 1 ? 's' : ''}`);
               const isExpanded = expandedEvents.has(eventName);
               const headline = selectHeadlineFight(eventData.fights);
               const otherFights = eventData.fights.filter((f) => f !== headline);
