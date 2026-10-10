@@ -170,6 +170,14 @@ reason. If a browser-based task fails with "chrome not reachable" and a rerun su
 immediately, this is almost certainly why — no further action needed beyond the retry
 already in place.
 
+**Overlapping runs, hung Chrome and DNS blips (Oct 2026)** - `run_scheduled.py` now takes a
+machine-wide lock (`data/staging/run_scheduled.lock`) so tasks run one at a time instead of
+launching concurrent Chromes (the Oct 5 roster + upcoming runs both timed out at the same
+minute). It also waits for DNS before starting and before uploads, kills orphaned
+automation Chrome/chromedriver before each run, and retries the Selenium scrapers
+(`roster`, `rankings`, `upcoming`) and the Supabase uploads once. A task that waits more
+than 90 minutes for the lock fails with an email. Script timeouts now count as ordinary failures.
+
 **Roster scrape stuck at page 1 / a fighter with a blank name** — `scrape_roster.py`'s
 "Load More" pagination loop now tolerates a few short misses (the button may just not
 have rendered yet) before concluding the roster page is fully loaded, and per-card name

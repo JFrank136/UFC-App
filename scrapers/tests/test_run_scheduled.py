@@ -207,3 +207,31 @@ def test_main_exits_1_and_emails_on_task_failure(tmp_path, monkeypatch):
     assert exc.value.code == 1
     mock_send.assert_called_once()
     assert "FAILED" in mock_send.call_args[0][0]
+
+
+def test_run_script_retries_then_succeeds(monkeypatch):
+    import run_scheduled
+    calls = []
+    monkeypatch.setattr(run_scheduled, "_run_script_once",
+                        lambda *a, **k: calls.append(1) or len(calls) == 2)
+    monkeypatch.setattr(run_scheduled, "kill_orphaned_automation_chrome", lambda *a: None)
+    monkeypatch.setattr(run_scheduled, "wait_for_network", lambda *a, **k: True)
+    assert run_scheduled.run_script(Path("x.py"), None, MagicMock(), attempts=2) is True
+    assert len(calls) == 2
+
+
+def test_run_script_does_not_retry_by_default(monkeypatch):
+    import run_scheduled
+    calls = []
+    monkeypatch.setattr(run_scheduled, "_run_script_once",
+                        lambda *a, **k: calls.append(1) or False)
+    assert run_scheduled.run_script(Path("x.py"), None, MagicMock()) is False
+    assert len(calls) == 1
+
+
+def test_run_script_timeout_is_a_failure_not_a_crash(monkeypatch):
+    import subprocess, run_scheduled
+    def boom(*a, **k):
+        raise subprocess.TimeoutExpired("x", 1)
+    monkeypatch.setattr(run_scheduled.subprocess, "run", boom)
+    assert run_scheduled._run_script_once(Path("x.py"), None, MagicMock(), 1) is False

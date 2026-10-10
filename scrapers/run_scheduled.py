@@ -77,24 +77,139 @@ def restore_file(backup: Path, destination: Path) -> bool:
     return True
 
 
-def run_script(
-    script: Path, choice: Optional[str], logger: logging.Logger, timeout: int = 1800
+LOCK_FILE = STAGING_DIR / "run_scheduled.lock"
+LOCK_WAIT_SECONDS = 90 * 60  # Task Scheduler's own limit is 3h; don't wait longer than half
+
+
+def acquire_run_lock(logger: logging.Logger):
+    """Block until no other run_scheduled task is running, then hold a machine-wide lock.
+
+    Two tasks that overlap each launch their own Chrome on a ~8GB machine, and
+    both end up timing out (Oct 5 roster + upcoming both died at the same
+    minute). msvcrt locks are released by the OS when the process dies, so a
+    crashed run can't leave a stale lock behind.
+    Returns the open file handle (keep it referenced), or None on timeout.
+    """
+    import msvcrt
+    import time
+
+    STAGING_DIR.mkdir(parents=True, exist_ok=True)
+    handle = open(LOCK_FILE, "a+")
+    deadline = time.monotonic() + LOCK_WAIT_SECONDS
+    announced = False
+    while True:
+        try:
+            handle.seek(0)
+            msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+            return handle
+        except OSError:
+            if time.monotonic() >= deadline:
+                handle.close()
+                return None
+            if not announced:
+                logger.warning("Another scheduled task is running - waiting for it to finish")
+                announced = True
+            time.sleep(15)
+
+
+def wait_for_network(
+    logger: logging.Logger,
+    hosts: tuple = ("www.ufc.com", "www.tapology.com"),
+    timeout: int = 300,
 ) -> bool:
-    """Run a Python script, capturing stdout/stderr to logger. Returns True on success."""
+    """Wait until every host resolves. Covers the wake-from-sleep DNS race."""
+    import socket
+    import time
+
+    supabase_url = os.environ.get("SUPABASE_URL", "")
+    if supabase_url:
+        hosts = hosts + (supabase_url.split("//")[-1].split("/")[0],)
+    deadline = time.monotonic() + timeout
+    while True:
+        try:
+            for host in hosts:
+                socket.getaddrinfo(host, 443)
+            return True
+        except OSError:
+            if time.monotonic() >= deadline:
+                logger.error(f"Network not reachable after {timeout}s (hosts: {', '.join(hosts)})")
+                return False
+            time.sleep(10)
+
+
+def kill_orphaned_automation_chrome(logger: logging.Logger) -> None:
+    """Kill leftover chromedriver and automation-launched Chrome (parent already gone).
+
+    A hung or failed scrape can leave these behind; each eats RAM and makes
+    the next launch slower to respond. Only Chrome started with
+    --remote-debugging-port is touched, so a normal browsing Chrome is safe.
+    """
+    script = (
+        "$all = Get-CimInstance Win32_Process;"
+        "$ids = $all.ProcessId;"
+        "$all | Where-Object {"
+        " $_.Name -in 'chromedriver.exe','undetected_chromedriver.exe' -or"
+        " ($_.Name -eq 'chrome.exe' -and $_.CommandLine -match '--remote-debugging-port'"
+        "  -and $_.ParentProcessId -notin $ids) } |"
+        " ForEach-Object { taskkill /F /T /PID $_.ProcessId | Out-Null; $_.Name }"
+    )
+    try:
+        out = subprocess.run(
+            ["powershell", "-NoProfile", "-Command", script],
+            capture_output=True, text=True, timeout=60,
+        ).stdout.split()
+        if out:
+            logger.warning(f"Cleaned up {len(out)} orphaned automation process(es)")
+    except (OSError, subprocess.TimeoutExpired):
+        logger.warning("Orphaned Chrome cleanup could not run")
+
+
+def run_script(
+    script: Path,
+    choice: Optional[str],
+    logger: logging.Logger,
+    timeout: int = 1800,
+    attempts: int = 1,
+) -> bool:
+    """Run a Python script, retrying up to `attempts` times. Returns True on success.
+
+    Use attempts=2 for Selenium scrapers: a hung Chrome fails the first try
+    and a clean relaunch usually succeeds.
+    """
+    for attempt in range(1, attempts + 1):
+        if attempt > 1:
+            logger.warning(f"Retrying {script.name} (attempt {attempt}/{attempts})")
+            kill_orphaned_automation_chrome(logger)
+            wait_for_network(logger, timeout=120)
+        if _run_script_once(script, choice, logger, timeout):
+            return True
+    if attempts > 1:
+        kill_orphaned_automation_chrome(logger)
+    return False
+
+
+def _run_script_once(
+    script: Path, choice: Optional[str], logger: logging.Logger, timeout: int
+) -> bool:
+    """Run a Python script once, capturing stdout/stderr to logger."""
     logger.info(f"▶ Running {script.name}")
     env = os.environ.copy()
     env["PYTHONIOENCODING"] = "utf-8"
-    result = subprocess.run(
-        [sys.executable, str(script)],
-        input=(choice + "\n") if choice else None,
-        cwd=str(script.parent),
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        capture_output=True,
-        timeout=timeout,
-        env=env,
-    )
+    try:
+        result = subprocess.run(
+            [sys.executable, str(script)],
+            input=(choice + "\n") if choice else None,
+            cwd=str(script.parent),
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            timeout=timeout,
+            env=env,
+        )
+    except subprocess.TimeoutExpired:
+        logger.error(f"{script.name} timed out after {timeout}s")
+        return False
     if result.stdout:
         logger.debug(result.stdout.rstrip())
     if result.stderr:
@@ -162,13 +277,16 @@ def _upload_with_guard(
         ctx.logger.error(f"❌ Upload blocked for {table}: {reason}")
         ctx.errors.append(reason)
         return False
-    return run_script(upload_script, choice=None, logger=ctx.logger)
+    wait_for_network(ctx.logger, timeout=120)
+    # Uploads delete-then-reinsert, so a retry after a mid-upload network blip
+    # re-runs the whole thing rather than leaving the table half-written.
+    return run_script(upload_script, choice=None, logger=ctx.logger, attempts=2)
 
 
 def run_roster(ctx: RunContext) -> bool:
     data_file = DATA_DIR / "ufc_fighters_raw.json"
     backup = backup_file(data_file)
-    if not run_script(BASE_DIR / "scrape_roster.py", choice="1", logger=ctx.logger):
+    if not run_script(BASE_DIR / "scrape_roster.py", choice="1", logger=ctx.logger, attempts=2):
         restore_file(backup, data_file)
         ctx.errors.append("scrape_roster.py failed")
         return False
@@ -178,7 +296,7 @@ def run_roster(ctx: RunContext) -> bool:
 def run_rankings(ctx: RunContext) -> bool:
     data_file = DATA_DIR / "ufc_rankings.json"
     backup = backup_file(data_file)
-    if not run_script(BASE_DIR / "scrape_rankings.py", choice="1", logger=ctx.logger):
+    if not run_script(BASE_DIR / "scrape_rankings.py", choice="1", logger=ctx.logger, attempts=2):
         restore_file(backup, data_file)
         ctx.errors.append("scrape_rankings.py failed")
         return False
@@ -198,7 +316,9 @@ def run_rankings(ctx: RunContext) -> bool:
 def run_upcoming(ctx: RunContext) -> bool:
     data_file = DATA_DIR / "upcoming_fights.json"
     backup = backup_file(data_file)
-    if not run_script(BASE_DIR / "scrape_upcoming_fights.py", choice="1", logger=ctx.logger):
+    if not run_script(
+        BASE_DIR / "scrape_upcoming_fights.py", choice="1", logger=ctx.logger, attempts=2
+    ):
         restore_file(backup, data_file)
         ctx.errors.append("scrape_upcoming_fights.py failed")
         return False
@@ -303,6 +423,24 @@ def main() -> None:
     logger, log_file = setup_logging(args.task)
     ctx = RunContext(task_name=args.task, logger=logger, log_file=log_file)
     logger.info(f"=== Starting task: {args.task} ===")
+
+    lock = acquire_run_lock(logger)
+    if lock is None:
+        logger.error("Gave up waiting for another scheduled task to finish")
+        subject, body = format_failure_email(
+            args.task, "Another scheduled task held the run lock for 90+ minutes", tail_log(log_file)
+        )
+        notifier.send_email(subject, body)
+        sys.exit(1)
+
+    if not wait_for_network(logger):
+        subject, body = format_failure_email(
+            args.task, "Network/DNS unavailable at start of run", tail_log(log_file)
+        )
+        notifier.send_email(subject, body)
+        sys.exit(1)
+
+    kill_orphaned_automation_chrome(logger)
 
     try:
         success = TASK_MAP[args.task](ctx)
