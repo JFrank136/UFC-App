@@ -32,3 +32,6 @@ Quick reference — the five scrapers and what they touch:
 push each dataset to its Supabase table. Run everything through
 `python run_scheduled.py --task <roster|rankings|upcoming|weekly_fighters>` rather than
 calling scrapers directly, except when debugging a single stage in isolation.
+`run_scheduled.py` takes a lock so only one task runs at a time (concurrent Chromes
+time out on this low-RAM machine), waits for DNS, and retries the Selenium scrapers
+and uploads once; see `scrapers/scrapers_guide.md` for the failure modes.
