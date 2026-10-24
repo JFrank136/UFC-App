@@ -108,6 +108,8 @@ def _build_chrome_options():
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-infobars")
     options.add_argument("--start-maximized")
+    # Return once the DOM is ready instead of waiting on images/ads, which can stall for minutes on a low-memory machine
+    options.page_load_strategy = "eager"
 
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36")
     return options
@@ -128,12 +130,118 @@ def get_event_links(driver):
     )
     soup = BeautifulSoup(driver.page_source, "html.parser")
     links = soup.select("a[href^='/fightcenter/events/']")
+    # Event pages only; sub-pages like /predictions-leaderboard are not cards
     urls = {
         "https://www.tapology.com" + a["href"]
-        for a in links if "ufc" in a["href"].lower()
+        for a in links
+        if "ufc" in a["href"].lower() and re.fullmatch(r"/fightcenter/events/\d+-[^/?#]+", a["href"])
     }
     print(f"Found {len(urls)} UFC events")
     return list(urls)
+
+
+UFC_EVENTS_URL = "https://www.ufc.com/events"
+UFC_BASE_URL = "https://www.ufc.com"
+UFC_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+}
+# UFC.com container id -> section
+UFC_SECTION_IDS = {"main-card": "main", "prelims-card": "prelims", "early-prelims": "early"}
+MAIN_LABELS = {"Main Event", "Co-Main", "Main Card"}
+NAME_SUFFIXES = {"jr", "sr", "ii", "iii"}
+
+# Filled in by main()/retry mode; maps fighter pair -> UFC.com section
+ufc_sections = {}
+
+
+def _name_key(name):
+    return re.sub(r"[^a-z0-9]", "", normalize_name(name).lower())
+
+
+def _family_key(name):
+    parts = [p for p in normalize_name(name).lower().split() if re.sub(r"[^a-z0-9]", "", p) not in NAME_SUFFIXES]
+    return re.sub(r"[^a-z0-9]", "", parts[-1]) if parts else ""
+
+
+def _pair_keys(name1, name2):
+    """Full-name pair first, family-name pair as a fallback for spelling differences between sites."""
+    return [
+        ("full", frozenset((_name_key(name1), _name_key(name2)))),
+        ("family", frozenset((_family_key(name1), _family_key(name2)))),
+    ]
+
+
+def parse_ufc_event_sections(html):
+    """Map each bout on a UFC.com event page to 'main', 'prelims' or 'early'."""
+    soup = BeautifulSoup(html, "html.parser")
+    sections = {}
+    for container_id, section in UFC_SECTION_IDS.items():
+        container = soup.find(id=container_id)
+        if not container:
+            continue
+        for bout in container.select(".c-listing-fight"):
+            red = bout.select_one(".c-listing-fight__corner-name--red")
+            blue = bout.select_one(".c-listing-fight__corner-name--blue")
+            if not red or not blue:
+                continue
+            for key in _pair_keys(red.get_text(" ", strip=True), blue.get_text(" ", strip=True)):
+                sections[key] = section
+    return sections
+
+
+def fetch_ufc_card_sections():
+    """Tapology only labels bouts Main Event / Co-Main / Main Card / Prelim, so UFC.com is the only
+    place early prelims show up. Returns {} on failure so the scrape keeps Tapology's labels."""
+    sections = {}
+    try:
+        res = requests.get(UFC_EVENTS_URL, headers=UFC_HEADERS, timeout=20)
+        res.raise_for_status()
+        soup = BeautifulSoup(res.text, "html.parser")
+        paths = sorted({
+            a["href"] for a in soup.select("a[href^='/event/']")
+            if re.fullmatch(r"/event/[^/?#]+", a["href"])
+        })
+    except Exception as e:
+        print(f"Could not load UFC.com event list, early prelims will not be detected: {e}")
+        return {}
+
+    for path in paths:
+        try:
+            res = requests.get(UFC_BASE_URL + path, headers=UFC_HEADERS, timeout=20)
+            res.raise_for_status()
+            sections.update(parse_ufc_event_sections(res.text))
+        except Exception as e:
+            print(f"Could not load UFC.com event {path}: {e}")
+        time.sleep(random.uniform(0.5, 1.5))
+
+    print(f"Loaded card sections for {len(sections) // 2} bouts from {len(paths)} UFC.com events")
+    return sections
+
+
+def resolve_card_section(tapology_label, ufc_section):
+    """UFC.com decides main / prelims / early; Tapology's finer main-card labels are kept."""
+    if ufc_section == "early":
+        return "Early Prelims"
+    if ufc_section == "prelims":
+        return "Prelim"
+    if ufc_section == "main":
+        return tapology_label if tapology_label in MAIN_LABELS else "Main Card"
+    return tapology_label
+
+
+def lookup_ufc_section(fighter1, fighter2, sections):
+    for key in _pair_keys(fighter1, fighter2):
+        if key in sections:
+            return sections[key]
+    return None
+
+
+def compute_event_status(event_date):
+    try:
+        fight_date_obj = datetime.strptime(event_date, "%Y-%m-%d").date()
+    except Exception:
+        return "tbd"  # If date is TBD or malformed
+    return "past" if fight_date_obj < datetime.now(timezone.utc).date() else "upcoming"
 
 def parse_event_datetime(soup):
     try:
@@ -251,7 +359,7 @@ def download_event_image(soup, event_title):
             "img[alt*='UFC']",
             "img[src*='poster']",
             "img[src*='fight']",
-            "img.w-4/5",
+            "img[class~='w-4/5']",
             "img[alt*='Fight Night']",
             "img[alt*='fight card']"
         ]
@@ -314,7 +422,6 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
         return []
 
     fights = []
-    now = datetime.now(timezone.utc).date()
 
     # Extract venue and location info
     venue, location = parse_venue_info(soup)
@@ -338,6 +445,7 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
             card_section = section_tag.get_text(strip=True) if section_tag else "Unknown"
             if "rumor" in card_section.lower():
                 continue  # Skip rumor fights
+            card_section = resolve_card_section(card_section, lookup_ufc_section(fighter1, fighter2, ufc_sections))
 
             weight_tag = block.select_one("span.bg-tap_darkgold")
             weight_class = weight_tag.get_text(strip=True) if weight_tag else "TBD"
@@ -349,13 +457,7 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
             fighter2_id = uuid_lookup.get(normalize_name(fixed2))
 
             # Mark event status (upcoming vs past) but keep all events
-            event_status = "upcoming"
-            try:
-                fight_date_obj = datetime.strptime(event_date, "%Y-%m-%d").date()
-                if fight_date_obj < now:
-                    event_status = "past"
-            except Exception:
-                event_status = "tbd"  # If date is TBD or malformed
+            event_status = compute_event_status(event_date)
 
             fights.append({
                 "event": event_title,
@@ -384,19 +486,26 @@ def parse_fights(soup, event_title, event_type, event_date, event_time):
     return fights
 
 def scrape_event(driver, url):
+    """Returns the event's fights, or None if the page could not be scraped (as opposed to [] for an
+    event with no fights) so callers don't treat a failed load as 'every fight was cancelled'."""
     try:
         driver.get(url)
     except Exception as e:
         print(f"Failed to load event page: {url}\n  → {e}")
-        return []
+        return None
 
     try:
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "li[data-controller='table-row-background']"))
         )
     except Exception:
+        # An event page that rendered but has no bouts yet is an empty card, not a failed load
+        page = BeautifulSoup(driver.page_source, "html.parser")
+        if page.find("h1") and page.find("span", string=lambda t: t and "Date/Time:" in t):
+            print(" Event has no fights listed yet")
+            return []
         print(" Fight cards did not load")
-        return []
+        return None
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
 
@@ -406,7 +515,7 @@ def scrape_event(driver, url):
         event_title = title_tag.get_text(strip=True).split("|")[0].strip()
     except Exception as e:
         print(f"Failed to get event title: {e}")
-        return []
+        return None
 
     # Determine type
     if "fight night" in event_title.lower():
@@ -432,17 +541,30 @@ def make_fight_key(f):
     return (min(n1, n2), max(n1, n2), date)
 
 
-def merge_fights(existing_fights, new_fights):
+def merge_fights(existing_fights, new_fights, prune=True, keep_early_prelims=False, still_listed=None):
     """
     Merge freshly scraped fights into the existing fight list.
     - Matches fights using order-independent key (sorted IDs or sorted names + date)
     - Updates all fields on a match (including event_status and scraped_at)
     - Appends genuinely new fights
-    - Preserves existing fights that aged off Tapology's page
+    - Preserves existing fights on dates that were not scraped (aged off Tapology's page)
+    - With prune, drops existing fights on a freshly scraped date that are no longer on the card
+      (cancelled, or replaced by a new opponent) instead of keeping them next to the replacement
+    - still_listed(fight) -> True protects a fight from pruning because another source (UFC.com) still
+      lists it; the two sites sometimes disagree and a fight on the official card shouldn't be dropped
+    - keep_early_prelims keeps a stored 'Early Prelims' when this run could not look sections up
+    Returns (merged, added, updated, unchanged, removed).
     """
+    scraped_dates = {f.get("event_date") for f in new_fights if f.get("event_date") not in (None, "", "TBD")}
+    new_keys = {make_fight_key(f) for f in new_fights}
+
     existing_by_key = {}
+    removed = []
     for f in existing_fights:
         key = make_fight_key(f)
+        if prune and f.get("event_date") in scraped_dates and key not in new_keys and not (still_listed and still_listed(f)):
+            removed.append(f)
+            continue
         existing_by_key[key] = f
 
     added = 0
@@ -451,24 +573,41 @@ def merge_fights(existing_fights, new_fights):
     for new_fight in new_fights:
         key = make_fight_key(new_fight)
         if key in existing_by_key:
-            existing_by_key[key].update(new_fight)
+            existing = existing_by_key[key]
+            if keep_early_prelims and existing.get("card_section") == "Early Prelims" and new_fight.get("card_section") == "Prelim":
+                new_fight = {**new_fight, "card_section": "Early Prelims"}
+            existing.update(new_fight)
             updated += 1
         else:
             existing_by_key[key] = new_fight
             added += 1
 
-    unchanged = len(existing_fights) - updated
-    return list(existing_by_key.values()), added, updated, unchanged
+    merged = list(existing_by_key.values())
+    # Events that have since happened are no longer re-scraped, so refresh their status here
+    for f in merged:
+        f["event_status"] = compute_event_status(f.get("event_date"))
+
+    unchanged = len(existing_fights) - updated - len(removed)
+    return merged, added, updated, unchanged, removed
+
+
+def print_removed(removed):
+    if removed:
+        print(f"Removed {len(removed)} stale fights (cancelled or replaced):")
+        for f in removed:
+            print(f"  {f.get('event_date')}  {f.get('fighter1')} vs {f.get('fighter2')}  [{f.get('event')}]")
 
 
 def main():
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
 
-    global uuid_lookup
+    global uuid_lookup, ufc_sections
     uuid_lookup = load_uuid_lookup()
+    ufc_sections = fetch_ufc_card_sections()
 
     driver = None
     all_fights = []
+    failed_links = []
     try:
         driver = setup_browser()
         links = get_event_links(driver)
@@ -477,9 +616,13 @@ def main():
             try:
                 print_progress_bar(idx, total_links, "Scraping Events")
                 fights = scrape_event(driver, link)
-                all_fights.extend(fights)
+                if fights is None:
+                    failed_links.append(link)
+                else:
+                    all_fights.extend(fights)
                 time.sleep(random.uniform(1.5, 3.5))
             except Exception as e:
+                failed_links.append(link)
                 # Log failed events for retry without verbose output
                 # Log failed events for retry
                 error_event = {"url": link, "error": str(e), "timestamp": datetime.now(timezone.utc).isoformat()}
@@ -495,12 +638,31 @@ def main():
                         json.dump(existing, f, indent=2, ensure_ascii=False)
                 except Exception as err:
                     print(f"Could not write to event error log: {err}")
+
+        # One more try for events that failed (a slow or wedged Chrome often recovers)
+        if failed_links:
+            print(f"\nRetrying {len(failed_links)} failed events...")
+            still_failed = []
+            for link in failed_links:
+                try:
+                    fights = scrape_event(driver, link)
+                except Exception:
+                    fights = None
+                if fights is None:
+                    still_failed.append(link)
+                else:
+                    all_fights.extend(fights)
+                time.sleep(random.uniform(1.5, 3.5))
+            failed_links = still_failed
     finally:
         if driver:
             try:
                 driver.quit()
             except Exception as e:
                 print(f" Chrome quit() failed: {e}")
+
+    # A failed event could hide fights on a date another event covers, so don't prune then
+    had_failures = bool(failed_links)
 
     # Load existing fights and merge with freshly scraped ones
     existing_fights = []
@@ -511,7 +673,12 @@ def main():
         except Exception as e:
             print(f"Warning: Could not load existing fights file, starting fresh: {e}")
 
-    merged_fights, added, updated, unchanged = merge_fights(existing_fights, all_fights)
+    if had_failures:
+        print("\nSome events failed to scrape, so stale fights will not be pruned this run")
+    merged_fights, added, updated, unchanged, removed = merge_fights(
+        existing_fights, all_fights, prune=not had_failures, keep_early_prelims=not ufc_sections,
+        still_listed=lambda f: lookup_ufc_section(f.get("fighter1", ""), f.get("fighter2", ""), ufc_sections) is not None,
+    )
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(merged_fights, f, indent=2, ensure_ascii=False)
@@ -531,7 +698,8 @@ def main():
     missing_names = sorted(missing_names)
 
     print(f"\nSCRAPING SUMMARY")
-    print(f"This run:  {added} added, {updated} updated, {unchanged} unchanged")
+    print(f"This run:  {added} added, {updated} updated, {unchanged} unchanged, {len(removed)} removed")
+    print_removed(removed)
     print(f"Total in file: {len(merged_fights)} fights ({upcoming_count} upcoming, {past_count} past, {tbd_count} tbd)")
     if missing_names:
         print(f"Missing UUIDs: {len(missing_names)} fighters")
@@ -619,6 +787,7 @@ if __name__ == "__main__":
             print("No failed events to retry.")
             sys.exit(0)
         uuid_lookup = load_uuid_lookup()
+        ufc_sections = fetch_ufc_card_sections()
         all_fights = []
         retried_urls = set()
         driver = None
@@ -650,7 +819,10 @@ if __name__ == "__main__":
             except Exception as e:
                 print(f"Warning: Could not load existing fights file, starting fresh: {e}")
 
-        merged_fights, added, updated, unchanged = merge_fights(existing_fights, all_fights)
+        # Only some events were retried, so don't prune: another event may share a retried date
+        merged_fights, added, updated, unchanged, removed = merge_fights(
+            existing_fights, all_fights, prune=False, keep_early_prelims=not ufc_sections
+        )
 
         with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
             json.dump(merged_fights, f, indent=2, ensure_ascii=False)

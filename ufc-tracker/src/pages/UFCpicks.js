@@ -38,7 +38,8 @@ const UFCPicks = () => {
             )
           `)
           .or('event_type.ilike.%ppv%,event.ilike.%ufc [0-9]%')
-          .eq('card_section', 'Main')
+          .in('card_section', ['Main Event', 'Co-Main', 'Main Card', 'Main'])
+          .neq('event_status', 'past')
           .order('event_date')
           .order('fight_order', { ascending: false });
 

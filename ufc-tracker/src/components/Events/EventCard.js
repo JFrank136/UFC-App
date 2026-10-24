@@ -123,10 +123,10 @@ const EventCard = ({
       let section;
       if (raw === 'Main Card' || raw === 'Main' || raw === 'Main Event' || raw === 'Co-Main') {
         section = 'Main Card';
-      } else if (raw === 'Preliminary Card' || raw === 'Prelim' || raw === 'Prelims') {
-        section = 'Preliminary Card';
-      } else {
+      } else if (raw === 'Early Prelims') {
         section = 'Early Prelims';
+      } else {
+        section = 'Preliminary Card';
       }
       if (!acc[section]) acc[section] = [];
       acc[section].push(fight);

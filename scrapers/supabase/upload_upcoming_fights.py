@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 UPCOMING_FIGHTS_PATH = Path(__file__).resolve().parent.parent / "data" / "upcoming_fights.json"
 BATCH_SIZE = 500
 HTTP_TIMEOUT = 30  # seconds
+MAX_PRUNE = 25  # most stale rows deleted in one run without --force-prune
 
 
 def print_progress(current, total, prefix="Progress", bar_length=50):
@@ -175,6 +176,74 @@ def mark_past_fights(supabase_url, headers):
     print("  Done marking past fights")
 
 
+def db_fight_key(row):
+    """Order-independent identity of a bout: fighter IDs when both known, lowercase names otherwise."""
+    f1, f2 = row.get("fighter1_id") or row.get("uuid1"), row.get("fighter2_id") or row.get("uuid2")
+    if f1 and f2:
+        return ("id", row.get("event_date"), frozenset((f1, f2)))
+    names = frozenset((str(row.get("fighter1") or "").strip().lower(), str(row.get("fighter2") or "").strip().lower()))
+    return ("name", row.get("event_date"), names)
+
+
+def find_stale_rows(db_rows, fights):
+    """DB rows on a date that appears in the file but whose bout no longer does (cancelled or replaced)."""
+    file_keys = {db_fight_key(f) for f in fights}
+    return [r for r in db_rows if db_fight_key(r) not in file_keys]
+
+
+def prune_stale_rows(supabase_url, headers, fights, force=False):
+    """Upserts never remove anything, so a cancelled bout or a replaced opponent would otherwise stay
+    in the table next to its replacement. Only dates that are today or later and present in the
+    scraped file are touched, and a suspiciously large deletion is refused unless force is set."""
+    from datetime import date
+    today = date.today().isoformat()
+    dates = sorted({
+        f["event_date"] for f in fights
+        if f.get("event_date") and f["event_date"] >= today and f["event_date"] != "TBD"
+    })
+    if not dates:
+        return 0
+
+    url = f"{supabase_url}/rest/v1/upcoming_fights"
+    resp = http_request_with_retry(
+        "GET", url, headers=headers,
+        params={
+            "select": "id,event_date,fighter1,fighter2,fighter1_id,fighter2_id",
+            "event_date": f"in.({','.join(dates)})",
+            "limit": "5000",
+        },
+    )
+    if resp is None or resp.status_code != 200:
+        print(f"  Warning: could not read existing rows to prune stale fights - skipping")
+        return 0
+
+    stale = find_stale_rows(resp.json(), [f for f in fights if f.get("event_date") in dates])
+    if not stale:
+        print("No stale fights to remove")
+        return 0
+
+    print(f"Stale fights in database ({len(stale)}):")
+    for r in stale:
+        print(f"  {r['event_date']}  {r['fighter1']} vs {r['fighter2']}")
+
+    if len(stale) > MAX_PRUNE and not force:
+        print(f"  Refusing to delete more than {MAX_PRUNE} rows automatically - re-run with --force-prune if this is right")
+        return 0
+
+    h = dict(headers)
+    h["Prefer"] = "return=minimal"
+    ids = [r["id"] for r in stale]
+    for i in range(0, len(ids), 50):
+        chunk = ids[i:i + 50]
+        resp = http_request_with_retry("DELETE", url, headers=h, params={"id": f"in.({','.join(chunk)})"})
+        if resp is None or resp.status_code not in (200, 204):
+            code = resp.status_code if resp is not None else "no response"
+            print(f"  Warning: failed to delete stale rows (HTTP {code})")
+            return 0
+    print(f"Removed {len(ids)} stale fights")
+    return len(ids)
+
+
 def main():
     print("Uploading upcoming fights (HTTPS)...")
 
@@ -279,6 +348,9 @@ def main():
         print(f"\nUpcoming fights upload failed: {e}")
         sys.exit(1)
 
+    print()
+    pruned = prune_stale_rows(supabase_url, headers, fights, force="--force-prune" in sys.argv)
+
     print("\n" + "=" * 60)
     print("UPCOMING FIGHTS UPLOAD SUMMARY (HTTPS)")
     print("=" * 60)
@@ -286,6 +358,7 @@ def main():
     print(f"Upserted (stable IDs):    {upserted:,}")
     print(f"Inserted (partial IDs):   {inserted:,}")
     print(f"Skipped (no UUIDs):       {skipped:,}")
+    print(f"Pruned (stale rows):      {pruned:,}")
     print("=" * 60)
     print("Upload completed!")
 

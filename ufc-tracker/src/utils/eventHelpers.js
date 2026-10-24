@@ -112,13 +112,13 @@ export const groupFightsBySection = (fights) => {
   const grouped = fights.reduce((acc, fight) => {
     const raw = fight.card_section || '';
     let section;
-    // Match both short ('Main') and full ('Main Card') values from Supabase
-    if (raw === 'Main Card' || raw === 'Main') {
+    // Main event and co-main are labelled separately but belong to the main card
+    if (raw === 'Main Card' || raw === 'Main' || raw === 'Main Event' || raw === 'Co-Main') {
       section = 'Main Card';
-    } else if (raw === 'Preliminary Card' || raw === 'Prelim' || raw === 'Prelims') {
-      section = 'Preliminary Card';
-    } else {
+    } else if (raw === 'Early Prelims') {
       section = 'Early Prelims';
+    } else {
+      section = 'Preliminary Card';
     }
 
     if (!acc[section]) acc[section] = [];

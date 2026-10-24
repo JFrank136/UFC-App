@@ -111,6 +111,18 @@ python scrape_upcoming_fights.py
 **Note**: Fighters in `upcoming_errors.json` don't have a UUID yet — they're on a fight
 card but not in the roster. See "Adding a New Fighter" below.
 
+**Card sections**: Tapology only labels bouts `Main Event` / `Co-Main` / `Main Card` / `Prelim`.
+Early prelims come from UFC.com (`fetch_ufc_card_sections`, which reads each event on
+`ufc.com/events`) and are stored as `card_section = "Early Prelims"`. If UFC.com can't be
+reached the scrape still works; bouts just keep Tapology's label and any stored
+`Early Prelims` are preserved.
+
+**Cancelled fights / new opponents**: on a full scrape, any stored fight on a date that was
+scraped but is no longer on the card is removed from `upcoming_fights.json`
+(skipped if any event failed to scrape, and in mode 3). `upload_upcoming_fights.py` then
+deletes DB rows for those upcoming dates that aren't in the file, since an upsert alone never
+removes anything. It refuses to delete more than 25 rows at once unless run with `--force-prune`.
+
 ---
 
 ## Data Processing Scripts
