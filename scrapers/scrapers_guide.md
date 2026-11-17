@@ -41,7 +41,6 @@ fighter (see "Adding a New Fighter" below)
 python scrape_details.py
 # [1] Full scrape - all active fighters (~400-500)
 # [2] Retry from details_errors.json
-# [3] Update ranked fighter images - top 5 + champions (~60)
 # Optional: --workers=6, --sequential
 ```
 

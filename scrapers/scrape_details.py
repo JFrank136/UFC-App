@@ -68,27 +68,6 @@ def clean_stats_group(stats_dict):
     return stats_dict
 
 
-def download_image(url, save_path):
-    """Download image with minimal logging"""
-    try:
-        os.makedirs(os.path.dirname(save_path), exist_ok=True)
-        
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-            "Referer": "https://www.ufc.com/"
-        }
-        
-        res = session_manager.get(url, stream=True, timeout=10)
-        if res.status_code == 200:
-            with open(save_path, 'wb') as f:
-                for chunk in res.iter_content(1024):
-                    if chunk:
-                        f.write(chunk)
-            return True
-    except Exception:
-        pass
-    return False
-
 # Setup logging
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -659,22 +638,14 @@ def _scrape_details(profile_url_ufc):
             if not image_url:
                 logger.warning(f"⚠️ Could not find any image for {fighter_slug}")
 
+        # Fighter photos are served straight from UFC.com via image_url; nothing is
+        # downloaded locally, so image_local_path is always None.
+        data["image_local_path"] = None
         if image_url:
-            image_dir = os.path.join("..", "ufc-tracker", "public", "images")
-            os.makedirs(image_dir, exist_ok=True)
-            image_path = os.path.join(image_dir, f"{fighter_slug}.jpg")
-
-            if os.path.exists(image_path):
-                data["image_local_path"] = f"/images/{fighter_slug}.jpg"
-            else:
-                success = download_image(image_url, image_path)
-                if success:
-                    data["image_local_path"] = f"/images/{fighter_slug}.jpg"
             data["image_url"] = image_url
             data["image_verified"] = True
         else:
             data["image_url"] = "/static/images/placeholder.jpg"
-            data["image_local_path"] = "/images/placeholder.jpg"
             data["image_verified"] = False
 
         # Bio extraction (preserved from original)
@@ -863,12 +834,9 @@ def process_fighter(fighter_info):
     # Show progress for every 25th fighter
     show_progress(idx, total, fighter_name)
 
-    # Skip if already processed and image exists
-    fighter_slug = fighter.get("profile_url_ufc", "").rstrip('/').split('/')[-1]
-    if fighter_slug:
-        image_path = os.path.join("..", "ufc-tracker", "public", "images", f"{fighter_slug}.jpg")
-        if (fighter.get("image_verified") and os.path.exists(image_path)):
-            return fighter
+    # Skip if already processed with a verified image
+    if fighter.get("image_verified"):
+        return fighter
 
     # Get profile URL
     profile_url_ufc = fighter.get("profile_url_ufc") or fighter.get("profile_url")
@@ -1077,152 +1045,10 @@ def enrich_roster_sequential(input_file="data/ufc_fighters_raw.json", output_fil
     logger.info(f"✅ Sequential processing complete. Saved {len(enriched)} fighters to {output_file}")
 
 
-def update_ranked_fighter_images(rankings_file="data/ufc_rankings.json", roster_file="data/ufc_fighters_raw.json"):
-    """Update images for top 5 ranked fighters + champions from each division"""
-    logger.info("🏆 Starting ranked fighter image update...")
-    
-    # Load rankings and roster data
-    try:
-        with open(rankings_file, "r", encoding="utf-8") as f:
-            rankings_data = json.load(f)
-        with open(roster_file, "r", encoding="utf-8") as f:
-            roster_data = json.load(f)
-    except FileNotFoundError as e:
-        logger.error(f"❌ Required file not found: {e}")
-        return
-    except json.JSONDecodeError as e:
-        logger.error(f"❌ Invalid JSON: {e}")
-        return
-    
-    # Build UUID to fighter mapping
-    uuid_to_fighter = {f.get("id"): f for f in roster_data if f.get("id")}
-    
-    # Collect fighters to update (top 5 + champions)
-    fighters_to_update = []
-    
-    for division in rankings_data:
-        division_name = division.get("division", "Unknown")
-        logger.info(f"📋 Processing division: {division_name}")
-        
-        for fighter_rank in division.get("fighters", []):
-            rank = fighter_rank.get("rank")
-            uuid = fighter_rank.get("uuid")
-            name = fighter_rank.get("name", "Unknown")
-            
-            # Include champions (rank "C") and top 5 (ranks 1-5)
-            if rank == "C" or (isinstance(rank, int) and 1 <= rank <= 5):
-                if uuid and uuid in uuid_to_fighter:
-                    fighter_data = uuid_to_fighter[uuid]
-                    fighters_to_update.append((fighter_data, rank, division_name))
-                    logger.info(f"  🎯 Queued for update: {name} (Rank {rank})")
-                else:
-                    logger.warning(f"  ⚠️ Fighter not found in roster: {name} (UUID: {uuid})")
-    
-    if not fighters_to_update:
-        logger.warning("No ranked fighters found to update")
-        return
-    
-    logger.info(f"🚀 Updating images for {len(fighters_to_update)} ranked fighters...")
-    
-    # Process each fighter
-    updated_count = 0
-    failed_count = 0
-    
-    for idx, (fighter, rank, division) in enumerate(fighters_to_update, 1):
-        fighter_name = fighter.get("name", "Unknown")
-        profile_url_ufc = fighter.get("profile_url_ufc") or fighter.get("profile_url")
-        
-        if not profile_url_ufc:
-            logger.warning(f"[{idx}/{len(fighters_to_update)}] No profile URL for {fighter_name}")
-            failed_count += 1
-            continue
-        
-        if idx % 10 == 0 or idx == 1 or idx == len(fighters_to_update):
-            print(f"[{idx}/{len(fighters_to_update)}] Updating ranked fighter images...")
-        
-        try:
-            # Scrape the profile page for updated image
-            res = session_manager.get(profile_url_ufc, timeout=15)
-            if res.status_code != 200:
-                logger.warning(f"Failed to load profile: {profile_url_ufc}")
-                failed_count += 1
-                continue
-            
-            soup = BeautifulSoup(res.text, "html.parser")
-            fighter_slug = profile_url_ufc.rstrip('/').split('/')[-1]
-            
-            # Find image using same selectors as main scraping
-            image_url = None
-            image_el = (soup.select_one("img.hero-profile__image") or 
-                       soup.select_one("img[class*='hero-profile']") or
-                       soup.select_one("img[class*='athlete_bio_full_body']") or
-                       soup.select_one(".hero-profile img"))
-            
-            if image_el and image_el.get("src"):
-                src = image_el["src"].strip()
-                if src.startswith("//"):
-                    image_url = "https:" + src
-                elif src.startswith("/"):
-                    image_url = "https://www.ufc.com" + src
-                else:
-                    image_url = src
-            else:
-                # Try backup selectors
-                backup_selectors = [
-                    "img[src*='athlete_bio']",
-                    "img[src*='fighter']", 
-                    ".hero-profile img",
-                    ".c-hero img",
-                    "img[alt*='Fighter']"
-                ]
-                
-                for selector in backup_selectors:
-                    backup_el = soup.select_one(selector)
-                    if backup_el and backup_el.get("src"):
-                        src = backup_el["src"].strip()
-                        if src.startswith("//"):
-                            image_url = "https:" + src
-                        elif src.startswith("/"):
-                            image_url = "https://www.ufc.com" + src
-                        else:
-                            image_url = src
-                        break
-            
-            if not image_url:
-                logger.warning(f"Could not find image URL for {fighter_name}")
-                failed_count += 1
-                continue
-            
-            # Force download new image (overwrite existing)
-            image_dir = os.path.join("..", "ufc-tracker", "public", "images")
-            os.makedirs(image_dir, exist_ok=True)
-            image_path = os.path.join(image_dir, f"{fighter_slug}.jpg")
-            
-            success = download_image(image_url, image_path)
-            
-            if success:
-                updated_count += 1
-            else:
-                failed_count += 1
-            
-            # Be respectful with requests
-            time.sleep(1)
-            
-        except Exception as e:
-            logger.error(f"Error updating {fighter_name}: {e}")
-            failed_count += 1
-    
-    # Summary
-    logger.info(f"\n📊 RANKED FIGHTER IMAGE UPDATE SUMMARY")
-    logger.info(f"✅ Successfully updated: {updated_count} images")
-    logger.info(f"❌ Failed to update: {failed_count} images")
-    logger.info(f"📁 Images saved to: ../ufc-tracker/public/images/")
-
-
 if __name__ == "__main__":
     import sys
-    print("Run mode:\n[1] Full scrape\n[2] Retry from details_errors.json\n[3] Update ranked fighter images")
-    mode = input("Choose 1, 2, or 3: ").strip()
+    print("Run mode:\n[1] Full scrape\n[2] Retry from details_errors.json")
+    mode = input("Choose 1 or 2: ").strip()
 
     sequential_mode = "--sequential" in sys.argv
     max_workers = 4
@@ -1238,11 +1064,6 @@ if __name__ == "__main__":
         logger.info(f"🚀 Running full scrape with {max_workers} workers...")
         enrich_roster(max_workers=max_workers)
 
-    elif mode == "3":
-        logger.info("🏆 Running ranked fighter image update...")
-        update_ranked_fighter_images()
-    
-        
     elif mode == "2":
         retry_file = "data/errors/details_errors.json"
         input_roster_file = "data/ufc_fighters_raw.json"

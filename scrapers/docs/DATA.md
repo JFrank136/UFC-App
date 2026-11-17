@@ -65,10 +65,9 @@ consistent across all fighter pages:
   silently returns `{}` rather than raising.
 - Image selectors cascade through `img.hero-profile__image` → `img[class*='hero-profile']`
   → `img[class*='athlete_bio_full_body']` → a handful of backup selectors. Any URL not
-  containing `ufc.com` is rejected as bad data. Downloaded to
-  `ufc-tracker/public/images/<slug>.jpg` — **relative to the scraper's own working
-  directory** (`../ufc-tracker/public/images`), so this only works when run from
-  `scrapers/`.
+  containing `ufc.com` is rejected as bad data. Images are **not** downloaded locally
+  (removed Nov 2026 to save disk space); the frontend loads `image_url` straight from
+  UFC.com and `image_local_path` is always `None`.
 - Gender is inferred, not scraped as a field: defaults to `"Male"`, flipped to
   `"Female"` if the word "women" appears anywhere on the page or in the bio's
   "Weight class" value. No explicit gender field exists on UFC.com's markup.
