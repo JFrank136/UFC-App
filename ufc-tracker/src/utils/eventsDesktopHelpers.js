@@ -2,10 +2,15 @@
 // Desktop-only Events page logic. Kept separate from eventHelpers.js because
 // these functions are new for the desktop redesign and have no mobile caller.
 
+// Real fight_history.method values are short codes ("KO", "TKO", "SUB",
+// "DEC"), not the long-form strings ("Decision - Unanimous") these patterns
+// were originally written to match — confirmed against live data while
+// manually verifying this page, where every real decision method is
+// literally "DEC". `dec` below matches both forms.
 const METHOD_PATTERNS = {
   ko: /ko|tko|knockout/,
   sub: /sub|submission|tap/,
-  dec: /decision|unanimous|majority|split/,
+  dec: /dec|decision|unanimous|majority|split/,
 };
 
 /**

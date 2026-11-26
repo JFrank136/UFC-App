@@ -5,16 +5,23 @@ describe('getFinishRateBreakdown', () => {
   // mockup: fighters.ufc_losses_dec was stale (read 0) for a fighter whose
   // actual UFC losses were all decisions. Deriving from fight_history
   // directly, as this function does, can't go stale the same way.
+  //
+  // Method values here are the real short codes fight_history.method
+  // actually stores ("KO", "TKO", "SUB", "DEC") — an earlier version of this
+  // fixture used long-form strings like "Decision - Unanimous", which masked
+  // a real bug where the "dec" pattern didn't match the literal "DEC" the
+  // live app actually renders (caught by manual verification, not by this
+  // test, until this fixture was corrected to match real data).
   const fightHistory = [
     { result: 'win', method: 'TKO' },
-    { result: 'win', method: 'Submission' },
+    { result: 'win', method: 'SUB' },
     { result: 'win', method: 'TKO' },
-    { result: 'win', method: 'Decision - Unanimous' },
-    { result: 'win', method: 'Decision - Unanimous' },
-    { result: 'win', method: 'KO/TKO' },
-    { result: 'loss', method: 'Decision - Unanimous' },
-    { result: 'loss', method: 'Decision - Split' },
-    { result: 'loss', method: 'Decision - Unanimous' },
+    { result: 'win', method: 'DEC' },
+    { result: 'win', method: 'DEC' },
+    { result: 'win', method: 'KO' },
+    { result: 'loss', method: 'DEC' },
+    { result: 'loss', method: 'DEC' },
+    { result: 'loss', method: 'DEC' },
   ];
   const fighter = { fight_history: fightHistory };
 
