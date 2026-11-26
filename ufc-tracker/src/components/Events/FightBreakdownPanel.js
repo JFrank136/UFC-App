@@ -34,54 +34,61 @@ const BodySilhouette = ({ targetPlacement, fillClass }) => (
   </svg>
 );
 
-const FighterBreakdownColumn = ({ fighter, fillClass }) => {
+const PositionColumn = ({ fighter, barFillClass }) => {
   const position = getStrikePlacement(fighter, 'sig_strikes_by_position', POSITION_LABELS);
-  const target = getStrikePlacement(fighter, 'sig_strikes_by_target', TARGET_LABELS);
-  const recent5 = getRecentFights(fighter, 5);
-
   return (
-    <>
-      <div className={styles.placementCol}>
-        {position.map((item) => (
-          <div key={item.label}>
-            <div className={styles.placementItemTop}><span>{item.label}</span><b>{item.pct}%</b></div>
-            <div className={styles.placementBar}>
-              <div className={fillClass === styles.silFillGold ? styles.placementBarFill : styles.placementBarFillAlt} style={{ width: `${item.pct}%` }} />
-            </div>
+    <div className={styles.placementCol}>
+      {position.map((item) => (
+        <div key={item.label}>
+          <div className={styles.placementItemTop}><span>{item.label}</span><b>{item.pct}%</b></div>
+          <div className={styles.placementBar}>
+            <div className={barFillClass} style={{ width: `${item.pct}%` }} />
           </div>
-        ))}
-      </div>
-      <div className={styles.silhouetteCol}>
-        <BodySilhouette targetPlacement={target} fillClass={fillClass} />
-        <div className={styles.targetList}>
-          {target.map((item) => (
-            <div key={item.label} className={styles.targetRow}>
-              <span className={styles.targetRegion}>{item.label}</span>
-              <span className={styles.targetLeader} />
-              <span className={styles.targetCount}>{item.count}</span>
-              <span className={styles.targetPct}>{item.pct}%</span>
-            </div>
-          ))}
         </div>
-      </div>
-      <div className={styles.cmpRfCol}>
-        {recent5.map((fight, i) => (
-          <div key={i} className={styles.cmpRfItem}>
-            <div className={`${styles.cmpRfChip} ${fight.result?.toLowerCase() === 'win' ? styles.cmpRfChipWin : styles.cmpRfChipLoss}`}>
-              {fight.result?.charAt(0)?.toUpperCase() || '?'}
-            </div>
-            <div>
-              <div className={styles.cmpRfOpp}>{fight.opponent}</div>
-              <div className={styles.cmpRfMeta}>
-                {fight.method?.replace(/\([^)]*\)/g, '').trim() || 'N/A'}
-                {fight.fight_date ? ` · ${new Date(`${fight.fight_date}T00:00:00`).toLocaleDateString('en-US', { month: 'short', year: '2-digit' })}` : ''}
-              </div>
-            </div>
+      ))}
+    </div>
+  );
+};
+
+const TargetColumn = ({ fighter, silhouetteFillClass }) => {
+  const target = getStrikePlacement(fighter, 'sig_strikes_by_target', TARGET_LABELS);
+  return (
+    <div className={styles.silhouetteCol}>
+      <BodySilhouette targetPlacement={target} fillClass={silhouetteFillClass} />
+      <div className={styles.targetList}>
+        {target.map((item) => (
+          <div key={item.label} className={styles.targetRow}>
+            <span className={styles.targetRegion}>{item.label}</span>
+            <span className={styles.targetLeader} />
+            <span className={styles.targetCount}>{item.count}</span>
+            <span className={styles.targetPct}>{item.pct}%</span>
           </div>
         ))}
-        {recent5.length === 0 && <div className={styles.cmpRfMeta}>No recent fights</div>}
       </div>
-    </>
+    </div>
+  );
+};
+
+const LastFightsColumn = ({ fighter }) => {
+  const recentFights = getRecentFights(fighter, 5);
+  return (
+    <div className={styles.cmpRfCol}>
+      {recentFights.map((fight, i) => (
+        <div key={i} className={styles.cmpRfItem}>
+          <div className={`${styles.cmpRfChip} ${fight.result?.toLowerCase() === 'win' ? styles.cmpRfChipWin : styles.cmpRfChipLoss}`}>
+            {fight.result?.charAt(0)?.toUpperCase() || '?'}
+          </div>
+          <div>
+            <div className={styles.cmpRfOpp}>{fight.opponent}</div>
+            <div className={styles.cmpRfMeta}>
+              {fight.method?.replace(/\([^)]*\)/g, '').trim() || 'N/A'}
+              {fight.fight_date ? ` · ${new Date(`${fight.fight_date}T00:00:00`).toLocaleDateString('en-US', { month: 'short', year: '2-digit' })}` : ''}
+            </div>
+          </div>
+        </div>
+      ))}
+      {recentFights.length === 0 && <div className={styles.cmpRfMeta}>No recent fights</div>}
+    </div>
   );
 };
 
@@ -92,7 +99,7 @@ const FightBreakdownPanel = ({ fight, onBack }) => {
 
   return (
     <div className={styles.cmpCard}>
-      <button className={styles.breakdownBack} onClick={onBack}>
+      <button type="button" className={styles.breakdownBack} onClick={onBack}>
         <ArrowLeft size={14} /> Back to comparison
       </button>
       <div className={styles.cmpGrid}>
@@ -101,15 +108,19 @@ const FightBreakdownPanel = ({ fight, onBack }) => {
 
         <div className={styles.cmpSection}>Where strikes land · position</div>
         <div className={styles.placementWrap}>
-          <FighterBreakdownColumn fighter={f1} fillClass={styles.silFillGold} />
+          <PositionColumn fighter={f1} barFillClass={styles.placementBarFill} />
+          <PositionColumn fighter={f2} barFillClass={styles.placementBarFillAlt} />
         </div>
 
         <div className={styles.cmpSection}>Where strikes land · target</div>
         <div className={styles.placementWrap}>
-          <FighterBreakdownColumn fighter={f2} fillClass={styles.silFillPersonal} />
+          <TargetColumn fighter={f1} silhouetteFillClass={styles.silFillGold} />
+          <TargetColumn fighter={f2} silhouetteFillClass={styles.silFillPersonal} />
         </div>
 
         <div className={styles.cmpSection}>Last 5 fights</div>
+        <LastFightsColumn fighter={f1} />
+        <LastFightsColumn fighter={f2} />
       </div>
     </div>
   );
