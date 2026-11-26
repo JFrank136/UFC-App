@@ -52,6 +52,7 @@ const EventDetailPane = ({ eventKey, eventData }) => {
             key={section}
             type="button"
             className={`${styles.desktopSegPill} ${activeSection === section ? styles.desktopSegPillActive : ''}`}
+            aria-pressed={activeSection === section}
             onClick={() => setActiveSection(section)}
           >
             {SECTION_LABEL[section]}
