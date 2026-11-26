@@ -57,9 +57,11 @@ const StatRow = ({ label, f1, f2 }) => (
   </div>
 );
 
-const RecentFightsColumn = ({ fighter }) => (
+const RecentFightsColumn = ({ fighter }) => {
+  const recentFights = getRecentFights(fighter, 3);
+  return (
   <div className={styles.cmpRfCol}>
-    {getRecentFights(fighter, 3).map((fight, i) => (
+    {recentFights.map((fight, i) => (
       <div key={i} className={styles.cmpRfItem}>
         <div className={`${styles.cmpRfChip} ${fight.result?.toLowerCase() === 'win' ? styles.cmpRfChipWin : styles.cmpRfChipLoss}`}>
           {fight.result?.charAt(0)?.toUpperCase() || '?'}
@@ -73,9 +75,10 @@ const RecentFightsColumn = ({ fighter }) => (
         </div>
       </div>
     ))}
-    {getRecentFights(fighter, 3).length === 0 && <div className={styles.cmpRfMeta}>No recent fights</div>}
+    {recentFights.length === 0 && <div className={styles.cmpRfMeta}>No recent fights</div>}
   </div>
-);
+  );
+};
 
 const FightComparisonCard = ({ fight, fightDivision, onOpenBreakdown }) => {
   const [finishView, setFinishView] = useState('all');
@@ -117,6 +120,8 @@ const FightComparisonCard = ({ fight, fightDivision, onOpenBreakdown }) => {
             {['all', 'wins', 'losses'].map((key) => (
               <button
                 key={key}
+                type="button"
+                aria-pressed={finishView === key}
                 className={`${styles.cmpSegMini} ${finishView === key ? styles.cmpSegMiniActive : ''}`}
                 onClick={() => setFinishView(key)}
               >
@@ -134,7 +139,7 @@ const FightComparisonCard = ({ fight, fightDivision, onOpenBreakdown }) => {
         <RecentFightsColumn fighter={f1} />
         <RecentFightsColumn fighter={f2} />
 
-        <button className={styles.cmpBreakdownLink} onClick={onOpenBreakdown}>
+        <button type="button" className={styles.cmpBreakdownLink} onClick={onOpenBreakdown}>
           Full fight breakdown <ChevronRight size={13} />
         </button>
       </div>
