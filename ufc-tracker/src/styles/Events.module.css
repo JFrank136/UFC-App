@@ -178,6 +178,7 @@
   --personal: #7fa3e0;
   --portrait: #212c47;
   --line: #262f47;
+  --chipOnInk: #05070c;
   background: var(--bg);
   color: var(--text);
 }
@@ -191,6 +192,7 @@
   --personal: #2563eb;
   --portrait: #e2e8f0;
   --line: #e7eaef;
+  --chipOnInk: #ffffff;
   background: var(--bg);
   color: var(--text);
 }
@@ -226,7 +228,6 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  width: 100%;
   background: var(--card);
   border: none;
   border-radius: 10px;
@@ -347,7 +348,7 @@
 
 .desktopSegPillActive {
   background: var(--gold);
-  color: #05070c;
+  color: var(--chipOnInk);
   font-weight: 600;
 }
 
@@ -579,7 +580,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #05070c;
+  color: var(--chipOnInk);
   flex: 0 0 auto;
   margin-top: 1px;
 }
