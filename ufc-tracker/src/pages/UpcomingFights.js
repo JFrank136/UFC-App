@@ -210,7 +210,12 @@ const UpcomingFights = () => {
     if (total === 0) return { ko: 0, sub: 0, dec: 0, total: 0 };
     const ko = fightList.filter(f => f.method?.toLowerCase().match(/ko|tko|knockout/)).length;
     const sub = fightList.filter(f => f.method?.toLowerCase().match(/sub|submission|tap/)).length;
-    const dec = fightList.filter(f => f.method?.toLowerCase().match(/decision|unanimous|majority|split/)).length;
+    // Real fight_history.method values are short codes ("KO", "TKO", "SUB",
+    // "DEC"), not the long-form strings ("Decision - Unanimous") this
+    // pattern originally only matched — same bug found and fixed in
+    // eventsDesktopHelpers.js's getFinishRateBreakdown during the Events
+    // desktop redesign; this comparison modal had the identical issue.
+    const dec = fightList.filter(f => f.method?.toLowerCase().match(/dec|decision|unanimous|majority|split/)).length;
     return {
       ko: Math.round((ko / total) * 100),
       sub: Math.round((sub / total) * 100),
