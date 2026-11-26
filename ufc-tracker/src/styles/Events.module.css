@@ -156,3 +156,543 @@
     padding: 1rem;
   }
 }
+
+/* =====================================================
+   Desktop (>= 860px) — list + detail
+   Separate token scope from the mobile rules above so this
+   addition can't regress the existing mobile styling.
+   ===================================================== */
+
+.desktopWrap {
+  display: flex;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.desktopWrap[data-theme="dark"] {
+  --bg: #05070c;
+  --card: #151d31;
+  --text: #f5f7fa;
+  --mute: #7b8698;
+  --gold: #facc15;
+  --personal: #7fa3e0;
+  --portrait: #212c47;
+  --line: #262f47;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.desktopWrap[data-theme="light"] {
+  --bg: #dde3ed;
+  --card: #ffffff;
+  --text: #1e293b;
+  --mute: #64748b;
+  --gold: #a16207;
+  --personal: #2563eb;
+  --portrait: #e2e8f0;
+  --line: #e7eaef;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.desktopSidebar {
+  width: 420px;
+  flex: 0 0 auto;
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+  padding: 1.5rem 0 2rem;
+}
+
+.desktopSidebarHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem 1rem;
+}
+
+.desktopSidebarTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.75rem;
+  letter-spacing: 0.5px;
+}
+
+.desktopSidebarCount {
+  font-size: 0.8rem;
+  color: var(--mute);
+  padding: 0 1.5rem 1rem;
+}
+
+.desktopEventRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  background: var(--card);
+  border: none;
+  border-radius: 10px;
+  padding: 0.7rem 0.85rem;
+  margin: 0 1rem 0.5rem;
+  width: calc(100% - 2rem);
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
+  font-family: inherit;
+}
+
+.desktopEventRowSelected {
+  outline: 1px solid var(--gold);
+}
+
+.desktopEventRow .dateChip {
+  flex: 0 0 auto;
+  width: 44px;
+  text-align: center;
+}
+
+.desktopEventRow .dateChipDay {
+  display: block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.desktopEventRow .dateChipMonth {
+  display: block;
+  font-size: 0.6rem;
+  color: var(--mute);
+  text-transform: uppercase;
+}
+
+.desktopEventRowInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.desktopEventRowName {
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.desktopEventRowMeta {
+  font-size: 0.72rem;
+  color: var(--mute);
+  margin-top: 2px;
+}
+
+.desktopPpvTag {
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  color: var(--gold);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-left: 6px;
+}
+
+.desktopDetail {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 1.75rem 2rem 3rem;
+}
+
+.desktopDetailEmpty {
+  color: var(--mute);
+  font-size: 0.9rem;
+  padding-top: 2rem;
+  text-align: center;
+}
+
+.desktopEventHeader h2 {
+  font-size: 1.5rem;
+  margin: 0 0 0.4rem;
+}
+
+.desktopEventMeta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--mute);
+  margin-bottom: 1.25rem;
+}
+
+.desktopEventMeta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.desktopSegmented {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 1.25rem;
+}
+
+.desktopSegPill {
+  flex: 1;
+  text-align: center;
+  font-size: 0.78rem;
+  padding: 0.5rem 0;
+  border-radius: 8px;
+  border: none;
+  background: var(--card);
+  color: var(--mute);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.desktopSegPillActive {
+  background: var(--gold);
+  color: #05070c;
+  font-weight: 600;
+}
+
+.desktopFightRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: var(--card);
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
+  font-family: inherit;
+}
+
+.desktopFightRowSelected {
+  outline: 1px solid var(--gold);
+}
+
+.desktopFightRowTag {
+  font-size: 0.65rem;
+  color: var(--mute);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.desktopFightRowAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: var(--portrait);
+  flex: 0 0 auto;
+}
+
+.desktopFightRowName {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.82rem;
+}
+
+.desktopFightRowChevron {
+  color: var(--mute);
+  flex: 0 0 auto;
+}
+
+/* Comparison card */
+.cmpCard {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.cmpGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 0.75rem;
+}
+
+.cmpSide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cmpPortrait {
+  width: 100%;
+  max-width: 150px;
+  aspect-ratio: 3 / 4;
+  border-radius: 10px 10px 4px 4px;
+  background: var(--portrait);
+  object-fit: cover;
+}
+
+.cmpName {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.cmpName svg { flex: 0 0 auto; }
+
+.cmpFavoriteStar { color: var(--personal); }
+.cmpChampionCrown { color: var(--gold); }
+
+.cmpNick {
+  font-size: 0.72rem;
+  color: var(--mute);
+  font-style: italic;
+  min-height: 14px;
+}
+
+.cmpRec {
+  font-size: 0.78rem;
+  color: var(--mute);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cmpFlag {
+  width: 16px;
+  height: 11px;
+  border-radius: 2px;
+  object-fit: cover;
+}
+
+.cmpRank {
+  font-size: 0.72rem;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.cmpVs {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--mute);
+  letter-spacing: 0.1em;
+  padding: 2px 0;
+}
+
+.cmpSection {
+  grid-column: 1 / -1;
+  font-size: 0.65rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border-top: 1px solid var(--line);
+  padding-top: 0.6rem;
+  margin-top: 2px;
+  text-align: center;
+}
+
+.cmpStatRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr minmax(92px, 1.2fr) 1fr;
+  align-items: center;
+  gap: 6px;
+  padding: 0.35rem 0;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.cmpStatRow .cmpStatValue { text-align: right; }
+.cmpStatRow .cmpStatValueRight { text-align: left; }
+
+.cmpStatLabel {
+  font-size: 0.62rem;
+  color: var(--mute);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+}
+
+.cmpFinishHead {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  border-top: 1px solid var(--line);
+  padding-top: 0.6rem;
+  margin-top: 2px;
+}
+
+.cmpFinishHead .cmpSection { border-top: none; padding-top: 0; margin-top: 0; }
+
+.cmpSegMiniGroup {
+  display: flex;
+  gap: 3px;
+  background: var(--bg);
+  border-radius: 7px;
+  padding: 2px;
+}
+
+.cmpSegMini {
+  font-size: 0.65rem;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 5px;
+  background: none;
+  color: var(--mute);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.cmpSegMiniActive {
+  background: var(--card);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.cmpRfCol {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.cmpRfItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 0.72rem;
+  line-height: 1.3;
+}
+
+.cmpRfChip {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  font-size: 0.56rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #05070c;
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.cmpRfChipWin { background: #4ade80; }
+.cmpRfChipLoss { background: #f87171; }
+.cmpRfOpp { font-weight: 600; }
+.cmpRfMeta { color: var(--mute); }
+
+.cmpBreakdownLink {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 0.5rem;
+  padding: 0.55rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--gold);
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Fight breakdown panel */
+.breakdownBack {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--mute);
+  font-size: 0.78rem;
+  cursor: pointer;
+  padding: 0 0 1rem;
+  font-family: inherit;
+}
+
+.placementWrap {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 10px;
+}
+
+.placementCol {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.placementItemTop {
+  display: flex;
+  justify-content: space-between;
+  color: var(--mute);
+  font-size: 0.72rem;
+  margin-bottom: 3px;
+}
+
+.placementItemTop b { color: var(--text); font-weight: 600; }
+
+.placementBar {
+  height: 6px;
+  background: var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.placementBarFill { height: 100%; background: var(--gold); }
+.placementBarFillAlt { height: 100%; background: var(--personal); }
+
+.silhouetteCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.silhouetteCol svg { width: 56px; height: 130px; }
+.silBase { fill: var(--portrait); }
+.silFillGold { fill: var(--gold); }
+.silFillPersonal { fill: var(--personal); }
+
+.targetList { width: 100%; }
+
+.targetRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 0;
+  font-size: 0.68rem;
+}
+
+.targetRegion {
+  flex: 0 0 auto;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.6rem;
+}
+
+.targetLeader {
+  flex: 1;
+  border-bottom: 1px dotted var(--line);
+  margin-bottom: 3px;
+}
+
+.targetCount { color: var(--mute); flex: 0 0 auto; }
+.targetPct {
+  font-weight: 700;
+  min-width: 28px;
+  text-align: right;
+  flex: 0 0 auto;
+}
