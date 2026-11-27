@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Sun, Moon } from 'lucide-react';
 import { useEventData } from '../hooks/useEventData';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import EventCard from '../components/Events/EventCard';
+import EventListSidebar from '../components/Events/EventListSidebar';
+import EventDetailPane from '../components/Events/EventDetailPane';
 import styles from '../styles/Events.module.css';
 
 const Events = () => {
@@ -10,6 +13,8 @@ const Events = () => {
   const [expandedFights, setExpandedFights] = useState(new Set());
   const [darkMode, setDarkMode] = useState(true);
   const [activeCardSections, setActiveCardSections] = useState({});
+  const [selectedEventKey, setSelectedEventKey] = useState(null);
+  const isDesktop = useMediaQuery('(min-width: 860px)');
 
   const toggleEvent = (eventKey) => {
     setExpandedEvents(prev => {
@@ -61,7 +66,6 @@ const Events = () => {
     return eventDate >= cutoff;
   });
 
-  // Plain theme class for :global(.dark)/:global(.light) selectors in child CSS modules
   const themeClass = darkMode ? 'dark' : 'light';
 
   if (loading) {
@@ -94,6 +98,26 @@ const Events = () => {
           <h3>No Upcoming Events</h3>
           <p>Check back later for new fight announcements!</p>
         </div>
+      </div>
+    );
+  }
+
+  if (isDesktop) {
+    const selectedEntry = upcomingEvents.find(([key]) => key === selectedEventKey);
+    return (
+      <div className={styles.desktopWrap} data-theme={themeClass}>
+        <EventListSidebar
+          sortedEvents={upcomingEvents}
+          selectedEventKey={selectedEventKey}
+          onSelectEvent={setSelectedEventKey}
+        />
+        {selectedEntry ? (
+          <EventDetailPane eventKey={selectedEntry[0]} eventData={selectedEntry[1]} />
+        ) : (
+          <div className={styles.desktopDetail}>
+            <div className={styles.desktopDetailEmpty}>Select an event to see its fight card</div>
+          </div>
+        )}
       </div>
     );
   }

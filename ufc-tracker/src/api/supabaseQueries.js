@@ -56,6 +56,13 @@ export const getEventData = async () => {
 
   if (rankingsError) throw rankingsError;
 
+  const { data: userFavorites, error: favoritesError } = await supabase
+    .from('user_favorites')
+    .select('*')
+    .in('fighter_id', fighterIds);
+
+  if (favoritesError) throw favoritesError;
+
   // Combine data
   const fightersMap = {};
   fighters?.forEach(fighter => {
@@ -69,7 +76,9 @@ export const getEventData = async () => {
   return fights.map(fight => ({
     ...fight,
     fighter1_data: fightersMap[fight.fighter1_id] || null,
-    fighter2_data: fightersMap[fight.fighter2_id] || null
+    fighter2_data: fightersMap[fight.fighter2_id] || null,
+    fighter1_favorites: userFavorites?.filter(f => f.fighter_id === fight.fighter1_id) || [],
+    fighter2_favorites: userFavorites?.filter(f => f.fighter_id === fight.fighter2_id) || []
   }));
 };
 
